@@ -19,6 +19,7 @@ Shared layout, typography, and loading patterns for home, tracks catalog, and le
 | `/` | `default` layout, `.hero.home-hero` + `.catalog-section` | Catalog preview 56rem |
 | `/tracks` | `default` layout, `.hub-page-wide` | 56rem |
 | `/progress`, `/notes`, `/search`, `/account` | `learn` + `hub-mode`, `.hub-page.learn-scroll` | 40rem |
+| `/tracks/:track` | `learn`, `.hub-page.learn-scroll` + `HubHeader` | 40rem |
 
 Home keeps a custom hero (path-first); other hubs use `AppBreadcrumb` + `HubHeader`.
 
@@ -38,13 +39,21 @@ Use theme tokens (`--color-brand*`, `--space-*`, `--font-display`) — no hardco
 | Page | Skeleton |
 |------|----------|
 | Home | `SkeletonHome` |
-| Tracks / progress / notes / search | `SkeletonHub` (+ optional slot for search filter) |
+| Tracks / progress / notes / search / account | `SkeletonHub` (+ optional slot for search filter) |
+| Track hub (`/tracks/:id`) | `SkeletonHub` + lesson list slot |
 
 ### Error chrome
 
 Hub pages: breadcrumb → `HubHeader` with `lead=hub.loadError` → `.muted` detail → retry button.
 
 Home catalog error: `.hub-error-panel` (no breadcrumb — home is root).
+
+Track hub and catalog pages call `retryLoad` / `retryCatalog` on catalog API failures.
+
+### Account
+
+- Shared `.account-facts`, `.account-section`, `.section-lead` in `layout.css`
+- Footer quick links use `.hub-footer-links` (not `HubHeader` `#actions` slot)
 
 ## Steps
 

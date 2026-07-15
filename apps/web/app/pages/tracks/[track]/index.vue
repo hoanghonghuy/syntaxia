@@ -1,32 +1,22 @@
 <template>
-  <div class="track-hub learn-scroll">
-    <template v-if="loading">
-      <UiSkeleton width="35%" height="0.75rem" />
-      <UiSkeleton width="55%" height="2rem" />
-      <UiSkeleton width="70%" height="0.95rem" />
-      <UiSkeleton width="10rem" height="2.5rem" radius="6px" />
+  <div class="hub-page learn-scroll">
+    <SkeletonHub v-if="loading">
       <div class="hub-skel-list">
         <UiSkeleton v-for="n in 6" :key="n" width="100%" height="2.25rem" radius="6px" />
       </div>
+    </SkeletonHub>
+
+    <template v-else-if="catalog.loadError">
+      <AppBreadcrumb :items="crumbs" />
+      <HubHeader :eyebrow="trackEyebrow" :title="trackTitle" :lead="t('hub.loadError')" />
+      <p class="muted">{{ catalog.loadError }}</p>
+      <button class="btn btn-primary" type="button" @click="retryLoad">{{ t('hub.retry') }}</button>
     </template>
+
     <template v-else>
       <AppBreadcrumb :items="crumbs" />
-      <p v-if="trackMeta" class="track-meta">
-        {{ t(`catalog.category.${trackMeta.category}`) }}
-        ·
-        {{ t(`catalog.level.${trackMeta.level}`) }}
-      </p>
-      <h1>{{ trackTitle }}</h1>
-      <template v-if="stats.total === 0">
-        <p class="muted coming-soon">{{ t('catalog.comingSoon') }}</p>
-      </template>
-      <template v-else>
-        <p class="muted">
-          {{ t('lesson.progress', { done: stats.done, total: stats.total }) }}
-          ·
-          {{ t('lesson.progressPercent', { percent: stats.percent }) }}
-        </p>
-        <div class="hub-actions">
+      <HubHeader :eyebrow="trackEyebrow" :title="trackTitle" :lead="trackLead">
+        <template v-if="stats.total > 0" #actions>
           <NuxtLink
             v-if="nextLesson"
             class="btn btn-primary continue-btn"
@@ -43,20 +33,21 @@
           >
             {{ t('nav.openMenu') }}
           </button>
-        </div>
-        <ul v-if="!isNarrow" class="nav-list hub-list">
-          <li v-for="item in catalog.lessons" :key="item.id">
-            <NuxtLink
-              class="nav-link"
-              :class="{ 'is-next': nextLesson?.id === item.id }"
-              :to="localePath(`/tracks/${trackId}/lessons/${item.slug}`)"
-            >
-              {{ item.sortOrder }}. {{ item.title }}
-              <span v-if="catalog.isCompleted(item.id, locale)"> ✓</span>
-            </NuxtLink>
-          </li>
-        </ul>
-      </template>
+        </template>
+      </HubHeader>
+
+      <ul v-if="stats.total > 0 && !isNarrow" class="nav-list hub-list">
+        <li v-for="item in catalog.lessons" :key="item.id">
+          <NuxtLink
+            class="nav-link"
+            :class="{ 'is-next': nextLesson?.id === item.id }"
+            :to="localePath(`/tracks/${trackId}/lessons/${item.slug}`)"
+          >
+            {{ item.sortOrder }}. {{ item.title }}
+            <span v-if="catalog.isCompleted(item.id, locale)"> ✓</span>
+          </NuxtLink>
+        </li>
+      </ul>
     </template>
   </div>
 </template>
@@ -80,6 +71,17 @@ const trackMeta = computed(() => catalog.tracks.find((tr) => tr.id === trackId.v
 const trackTitle = computed(() => {
   const track = trackMeta.value
   return track?.title[locale.value] || track?.title.en || trackId.value
+})
+
+const trackEyebrow = computed(() => {
+  const track = trackMeta.value
+  if (!track) return ''
+  return `${t(`catalog.category.${track.category || 'sql'}`)} · ${t(`catalog.level.${track.level || 'basic'}`)}`
+})
+
+const trackLead = computed(() => {
+  if (stats.value.total === 0) return t('catalog.comingSoon')
+  return `${t('lesson.progress', { done: stats.value.done, total: stats.value.total })} · ${t('lesson.progressPercent', { percent: stats.value.percent })}`
 })
 
 const crumbs = computed(() =>
@@ -116,6 +118,10 @@ async function loadHub() {
   }
 }
 
+async function retryLoad() {
+  await loadHub()
+}
+
 onMounted(loadHub)
 
 watch(locale, async (loc) => {
@@ -134,61 +140,3 @@ watch(locale, async (loc) => {
 
 watch(trackId, loadHub)
 </script>
-
-<style scoped>
-.track-hub {
-  max-width: 40rem;
-  padding: var(--space-6) var(--space-4) var(--space-8);
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.muted {
-  color: var(--color-ink-muted);
-}
-
-.track-meta {
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-brand-deep);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.hub-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-top: 0.25rem;
-}
-
-.coming-soon {
-  margin-top: 0.35rem;
-  font-size: 1.05rem;
-}
-
-.hub-list {
-  margin-top: 0.75rem;
-}
-
-.hub-skel-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 0.75rem;
-}
-
-.nav-link.is-next {
-  border: 1px solid var(--color-brand);
-  background: var(--color-brand-soft);
-}
-
-@media (min-width: 768px) {
-  .track-hub {
-    padding: var(--space-6) var(--space-5) var(--space-8);
-  }
-}
-</style>

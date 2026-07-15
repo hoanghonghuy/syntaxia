@@ -30,11 +30,12 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 16 | **Account profile + password** | done | 15 | `PATCH /auth/me`, `POST /auth/password`, account forms; see `account-profile-password.md` |
 | 17 | **Appearance theme system** | done | 16 | system/light/dark + accent presets/hex; see `appearance-theme.md` |
 | 18 | **Home + hub UI polish** | done | 17 | Shared hub CSS, SkeletonHub, card/empty/error unify; see `home-hub-ui-polish.md` |
+| 19 | **Track hub + account shell** | done | 18 | HubHeader on track hub, account shared CSS, load error + retry; see `home-hub-ui-polish.md` |
 | — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
 ## Current focus
 
-**Full-stack perfection.** Rows **0–18** and audit remediation are done. Google/Drive and **guest static learning** remain deferred — see [`future-guest-static-learning.md`](./future-guest-static-learning.md).
+**Full-stack perfection.** Rows **0–19** and audit remediation are done. Google/Drive and **guest static learning** remain deferred — see [`future-guest-static-learning.md`](./future-guest-static-learning.md). Next candidate: **release smoke** (`release-hardening.md`) or curriculum expansion per track docs.
 
 ## Related
 

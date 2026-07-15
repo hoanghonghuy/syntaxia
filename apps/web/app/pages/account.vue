@@ -1,11 +1,6 @@
 <template>
   <div class="hub-page learn-scroll">
-    <template v-if="loading">
-      <UiSkeleton width="35%" height="0.75rem" />
-      <UiSkeleton width="45%" height="2rem" />
-      <UiSkeleton width="70%" height="0.95rem" />
-      <UiSkeleton width="12rem" height="2.5rem" radius="6px" />
-    </template>
+    <SkeletonHub v-if="loading" :cards="2" card-height="8rem" />
 
     <template v-else-if="!auth.user">
       <AppBreadcrumb :items="crumbs" />
@@ -93,7 +88,7 @@
         <p class="section-lead">{{ t('account.googlePasswordHint') }}</p>
       </section>
 
-      <div class="hub-actions">
+      <div class="hub-footer-links">
         <NuxtLink class="btn btn-ghost" :to="localePath('/progress')">{{ t('nav.progress') }}</NuxtLink>
         <NuxtLink class="btn btn-ghost" :to="localePath('/notes')">{{ t('nav.notes') }}</NuxtLink>
         <NuxtLink v-if="auth.isAdmin" class="btn btn-ghost" :to="localePath('/admin')">{{ t('nav.admin') }}</NuxtLink>
@@ -197,70 +192,3 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.account-facts {
-  margin: 0;
-  display: grid;
-  gap: 0.9rem;
-  padding: var(--space-5);
-  background: var(--color-surface);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
-}
-
-.account-facts dt {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
-}
-
-.account-facts dd {
-  margin: 0.25rem 0 0;
-  color: var(--color-ink);
-}
-
-.account-section {
-  padding: var(--space-5);
-  background: var(--color-surface);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
-}
-
-.account-section h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.05rem;
-}
-
-.section-lead {
-  margin: -0.25rem 0 0.85rem;
-  color: var(--color-ink-muted);
-  font-size: 0.95rem;
-  line-height: 1.45;
-}
-
-.field-hint {
-  margin: 0.35rem 0 0;
-  font-size: 0.85rem;
-  color: var(--color-ink-faint);
-}
-
-.form-error {
-  margin: 0;
-  color: var(--color-error);
-  font-size: 0.92rem;
-}
-
-.form-ok {
-  margin: 0;
-  color: var(--color-success);
-  font-size: 0.92rem;
-}
-
-.hub-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-</style>
