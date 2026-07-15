@@ -20,6 +20,18 @@ Run from the **repo root** unless noted. Prefer fail-closed: stop on the first r
 powershell -File scripts/docker-up.ps1
 ```
 
+Or run the full automated gate (includes stack up):
+
+```powershell
+powershell -File scripts/release-smoke.ps1
+```
+
+With stack already running:
+
+```powershell
+powershell -File scripts/release-smoke.ps1 -SkipDocker
+```
+
 Confirm `GET http://127.0.0.1:8082/health` returns `status=ok`. Web: `http://localhost:3001`.
 
 ### 2. SQL Fundamentals E2E
@@ -44,13 +56,18 @@ Expect exit **0** (sql + code categories; tracks include `sql-fundamentals`, `po
 cd apps/web
 npm run test:i18n
 npm run test:toc
+npm run test:shell-ux
+npm run test:theme
+npm run test:audit-remediation
 ```
+
+(`release-smoke.ps1` runs these automatically.)
 
 ### 5. Go package tests
 
 ```bash
 cd apps/api
-go test ./internal/learning ./internal/sandbox ./internal/markdown
+go test ./internal/learning ./internal/sandbox ./internal/markdown ./internal/content ./internal/service/...
 ```
 
 ### 6. Manual UI (light)
@@ -87,4 +104,4 @@ With web open at `http://localhost:3001`:
 - [`i18n.md`](./i18n.md)
 - [`catalog-architecture.md`](./catalog-architecture.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md) (#12)
-- Scripts: `scripts/docker-up.ps1`, `scripts/e2e-sql-fundamentals.ps1`, `scripts/check-catalog.ps1`
+- Scripts: `scripts/docker-up.ps1`, `scripts/release-smoke.ps1`, `scripts/e2e-sql-fundamentals.ps1`, `scripts/check-catalog.ps1`

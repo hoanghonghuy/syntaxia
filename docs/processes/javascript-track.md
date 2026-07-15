@@ -18,21 +18,21 @@ Primary references:
 - [MDN — Dynamic scripting with JavaScript](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting) (current Learn path; formerly “JavaScript first steps” + building blocks)
 - [MDN Curriculum — JavaScript fundamentals](https://developer.mozilla.org/en-US/curriculum/core/javascript-fundamentals/)
 
-### Basic (scaffold — publish first)
+### Basic (published)
 
 | Order | Slug | Topic | MDN map | Status |
 |------:|------|-------|---------|--------|
-| 0 | `what-is-javascript` | What JavaScript is and where it runs | What is JavaScript? | **Published** (scaffold) |
-| 1 | `variables` | Storing values with `let` / `const` | Variables | **Published** (scaffold) |
-| 2 | `numbers-and-operators` | Numbers and basic operators | Basic math — numbers and operators | **Published** (scaffold) |
+| 0 | `what-is-javascript` | What JavaScript is and where it runs | What is JavaScript? | **Published** |
+| 1 | `variables` | Storing values with `let` / `const` | Variables | **Published** |
+| 2 | `numbers-and-operators` | Numbers and basic operators | Basic math — numbers and operators | **Published** |
+| 3 | `strings` | Creating and joining text | Handling text — strings | **Published** |
+| 4 | `string-methods` | Length, slice, case | Useful string methods | **Published** |
+| 5 | `arrays` | Lists under one name | Arrays | **Published** |
 
 ### Next basics (future — document only)
 
 | Order | Slug (planned) | Topic | MDN map |
 |------:|----------------|-------|---------|
-| 3 | `strings` | Creating and joining text | Handling text — strings |
-| 4 | `string-methods` | Length, slice, replace (intro) | Useful string methods |
-| 5 | `arrays` | Lists under one name | Arrays |
 | 6 | `conditionals` | `if` / `else` decisions | Conditionals |
 | 7 | `loops` | Repeating work | Loops |
 | 8 | `functions` | Reusable blocks | Functions |
@@ -55,7 +55,7 @@ Authoring rule until a JS sandbox exists: **examples in the body only**; “Your
 
 - Track id: **`javascript-basics`** (seeded; category `code`, level `basic`)
 - Path: `docs/curriculum/javascript-basics/<locale>/<slug>.md`
-- Frontmatter: `track: javascript-basics`, `order` 0, 1, 2 for the three published basics
+- Frontmatter: `track: javascript-basics`, `order` 0–5 for published basics
 
 ## Pedagogy adaptation (Depth B for code)
 

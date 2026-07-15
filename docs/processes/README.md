@@ -32,6 +32,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [account-profile-password.md](./account-profile-password.md) | Account display name + password change |
 | [appearance-theme.md](./appearance-theme.md) | Light/dark mode + accent presets/hex picker |
 | [home-hub-ui-polish.md](./home-hub-ui-polish.md) | Shared home/tracks/hub layout + card polish |
+| [curriculum-track-completion.md](./curriculum-track-completion.md) | Finish one track before starting the next |
 | [audit-remediation-checklist.md](./audit-remediation-checklist.md) | Ordered TDD fixes from security/UX audit |
 | [future-guest-static-learning.md](./future-guest-static-learning.md) | **Deferred** guest FE-only vs member full-stack |
 | [environment.md](./environment.md) | Syntaxia `.env` + Compose ports |

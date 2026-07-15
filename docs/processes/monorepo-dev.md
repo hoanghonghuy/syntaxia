@@ -55,6 +55,12 @@ Exit **0** = gate green (register → intro → sandbox pass → progress → ne
 
 Full release ordered smoke (E2E + catalog + i18n/toc + Go tests + manual UI): [`release-hardening.md`](./release-hardening.md).
 
+One command for automated gates:
+
+```powershell
+powershell -File scripts/release-smoke.ps1
+```
+
 There is no root `package.json` npm script for this gate yet — run the PowerShell file from the repo root (Windows). Optional: wrap later as `npm run e2e:sql` if a monorepo root package is added.
 
 ## Do

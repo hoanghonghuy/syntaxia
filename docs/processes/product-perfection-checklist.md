@@ -31,11 +31,14 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 17 | **Appearance theme system** | done | 16 | system/light/dark + accent presets/hex; see `appearance-theme.md` |
 | 18 | **Home + hub UI polish** | done | 17 | Shared hub CSS, SkeletonHub, card/empty/error unify; see `home-hub-ui-polish.md` |
 | 19 | **Track hub + account shell** | done | 18 | HubHeader on track hub, account shared CSS, load error + retry; see `home-hub-ui-polish.md` |
+| 20 | **Release smoke verification** | done | 19 | `scripts/release-smoke.ps1` green 2026-07-15; see `release-hardening.md` |
+| 21 | **JavaScript Basics expansion** | done | 20 | Lessons 3–5 (strings, string-methods, arrays) en+vi; see `javascript-track.md` |
+| 22 | **JavaScript Basics completion** | pending | 21 | Lessons 6–8 (conditionals, loops, functions) en+vi; see `curriculum-track-completion.md` |
 | — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
 ## Current focus
 
-**Full-stack perfection.** Rows **0–19** and audit remediation are done. Google/Drive and **guest static learning** remain deferred — see [`future-guest-static-learning.md`](./future-guest-static-learning.md). Next candidate: **release smoke** (`release-hardening.md`) or curriculum expansion per track docs.
+**Finish `javascript-basics` first (row 22).** Rows 0–21 done. Do not expand SQL tracks or start a new code track until row 22 passes Definition of done in [`curriculum-track-completion.md`](./curriculum-track-completion.md).
 
 ## Related
 

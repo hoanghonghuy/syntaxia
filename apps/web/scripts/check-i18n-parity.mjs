@@ -97,3 +97,18 @@ describe('SQL Fundamentals lesson locale pairs', () => {
     console.log(`sql-fundamentals lessons: en=${en.length} vi=${vi.length}`)
   })
 })
+
+describe('JavaScript Basics lesson locale pairs', () => {
+  it('en and vi lesson slug sets match', () => {
+    const { en, vi } = listLessonSlugs('javascript-basics')
+    const onlyEn = missingKeys(en, vi)
+    const onlyVi = missingKeys(vi, en)
+    assert.deepEqual(
+      { onlyEn, onlyVi, enCount: en.length, viCount: vi.length },
+      { onlyEn: [], onlyVi: [], enCount: en.length, viCount: en.length },
+      `lesson pair mismatch — onlyEn=${JSON.stringify(onlyEn)} onlyVi=${JSON.stringify(onlyVi)}`,
+    )
+    assert.equal(en.length, 6, 'javascript-basics should have 6 published lessons')
+    console.log(`javascript-basics lessons: en=${en.length} vi=${vi.length}`)
+  })
+})

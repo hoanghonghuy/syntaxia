@@ -19,7 +19,7 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 |-------|-------|-------|
 | `sql-fundamentals` | basic | W3Schools-density portable SQL (**36** lessons) |
 | `postgresql` | intermediate | PG-specific basic→advanced (**19** lessons) |
-| `javascript-basics` | basic | Reading lessons; JS sandbox deferred |
+| `javascript-basics` | basic | MDN-mapped reading lessons (**6** en+vi pairs); JS sandbox deferred |
 
 ## SQL Fundamentals (published order)
 
@@ -61,3 +61,14 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 | 33 | foreign-key |
 | 34 | create-index |
 | 35 | create-view |
+
+## JavaScript Basics (published order)
+
+| Order | Slug |
+|------:|------|
+| 0 | what-is-javascript |
+| 1 | variables |
+| 2 | numbers-and-operators |
+| 3 | strings |
+| 4 | string-methods |
+| 5 | arrays |
