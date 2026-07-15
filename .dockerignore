@@ -1,0 +1,9 @@
+apps/api/bin/
+*.exe
+node_modules/
+.nuxt/
+.output/
+.synapse/
+memory-bank/
+.env
+**/.git

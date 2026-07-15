@@ -1,0 +1,62 @@
+---
+id: sql-07-update
+track: sql-fundamentals
+locale: en
+slug: updating-rows
+title: Changing rows with UPDATE
+order: 10
+published: true
+objectives:
+  - Change existing values with UPDATE
+  - Always target rows with WHERE
+exercise:
+  starter: "SELECT id, title, year FROM movies ORDER BY id;"
+  hints:
+    - "UPDATE ... SET column = value WHERE condition."
+    - "Always include WHERE so you change only the intended row."
+    - "Try: UPDATE movies SET year = 2014 WHERE title = 'Interstellar';"
+  solution: "UPDATE movies SET year = 2014 WHERE title = 'Interstellar';"
+  preview:
+    columns: ["id", "title", "year"]
+    rows:
+      - [1, "Inception", 2010]
+      - [2, "Interstellar", 2010]
+  expected:
+    columns: ["id", "title", "year"]
+    rows:
+      - [1, "Inception", 2010]
+      - [2, "Interstellar", 2014]
+sandbox_seed:
+  allow_mutations: true
+  verify_sql: "SELECT id, title, year FROM movies ORDER BY id;"
+  ddl:
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'Interstellar', 2010);"
+---
+
+`UPDATE` edits cells that already exist. Always use `WHERE` — without it you would change **every** row.
+
+| id | title | year |
+| --- | --- | --- |
+| 1 | Inception | 2010 |
+| 2 | Interstellar | 2010 |
+
+## Worked example
+
+```sql
+UPDATE movies SET year = 2014 WHERE title = 'Interstellar';
+```
+
+- `SET year = 2014` is the new value.
+- `WHERE title = 'Interstellar'` limits the change to one row.
+- Inception stays at 2010; only Interstellar becomes 2014.
+
+## Common mistakes
+
+- Omitting `WHERE` — that updates every row’s `year` to 2014.
+- Matching the title with the wrong quotes or spelling (`Intersteller`).
+- Using `INSERT` instead of `UPDATE` when the row already exists.
+
+## Your turn
+
+Set `year` to `2014` for the movie titled `Interstellar`.

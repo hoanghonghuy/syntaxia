@@ -1,0 +1,108 @@
+import type { Track } from '~/types/api'
+
+/** Client page size for the tracks catalog; raise only with UX review. */
+export const TRACKS_PAGE_SIZE = 12
+
+/** Home shows a short preview per category; full list lives on `/tracks`. */
+export const HOME_TRACKS_PER_CATEGORY = 3
+
+export type CatalogCategoryFilter = 'all' | string
+
+export type TrackCategoryGroup = {
+  category: string
+  tracks: Track[]
+}
+
+export function filterTracksByCategory(
+  tracks: Track[],
+  category: CatalogCategoryFilter,
+): Track[] {
+  const sorted = [...tracks].sort((a, b) => a.sortOrder - b.sortOrder)
+  if (!category || category === 'all') return sorted
+  return sorted.filter((tr) => (tr.category || 'sql') === category)
+}
+
+export function groupTracksByCategory(tracks: Track[]): TrackCategoryGroup[] {
+  const byCat = new Map<string, Track[]>()
+  for (const track of [...tracks].sort((a, b) => a.sortOrder - b.sortOrder)) {
+    const cat = track.category || 'sql'
+    const list = byCat.get(cat) || []
+    list.push(track)
+    byCat.set(cat, list)
+  }
+  return [...byCat.entries()].map(([category, list]) => ({
+    category,
+    tracks: list,
+  }))
+}
+
+export type TrackCategoryPreview = TrackCategoryGroup & {
+  total: number
+  hasMore: boolean
+}
+
+/** Cap tracks per category for the home page; full browse is `/tracks`. */
+export function previewTracksByCategory(
+  tracks: Track[],
+  limit: number = HOME_TRACKS_PER_CATEGORY,
+): TrackCategoryPreview[] {
+  const cap = Math.max(1, Math.floor(limit) || HOME_TRACKS_PER_CATEGORY)
+  return groupTracksByCategory(tracks).map((group) => ({
+    category: group.category,
+    tracks: group.tracks.slice(0, cap),
+    total: group.tracks.length,
+    hasMore: group.tracks.length > cap,
+  }))
+}
+
+/** First track by sortOrder — guest CTA target when catalog is loaded. */
+export function firstTrackId(tracks: Track[]): string | null {
+  const sorted = [...tracks].sort((a, b) => a.sortOrder - b.sortOrder)
+  return sorted[0]?.id ?? null
+}
+
+export type PageSlice<T> = {
+  items: T[]
+  page: number
+  pageSize: number
+  total: number
+  totalPages: number
+}
+
+/** 1-based page index; clamps out-of-range pages. */
+export function paginateItems<T>(
+  items: T[],
+  page: number,
+  pageSize: number = TRACKS_PAGE_SIZE,
+): PageSlice<T> {
+  const size = Math.max(1, Math.floor(pageSize) || TRACKS_PAGE_SIZE)
+  const total = items.length
+  const totalPages = Math.max(1, Math.ceil(total / size))
+  const safePage = Math.min(Math.max(1, Math.floor(page) || 1), totalPages)
+  const start = (safePage - 1) * size
+  return {
+    items: items.slice(start, start + size),
+    page: safePage,
+    pageSize: size,
+    total,
+    totalPages,
+  }
+}
+
+export function parseTracksQuery(query: Record<string, unknown>): {
+  category: CatalogCategoryFilter
+  page: number
+} {
+  const rawCat = query.category
+  const category =
+    typeof rawCat === 'string' && rawCat.trim() ? rawCat.trim() : 'all'
+  const rawPage = query.page
+  const pageNum =
+    typeof rawPage === 'string' || typeof rawPage === 'number'
+      ? Number(rawPage)
+      : 1
+  return {
+    category,
+    page: Number.isFinite(pageNum) && pageNum > 0 ? Math.floor(pageNum) : 1,
+  }
+}

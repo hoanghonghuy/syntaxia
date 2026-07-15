@@ -1,0 +1,234 @@
+<template>
+  <div class="hub-page learn-scroll">
+    <template v-if="loading">
+      <UiSkeleton width="40%" height="0.75rem" />
+      <UiSkeleton width="55%" height="2rem" />
+      <UiSkeleton width="80%" height="0.95rem" />
+      <UiSkeleton width="12rem" height="2.5rem" radius="6px" />
+      <div class="progress-skel-cards">
+        <UiSkeleton v-for="n in 3" :key="n" width="100%" height="6.5rem" radius="10px" />
+      </div>
+    </template>
+
+    <template v-else-if="catalog.loadError">
+      <AppBreadcrumb :items="crumbs" />
+      <HubHeader :eyebrow="t('nav.progress')" :title="t('progress.title')" :lead="t('hub.loadError')" />
+      <p class="muted">{{ catalog.loadError }}</p>
+      <button class="btn btn-primary" type="button" @click="retryLoad">{{ t('hub.retry') }}</button>
+    </template>
+
+    <template v-else-if="!auth.user">
+      <AppBreadcrumb :items="crumbs" />
+      <HubHeader
+        :eyebrow="t('nav.progress')"
+        :title="t('progress.title')"
+        :lead="t('progress.guestBody')"
+      >
+        <template #actions>
+          <NuxtLink class="btn btn-primary" :to="loginPath">{{ t('nav.login') }}</NuxtLink>
+          <NuxtLink class="btn btn-ghost" :to="registerPath">{{ t('nav.register') }}</NuxtLink>
+        </template>
+      </HubHeader>
+    </template>
+
+    <template v-else>
+      <AppBreadcrumb :items="crumbs" />
+      <HubHeader
+        :eyebrow="t('nav.progress')"
+        :title="t('progress.title')"
+        :lead="`${t('lesson.progress', { done: overall.done, total: overall.total })} · ${t('lesson.progressPercent', { percent: overall.percent })}`"
+      >
+        <template #actions>
+          <NuxtLink
+            v-if="resume"
+            class="btn btn-primary"
+            :to="localePath(`/tracks/${resume.trackId}/lessons/${resume.lesson.slug}`)"
+          >
+            {{ t('home.continue') }}: {{ resume.lesson.title }}
+          </NuxtLink>
+          <p v-else-if="overall.total > 0" class="muted">{{ t('progress.allComplete') }}</p>
+          <NuxtLink class="btn btn-ghost" :to="localePath('/')">{{ t('nav.home') }}</NuxtLink>
+        </template>
+      </HubHeader>
+
+      <div class="overall-bar" role="img" :aria-label="t('lesson.progressPercent', { percent: overall.percent })">
+        <span class="overall-bar-fill" :style="{ width: `${overall.percent}%` }" />
+      </div>
+
+      <section v-if="rows.length" class="progress-tracks" :aria-label="t('nav.tracks')">
+        <article v-for="row in rows" :key="row.trackId" class="progress-card">
+          <p class="track-meta">
+            {{ t(`catalog.category.${row.category}`) }}
+            ·
+            {{ t(`catalog.level.${row.level}`) }}
+          </p>
+          <h2>{{ row.title }}</h2>
+          <p class="muted">
+            {{ t('lesson.progress', { done: row.done, total: row.total }) }}
+            ·
+            {{ t('lesson.progressPercent', { percent: row.percent }) }}
+          </p>
+          <div class="track-bar" aria-hidden="true">
+            <span class="track-bar-fill" :style="{ width: `${row.percent}%` }" />
+          </div>
+          <div class="card-actions">
+            <NuxtLink
+              v-if="row.next"
+              class="btn btn-primary"
+              :to="localePath(`/tracks/${row.trackId}/lessons/${row.next.slug}`)"
+            >
+              {{ t('lesson.continue') }}
+            </NuxtLink>
+            <NuxtLink class="btn btn-ghost" :to="localePath(`/tracks/${row.trackId}`)">
+              {{ t('nav.tracks') }}
+            </NuxtLink>
+          </div>
+        </article>
+      </section>
+      <p v-else class="muted">{{ t('progress.emptyCatalog') }}</p>
+    </template>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
+import { overallProgress, trackProgressRows } from '~/utils/learningPath'
+
+definePageMeta({ layout: 'learn' })
+
+const { t, locale } = useI18n()
+const localePath = useLocalePath()
+const catalog = useCatalogStore()
+const auth = useAuthStore()
+const loading = ref(true)
+
+const crumbs = computed(() =>
+  buildHubBreadcrumbs({
+    homeLabel: t('nav.home'),
+    homeTo: localePath('/'),
+    pageLabel: t('nav.progress'),
+  }),
+)
+
+const loginPath = computed(() => ({
+  path: localePath('/login'),
+  query: { redirect: localePath('/progress') },
+}))
+const registerPath = computed(() => ({
+  path: localePath('/register'),
+  query: { redirect: localePath('/progress') },
+}))
+
+const overall = computed(() =>
+  overallProgress(catalog.lessonsByTrack, catalog.progress, locale.value),
+)
+
+const rows = computed(() =>
+  trackProgressRows(catalog.tracks, catalog.lessonsByTrack, catalog.progress, locale.value),
+)
+
+const resume = computed(() => catalog.resumeTarget(locale.value))
+
+async function retryLoad() {
+  loading.value = true
+  try {
+    await auth.fetchMe()
+    await catalog.loadCatalogForHome(locale.value)
+    if (auth.user) await catalog.loadProgress()
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    await auth.fetchMe()
+    await catalog.loadCatalogForHome(locale.value)
+    if (auth.user) await catalog.loadProgress()
+  } finally {
+    loading.value = false
+  }
+})
+
+watch(locale, async (loc) => {
+  loading.value = true
+  try {
+    await catalog.loadCatalogForHome(loc)
+    if (auth.user) await catalog.loadProgress()
+  } finally {
+    loading.value = false
+  }
+})
+</script>
+
+<style scoped>
+.muted {
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.overall-bar,
+.track-bar {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-hairline);
+  overflow: hidden;
+}
+
+.overall-bar-fill,
+.track-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-brand);
+  border-radius: inherit;
+  min-width: 0;
+  transition: width 0.25s ease;
+}
+
+.progress-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: 0.35rem;
+}
+
+.progress-card {
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.progress-card h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.track-meta {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-brand-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.progress-skel-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+</style>

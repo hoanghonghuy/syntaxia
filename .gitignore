@@ -1,0 +1,33 @@
+
+# synapse (local runtime — syn init)
+.env
+.env.*
+!.env.example
+!.env.*.example
+.synapse/
+memory-bank/
+
+# Secrets (belt-and-suspenders — credentials path is env-based)
+**/service-account*.json
+**/google-credentials*.json
+secrets/
+
+# Apps
+apps/web/node_modules/
+apps/web/.nuxt/
+apps/web/.output/
+apps/api/server
+apps/api/*.exe
+apps/api/bin/
+
+# Go
+coverage.out
+*.prof
+*.test
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local agent mirror (duplicate of .cursor/)
+.agent/
