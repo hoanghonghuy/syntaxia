@@ -1,16 +1,6 @@
 <template>
-  <div class="tracks-catalog">
-    <template v-if="loading">
-      <UiSkeleton width="35%" height="0.75rem" />
-      <UiSkeleton width="50%" height="2rem" />
-      <UiSkeleton width="70%" height="0.95rem" />
-      <div class="tracks-skel-filters">
-        <UiSkeleton v-for="n in 3" :key="n" width="5.5rem" height="2rem" radius="6px" />
-      </div>
-      <div class="track-grid">
-        <UiSkeleton v-for="n in 6" :key="n" width="100%" height="9rem" radius="10px" />
-      </div>
-    </template>
+  <div class="hub-page-wide">
+    <SkeletonHub v-if="loading" :filters="true" :cards="6" card-height="9rem" />
 
     <template v-else-if="catalog.loadError">
       <AppBreadcrumb :items="crumbs" />
@@ -50,16 +40,16 @@
         </NuxtLink>
       </div>
 
-      <p v-if="slice.total === 0" class="muted empty-cat">{{ t('catalog.emptyCategory') }}</p>
+      <p v-if="slice.total === 0" class="hub-empty">{{ t('catalog.emptyCategory') }}</p>
 
-      <div v-else class="track-grid">
+      <div v-else class="track-grid track-grid--flush">
         <article v-for="track in slice.items" :key="track.id" class="card">
           <p class="track-meta">
             {{ t(`catalog.category.${track.category || 'sql'}`) }}
             ·
             {{ t(`catalog.level.${track.level || 'basic'}`) }}
           </p>
-          <h2>{{ track.title[locale] || track.title.en }}</h2>
+          <h2 class="card-title">{{ track.title[locale] || track.title.en }}</h2>
           <p>{{ track.description[locale] || track.description.en }}</p>
           <p v-if="auth.user && lessonsReady" class="muted">
             {{
@@ -94,7 +84,7 @@
         </article>
       </div>
 
-      <nav v-if="slice.totalPages > 1" class="pager" :aria-label="t('catalog.pageOf', { page: slice.page, total: slice.totalPages })">
+      <nav v-if="slice.totalPages > 1" class="catalog-pager" :aria-label="t('catalog.pageOf', { page: slice.page, total: slice.totalPages })">
         <NuxtLink
           class="btn btn-ghost"
           :class="{ 'is-disabled': slice.page <= 1 }"
@@ -104,7 +94,7 @@
         >
           {{ t('catalog.prevPage') }}
         </NuxtLink>
-        <span class="pager-status">
+        <span class="catalog-pager-status">
           {{ t('catalog.pageOf', { page: slice.page, total: slice.totalPages }) }}
         </span>
         <NuxtLink
@@ -218,109 +208,3 @@ watch(locale, async (loc) => {
   }
 })
 </script>
-
-<style scoped>
-.tracks-catalog {
-  max-width: 56rem;
-  margin: 0 auto;
-  padding: var(--space-6) var(--space-4) var(--space-8);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.tracks-skel-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.category-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.category-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 6px;
-  border: 1px solid var(--color-hairline);
-  background: var(--color-surface);
-  color: var(--color-ink-muted);
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.category-chip:hover,
-.category-chip:focus-visible {
-  border-color: var(--color-brand);
-  color: var(--color-brand-deep);
-}
-
-.category-chip.is-active {
-  border-color: var(--color-brand);
-  background: var(--color-brand-soft);
-  color: var(--color-brand-deep);
-}
-
-.track-meta {
-  margin: 0 0 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-brand-deep);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.card h2 {
-  margin: 0 0 0.35rem;
-  font-size: 1.2rem;
-  font-family: var(--font-display);
-}
-
-.muted {
-  color: var(--color-ink-muted);
-  font-size: 0.9rem;
-}
-
-.empty-cat {
-  margin: 0.5rem 0 0;
-}
-
-.card-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.pager {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-.pager-status {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-ink-muted);
-}
-
-.btn.is-disabled {
-  pointer-events: none;
-  opacity: 0.45;
-}
-
-@media (min-width: 768px) {
-  .tracks-catalog {
-    padding: var(--space-6) var(--space-5) var(--space-8);
-  }
-}
-</style>

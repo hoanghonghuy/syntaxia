@@ -1,14 +1,6 @@
 <template>
   <div class="hub-page learn-scroll">
-    <template v-if="loading">
-      <UiSkeleton width="40%" height="0.75rem" />
-      <UiSkeleton width="55%" height="2rem" />
-      <UiSkeleton width="80%" height="0.95rem" />
-      <UiSkeleton width="12rem" height="2.5rem" radius="6px" />
-      <div class="progress-skel-cards">
-        <UiSkeleton v-for="n in 3" :key="n" width="100%" height="6.5rem" radius="10px" />
-      </div>
-    </template>
+    <SkeletonHub v-if="loading" :cards="3" card-height="6.5rem" />
 
     <template v-else-if="catalog.loadError">
       <AppBreadcrumb :items="crumbs" />
@@ -51,25 +43,25 @@
         </template>
       </HubHeader>
 
-      <div class="overall-bar" role="img" :aria-label="t('lesson.progressPercent', { percent: overall.percent })">
-        <span class="overall-bar-fill" :style="{ width: `${overall.percent}%` }" />
+      <div class="hub-progress-bar" role="img" :aria-label="t('lesson.progressPercent', { percent: overall.percent })">
+        <span class="hub-progress-bar-fill" :style="{ width: `${overall.percent}%` }" />
       </div>
 
-      <section v-if="rows.length" class="progress-tracks" :aria-label="t('nav.tracks')">
-        <article v-for="row in rows" :key="row.trackId" class="progress-card">
+      <section v-if="rows.length" class="hub-progress-tracks" :aria-label="t('nav.tracks')">
+        <article v-for="row in rows" :key="row.trackId" class="card card--stack">
           <p class="track-meta">
             {{ t(`catalog.category.${row.category}`) }}
             ·
             {{ t(`catalog.level.${row.level}`) }}
           </p>
-          <h2>{{ row.title }}</h2>
+          <h2 class="card-title">{{ row.title }}</h2>
           <p class="muted">
             {{ t('lesson.progress', { done: row.done, total: row.total }) }}
             ·
             {{ t('lesson.progressPercent', { percent: row.percent }) }}
           </p>
-          <div class="track-bar" aria-hidden="true">
-            <span class="track-bar-fill" :style="{ width: `${row.percent}%` }" />
+          <div class="hub-progress-bar" aria-hidden="true">
+            <span class="hub-progress-bar-fill" :style="{ width: `${row.percent}%` }" />
           </div>
           <div class="card-actions">
             <NuxtLink
@@ -85,7 +77,7 @@
           </div>
         </article>
       </section>
-      <p v-else class="muted">{{ t('progress.emptyCatalog') }}</p>
+      <p v-else class="hub-empty">{{ t('progress.emptyCatalog') }}</p>
     </template>
   </div>
 </template>
@@ -162,73 +154,3 @@ watch(locale, async (loc) => {
 })
 </script>
 
-<style scoped>
-.muted {
-  color: var(--color-ink-muted);
-  margin: 0;
-}
-
-.overall-bar,
-.track-bar {
-  height: 0.55rem;
-  border-radius: 999px;
-  background: var(--color-surface-soft);
-  border: 1px solid var(--color-hairline);
-  overflow: hidden;
-}
-
-.overall-bar-fill,
-.track-bar-fill {
-  display: block;
-  height: 100%;
-  background: var(--color-brand);
-  border-radius: inherit;
-  min-width: 0;
-  transition: width 0.25s ease;
-}
-
-.progress-tracks {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  margin-top: 0.35rem;
-}
-
-.progress-card {
-  padding: var(--space-5);
-  background: var(--color-surface);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.progress-card h2 {
-  margin: 0;
-  font-size: 1.15rem;
-}
-
-.track-meta {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-brand-deep);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.card-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.35rem;
-}
-
-.progress-skel-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-}
-</style>

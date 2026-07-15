@@ -24,6 +24,7 @@ describe('shell UX foundation', () => {
       'app/components/SkeletonLesson.vue',
       'app/components/SkeletonSidebar.vue',
       'app/components/SkeletonHome.vue',
+      'app/components/SkeletonHub.vue',
       'app/components/ComingSoonPanel.vue',
     ]) {
       assert.equal(existsSync(join(webRoot, file)), true, `missing ${file}`)
@@ -149,10 +150,28 @@ describe('shell UX foundation', () => {
   it('ships shared hub-page styles and exact footer active state', () => {
     const css = read('app/assets/css/layout.css')
     assert.match(css, /\.hub-page\s*\{/)
+    assert.match(css, /\.hub-page-wide\s*\{/)
+    assert.match(css, /\.muted\s*\{/)
+    assert.match(css, /\.track-meta\s*\{/)
+    assert.match(css, /\.card-actions\s*\{/)
+    assert.match(css, /\.card-title\s*\{/)
+    assert.match(css, /\.category-chip/)
     assert.match(css, /\.hub-filter/)
     assert.match(css, /router-link-exact-active/)
-    assert.match(read('app/pages/search.vue'), /hub-page/)
-    assert.match(read('app/pages/notes.vue'), /hub-page/)
-    assert.doesNotMatch(read('app/pages/search.vue'), /\.hub-page\s*\{/)
+    for (const file of [
+      'app/pages/search.vue',
+      'app/pages/notes.vue',
+      'app/pages/progress.vue',
+    ]) {
+      assert.match(read(file), /hub-page/, `${file} should use hub-page`)
+      assert.doesNotMatch(read(file), /\.hub-page\s*\{/, `${file} should not define hub-page locally`)
+    }
+    assert.match(read('app/pages/tracks/index.vue'), /hub-page-wide/)
+    assert.match(read('app/pages/progress.vue'), /SkeletonHub/)
+    assert.match(read('app/pages/tracks/index.vue'), /SkeletonHub/)
+    assert.match(read('app/pages/index.vue'), /card-title/)
+    assert.match(read('app/pages/index.vue'), /hub-error-panel/)
+    assert.doesNotMatch(read('app/pages/tracks/index.vue'), /\.track-meta\s*\{/)
+    assert.doesNotMatch(read('app/pages/index.vue'), /\.track-meta\s*\{/)
   })
 })

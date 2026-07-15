@@ -1,13 +1,6 @@
 <template>
   <div class="hub-page learn-scroll">
-    <template v-if="loading">
-      <UiSkeleton width="30%" height="0.75rem" />
-      <UiSkeleton width="45%" height="2rem" />
-      <UiSkeleton width="80%" height="0.95rem" />
-      <div class="hub-skel-list">
-        <UiSkeleton v-for="n in 4" :key="n" width="100%" height="5.5rem" radius="10px" />
-      </div>
-    </template>
+    <SkeletonHub v-if="loading" :cards="4" card-height="5.5rem" />
 
     <template v-else-if="!auth.user">
       <AppBreadcrumb :items="crumbs" />
@@ -25,7 +18,7 @@
 
     <template v-else-if="loadError">
       <AppBreadcrumb :items="crumbs" />
-      <HubHeader :eyebrow="t('nav.notes')" :title="t('notes.title')" :lead="t('notes.loadError')" />
+      <HubHeader :eyebrow="t('nav.notes')" :title="t('notes.title')" :lead="t('hub.loadError')" />
       <p class="muted">{{ loadError }}</p>
       <button class="btn btn-primary" type="button" @click="load">{{ t('hub.retry') }}</button>
     </template>

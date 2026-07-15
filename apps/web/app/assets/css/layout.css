@@ -451,6 +451,12 @@ body.lesson-nav-locked {
   padding: var(--space-5);
 }
 
+.card--stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
 .prose-lesson {
   font-size: 1.0625rem;
   line-height: 1.75;
@@ -798,6 +804,219 @@ body.lesson-nav-locked {
   max-width: none;
 }
 
+/* —— Shared catalog + card utilities —— */
+
+.muted {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.track-meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-brand-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.track-grid--flush {
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+
+.catalog-section {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-6);
+}
+
+.catalog-heading {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.catalog-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 0 0 var(--space-4);
+}
+
+.catalog-more {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-brand-deep);
+  text-decoration: none;
+}
+
+.catalog-more:hover,
+.catalog-more:focus-visible {
+  text-decoration: underline;
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-surface);
+  color: var(--color-ink-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.category-chip:hover,
+.category-chip:focus-visible {
+  border-color: var(--color-brand);
+  color: var(--color-brand-deep);
+}
+
+.category-chip.is-active {
+  border-color: var(--color-brand);
+  background: var(--color-brand-soft);
+  color: var(--color-brand-deep);
+}
+
+.hub-empty--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.hub-error-panel {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.home-hero h1 {
+  font-size: clamp(1.85rem, 5vw, 2.65rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-3);
+  color: var(--color-ink);
+}
+
+.home-hero .hero-lead {
+  color: var(--color-ink-muted);
+  max-width: 32rem;
+  margin: 0 auto var(--space-4);
+  line-height: 1.55;
+}
+
+.home-hero .hero-progress {
+  margin: 0 auto var(--space-4);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-brand-deep);
+}
+
+.home-hero .hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.hub-progress-bar {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-hairline);
+  overflow: hidden;
+}
+
+.hub-progress-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-brand);
+  border-radius: inherit;
+  min-width: 0;
+  transition: width 0.25s ease;
+}
+
+.hub-progress-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: 0.35rem;
+}
+
+.hub-skel-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hub-skel-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.catalog-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.catalog-pager-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+.btn.is-disabled {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
 /* —— Shared hub pages (progress / notes / search / account) —— */
 
 .hub-page {
@@ -806,6 +1025,15 @@ body.lesson-nav-locked {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
+}
+
+.hub-page-wide {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .hub-filter {
@@ -870,7 +1098,8 @@ body.lesson-nav-locked {
 }
 
 @media (min-width: 768px) {
-  .hub-page {
+  .hub-page,
+  .hub-page-wide {
     padding: var(--space-6) var(--space-5) var(--space-8);
   }
 }

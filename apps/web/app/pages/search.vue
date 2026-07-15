@@ -1,11 +1,9 @@
 <template>
   <div class="hub-page learn-scroll">
-    <template v-if="loading">
-      <UiSkeleton width="30%" height="0.75rem" />
-      <UiSkeleton width="40%" height="2rem" />
+    <SkeletonHub v-if="loading">
       <UiSkeleton width="100%" height="2.75rem" radius="6px" />
       <UiSkeleton width="70%" height="0.95rem" />
-    </template>
+    </SkeletonHub>
 
     <template v-else-if="catalog.loadError">
       <AppBreadcrumb :items="crumbs" />

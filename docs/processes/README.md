@@ -31,7 +31,9 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [notes-hub-and-search.md](./notes-hub-and-search.md) | Notes list API + catalog title search |
 | [account-profile-password.md](./account-profile-password.md) | Account display name + password change |
 | [appearance-theme.md](./appearance-theme.md) | Light/dark mode + accent presets/hex picker |
+| [home-hub-ui-polish.md](./home-hub-ui-polish.md) | Shared home/tracks/hub layout + card polish |
 | [audit-remediation-checklist.md](./audit-remediation-checklist.md) | Ordered TDD fixes from security/UX audit |
+| [future-guest-static-learning.md](./future-guest-static-learning.md) | **Deferred** guest FE-only vs member full-stack |
 | [environment.md](./environment.md) | Syntaxia `.env` + Compose ports |
 | [auth-email-local-phase.md](./auth-email-local-phase.md) | Email + local curriculum phase (Google deferred) |
 | [onboarding.md](./onboarding.md) | Auth redirect, guest soft gates, login/register polish |

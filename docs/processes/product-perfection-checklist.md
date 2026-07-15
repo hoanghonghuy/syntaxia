@@ -29,10 +29,12 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 15 | **Notes hub + catalog search** | done | 14 | `GET /notes`, `/notes` list, `/search` title filter, HubHeader polish; see `notes-hub-and-search.md` |
 | 16 | **Account profile + password** | done | 15 | `PATCH /auth/me`, `POST /auth/password`, account forms; see `account-profile-password.md` |
 | 17 | **Appearance theme system** | done | 16 | system/light/dark + accent presets/hex; see `appearance-theme.md` |
+| 18 | **Home + hub UI polish** | done | 17 | Shared hub CSS, SkeletonHub, card/empty/error unify; see `home-hub-ui-polish.md` |
+| — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
 ## Current focus
 
-**Post-MVP.** Rows **0–17** done for current scope. Next: UI polish pass (home/hub hierarchy) using the new theme tokens. Google/Drive remain deferred.
+**Full-stack perfection.** Rows **0–18** and audit remediation are done. Google/Drive and **guest static learning** remain deferred — see [`future-guest-static-learning.md`](./future-guest-static-learning.md).
 
 ## Related
 
@@ -49,3 +51,4 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 - [`progress-hub.md`](./progress-hub.md)  
 - [`onboarding.md`](./onboarding.md)  
 - [`i18n.md`](./i18n.md)
+- [`future-guest-static-learning.md`](./future-guest-static-learning.md) (deferred)
