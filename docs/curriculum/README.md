@@ -19,6 +19,8 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 |-------|-------|-------|
 | `sql-fundamentals` | basic | W3Schools-density portable SQL (**42** lessons — **closed**) |
 | `postgresql` | intermediate | PG-specific basic→advanced (**19** lessons) |
+| `html-basics` | basic | MDN Semantic HTML (**12** en+vi) — Phase 1 no sandbox; see `html-css-basics-tracks.md` |
+| `css-basics` | basic | MDN CSS fundamentals + Flexbox (**14** en+vi) — Phase 1 no sandbox |
 | `javascript-basics` | basic | MDN scripting basics (**9** en+vi); JS sandbox **shipped** |
 
 ## SQL Fundamentals (published order)

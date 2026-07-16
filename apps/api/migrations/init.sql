@@ -96,5 +96,7 @@ $$;
 INSERT INTO tracks (id, title, description, category, level, sort_order) VALUES
     ('sql-fundamentals', '{"en":"SQL Fundamentals","vi":"SQL cơ bản"}', '{"en":"Portable SQL aligned with SQLBolt","vi":"SQL chuẩn theo SQLBolt"}', 'sql', 'basic', 1),
     ('postgresql', '{"en":"PostgreSQL","vi":"PostgreSQL"}', '{"en":"PostgreSQL from basics to advanced","vi":"PostgreSQL từ cơ bản đến nâng cao"}', 'sql', 'intermediate', 2),
+    ('html-basics', '{"en":"HTML Basics","vi":"HTML cơ bản"}', '{"en":"Semantic HTML mapped from the MDN Learn curriculum","vi":"HTML ngữ nghĩa theo lộ trình MDN Learn"}', 'web', 'basic', 5),
+    ('css-basics', '{"en":"CSS Basics","vi":"CSS cơ bản"}', '{"en":"CSS fundamentals and Flexbox intro mapped from MDN Learn","vi":"Nền tảng CSS và Flexbox cơ bản theo MDN Learn"}', 'web', 'basic', 6),
     ('javascript-basics', '{"en":"JavaScript Basics","vi":"JavaScript cơ bản"}', '{"en":"Core language basics mapped from MDN JavaScript First Steps","vi":"Nền tảng ngôn ngữ theo MDN JavaScript First Steps"}', 'code', 'basic', 10)
 ON CONFLICT (id) DO NOTHING;

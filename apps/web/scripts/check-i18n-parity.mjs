@@ -126,3 +126,33 @@ describe('JavaScript Basics lesson locale pairs', () => {
     }
   })
 })
+
+describe('CSS Basics lesson locale pairs', () => {
+  it('en and vi lesson slug sets match', () => {
+    const { en, vi } = listLessonSlugs('css-basics')
+    const onlyEn = missingKeys(en, vi)
+    const onlyVi = missingKeys(vi, en)
+    assert.deepEqual(
+      { onlyEn, onlyVi, enCount: en.length, viCount: vi.length },
+      { onlyEn: [], onlyVi: [], enCount: en.length, viCount: en.length },
+      `lesson pair mismatch — onlyEn=${JSON.stringify(onlyEn)} onlyVi=${JSON.stringify(onlyVi)}`,
+    )
+    assert.equal(en.length, 14, 'css-basics should have 14 published lessons')
+    console.log(`css-basics lessons: en=${en.length} vi=${vi.length}`)
+  })
+})
+
+describe('HTML Basics lesson locale pairs', () => {
+  it('en and vi lesson slug sets match', () => {
+    const { en, vi } = listLessonSlugs('html-basics')
+    const onlyEn = missingKeys(en, vi)
+    const onlyVi = missingKeys(vi, en)
+    assert.deepEqual(
+      { onlyEn, onlyVi, enCount: en.length, viCount: vi.length },
+      { onlyEn: [], onlyVi: [], enCount: en.length, viCount: en.length },
+      `lesson pair mismatch — onlyEn=${JSON.stringify(onlyEn)} onlyVi=${JSON.stringify(onlyVi)}`,
+    )
+    assert.equal(en.length, 12, 'html-basics should have 12 published lessons')
+    console.log(`html-basics lessons: en=${en.length} vi=${vi.length}`)
+  })
+})

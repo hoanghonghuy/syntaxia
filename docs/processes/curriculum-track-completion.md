@@ -20,6 +20,8 @@ Define when a Syntaxia track counts as **complete** for the current scope, so wo
 |-------|----------------|----------------|--------|
 | `sql-fundamentals` | 42 | W3Schools-density + closure (orders 0–41) | **Closed** (2026-07-16) — 42 lessons Depth B; polish A–F done |
 | `postgresql` | 19 | basic→advanced PG-specific (orders 0–6, 10–16, 20–24) | **Complete** — all outline rows published |
+| `html-basics` | 12 | MDN Semantic HTML (orders 0–11) | **Complete** (2026-07-16) — Phase 1, no sandbox |
+| `css-basics` | 14 | MDN CSS fundamentals + Flexbox (orders 0–13) | **Complete** (2026-07-16) — Phase 1, no sandbox |
 | `javascript-basics` | 9 | MDN Scripting basics (orders 0–8) | **Complete** (2026-07-16) |
 
 Do not start a second code track or widen SQL tracks until the next `/opsx-research` picks the following slice.

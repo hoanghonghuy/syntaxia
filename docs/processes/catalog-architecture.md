@@ -22,7 +22,8 @@ Category (sql | code)
 | Category | Seeded tracks (today) | Notes |
 |----------|----------------------|--------|
 | `sql` | `sql-fundamentals` (basic), `postgresql` (intermediate) | Portable SQL → Postgres dialect |
-| `code` | `javascript-basics` (basic) | MDN First Steps scaffold (#11 done); see `javascript-track.md` |
+| `web` | `html-basics` (basic), `css-basics` (basic) | MDN HTML → CSS; see [`html-css-basics-tracks.md`](./html-css-basics-tracks.md) |
+| `code` | `javascript-basics` (basic) | MDN JS scripting; see `javascript-track.md` |
 
 Home groups tracks by `category` (i18n `catalog.category.*`). Each card shows `catalog.level.*`.
 
@@ -67,5 +68,5 @@ Canonical browse UI for many tracks: **`/tracks`** with category filters and cli
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md) — #10 / #11
 - [`postgresql-track.md`](./postgresql-track.md) — SQL category example
 - [`curriculum-pedagogy.md`](./curriculum-pedagogy.md)
-- `apps/api/migrations/003_track_taxonomy.sql`, `004_code_track.sql`, `init.sql`
+- `apps/api/migrations/003_track_taxonomy.sql`, `004_code_track.sql`, `005_web_tracks.sql`, `init.sql`
 - `scripts/check-catalog.ps1`

@@ -78,6 +78,7 @@
   "catalog": {
     "category": {
       "sql": "SQL",
+      "web": "Web",
       "code": "Code"
     },
     "level": {
