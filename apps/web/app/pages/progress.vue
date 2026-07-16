@@ -75,6 +75,19 @@
               {{ t('nav.tracks') }}
             </NuxtLink>
           </div>
+          <p class="hub-progress-lessons-label">{{ t('progress.lessonList') }}</p>
+          <ul class="nav-list hub-list hub-progress-lessons">
+            <li v-for="lesson in lessonStatuses(row.trackId)" :key="lesson.id">
+              <NuxtLink
+                class="nav-link"
+                :class="{ 'is-next': lesson.isNext }"
+                :to="localePath(`/tracks/${row.trackId}/lessons/${lesson.slug}`)"
+              >
+                {{ lesson.sortOrder }}. {{ lesson.title }}
+                <span v-if="lesson.completed" class="lesson-done">✓</span>
+              </NuxtLink>
+            </li>
+          </ul>
         </article>
       </section>
       <p v-else class="hub-empty">{{ t('progress.emptyCatalog') }}</p>
@@ -84,7 +97,7 @@
 
 <script setup lang="ts">
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
-import { overallProgress, trackProgressRows } from '~/utils/learningPath'
+import { overallProgress, trackLessonStatusRows, trackProgressRows } from '~/utils/learningPath'
 
 definePageMeta({ layout: 'learn' })
 
@@ -120,6 +133,11 @@ const rows = computed(() =>
 )
 
 const resume = computed(() => catalog.resumeTarget(locale.value))
+
+function lessonStatuses(trackId: string) {
+  const lessons = catalog.lessonsByTrack[trackId] || []
+  return trackLessonStatusRows(lessons, catalog.progress, locale.value)
+}
 
 async function retryLoad() {
   loading.value = true

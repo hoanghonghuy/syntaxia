@@ -27,6 +27,7 @@
     "dismiss": "Dismiss",
     "noteSaved": "Note saved",
     "lessonComplete": "Lesson marked complete",
+    "lessonIncomplete": "Lesson marked incomplete",
     "genericError": "Something went wrong. Try again."
   },
   "shell": {
@@ -107,6 +108,8 @@
     "failed": "Not quite — check your query.",
     "failedWrongResult": "Your query ran, but the result is not quite right. Compare columns and rows with the expected answer.",
     "complete": "Mark complete",
+    "completed": "Completed",
+    "markIncomplete": "Mark incomplete",
     "notes": "Your notes",
     "saveNote": "Save note",
     "toc": "On this page",
@@ -223,7 +226,8 @@
     "title": "Your learning progress",
     "guestBody": "Log in to see completed lessons, track percentages, and continue where you left off.",
     "allComplete": "You have completed every lesson in the catalog for this language.",
-    "emptyCatalog": "No published lessons yet."
+    "emptyCatalog": "No published lessons yet.",
+    "lessonList": "Lessons in this track"
   },
   "notes": {
     "title": "Your notes",

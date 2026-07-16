@@ -14,7 +14,6 @@ exercise:
   starter: |
     let name = "Syntaxia";
     // return số ký tự trong name
-    return name.length;
   hints:
     - "Chuỗi có thuộc tính .length."
     - "Dùng return ở cuối với name.length."

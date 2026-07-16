@@ -13,9 +13,7 @@ objectives:
 exercise:
   starter: |
     let total = 0;
-    for (let n = 1; n <= 3; n++) {
-      total = total + n;
-    }
+    // Use a for loop to add 1, 2, and 3 into total
     return total;
   hints:
     - "The loop adds 1, then 2, then 3 into total."

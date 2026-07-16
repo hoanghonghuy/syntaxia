@@ -13,8 +13,7 @@ objectives:
 exercise:
   starter: |
     const fruits = ["apple", "pear", "orange"];
-    fruits.push("mango");
-    return fruits.length;
+    // Thêm "mango" vào cuối, rồi return fruits.length
   hints:
     - "push thêm một phần tử vào cuối mảng."
     - "length đếm số phần tử trong danh sách."

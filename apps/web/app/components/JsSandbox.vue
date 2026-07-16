@@ -113,6 +113,10 @@ const props = withDefaults(
   { canRun: true, solutionAvailable: false },
 )
 
+const emit = defineEmits<{
+  passed: []
+}>()
+
 const canRun = computed(() => props.canRun !== false)
 const { t } = useI18n()
 const api = useApi()
@@ -234,6 +238,8 @@ async function run() {
     )
     if (result.value && !result.value.passed) {
       failedAttempts.value += 1
+    } else if (result.value?.passed) {
+      emit('passed')
     }
   } catch (e) {
     result.value = {

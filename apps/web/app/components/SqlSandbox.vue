@@ -139,6 +139,10 @@ const props = withDefaults(
   { canRun: true, solutionAvailable: false },
 )
 
+const emit = defineEmits<{
+  passed: []
+}>()
+
 const canRun = computed(() => props.canRun !== false)
 
 const { t } = useI18n()
@@ -227,6 +231,8 @@ async function run() {
     result.value = await api.runSandbox(sql.value, props.lessonId, props.locale)
     if (result.value && !result.value.passed) {
       failedAttempts.value += 1
+    } else if (result.value?.passed) {
+      emit('passed')
     }
   } catch (e) {
     result.value = {

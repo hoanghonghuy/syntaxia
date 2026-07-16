@@ -17,6 +17,7 @@ How Syntaxia presents Category → Level → Track → Lessons and resume/progre
 3. Home: group by category, show level, Continue when logged in with incomplete lesson.
 4. Track hub: Continue to next incomplete, `%`, highlight `is-next`.
 5. Lesson sidebar stays Mintlify ordered list (free revisit).
+6. Sandbox pass (SQL or JS) writes `lesson_progress.completed` — see [`progress-sandbox-sync.md`](./progress-sandbox-sync.md).
 
 ## Do
 
@@ -34,3 +35,4 @@ How Syntaxia presents Category → Level → Track → Lessons and resume/progre
 - [`product-quality-lock.md`](./product-quality-lock.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md)
 - [`catalog-architecture.md`](./catalog-architecture.md)
+- [`progress-sandbox-sync.md`](./progress-sandbox-sync.md)

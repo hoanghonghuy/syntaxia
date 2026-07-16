@@ -13,11 +13,7 @@ objectives:
 exercise:
   starter: |
     const lives = 0;
-    if (lives === 0) {
-      console.log("Game over");
-    } else {
-      console.log("Keep playing");
-    }
+    // If lives is 0, log "Game over". Otherwise log "Keep playing".
   hints:
     - "When lives is 0, the if test is true."
     - "Only the if block runs — use console.log inside it."

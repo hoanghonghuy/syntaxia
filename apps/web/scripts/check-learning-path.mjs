@@ -8,6 +8,7 @@ import { describe, it } from 'node:test'
 import {
   nextIncompleteLesson,
   overallProgress,
+  trackLessonStatusRows,
   trackProgress,
   trackProgressRows,
 } from '../app/utils/learningPath.ts'
@@ -75,5 +76,16 @@ describe('learningPath', () => {
     assert.equal(rows[0].next?.id, 'a2')
     assert.equal(rows[1].trackId, 't2')
     assert.equal(rows[1].next?.id, 'b1')
+  })
+
+  it('trackLessonStatusRows marks completed lessons and highlights next', () => {
+    const progress = [{ lessonId: 'a1', locale: 'en', completed: true }]
+    const rows = trackLessonStatusRows(lessonsA, progress, 'en')
+    assert.equal(rows.length, 2)
+    assert.equal(rows[0].completed, true)
+    assert.equal(rows[0].isNext, false)
+    assert.equal(rows[1].completed, false)
+    assert.equal(rows[1].isNext, true)
+    assert.equal(rows[1].slug, 'two')
   })
 })

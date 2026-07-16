@@ -55,6 +55,34 @@ export type TrackProgressRow = {
   next: LessonSummary | null
 }
 
+export type LessonStatusRow = {
+  id: string
+  slug: string
+  title: string
+  sortOrder: number
+  completed: boolean
+  isNext: boolean
+}
+
+export function trackLessonStatusRows(
+  lessons: LessonSummary[],
+  progress: Progress[],
+  locale: string,
+): LessonStatusRow[] {
+  const sorted = [...lessons].sort((a, b) => a.sortOrder - b.sortOrder)
+  const next = nextIncompleteLesson(lessons, progress, locale)
+  return sorted.map((lesson) => ({
+    id: lesson.id,
+    slug: lesson.slug,
+    title: lesson.title,
+    sortOrder: lesson.sortOrder,
+    completed: progress.some(
+      (p) => p.lessonId === lesson.id && p.locale === locale && p.completed,
+    ),
+    isNext: next?.id === lesson.id,
+  }))
+}
+
 export function trackProgressRows(
   tracks: Track[],
   lessonsByTrack: Record<string, LessonSummary[]>,

@@ -29,6 +29,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [snackbar-and-breadcrumb.md](./snackbar-and-breadcrumb.md) | Hand-rolled snackbar + WAI-ARIA breadcrumb |
 | [ui-skeleton-and-shell.md](./ui-skeleton-and-shell.md) | Loading skeletons + scaffold routes for future features |
 | [progress-hub.md](./progress-hub.md) | Cross-track progress page + learningPath helpers |
+| [progress-sandbox-sync.md](./progress-sandbox-sync.md) | Sandbox pass → lesson progress + hub checklist |
 | [notes-hub-and-search.md](./notes-hub-and-search.md) | Notes list API + catalog title search |
 | [account-profile-password.md](./account-profile-password.md) | Account display name + password change |
 | [appearance-theme.md](./appearance-theme.md) | Light/dark mode + accent presets/hex picker |

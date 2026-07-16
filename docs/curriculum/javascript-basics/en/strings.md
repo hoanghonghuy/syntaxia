@@ -14,7 +14,7 @@ exercise:
   starter: |
     const greeting = "Hello";
     const name = "Sam";
-    return greeting + ", " + name + "!";
+    // Build and return "Hello, Sam!"
   hints:
     - "Use + between strings to join them."
     - "Put a comma and space between greeting and name."

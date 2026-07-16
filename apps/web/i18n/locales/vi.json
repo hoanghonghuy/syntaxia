@@ -27,6 +27,7 @@
     "dismiss": "Đóng",
     "noteSaved": "Đã lưu ghi chú",
     "lessonComplete": "Đã đánh dấu hoàn thành bài học",
+    "lessonIncomplete": "Đã bỏ đánh dấu hoàn thành",
     "genericError": "Có lỗi xảy ra. Thử lại nhé."
   },
   "shell": {
@@ -107,6 +108,8 @@
     "failed": "Chưa đúng — kiểm tra lại truy vấn.",
     "failedWrongResult": "Truy vấn đã chạy, nhưng kết quả chưa khớp đáp án. So sánh cột và hàng với kết quả mong đợi.",
     "complete": "Đánh dấu hoàn thành",
+    "completed": "Đã hoàn thành",
+    "markIncomplete": "Bỏ đánh dấu hoàn thành",
     "notes": "Ghi chú của bạn",
     "saveNote": "Lưu ghi chú",
     "toc": "Trong trang này",
@@ -223,7 +226,8 @@
     "title": "Tiến độ học của bạn",
     "guestBody": "Đăng nhập để xem bài đã hoàn thành, phần trăm từng lộ trình và tiếp tục đúng chỗ đang học dở.",
     "allComplete": "Bạn đã hoàn thành mọi bài trong catalog với ngôn ngữ này.",
-    "emptyCatalog": "Chưa có bài học được xuất bản."
+    "emptyCatalog": "Chưa có bài học được xuất bản.",
+    "lessonList": "Các bài trong lộ trình"
   },
   "notes": {
     "title": "Ghi chú của bạn",

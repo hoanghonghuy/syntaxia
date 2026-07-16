@@ -48,7 +48,8 @@ Research date: **2026-07-16** (checklist row **#24**).
 4. **Web** — `JsSandbox.vue` + CodeMirror `javascript` lang; wire lesson page when `track === 'javascript-basics'` and `lesson.exercise` present.
 5. **Curriculum** — one sandbox exercise per lesson (9 × en/vi); see [`javascript-basics-w3schools-map.md`](./javascript-basics-w3schools-map.md).
 6. **Tests** — Go unit tests for `gradeJs`; Node tests for worker protocol; extend `release-smoke.ps1` with one JS grade gate.
-7. **Docs** — update [`javascript-track.md`](./javascript-track.md) sandbox table to **shipped**.
+7. **Docs** — update [`javascript-track.md`](./javascript-track.md) sandbox table to **shipped** (**done** 2026-07-16).
+8. **Progress sync** — sandbox pass → `setProgress(true)` — see [`progress-sandbox-sync.md`](./progress-sandbox-sync.md) (**done** 2026-07-16).
 
 ## Exercise frontmatter (JS)
 
@@ -82,6 +83,7 @@ Console example:
 - Run untrusted learner code only inside a worker.
 - Keep grading inputs server-side; strip from public lesson JSON.
 - Mirror SQL sandbox auth, hints, and solution reveal UX.
+- Emit `passed` to lesson page for progress sync (SQL parity).
 - Ship en + vi exercise pairs together.
 - Fail closed on malformed `expected` or worker errors.
 

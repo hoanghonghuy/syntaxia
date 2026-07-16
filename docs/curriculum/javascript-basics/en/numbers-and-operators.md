@@ -15,7 +15,6 @@ exercise:
     const price = 12;
     const quantity = 3;
     // return the total (price * quantity)
-    return price * quantity;
   hints:
     - "Multiply price by quantity with *."
     - "Use return to send the number back to the checker."

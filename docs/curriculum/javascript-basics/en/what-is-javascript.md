@@ -13,7 +13,7 @@ objectives:
 exercise:
   starter: |
     let name = "Ada";
-    console.log("Hello, " + name);
+    // Log a greeting: Hello, Ada
   hints:
     - "Use console.log to print a message."
     - "Join text with + between quoted strings and the name variable."

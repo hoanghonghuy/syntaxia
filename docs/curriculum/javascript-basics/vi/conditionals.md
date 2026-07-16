@@ -13,11 +13,7 @@ objectives:
 exercise:
   starter: |
     const lives = 0;
-    if (lives === 0) {
-      console.log("Game over");
-    } else {
-      console.log("Keep playing");
-    }
+    // Nếu lives là 0, log "Game over". Ngược lại log "Keep playing".
   hints:
     - "Khi lives là 0, điều kiện if đúng."
     - "Chỉ khối if chạy — dùng console.log bên trong."

@@ -14,7 +14,7 @@ exercise:
   starter: |
     const greeting = "Hello";
     const name = "Sam";
-    return greeting + ", " + name + "!";
+    // Tạo và return "Hello, Sam!"
   hints:
     - "Dùng + giữa các chuỗi để nối."
     - "Thêm dấu phẩy và khoảng trắng giữa greeting và name."

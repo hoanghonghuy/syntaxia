@@ -31,6 +31,7 @@
           :preview="exercisePreview"
           :can-run="!auth.loading && !!auth.user"
           :login-path="authLoginPath"
+          @passed="onSandboxPassed"
         />
         <JsSandbox
           v-else-if="lesson.exercise && trackId === 'javascript-basics'"
@@ -43,6 +44,7 @@
           :solution-available="exerciseSolutionAvailable"
           :can-run="!auth.loading && !!auth.user"
           :login-path="authLoginPath"
+          @passed="onSandboxPassed"
         />
         <section v-if="auth.user" class="card notes-card">
           <h2>{{ t('lesson.notes') }}</h2>
@@ -51,9 +53,26 @@
             <button class="btn btn-primary" type="button" :disabled="savingNote" @click="saveNote">
               {{ t('lesson.saveNote') }}
             </button>
-            <button class="btn btn-ghost" type="button" :disabled="markingComplete" @click="markComplete">
+            <button
+              v-if="!lessonCompleted"
+              class="btn btn-ghost"
+              type="button"
+              :disabled="markingComplete"
+              @click="markComplete"
+            >
               {{ t('lesson.complete') }}
             </button>
+            <template v-else>
+              <span class="lesson-completed-badge">{{ t('lesson.completed') }}</span>
+              <button
+                class="btn btn-ghost"
+                type="button"
+                :disabled="markingComplete"
+                @click="markIncomplete"
+              >
+                {{ t('lesson.markIncomplete') }}
+              </button>
+            </template>
           </div>
         </section>
         <aside v-else class="auth-soft-prompt" role="note">
@@ -234,6 +253,10 @@ const nextLesson = computed(() =>
     : null,
 )
 
+const lessonCompleted = computed(() =>
+  lesson.value ? catalog.isCompleted(lesson.value.id, locale.value) : false,
+)
+
 function scrollToHeading(id: string) {
   const root = document.querySelector('.lesson-center')
   const el = document.getElementById(id)
@@ -297,19 +320,38 @@ async function saveNote() {
   }
 }
 
-async function markComplete() {
+async function setLessonCompleted(completed: boolean, notify: boolean) {
   if (!lesson.value || markingComplete.value) return
   markingComplete.value = true
   try {
-    await api.setProgress(lesson.value.id, locale.value, true)
+    await api.setProgress(lesson.value.id, locale.value, completed)
     await catalog.loadProgress()
-    snackbar.success(t('snackbar.lessonComplete'))
+    if (notify) {
+      snackbar.success(
+        completed ? t('snackbar.lessonComplete') : t('snackbar.lessonIncomplete'),
+      )
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : t('snackbar.genericError')
     snackbar.error(msg || t('snackbar.genericError'))
   } finally {
     markingComplete.value = false
   }
+}
+
+async function markComplete() {
+  if (!lesson.value || lessonCompleted.value) return
+  await setLessonCompleted(true, true)
+}
+
+async function markIncomplete() {
+  if (!lesson.value || !lessonCompleted.value) return
+  await setLessonCompleted(false, true)
+}
+
+async function onSandboxPassed() {
+  if (!lesson.value || !auth.user || lessonCompleted.value) return
+  await setLessonCompleted(true, false)
 }
 
 onMounted(async () => {
@@ -343,8 +385,14 @@ watch([slug, locale, trackId], async ([, , track]) => {
 .notes-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
+}
+.lesson-completed-badge {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-brand);
 }
 .lesson-pager {
   display: flex;

@@ -13,7 +13,7 @@ objectives:
 exercise:
   starter: |
     function add(a, b) {
-      return a + b;
+      // return tổng của a và b
     }
     console.log(add(4, 5));
   hints:

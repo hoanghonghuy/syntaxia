@@ -13,7 +13,7 @@ objectives:
 exercise:
   starter: |
     let name = "Ada";
-    console.log("Hello, " + name);
+    // In lời chào: Hello, Ada
   hints:
     - "Dùng console.log để in thông báo."
     - "Nối chữ bằng + giữa chuỗi trong ngoặc và biến name."

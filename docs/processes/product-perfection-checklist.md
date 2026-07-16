@@ -36,11 +36,12 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 22 | **JavaScript Basics completion** | done | 21 | Lessons 6–8 (conditionals, loops, functions) en+vi; see `curriculum-track-completion.md` |
 | 23 | **Production deploy readiness** | done | 22 | `check-javascript-basics.ps1` + `production-deploy.md`; release smoke green |
 | 24 | **JS code sandbox** | done | 23 | Web Worker + grade API; **9/9** lessons with exercise (W3Schools map); see `javascript-basics-w3schools-map.md` |
+| 25 | **Progress ↔ sandbox sync** | done | 24 | Auto-complete on grade pass (JS+SQL); lesson checklist on `/progress`; see `progress-sandbox-sync.md` |
 | — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
 ## Current focus
 
-**Checklist rows 0–24 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
+**Checklist rows 0–25 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
 
 ## Related
 

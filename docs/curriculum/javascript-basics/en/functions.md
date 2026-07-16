@@ -13,7 +13,7 @@ objectives:
 exercise:
   starter: |
     function add(a, b) {
-      return a + b;
+      // return the sum of a and b
     }
     console.log(add(4, 5));
   hints:

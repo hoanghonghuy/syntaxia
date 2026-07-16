@@ -13,9 +13,7 @@ objectives:
 exercise:
   starter: |
     let total = 0;
-    for (let n = 1; n <= 3; n++) {
-      total = total + n;
-    }
+    // Dùng vòng for để cộng 1, 2 và 3 vào total
     return total;
   hints:
     - "Vòng lặp cộng lần lượt 1, 2, 3 vào total."

@@ -14,7 +14,6 @@ exercise:
   starter: |
     let name = "Syntaxia";
     // return how many characters are in name
-    return name.length;
   hints:
     - "Strings have a .length property."
     - "Use return at the end with name.length."

@@ -15,7 +15,6 @@ exercise:
     const price = 12;
     const quantity = 3;
     // return tổng (price * quantity)
-    return price * quantity;
   hints:
     - "Nhân price với quantity bằng *."
     - "Dùng return để trả số về cho checker."

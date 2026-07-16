@@ -76,7 +76,7 @@ Aligned with SQLBolt-style progression:
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md)
 - [`product-baseline.md`](./product-baseline.md)
 - [`postgresql-track.md`](./postgresql-track.md)
-- [`javascript-track.md`](./javascript-track.md) — Depth B adapted for code; sandbox deferred
+- [`javascript-track.md`](./javascript-track.md) — Depth B adapted for code; JS sandbox shipped
 - [`sandbox-feedback.md`](./sandbox-feedback.md)
 - [`auth-email-local-phase.md`](./auth-email-local-phase.md)
 - `docs/curriculum/`

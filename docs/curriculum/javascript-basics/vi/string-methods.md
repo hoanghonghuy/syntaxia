@@ -13,8 +13,7 @@ objectives:
 exercise:
   starter: |
     const code = "Syntaxia";
-    // return ba chữ cái đầu
-    return code.slice(0, 3);
+    // return ba chữ cái đầu bằng slice
   hints:
     - "slice(start, end) lấy từ start đến trước end."
     - "Bắt đầu chỉ số 0; kết thúc trước chỉ số 3."

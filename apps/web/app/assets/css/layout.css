@@ -984,6 +984,29 @@ body.lesson-nav-locked {
   margin-top: 0.35rem;
 }
 
+.hub-progress-lessons-label {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.hub-progress-lessons {
+  margin-top: 0;
+}
+
+.hub-progress-lessons .nav-link {
+  font-size: 0.92rem;
+}
+
+.hub-progress-lessons .lesson-done {
+  margin-left: 0.35rem;
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
 .hub-skel-filters {
   display: flex;
   flex-wrap: wrap;

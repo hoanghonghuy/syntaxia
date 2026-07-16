@@ -13,8 +13,7 @@ objectives:
 exercise:
   starter: |
     const fruits = ["apple", "pear", "orange"];
-    fruits.push("mango");
-    return fruits.length;
+    // Add "mango" to the end, then return fruits.length
   hints:
     - "push adds one item to the end of the array."
     - "length counts how many items are in the list."

@@ -13,8 +13,7 @@ objectives:
 exercise:
   starter: |
     const code = "Syntaxia";
-    // return the first three letters
-    return code.slice(0, 3);
+    // return the first three letters using slice
   hints:
     - "slice(start, end) takes from start up to (not including) end."
     - "Start at index 0; end before index 3."
