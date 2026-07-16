@@ -17,7 +17,7 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 
 | Track | Level | Notes |
 |-------|-------|-------|
-| `sql-fundamentals` | basic | W3Schools-density portable SQL (**36** lessons) |
+| `sql-fundamentals` | basic | W3Schools-density portable SQL (**42** lessons — closure in progress) |
 | `postgresql` | intermediate | PG-specific basic→advanced (**19** lessons) |
 | `javascript-basics` | basic | MDN scripting basics complete (**9** en+vi pairs); JS sandbox deferred |
 
@@ -61,6 +61,14 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 | 33 | foreign-key |
 | 34 | create-index |
 | 35 | create-view |
+| 36 | sql-wildcards |
+| 37 | union-all |
+| 38 | insert-into-select |
+| 39 | any-all-subquery |
+| 40 | table-constraints |
+| 41 | sql-comments |
+
+Full path + polish rules: [`docs/processes/sql-fundamentals-closure.md`](../processes/sql-fundamentals-closure.md).
 
 ## JavaScript Basics (published order)
 

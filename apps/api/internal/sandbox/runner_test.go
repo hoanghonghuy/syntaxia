@@ -2,6 +2,7 @@ package sandbox
 
 import (
 	"testing"
+	"strings"
 )
 
 func TestGradeMatchesExpected(t *testing.T) {
@@ -44,6 +45,25 @@ func TestGradeRejectsWrongRowCount(t *testing.T) {
 	}
 }
 
+func TestStripSQLComments(t *testing.T) {
+	cases := []struct {
+		in   string
+		want string
+	}{
+		{"SELECT 1", "SELECT 1"},
+		{"-- note\nSELECT 1", "SELECT 1"},
+		{"SELECT 1 -- trail", "SELECT 1"},
+		{"SELECT /* mid */ 1", "SELECT  1"},
+		{"/* block */\nSELECT title FROM movies", "SELECT title FROM movies"},
+	}
+	for _, tc := range cases {
+		got := strings.TrimSpace(stripSQLComments(tc.in))
+		if got != tc.want {
+			t.Fatalf("strip %q: got %q want %q", tc.in, got, tc.want)
+		}
+	}
+}
+
 func TestStatementAllowed(t *testing.T) {
 	cases := []struct {
 		sql      string
@@ -51,6 +71,7 @@ func TestStatementAllowed(t *testing.T) {
 		want     bool
 	}{
 		{"SELECT 1", false, true},
+		{"-- list titles\nSELECT title FROM movies", false, true},
 		{"UPDATE movies SET year = 1", false, false},
 		{"UPDATE movies SET year = 1", true, true},
 		{"ALTER TABLE movies ADD COLUMN year INT", false, false},

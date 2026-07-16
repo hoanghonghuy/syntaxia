@@ -17,45 +17,55 @@ exercise:
     - "Try: SELECT DISTINCT director FROM movies ORDER BY director;"
   solution: "SELECT DISTINCT director FROM movies ORDER BY director;"
   preview:
-    columns: ["id", "director"]
+    columns: ["id", "title", "director"]
     rows:
-      - [1, "Nolan"]
-      - [2, "Nolan"]
-      - [3, "Wachowski"]
+      - [1, "Inception", "Nolan"]
+      - [2, "Interstellar", "Nolan"]
+      - [3, "The Matrix", "Wachowski"]
+      - [4, "Dune", "Villeneuve"]
   expected:
     columns: ["director"]
     rows:
       - ["Nolan"]
+      - ["Villeneuve"]
       - ["Wachowski"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, director TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Nolan'), (2, 'Nolan'), (3, 'Wachowski');"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 'Nolan'), (2, 'Interstellar', 'Nolan'), (3, 'The Matrix', 'Wachowski'), (4, 'Dune', 'Villeneuve');"
 ---
 
 A table can repeat the same value in many rows. When you only need each value once — like a unique list of directors — use `DISTINCT`.
 
-| id | director |
-| --- | --- |
-| 1 | Nolan |
-| 2 | Nolan |
-| 3 | Wachowski |
+**movies** (full table — notice Nolan appears twice)
+
+| id | title | director |
+| --- | --- | --- |
+| 1 | Inception | Nolan |
+| 2 | Interstellar | Nolan |
+| 3 | The Matrix | Wachowski |
+| 4 | Dune | Villeneuve |
+
+If you select `director` without `DISTINCT`, Nolan shows up twice (once per film).
 
 ## Worked example
 
 ```sql
-SELECT DISTINCT director FROM movies ORDER BY director;
+SELECT DISTINCT director
+FROM movies
+ORDER BY director;
 ```
 
-- `SELECT director` alone would return Nolan twice.
+- `SELECT director` alone would return Nolan, Nolan, Wachowski, Villeneuve.
 - `DISTINCT` keeps each director value only once.
-- `ORDER BY director` sorts the list so the result order is stable (Nolan, then Wachowski).
+- `ORDER BY director` sorts the list A→Z so the result order is stable.
 
 Result:
 
 | director |
 | --- |
 | Nolan |
+| Villeneuve |
 | Wachowski |
 
 ## Common mistakes

@@ -22,8 +22,8 @@ How Syntaxia writes SQL Fundamentals lessons so absolute beginners understand th
 
 1. **Frontmatter `title`** is the only page H1 (UI renders it). Body must **not** start with `# Title` or repeat the title as `#`.
 2. **Plain-language hook** — what problem this solves in everyday words (spreadsheet / list analogy).
-3. **Visual sample** — Markdown table of the data the learner will query (renders as `lesson-table` in HTML).
-4. **Worked example** — one full query + keyword gloss (one short sentence per keyword). Heading: `## Worked example` / `## Ví dụ mẫu`.
+3. **Visual sample** — Markdown table(s) of the data the learner will query. Show **all columns** used in the lesson; name multi-table samples (`**movies**`, `**orders**`). Prefer enough rows that the pattern is obvious (not a single-row stub when the concept needs contrast).
+4. **Worked example** — one full query + keyword gloss + a **result table** with the rows the query returns. Heading: `## Worked example` / `## Ví dụ mẫu`.
 5. **Common mistakes** — 2–3 bullets of real beginner errors for this concept. Heading: `## Common mistakes` / `## Lỗi thường gặp`. **Required** on every Fundamentals lesson.
 6. **Your turn** — one clear task. Heading: `## Your turn` / `## Thử ngay`.
 7. **Exercise frontmatter (required when the lesson has a sandbox exercise):**

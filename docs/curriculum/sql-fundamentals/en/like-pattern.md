@@ -61,7 +61,7 @@ Result:
 ## Common mistakes
 
 - Using `=` with a pattern — `=` needs an exact match; patterns need `LIKE`.
-- Forgetting `%` — `'In'` alone only matches the exact word `In`.
+- Forgetting `%` — `'In'` alone only matches the exact word `In`. The `_` wildcard (exactly one character) is covered in `sql-wildcards`.
 - Putting `%` in the wrong place — `'%In'` means “ends with In”, not “starts with In”.
 
 ## Your turn

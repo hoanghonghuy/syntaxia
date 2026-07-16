@@ -23,7 +23,7 @@ func NewRunner(pool *pgxpool.Pool) *Runner {
 }
 
 func (r *Runner) Run(ctx context.Context, sql string, seed map[string]any, expected map[string]any) (domain.SandboxResult, error) {
-	sql = strings.TrimSpace(sql)
+	sql = strings.TrimSpace(stripSQLComments(sql))
 	if sql == "" {
 		return domain.SandboxResult{}, apperrors.Validation("sql is required")
 	}
@@ -142,8 +142,9 @@ func (r *Runner) Run(ctx context.Context, sql string, seed map[string]any, expec
 // statementAllowed reports whether sql may run for this exercise.
 // allowMutations unlocks INSERT/UPDATE/DELETE and TEMP-safe DDL (CREATE/ALTER/DROP).
 // TRUNCATE/GRANT/REVOKE/COPY/DO/CALL stay blocked. Read-only exercises allow SELECT/WITH only.
+// Callers should pass SQL already stripped of comments (see stripSQLComments).
 func statementAllowed(sql string, allowMutations bool) bool {
-	upper := strings.ToUpper(strings.TrimSpace(sql))
+	upper := strings.ToUpper(strings.TrimSpace(stripSQLComments(sql)))
 	for _, b := range []string{
 		"TRUNCATE ", "GRANT ", "REVOKE ", "COPY ", "DO ", "CALL ", "EXECUTE ",
 	} {
@@ -167,6 +168,43 @@ func statementAllowed(sql string, allowMutations bool) bool {
 		}
 	}
 	return false
+}
+
+// stripSQLComments removes -- line comments and /* */ block comments for allowlist checks.
+// Beginner exercises rarely embed comment markers inside string literals.
+func stripSQLComments(sql string) string {
+	var b strings.Builder
+	b.Grow(len(sql))
+	inLine := false
+	inBlock := false
+	for i := 0; i < len(sql); i++ {
+		if inLine {
+			if sql[i] == '\n' {
+				inLine = false
+				b.WriteByte('\n')
+			}
+			continue
+		}
+		if inBlock {
+			if sql[i] == '*' && i+1 < len(sql) && sql[i+1] == '/' {
+				inBlock = false
+				i++
+			}
+			continue
+		}
+		if sql[i] == '-' && i+1 < len(sql) && sql[i+1] == '-' {
+			inLine = true
+			i++
+			continue
+		}
+		if sql[i] == '/' && i+1 < len(sql) && sql[i+1] == '*' {
+			inBlock = true
+			i++
+			continue
+		}
+		b.WriteByte(sql[i])
+	}
+	return b.String()
 }
 
 func applySeed(ctx context.Context, tx pgx.Tx, seed map[string]any) error {

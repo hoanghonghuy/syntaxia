@@ -22,27 +22,35 @@ exercise:
     rows:
       - [1, "Inception", 2010, "Nolan"]
       - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["id", "title", "year", "director"]
     rows:
       - [1, "Inception", 2010, "Nolan"]
       - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski');"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 Imagine a list of movies in Excel or Google Sheets. Each **row** is one movie. Each **column** is one fact about it — title, year, or director.
 
 In a database, that list is called a **table**. SQL (Structured Query Language) is a language for asking questions about tables. You do not need to be a programmer to start.
 
-Here is a table named `movies`:
+**movies** — the full practice table (four films):
 
 | id | title | year | director |
 | --- | --- | --- | --- |
 | 1 | Inception | 2010 | Nolan |
 | 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Read it like a spreadsheet: row 1 is Inception; the `year` column holds release years; Nolan directed two of the four films.
 
 ## Worked example
 
@@ -53,10 +61,19 @@ SELECT * FROM movies;
 ```
 
 - `SELECT` means “show me…”
-- `*` means every column
+- `*` means every column (`id`, `title`, `year`, `director`)
 - `FROM movies` means “from the table named movies”
 
-The result is the same two rows you see in the sample table above.
+Result (same four rows as the sample):
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Later lessons will ask for **some** columns or **some** rows. Today you only need “everything”.
 
 ## Common mistakes
 

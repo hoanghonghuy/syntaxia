@@ -1,5 +1,6 @@
 # Smoke-grade every published SQL Fundamentals lesson solution (en).
 # Requires API at http://127.0.0.1:8082
+# Uses authed solution reveal + server-side sandbox grading (lessonId).
 
 $ErrorActionPreference = "Stop"
 $Base = if ($env:SYNTAXIA_API) { $env:SYNTAXIA_API } else { "http://127.0.0.1:8082" }
@@ -12,17 +13,17 @@ $lessons = (Invoke-WebRequest -Uri "$Base/api/v1/lessons?track=sql-fundamentals&
 Write-Host "Lessons:" $lessons.Count
 $fail = @()
 foreach ($sum in ($lessons | Sort-Object sortOrder)) {
-  $lesson = (Invoke-WebRequest -Uri "$Base/api/v1/lessons/$($sum.slug)?locale=en" -WebSession $s -UseBasicParsing).Content | ConvertFrom-Json
-  $sol = $lesson.exercise.solution
+  $solResp = (Invoke-WebRequest -Uri "$Base/api/v1/lessons/$($sum.slug)/solution?locale=en" -WebSession $s -UseBasicParsing).Content | ConvertFrom-Json
+  $sol = $solResp.solution
   if (-not $sol) {
     $fail += "$($sum.slug): no solution"
     continue
   }
   $payload = @{
     sql      = $sol
-    seed     = $lesson.sandboxSeed
-    expected = $lesson.exercise.expected
-  } | ConvertTo-Json -Depth 12
+    lessonId = $sum.id
+    locale   = "en"
+  } | ConvertTo-Json -Compress
   try {
     $r = Invoke-WebRequest -Uri "$Base/api/v1/sandbox/run" -Method POST -Body ([Text.Encoding]::UTF8.GetBytes($payload)) -ContentType "application/json; charset=utf-8" -WebSession $s -UseBasicParsing
     $j = $r.Content | ConvertFrom-Json

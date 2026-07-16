@@ -22,27 +22,35 @@ exercise:
     rows:
       - [1, "Inception", 2010, "Nolan"]
       - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["id", "title", "year", "director"]
     rows:
       - [1, "Inception", 2010, "Nolan"]
       - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski');"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 Hãy tưởng tượng danh sách phim trong Excel hoặc Google Sheets. Mỗi **hàng** là một bộ phim. Mỗi **cột** là một thông tin — tên, năm, hoặc đạo diễn.
 
 Trong cơ sở dữ liệu, danh sách đó gọi là **bảng** (table). SQL (Structured Query Language — ngôn ngữ truy vấn có cấu trúc) là cách đặt câu hỏi về bảng. Bạn không cần biết lập trình để bắt đầu.
 
-Đây là bảng tên `movies`:
+**movies** — bảng luyện tập đầy đủ (bốn phim):
 
 | id | title | year | director |
 | --- | --- | --- | --- |
 | 1 | Inception | 2010 | Nolan |
 | 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Đọc như spreadsheet: hàng 1 là Inception; cột `year` giữ năm phát hành; Nolan đạo diễn hai trong bốn phim.
 
 ## Ví dụ mẫu
 
@@ -53,10 +61,19 @@ SELECT * FROM movies;
 ```
 
 - `SELECT` nghĩa là “hãy cho tôi xem…”
-- `*` nghĩa là mọi cột
+- `*` nghĩa là mọi cột (`id`, `title`, `year`, `director`)
 - `FROM movies` nghĩa là “từ bảng tên movies”
 
-Kết quả chính là hai dòng như bảng mẫu ở trên.
+Kết quả (cùng bốn hàng như bảng mẫu):
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Các bài sau sẽ hỏi **một số** cột hoặc **một số** hàng. Hôm nay bạn chỉ cần “tất cả”.
 
 ## Lỗi thường gặp
 

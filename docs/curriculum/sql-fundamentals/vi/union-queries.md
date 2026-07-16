@@ -75,7 +75,7 @@ Kết quả:
 
 ## Lỗi thường gặp
 
-- Dùng `UNION ALL` khi đề cần giá trị duy nhất — `UNION ALL` giữ bản trùng.
+- Dùng `UNION ALL` khi đề cần giá trị duy nhất — `UNION ALL` giữ bản trùng (xem bài `union-all` sau này).
 - Chọn số cột khác nhau ở hai câu truy vấn — sẽ lỗi.
 - Đặt `ORDER BY` chỉ trên `SELECT` đầu — hãy đặt sau toàn bộ `UNION`.
 

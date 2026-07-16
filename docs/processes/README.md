@@ -21,6 +21,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [sandbox-feedback.md](./sandbox-feedback.md) | Fail copy, hints, solution reveal |
 | [curriculum-pedagogy.md](./curriculum-pedagogy.md) | Lesson depth, voice, mistakes/hints/solution |
 | [sql-fundamentals-w3schools-map.md](./sql-fundamentals-w3schools-map.md) | W3Schools-density SQL Fundamentals outline |
+| [sql-fundamentals-closure.md](./sql-fundamentals-closure.md) | Full path 42 lessons + polish pass (**locked**) |
 | [lesson-reader.md](./lesson-reader.md) | TOC from headings, mobile nav, prose typography |
 | [responsive-lesson-layout.md](./responsive-lesson-layout.md) | Learn shell: shared sidebar, hamburger, scroll panes |
 | [learn-navigation-ia.md](./learn-navigation-ia.md) | Sidebar = current lessons; `/tracks` catalog + pagination |

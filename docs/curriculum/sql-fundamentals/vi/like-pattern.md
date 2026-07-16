@@ -61,7 +61,7 @@ Kết quả:
 ## Lỗi thường gặp
 
 - Dùng `=` với mẫu — `=` cần khớp đúng; mẫu cần `LIKE`.
-- Quên `%` — chỉ `'In'` thì chỉ khớp đúng chữ `In`.
+- Quên `%` — chỉ `'In'` thì chỉ khớp đúng chữ `In`. Chi tiết về `_` (đúng một ký tự) xem bài `sql-wildcards`.
 - Đặt `%` sai chỗ — `'%In'` nghĩa là “kết thúc bằng In”, không phải “bắt đầu bằng In”.
 
 ## Thử ngay

@@ -1,6 +1,3 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
 const base = process.env.SYNTAXIA_API || 'http://127.0.0.1:8082'
 
 function cookieFrom(res) {
@@ -28,11 +25,12 @@ async function main() {
   console.log('Lessons:', lessons.length)
   const fail = []
   for (const sum of lessons.sort((a, b) => a.sortOrder - b.sortOrder)) {
-    const lesson = await (
-      await fetch(`${base}/api/v1/lessons/${sum.slug}?locale=en`, { headers: { cookie } })
-    ).json()
-    const sol = lesson.exercise?.solution
-    if (!sol) {
+    const solRes = await fetch(`${base}/api/v1/lessons/${sum.slug}/solution?locale=en`, {
+      headers: { cookie },
+    })
+    const solBody = await solRes.json()
+    const sol = solBody.solution
+    if (!solRes.ok || !sol) {
       fail.push(`${sum.slug}: no solution`)
       continue
     }
@@ -41,8 +39,8 @@ async function main() {
       headers: { 'content-type': 'application/json', cookie },
       body: JSON.stringify({
         sql: sol,
-        seed: lesson.sandboxSeed,
-        expected: lesson.exercise.expected,
+        lessonId: sum.id,
+        locale: 'en',
       }),
     })
     const body = await run.json()

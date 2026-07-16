@@ -164,8 +164,8 @@ Ok "/auth/me ok id=$($me.Json.id)"
 # 3) List lessons
 $lessonsResp = Invoke-Api -Method GET -Path "/api/v1/lessons?track=sql-fundamentals&locale=en" -Session $session
 $lessons = @($lessonsResp.Json)
-if ($lessons.Count -lt 10) {
-  Fail "expected >= 10 sql-fundamentals lessons, got $($lessons.Count)"
+if ($lessons.Count -lt 42) {
+  Fail "expected >= 42 sql-fundamentals lessons, got $($lessons.Count)"
 }
 $intro = $lessons | Where-Object { $_.slug -eq "what-is-sql" } | Select-Object -First 1
 if (-not $intro) {

@@ -18,7 +18,10 @@ Expand `sql-fundamentals` to a **W3Schools-density** path: one concept ≈ one l
 
 | Order | Slug | Topic (W3 map) | Status |
 |------:|------|----------------|--------|
-| 0–35 | see table in `docs/curriculum/README.md` | Full W3Schools-density Fundamentals | **published** (36 lessons × en/vi) |
+| 0–35 | see [`sql-fundamentals-closure.md`](./sql-fundamentals-closure.md) | Core W3Schools-density Fundamentals | **published** (36 × en/vi) |
+| 36–41 | `sql-wildcards` … `sql-comments` | Closure gaps (Wildcards, Union All, Insert Select, Any/All, Constraints, Comments) | **in progress** → target **42** |
+
+Full ordered path + polish rules: [`sql-fundamentals-closure.md`](./sql-fundamentals-closure.md).
 
 **Deferred to PostgreSQL track / later:** stored procedures, SELECT INTO (vendor-specific), injection chapter as security essay, MySQL-only functions.
 

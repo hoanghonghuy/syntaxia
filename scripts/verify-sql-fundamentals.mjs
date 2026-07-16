@@ -39,6 +39,12 @@ const expected = [
   'foreign-key',
   'create-index',
   'create-view',
+  'sql-wildcards',
+  'union-all',
+  'insert-into-select',
+  'any-all-subquery',
+  'table-constraints',
+  'sql-comments',
 ]
 
 function parse(md) {
@@ -69,7 +75,7 @@ const issues = []
 for (const loc of ['en', 'vi']) {
   const dir = path.join(root, loc)
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'))
-  if (files.length !== 36) issues.push(`${loc} file count ${files.length}`)
+  if (files.length !== 42) issues.push(`${loc} file count ${files.length}`)
   const bySlug = {}
   for (const f of files) {
     const p = parse(fs.readFileSync(path.join(dir, f), 'utf8'))
@@ -110,4 +116,4 @@ if (issues.length) {
   console.log(issues.join('\n'))
   process.exit(1)
 }
-console.log('PASS pedagogy+order+parity 36')
+console.log('PASS pedagogy+order+parity 42')

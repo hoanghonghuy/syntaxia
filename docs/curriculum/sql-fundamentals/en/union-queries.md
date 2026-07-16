@@ -75,7 +75,7 @@ Result:
 
 ## Common mistakes
 
-- Using `UNION ALL` when the task expects unique values — `UNION ALL` keeps duplicates.
+- Using `UNION ALL` when the task expects unique values — `UNION ALL` keeps duplicates (see the later lesson `union-all`).
 - Selecting different column counts in the two queries — that causes an error.
 - Putting `ORDER BY` only on the first `SELECT` — place it after the full `UNION`.
 

@@ -14,39 +14,61 @@ exercise:
   hints:
     - "Thêm WHERE sau tên bảng để giữ một số dòng và bỏ các dòng khác."
     - "So sánh cột year, ví dụ year > 2000."
-    - "Thử: SELECT title FROM movies WHERE year > 2000;"
-  solution: "SELECT title FROM movies WHERE year > 2000;"
+    - "Thử: SELECT title FROM movies WHERE year > 2000 ORDER BY title;"
+  solution: "SELECT title FROM movies WHERE year > 2000 ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
     rows:
       - [1, "Inception", 2010, "Nolan"]
       - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["title"]
     rows:
+      - ["Dune"]
       - ["Inception"]
+      - ["Interstellar"]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski');"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 `SELECT` chọn **cột**. `WHERE` chọn **hàng** — giống bộ lọc Excel: “chỉ phim sau năm 2000”.
+
+**movies** (bảng đầy đủ)
 
 | id | title | year | director |
 | --- | --- | --- | --- |
 | 1 | Inception | 2010 | Nolan |
 | 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Ba phim sau năm 2000; The Matrix (1999) thì không.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title FROM movies WHERE year > 2000;
+SELECT title
+FROM movies
+WHERE year > 2000
+ORDER BY title;
 ```
 
 - Mỗi dòng được kiểm tra `year > 2000`.
-- Chỉ Inception (2010) được giữ; The Matrix (1999) bị loại.
-- Kết quả có một cột (`title`) và một dòng (`Inception`).
+- Inception (2010), Dune (2021) và Interstellar (2014) được giữ.
+- The Matrix (1999) bị loại.
+- `ORDER BY title` sắp tiêu đề còn lại A→Z để kết quả ổn định.
+
+Kết quả:
+
+| title |
+| --- |
+| Dune |
+| Inception |
+| Interstellar |
 
 ## Lỗi thường gặp
 
@@ -56,4 +78,4 @@ SELECT title FROM movies WHERE year > 2000;
 
 ## Thử ngay
 
-Liệt kê `title` các phim phát hành **sau** năm 2000.
+Liệt kê `title` các phim phát hành **sau** năm 2000. Sắp theo `title`.
