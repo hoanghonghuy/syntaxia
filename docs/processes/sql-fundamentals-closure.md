@@ -4,7 +4,7 @@
 
 Define **what one lesson is**, the **complete learner path** for `sql-fundamentals` (existing + new), and the **polish pass** for lessons already published — so work stays one track until this track is truly closed.
 
-**Status:** **locked** (owner confirm 2026-07-16).  
+**Status:** **closed** (owner confirm 2026-07-16; polish complete 2026-07-16).  
 **Research base:** `/opsx-research` 2026-07-16 + W3Schools SQL Tutorial sidebar.
 
 ## When to use
@@ -155,10 +155,10 @@ Polish is **TDD-gated**: after each batch, `verify-sql-solutions` (or release sm
 |------:|-------|-----------|
 | **0** | Owner confirms this file | **done** (locked) |
 | **1** | Write 6 new lessons (36–41) en+vi + smoke count=42 | **done** |
-| **2** | Polish Blocks A–B (0–11) | **in progress** (0, 3, 4 enriched; continue 1–2, 5–11) |
-| **3** | Polish Blocks C–D (12–25) | idem |
-| **4** | Polish Blocks E–F (26–35) + cross-links | idem |
-| **5** | Update maps, `curriculum-track-completion.md`, freeze Fundamentals | Track **closed** |
+| **2** | Polish Blocks A–B (0–11) | **done** (enriched tables + before/after for DML) |
+| **3** | Polish Blocks C–D (12–25) | **done** — Blocks C (12–18) and D (19–25) polished en+vi |
+| **4** | Polish Blocks E–F (26–35) + cross-links | **done** — Blocks E–F polished en+vi; solutions green |
+| **5** | Update maps, `curriculum-track-completion.md`, freeze Fundamentals | **done** — track **closed** (2026-07-16) |
 
 Do **not** start PostgreSQL expansion or JS curriculum while phases 1–5 are open.
 

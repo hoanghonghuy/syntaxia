@@ -17,28 +17,34 @@ exercise:
     - "Try: SELECT SUM(amount) AS total FROM sales;"
   solution: "SELECT SUM(amount) AS total FROM sales;"
   preview:
-    columns: ["id", "amount"]
+    columns: ["id", "product", "amount"]
     rows:
-      - [1, 10]
-      - [2, 20]
-      - [3, 30]
+      - [1, "Ticket", 10]
+      - [2, "Snack", 20]
+      - [3, "Poster", 30]
+      - [4, "Program", 15]
   expected:
     columns: ["total"]
     rows:
-      - [60]
+      - [75]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE sales (id INT, amount INT);"
-    - "INSERT INTO sales VALUES (1, 10), (2, 20), (3, 30);"
+    - "CREATE TEMP TABLE sales (id INT, product TEXT, amount INT);"
+    - "INSERT INTO sales VALUES (1, 'Ticket', 10), (2, 'Snack', 20), (3, 'Poster', 30), (4, 'Program', 15);"
 ---
 
 When a column holds amounts, you often want the total or the average — like summing a spreadsheet column or taking its mean.
 
-| id | amount |
-| --- | --- |
-| 1 | 10 |
-| 2 | 20 |
-| 3 | 30 |
+**sales** (full table)
+
+| id | product | amount |
+| --- | --- | --- |
+| 1 | Ticket | 10 |
+| 2 | Snack | 20 |
+| 3 | Poster | 30 |
+| 4 | Program | 15 |
+
+Amounts: `10 + 20 + 30 + 15` = **75**. Average would be `75 / 4` = **18.75**.
 
 ## Worked example
 
@@ -46,15 +52,17 @@ When a column holds amounts, you often want the total or the average — like su
 SELECT SUM(amount) AS total, AVG(amount) AS average FROM sales;
 ```
 
-- `SUM(amount)` adds `10 + 20 + 30` → `60`.
-- `AVG(amount)` divides that total by the number of rows → `20`.
+- `SUM(amount)` adds every amount → `75`.
+- `AVG(amount)` divides that total by the number of rows → `18.75`.
 - Each aggregate returns one summary value for the whole table (unless you later use `GROUP BY`).
 
 Result:
 
 | total | average |
 | --- | --- |
-| 60 | 20 |
+| 75 | 18.75 |
+
+Your exercise asks only for `SUM` named `total`.
 
 ## Common mistakes
 

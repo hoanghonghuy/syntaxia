@@ -9,6 +9,7 @@ published: true
 objectives:
   - Create a view that filters rows
   - Query the view like a table
+  - Use CREATE TEMP VIEW when the base table is temporary
 exercise:
   starter: "CREATE TEMP VIEW modern_movies AS "
   hints:
@@ -20,36 +21,45 @@ exercise:
     columns: ["id", "title", "year"]
     rows:
       - [1, "Inception", 2010]
-      - [2, "Matrix", 1999]
+      - [2, "The Matrix", 1999]
+      - [3, "Interstellar", 2014]
+      - [4, "Dune", 2021]
   expected:
     columns: ["title"]
     rows:
+      - ["Dune"]
       - ["Inception"]
+      - ["Interstellar"]
 sandbox_seed:
   allow_mutations: true
   verify_sql: "SELECT title FROM modern_movies ORDER BY title;"
   ddl:
     - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'Matrix', 1999);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Interstellar', 2014), (4, 'Dune', 2021);"
 ---
 
 A **view** is a saved `SELECT` with a name. You query it like a table, but it does not store its own copy of the rows — it re-runs the query.
 
-Base table `movies`:
+**movies** (base table)
 
 | id | title | year |
 | --- | --- | --- |
 | 1 | Inception | 2010 |
-| 2 | Matrix | 1999 |
+| 2 | The Matrix | 1999 |
+| 3 | Interstellar | 2014 |
+| 4 | Dune | 2021 |
+
+| title | year | In `modern_movies` (`year >= 2000`)? |
+| --- | --- | --- |
+| Inception | 2010 | yes |
+| The Matrix | 1999 | no |
+| Interstellar | 2014 | yes |
+| Dune | 2021 | yes |
 
 ```sql
 CREATE VIEW modern_movies AS
 SELECT title FROM movies WHERE year >= 2000;
 ```
-
-- `CREATE VIEW` names the saved query.
-- `AS` introduces the `SELECT` that defines it.
-- Later: `SELECT title FROM modern_movies;` returns only titles from year 2000 onward.
 
 In this sandbox the base table is temporary, so use `CREATE TEMP VIEW` (same idea as a regular view, scoped to the session).
 
@@ -61,8 +71,16 @@ SELECT title FROM movies WHERE year >= 2000;
 ```
 
 - `modern_movies` is the view name.
-- The filter keeps Inception (2010) and drops Matrix (1999).
-- The grader then selects from the view.
+- The filter keeps titles from year 2000 onward and drops The Matrix (1999).
+- The grader then selects from the view: `SELECT title FROM modern_movies ORDER BY title`.
+
+Result from the view:
+
+| title |
+| --- |
+| Dune |
+| Inception |
+| Interstellar |
 
 ## Common mistakes
 

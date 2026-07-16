@@ -17,11 +17,12 @@ exercise:
     - "Thử: SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
   solution: "SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
   preview:
-    columns: ["title"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception"]
-      - ["Interstellar"]
-      - ["The Matrix"]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "Interstellar", 2014, "Nolan"]
+      - [3, "The Matrix", 1999, "Wachowski"]
+      - [4, "Dune", 2021, "Villeneuve"]
   expected:
     columns: ["title"]
     rows:
@@ -29,27 +30,40 @@ exercise:
       - ["Interstellar"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Inception'), (2, 'Interstellar'), (3, 'The Matrix');"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'Interstellar', 2014, 'Nolan'), (3, 'The Matrix', 1999, 'Wachowski'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
 So sánh bằng (`=`) cần đúng cả chuỗi. `LIKE` cho phép khớp theo mẫu — ví dụ “tiêu đề bắt đầu bằng In”, giống bộ lọc “begins with” trong Excel.
 
-| title |
-| --- |
-| Inception |
-| Interstellar |
-| The Matrix |
+**movies** (bảng đầy đủ)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | Interstellar | 2014 | Nolan |
+| 3 | The Matrix | 1999 | Wachowski |
+| 4 | Dune | 2021 | Villeneuve |
+
+| title | Bắt đầu bằng `In`? |
+| --- | --- |
+| Inception | có |
+| Interstellar | có |
+| The Matrix | không |
+| Dune | không |
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;
+SELECT title
+FROM movies
+WHERE title LIKE 'In%'
+ORDER BY title;
 ```
 
-- `'In%'` nghĩa là: bắt đầu bằng `In`, rồi bất kỳ ký tự nào (hoặc không có).
-- Inception và Interstellar khớp; The Matrix thì không.
-- `ORDER BY title` sắp xếp tiêu đề khớp theo A→Z.
+- `'In%'` nghĩa là: bắt đầu bằng `In`, rồi bất kỳ ký tự nào (hoặc không có). `%` là ký tự đại diện.
+- Inception và Interstellar khớp; The Matrix và Dune thì không.
+- `ORDER BY title` sắp tiêu đề khớp theo A→Z.
 
 Kết quả:
 
@@ -58,10 +72,12 @@ Kết quả:
 | Inception |
 | Interstellar |
 
+Ký tự đại diện `_` (đúng một ký tự) được học ở bài sau `sql-wildcards`.
+
 ## Lỗi thường gặp
 
 - Dùng `=` với mẫu — `=` cần khớp đúng; mẫu cần `LIKE`.
-- Quên `%` — chỉ `'In'` thì chỉ khớp đúng chữ `In`. Chi tiết về `_` (đúng một ký tự) xem bài `sql-wildcards`.
+- Quên `%` — chỉ `'In'` thì chỉ khớp đúng chữ `In`.
 - Đặt `%` sai chỗ — `'%In'` nghĩa là “kết thúc bằng In”, không phải “bắt đầu bằng In”.
 
 ## Thử ngay

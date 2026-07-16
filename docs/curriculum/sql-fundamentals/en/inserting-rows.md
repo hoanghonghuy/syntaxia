@@ -37,22 +37,37 @@ sandbox_seed:
 
 So far you only **read** data. `INSERT` adds a new row — like appending a line at the bottom of a sheet.
 
+**movies** — before your insert (two films only)
+
 | id | title | year |
 | --- | --- | --- |
 | 1 | Inception | 2010 |
 | 2 | The Matrix | 1999 |
 
+You will add a third film: Dune (2021).
+
 ## Worked example
 
 ```sql
-INSERT INTO movies (id, title, year) VALUES (3, 'Dune', 2021);
+INSERT INTO movies (id, title, year)
+VALUES (3, 'Dune', 2021);
 ```
 
-- `INSERT INTO movies` names the table.
-- `(id, title, year)` lists the columns you are filling.
-- `VALUES (3, 'Dune', 2021)` supplies one value per column, in the same order.
+| Piece | Meaning |
+| --- | --- |
+| `INSERT INTO movies` | Add a row to this table |
+| `(id, title, year)` | Columns you are filling |
+| `VALUES (3, 'Dune', 2021)` | One value per column, same order |
 
-After insert, the table has three movies. The sandbox checks the table with a SELECT for you.
+**movies** — after the insert
+
+| id | title | year |
+| --- | --- | --- |
+| 1 | Inception | 2010 |
+| 2 | The Matrix | 1999 |
+| 3 | Dune | 2021 |
+
+The sandbox checks the table with a SELECT for you (ordered by `id`).
 
 ## Common mistakes
 

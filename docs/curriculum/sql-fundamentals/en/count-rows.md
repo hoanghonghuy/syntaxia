@@ -17,28 +17,34 @@ exercise:
     - "Try: SELECT COUNT(*) AS movie_count FROM movies;"
   solution: "SELECT COUNT(*) AS movie_count FROM movies;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception", 2010]
-      - ["The Matrix", 1999]
-      - ["Dune", 2021]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["movie_count"]
     rows:
-      - [3]
+      - [4]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 A spreadsheet can tell you how many filled rows you have. In SQL, `COUNT` answers “how many?” without listing every row.
 
-| title | year |
-| --- | --- |
-| Inception | 2010 |
-| The Matrix | 1999 |
-| Dune | 2021 |
+**movies** (full table — count these rows)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+There are **four** films.
 
 ## Worked example
 
@@ -47,14 +53,14 @@ SELECT COUNT(*) AS movie_count FROM movies;
 ```
 
 - `COUNT(*)` counts every row in `movies`.
-- The table has three movies, so the result is `3`.
+- Four rows → the result is `4`.
 - `AS movie_count` labels that single number clearly.
 
 Result:
 
 | movie_count |
 | --- |
-| 3 |
+| 4 |
 
 ## Common mistakes
 

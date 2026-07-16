@@ -8,6 +8,7 @@ order: 20
 published: true
 objectives:
   - Keep every row from the left table even when the right side has no match
+  - Read NULL on the right side as “no match”
   - Find orphan rows with LEFT JOIN and IS NULL
 exercise:
   starter: "SELECT title FROM movies;"
@@ -17,10 +18,11 @@ exercise:
     - "Try: SELECT movies.title FROM movies LEFT JOIN directors ON movies.director_id = directors.id WHERE directors.id IS NULL;"
   solution: "SELECT movies.title FROM movies LEFT JOIN directors ON movies.director_id = directors.id WHERE directors.id IS NULL;"
   preview:
-    columns: ["movies.title", "directors.name"]
+    columns: ["id", "title", "director_id"]
     rows:
-      - ["Inception", "Nolan"]
-      - ["Orphan", null]
+      - [1, "Inception", 1]
+      - [2, "The Matrix", 2]
+      - [3, "Orphan", null]
   expected:
     columns: ["title"]
     rows:
@@ -28,26 +30,33 @@ exercise:
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE directors (id INT, name TEXT);"
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, director_id INT);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director_id INT);"
     - "INSERT INTO directors VALUES (1, 'Nolan'), (2, 'Wachowski');"
-    - "INSERT INTO movies VALUES (1, 'Inception', 1), (2, 'Orphan', NULL);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 1), (2, 'The Matrix', 1999, 2), (3, 'Orphan', 2020, NULL);"
 ---
 
-Sometimes a movie has no director listed yet — like a blank lookup cell in a spreadsheet. `INNER JOIN` would drop that row. `LEFT JOIN` keeps every row from the left table and fills the right side with `NULL` when there is no match.
+Sometimes a movie has no director listed yet — like a blank lookup cell in a spreadsheet. `INNER JOIN` would drop that row. `LEFT JOIN` keeps every row from the **left** table and fills the right side with `NULL` when there is no match.
 
-**movies**
-
-| id | title | director_id |
-| --- | --- | --- |
-| 1 | Inception | 1 |
-| 2 | Orphan |  |
-
-**directors**
+**directors** (full table)
 
 | id | name |
 | --- | --- |
 | 1 | Nolan |
 | 2 | Wachowski |
+
+**movies** (full table)
+
+| id | title | year | director_id |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | 1 |
+| 2 | The Matrix | 1999 | 2 |
+| 3 | Orphan | 2020 |  |
+
+| title | Match on LEFT JOIN? |
+| --- | --- |
+| Inception | Nolan |
+| The Matrix | Wachowski |
+| Orphan | none → `NULL` |
 
 ## Worked example
 
@@ -68,6 +77,13 @@ Result of the full join (before the orphan filter):
 | --- | --- |
 | Inception | Nolan |
 | Orphan |  |
+| The Matrix | Wachowski |
+
+Orphan-only filter result:
+
+| title |
+| --- |
+| Orphan |
 
 ## Common mistakes
 

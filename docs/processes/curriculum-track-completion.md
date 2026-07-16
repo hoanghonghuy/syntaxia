@@ -18,7 +18,7 @@ Define when a Syntaxia track counts as **complete** for the current scope, so wo
 
 | Track | Lessons (en) | Locked outline | Status |
 |-------|----------------|----------------|--------|
-| `sql-fundamentals` | 42 | W3Schools-density + closure (orders 0–41) | **Closure in progress** — 6 new lessons live; polish pass ongoing |
+| `sql-fundamentals` | 42 | W3Schools-density + closure (orders 0–41) | **Closed** (2026-07-16) — 42 lessons Depth B; polish A–F done |
 | `postgresql` | 19 | basic→advanced PG-specific (orders 0–6, 10–16, 20–24) | **Complete** — all outline rows published |
 | `javascript-basics` | 9 | MDN Scripting basics (orders 0–8) | **Complete** (2026-07-16) |
 

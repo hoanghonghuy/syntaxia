@@ -7,8 +7,9 @@ title: Changing a table with ALTER TABLE
 order: 30
 published: true
 objectives:
-  - Add a column with ALTER TABLE
-  - Confirm the new column accepts values
+  - Add a column with ALTER TABLE … ADD COLUMN
+  - Choose a type for the new column
+  - Confirm the new column exists on the table
 exercise:
   starter: "ALTER TABLE movies ADD COLUMN "
   hints:
@@ -32,13 +33,18 @@ sandbox_seed:
 
 Tables change over time. `ALTER TABLE` adds (or adjusts) columns on a table that already exists — like inserting a new header into a spreadsheet without starting over.
 
-Starting shape:
+**movies** (starting shape)
 
 | id | title |
 | --- | --- |
 |  |  |
 
-After you add `year`, the table can store release years too.
+| Step | Shape |
+| --- | --- |
+| Before | `id`, `title` |
+| After `ADD COLUMN year INT` | `id`, `title`, `year` |
+
+Existing rows would get `NULL` in `year` until you fill them. This sandbox starts empty and checks that the column named `year` exists.
 
 ## Worked example
 
@@ -48,9 +54,7 @@ ALTER TABLE movies ADD COLUMN year INT;
 
 - `ALTER TABLE movies` names the table to change.
 - `ADD COLUMN year INT` creates a new column called `year` that holds whole numbers.
-- Existing rows get `NULL` in the new column until you fill them.
-
-The sandbox checks that a column named `year` now exists on `movies`.
+- You are not rebuilding the table with `CREATE TABLE` — you are extending it.
 
 ## Common mistakes
 

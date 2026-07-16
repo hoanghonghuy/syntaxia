@@ -13,32 +13,38 @@ exercise:
   starter: "SELECT year FROM movies;"
   hints:
     - "MIN và MAX nhìn cả cột và trả về một giá trị."
-    - "Đặt tên cột kết quả bằng AS, ví dụ newest_year."
+    - "Đặt tên kết quả rõ bằng AS, ví dụ newest_year."
     - "Thử: SELECT MAX(year) AS newest_year FROM movies;"
   solution: "SELECT MAX(year) AS newest_year FROM movies;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception", 2010]
-      - ["The Matrix", 1999]
-      - ["Dune", 2021]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["newest_year"]
     rows:
       - [2021]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Đôi khi bạn không cần mọi hàng — chỉ cần số nhỏ nhất hoặc lớn nhất trong một cột, như năm sớm nhất hoặc muộn nhất trong danh sách.
+Đôi khi bạn không cần mọi hàng — bạn cần số nhỏ nhất hoặc lớn nhất trong một cột, như năm sớm nhất hoặc muộn nhất trong danh sách.
 
-| title | year |
-| --- | --- |
-| Inception | 2010 |
-| The Matrix | 1999 |
-| Dune | 2021 |
+**movies** (bảng đầy đủ)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Các năm trong cột: 2010, 1999, 2021, 2014 → nhỏ nhất **1999**, lớn nhất **2021**.
 
 ## Ví dụ mẫu
 
@@ -47,18 +53,20 @@ SELECT MIN(year) AS oldest_year FROM movies;
 ```
 
 - `MIN(year)` quét cột `year` và giữ giá trị nhỏ nhất (`1999`).
-- `MAX(year)` sẽ giữ giá trị lớn nhất (`2021`).
+- `MAX(year)` sẽ giữ lớn nhất (`2021`).
 - `AS oldest_year` đặt tên cột kết quả cho dễ đọc.
 
-Kết quả:
+Kết quả của `MIN`:
 
 | oldest_year |
 | --- |
 | 1999 |
 
+Bài tập của bạn yêu cầu `MAX` với tên `newest_year` → `2021`.
+
 ## Lỗi thường gặp
 
-- Mong đợi một hàng cho mỗi phim — `MIN` / `MAX` trả về một giá trị tổng hợp, không phải danh sách tiêu đề đã lọc.
+- Mong mỗi phim một hàng — `MIN` / `MAX` trả một giá trị tóm tắt, không phải danh sách tiêu đề.
 - Quên ngoặc: viết `MAX(year)`, không phải `MAX year`.
 - Nhầm cực trị — `MIN` là nhỏ nhất; `MAX` là lớn nhất.
 

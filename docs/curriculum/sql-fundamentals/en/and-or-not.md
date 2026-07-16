@@ -22,6 +22,7 @@ exercise:
       - [1, "Inception", 2010, "Nolan"]
       - [2, "The Matrix", 1999, "Wachowski"]
       - [3, "Interstellar", 2014, "Nolan"]
+      - [4, "Dune", 2021, "Villeneuve"]
   expected:
     columns: ["title"]
     rows:
@@ -30,37 +31,57 @@ exercise:
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Interstellar', 2014, 'Nolan');"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
 One filter is often not enough. `AND` keeps a row only when **every** condition is true — like two spreadsheet filters applied together.
+
+**movies** (full table)
 
 | id | title | year | director |
 | --- | --- | --- | --- |
 | 1 | Inception | 2010 | Nolan |
 | 2 | The Matrix | 1999 | Wachowski |
 | 3 | Interstellar | 2014 | Nolan |
+| 4 | Dune | 2021 | Villeneuve |
+
+Walk the table by hand:
+
+| title | year > 2000? | director = Nolan? | Both (AND)? |
+| --- | --- | --- | --- |
+| Inception | yes | yes | **keep** |
+| The Matrix | no | no | drop |
+| Interstellar | yes | yes | **keep** |
+| Dune | yes | no | drop (fails director) |
 
 ## Worked example
 
 ```sql
-SELECT title FROM movies
+SELECT title
+FROM movies
 WHERE year > 2000 AND director = 'Nolan'
 ORDER BY title;
 ```
 
 - `year > 2000` drops The Matrix (1999).
-- `director = 'Nolan'` keeps only Nolan’s films among what remains.
-- `AND` requires both checks to pass: Inception and Interstellar.
+- `director = 'Nolan'` drops Dune (Villeneuve), even though Dune is after 2000.
+- `AND` requires both checks: only Inception and Interstellar.
 - `ORDER BY title` sorts the titles alphabetically.
 
-`OR` would keep a row if **either** condition is true. `NOT` flips a condition (true becomes false). This lesson focuses on `AND`.
+Result:
+
+| title |
+| --- |
+| Inception |
+| Interstellar |
+
+`OR` would keep a row if **either** condition is true (that would include Dune). `NOT` flips a condition. This lesson focuses on `AND`.
 
 ## Common mistakes
 
 - Using `OR` when you meant “both must match” — `OR` widens the result; `AND` narrows it.
 - Comparing text without quotes (`director = Nolan`) — text values need single quotes: `'Nolan'`.
-- Forgetting that `year > 2000` alone still returns every post-2000 title, including non-Nolan films.
+- Forgetting that `year > 2000` alone still returns Dune — you need `AND director = 'Nolan'`.
 
 ## Your turn
 

@@ -12,7 +12,7 @@ Ordered steps to deploy Syntaxia (Docker Compose stack) for a real host with HTT
 
 ## Prerequisites
 
-- All three tracks published: `sql-fundamentals` (36), `postgresql` (19), `javascript-basics` (9)
+- All three tracks published: `sql-fundamentals` (42), `postgresql` (19), `javascript-basics` (9)
 - Local `release-smoke.ps1` green on the commit you deploy
 
 ## Steps

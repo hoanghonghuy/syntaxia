@@ -17,11 +17,12 @@ exercise:
     - "Try: SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception", 2010]
-      - ["The Matrix", 1999]
-      - ["Dune", 2021]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["title"]
     rows:
@@ -29,26 +30,39 @@ exercise:
       - ["The Matrix"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 Sometimes you want several exact values at once — “year is 1999 or 2010”. `IN` is a short way to write that list, instead of chaining many `OR`s.
 
-| title | year |
+**movies** (full table)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+| title | year in (1999, 2010)? |
 | --- | --- |
-| Inception | 2010 |
-| The Matrix | 1999 |
-| Dune | 2021 |
+| Inception | yes (2010) |
+| The Matrix | yes (1999) |
+| Dune | no (2021) |
+| Interstellar | no (2014) |
 
 ## Worked example
 
 ```sql
-SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;
+SELECT title
+FROM movies
+WHERE year IN (1999, 2010)
+ORDER BY title;
 ```
 
 - `year IN (1999, 2010)` keeps a row if `year` equals either value.
-- Inception (2010) and The Matrix (1999) match; Dune (2021) does not.
+- Same idea as `year = 1999 OR year = 2010`, but shorter.
 - `ORDER BY title` sorts the result alphabetically.
 
 Result:

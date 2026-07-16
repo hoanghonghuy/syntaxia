@@ -9,6 +9,7 @@ published: true
 objectives:
   - Explain what a PRIMARY KEY does
   - Insert a row that respects the primary key
+  - See why duplicate ids are rejected
 exercise:
   starter: "INSERT INTO actors (id, name) VALUES "
   hints:
@@ -39,15 +40,23 @@ CREATE TABLE actors (
 );
 ```
 
-- `PRIMARY KEY` on `id` means every row needs a non-null `id`.
-- Two rows cannot share the same `id`.
-- Databases use the key to find a row quickly and to link tables later.
+| Rule | Meaning |
+| --- | --- |
+| Unique | two rows cannot share the same `id` |
+| Not null | every row needs an `id` |
+| Lookup | databases use the key to find a row quickly and to link tables later |
 
 Empty `actors` table in this sandbox (already created with a primary key on `id`):
 
 | id | name |
 | --- | --- |
 |  |  |
+
+After a valid insert:
+
+| id | name |
+| --- | --- |
+| 1 | Ada |
 
 Your task is not to create the key — it is already there. Insert one valid row.
 
@@ -66,6 +75,7 @@ INSERT INTO actors (id, name) VALUES (1, 'Ada');
 - Inserting the same `id` twice — the primary key rejects duplicates.
 - Leaving `id` out or setting it to `NULL` — primary keys require a value.
 - Trying to `ALTER` or recreate the table — the sandbox already defined the key.
+- Other column rules (UNIQUE, CHECK, DEFAULT) live in `table-constraints`.
 
 ## Your turn
 

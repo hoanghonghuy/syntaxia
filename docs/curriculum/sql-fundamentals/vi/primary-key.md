@@ -3,17 +3,18 @@ id: sql-32-pk
 track: sql-fundamentals
 locale: vi
 slug: primary-key
-title: Khóa chính (PRIMARY KEY)
+title: Khóa chính
 order: 32
 published: true
 objectives:
   - Giải thích PRIMARY KEY làm gì
-  - INSERT một dòng tuân thủ khóa chính
+  - Insert một dòng tôn trọng khóa chính
+  - Thấy vì sao id trùng bị từ chối
 exercise:
   starter: "INSERT INTO actors (id, name) VALUES "
   hints:
     - "Khóa chính định danh duy nhất mỗi dòng — thường là id."
-    - "Thêm một dòng với id duy nhất và một tên."
+    - "Insert một dòng với id duy nhất và một name."
     - "Thử: INSERT INTO actors (id, name) VALUES (1, 'Ada');"
   solution: "INSERT INTO actors (id, name) VALUES (1, 'Ada');"
   preview:
@@ -30,7 +31,7 @@ sandbox_seed:
     - "CREATE TEMP TABLE actors (id INT PRIMARY KEY, name TEXT);"
 ---
 
-**Khóa chính** (primary key) là cột (hoặc nhóm cột) định danh duy nhất mỗi dòng — như mã nhân viên không được trùng.
+**Khóa chính** (primary key) là cột (hoặc tập cột) định danh duy nhất mỗi dòng — như mã nhân viên không được trùng.
 
 ```sql
 CREATE TABLE actors (
@@ -39,17 +40,25 @@ CREATE TABLE actors (
 );
 ```
 
-- `PRIMARY KEY` trên `id` nghĩa là mỗi dòng cần một `id` khác null.
-- Hai dòng không được chung một `id`.
-- Cơ sở dữ liệu dùng khóa để tìm dòng nhanh và để nối bảng sau này.
+| Quy tắc | Ý nghĩa |
+| --- | --- |
+| Unique | hai dòng không chung một `id` |
+| Not null | mọi dòng cần có `id` |
+| Lookup | database dùng khóa để tìm dòng nhanh và nối bảng sau này |
 
-Bảng `actors` trống trong sandbox (đã tạo sẵn với khóa chính trên `id`):
+Bảng `actors` trống trong sandbox (đã tạo với khóa chính trên `id`):
 
 | id | name |
 | --- | --- |
 |  |  |
 
-Bạn không cần tạo khóa — khóa đã có. Hãy INSERT một dòng hợp lệ.
+Sau insert hợp lệ:
+
+| id | name |
+| --- | --- |
+| 1 | Ada |
+
+Nhiệm vụ không phải tạo khóa — khóa đã có. Hãy insert một dòng hợp lệ.
 
 ## Ví dụ mẫu
 
@@ -57,16 +66,17 @@ Bạn không cần tạo khóa — khóa đã có. Hãy INSERT một dòng hợp
 INSERT INTO actors (id, name) VALUES (1, 'Ada');
 ```
 
-- `id = 1` thỏa khóa chính (duy nhất và khác null).
-- INSERT lần hai với `id = 1` sẽ lỗi — trùng khóa.
-- `name` là chữ thường; ở đây nó không phải khóa chính.
+- `id = 1` thỏa khóa chính (duy nhất và không null).
+- Insert lần hai với `id = 1` sẽ thất bại — trùng khóa.
+- `name` là chữ thường; không phải khóa chính ở đây.
 
 ## Lỗi thường gặp
 
-- INSERT cùng một `id` hai lần — khóa chính từ chối trùng.
-- Bỏ `id` hoặc để `NULL` — khóa chính bắt buộc có giá trị.
+- Insert cùng `id` hai lần — khóa chính từ chối trùng.
+- Bỏ `id` hoặc đặt `NULL` — khóa chính cần giá trị.
 - Thử `ALTER` hoặc tạo lại bảng — sandbox đã định nghĩa khóa.
+- Các quy tắc cột khác (UNIQUE, CHECK, DEFAULT) nằm ở bài `table-constraints`.
 
 ## Thử ngay
 
-Thêm diễn viên `id = 1`, `name = 'Ada'` vào `actors`.
+Insert actor `id = 1`, `name = 'Ada'` vào `actors`.

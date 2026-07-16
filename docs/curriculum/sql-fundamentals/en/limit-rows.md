@@ -17,37 +17,47 @@ exercise:
     - "Try: SELECT title FROM movies ORDER BY year DESC LIMIT 2;"
   solution: "SELECT title FROM movies ORDER BY year DESC LIMIT 2;"
   preview:
-    columns: ["id", "title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - [1, "The Matrix", 1999]
-      - [2, "Inception", 2010]
-      - [3, "Dune", 2021]
+      - [1, "The Matrix", 1999, "Wachowski"]
+      - [2, "Inception", 2010, "Nolan"]
+      - [3, "Interstellar", 2014, "Nolan"]
+      - [4, "Dune", 2021, "Villeneuve"]
   expected:
     columns: ["title"]
     rows:
       - ["Dune"]
-      - ["Inception"]
+      - ["Interstellar"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'The Matrix', 1999, 'Wachowski'), (2, 'Inception', 2010, 'Nolan'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
-Sometimes you only need the first few rows — the two newest films, not the whole catalog. `LIMIT` caps how many rows come back after sorting.
+Sometimes you only need the first few rows — the two newest films, not the whole catalog. `LIMIT` caps how many rows come back **after** sorting.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Dune | 2021 |
+**movies** (full table)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | The Matrix | 1999 | Wachowski |
+| 2 | Inception | 2010 | Nolan |
+| 3 | Interstellar | 2014 | Nolan |
+| 4 | Dune | 2021 | Villeneuve |
+
+After `ORDER BY year DESC` the order is: Dune → Interstellar → Inception → The Matrix.  
+`LIMIT 2` keeps only the first two of that list.
 
 ## Worked example
 
 ```sql
-SELECT title FROM movies ORDER BY year DESC LIMIT 2;
+SELECT title
+FROM movies
+ORDER BY year DESC
+LIMIT 2;
 ```
 
-- `ORDER BY year DESC` sorts newest first: Dune (2021), Inception (2010), The Matrix (1999).
+- `ORDER BY year DESC` sorts newest first.
 - `LIMIT 2` keeps only the first two rows of that sorted list.
 - Without `ORDER BY`, `LIMIT` still caps the count, but which rows you get is not meaningful for “newest”.
 
@@ -56,7 +66,7 @@ Result:
 | title |
 | --- |
 | Dune |
-| Inception |
+| Interstellar |
 
 ## Common mistakes
 

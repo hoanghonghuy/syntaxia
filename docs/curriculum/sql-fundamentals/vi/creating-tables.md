@@ -8,12 +8,13 @@ order: 29
 published: true
 objectives:
   - Hiểu định nghĩa cột trong CREATE TABLE
+  - Khớp danh sách cột INSERT với kiểu dữ liệu
   - INSERT vào bảng trống đã chuẩn bị sẵn
 exercise:
   starter: "SELECT id, name FROM actors;"
   hints:
-    - "Bảng actors trống đã có sẵn — bạn chỉ cần INSERT."
-    - "Liệt kê cột (id, name) rồi VALUES với đúng kiểu."
+    - "Bảng actors trống đã tồn tại — bạn chỉ cần INSERT."
+    - "Liệt kê cột (id, name) rồi VALUES với kiểu khớp."
     - "Thử: INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');"
   solution: "INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');"
   preview:
@@ -30,7 +31,7 @@ sandbox_seed:
     - "CREATE TEMP TABLE actors (id INT, name TEXT);"
 ---
 
-Bảng là lưới có tên với các cột có kiểu — giống “dòng tiêu đề” của sheet, định nghĩa một lần.
+Bảng là lưới có tên với cột có kiểu — “dòng tiêu đề” của spreadsheet, định nghĩa một lần.
 
 ```sql
 CREATE TABLE actors (
@@ -39,17 +40,25 @@ CREATE TABLE actors (
 );
 ```
 
-- `INT` nghĩa là số nguyên.
-- `TEXT` nghĩa là chữ hoặc tên.
-- Mỗi cột có tên và kiểu để cơ sở dữ liệu biết giá trị nào hợp lệ.
+| Phần | Ý nghĩa |
+| --- | --- |
+| `actors` | tên bảng |
+| `id INT` | cột số nguyên |
+| `name TEXT` | cột chữ |
 
-Hình dạng sau khi bạn thêm một dòng:
+Trong sandbox, bảng `actors` trống đã được tạo sẵn (cùng hình dạng). Việc của bạn là thêm dòng đầu bằng `INSERT`.
+
+**actors** (trước khi insert)
+
+| id | name |
+| --- | --- |
+|  |  |
+
+**actors** (sau khi insert thành công)
 
 | id | name |
 | --- | --- |
 | 1 | DiCaprio |
-
-Trong sandbox, bảng `actors` trống đã được tạo sẵn (cùng hình dạng như trên). Việc của bạn là thêm dòng đầu tiên bằng `INSERT`.
 
 ## Ví dụ mẫu
 
@@ -57,15 +66,18 @@ Trong sandbox, bảng `actors` trống đã được tạo sẵn (cùng hình d�
 INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');
 ```
 
-- Bạn không cần chạy `CREATE TABLE` ở đây — bảng đã có sẵn.
-- `VALUES (1, 'DiCaprio')` điền `id` rồi `name` theo đúng thứ tự đó.
+- Bạn không cần chạy `CREATE TABLE` ở đây — đã làm sẵn.
+- `(id, name)` liệt kê cột bạn điền.
+- `VALUES (1, 'DiCaprio')` điền `id` rồi `name` theo thứ tự đó.
+- Giá trị chữ dùng dấu nháy **đơn**.
 
 ## Lỗi thường gặp
 
 - Thử `CREATE TABLE actors` lần nữa — bảng đã tồn tại trong sandbox.
-- Dùng ngoặc kép quanh tên (`"DiCaprio"`) thay vì ngoặc đơn.
-- INSERT vào sai tên bảng (`movies` thay vì `actors`).
+- Dùng nháy kép quanh tên (`"DiCaprio"`) thay vì nháy đơn.
+- Insert vào sai tên bảng (`movies` thay vì `actors`).
+- Muốn UNIQUE / CHECK / DEFAULT trên cột — xem bài sau `table-constraints`.
 
 ## Thử ngay
 
-Thêm `(1, 'DiCaprio')` vào `actors`.
+Insert `(1, 'DiCaprio')` vào `actors`.

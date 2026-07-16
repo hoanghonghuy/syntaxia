@@ -17,11 +17,12 @@ exercise:
     - "Try: SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
   solution: "SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
   preview:
-    columns: ["title"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception"]
-      - ["Interstellar"]
-      - ["The Matrix"]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "Interstellar", 2014, "Nolan"]
+      - [3, "The Matrix", 1999, "Wachowski"]
+      - [4, "Dune", 2021, "Villeneuve"]
   expected:
     columns: ["title"]
     rows:
@@ -29,27 +30,40 @@ exercise:
       - ["Interstellar"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT);"
-    - "INSERT INTO movies VALUES (1, 'Inception'), (2, 'Interstellar'), (3, 'The Matrix');"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'Interstellar', 2014, 'Nolan'), (3, 'The Matrix', 1999, 'Wachowski'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
 Exact equality (`=`) needs the whole string. `LIKE` lets you match a pattern — for example “titles that start with In”, like a spreadsheet “begins with” filter.
 
-| title |
-| --- |
-| Inception |
-| Interstellar |
-| The Matrix |
+**movies** (full table)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | Interstellar | 2014 | Nolan |
+| 3 | The Matrix | 1999 | Wachowski |
+| 4 | Dune | 2021 | Villeneuve |
+
+| title | Starts with `In`? |
+| --- | --- |
+| Inception | yes |
+| Interstellar | yes |
+| The Matrix | no |
+| Dune | no |
 
 ## Worked example
 
 ```sql
-SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;
+SELECT title
+FROM movies
+WHERE title LIKE 'In%'
+ORDER BY title;
 ```
 
-- `'In%'` means: starts with `In`, then any characters (or none).
-- Inception and Interstellar match; The Matrix does not.
-- `ORDER BY title` sorts the matching titles A→Z.
+- `'In%'` means: starts with `In`, then any characters (or none). The `%` is a wildcard.
+- Inception and Interstellar match; The Matrix and Dune do not.
+- `ORDER BY title` sorts matching titles A→Z.
 
 Result:
 
@@ -58,10 +72,12 @@ Result:
 | Inception |
 | Interstellar |
 
+The `_` wildcard (exactly one character) is covered in the later lesson `sql-wildcards`.
+
 ## Common mistakes
 
 - Using `=` with a pattern — `=` needs an exact match; patterns need `LIKE`.
-- Forgetting `%` — `'In'` alone only matches the exact word `In`. The `_` wildcard (exactly one character) is covered in `sql-wildcards`.
+- Forgetting `%` — `'In'` alone only matches the exact word `In`.
 - Putting `%` in the wrong place — `'%In'` means “ends with In”, not “starts with In”.
 
 ## Your turn

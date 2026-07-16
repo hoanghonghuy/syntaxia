@@ -9,6 +9,7 @@ published: true
 objectives:
   - Use EXISTS with a correlated subquery
   - Return only parent rows that have at least one child match
+  - Link inner and outer rows with a shared key
 exercise:
   starter: "SELECT name FROM directors;"
   hints:
@@ -17,11 +18,11 @@ exercise:
     - "Try: SELECT name FROM directors d WHERE EXISTS (SELECT 1 FROM movies m WHERE m.director_id = d.id) ORDER BY name;"
   solution: "SELECT name FROM directors d WHERE EXISTS (SELECT 1 FROM movies m WHERE m.director_id = d.id) ORDER BY name;"
   preview:
-    columns: ["directors.name", "has_movies"]
+    columns: ["id", "name"]
     rows:
-      - ["Nolan", "yes"]
-      - ["Villeneuve", "no"]
-      - ["Wachowski", "yes"]
+      - [1, "Nolan"]
+      - [2, "Wachowski"]
+      - [3, "Villeneuve"]
   expected:
     columns: ["name"]
     rows:
@@ -30,14 +31,14 @@ exercise:
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE directors (id INT, name TEXT);"
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, director_id INT);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director_id INT);"
     - "INSERT INTO directors VALUES (1, 'Nolan'), (2, 'Wachowski'), (3, 'Villeneuve');"
-    - "INSERT INTO movies VALUES (1, 'Inception', 1), (2, 'The Matrix', 2);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 1), (2, 'Interstellar', 2014, 1), (3, 'The Matrix', 1999, 2);"
 ---
 
 Sometimes you only care whether a related row **exists**, not which one. `EXISTS` runs a small inner query for each outer row and keeps the outer row when the inner query finds at least one match — like checking “does this director have any movie?” without listing the movies.
 
-**directors**
+**directors** (full table)
 
 | id | name |
 | --- | --- |
@@ -45,12 +46,19 @@ Sometimes you only care whether a related row **exists**, not which one. `EXISTS
 | 2 | Wachowski |
 | 3 | Villeneuve |
 
-**movies**
+**movies** (full table)
 
-| id | title | director_id |
-| --- | --- |
-| 1 | Inception | 1 |
-| 2 | The Matrix | 2 |
+| id | title | year | director_id |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | 1 |
+| 2 | Interstellar | 2014 | 1 |
+| 3 | The Matrix | 1999 | 2 |
+
+| name | Any movie? | `EXISTS`? |
+| --- | --- | --- |
+| Nolan | Inception, Interstellar | true |
+| Wachowski | The Matrix | true |
+| Villeneuve | none | false |
 
 ## Worked example
 
@@ -68,6 +76,7 @@ ORDER BY name;
 - The outer query walks each director (`d`).
 - The inner query looks for any movie whose `director_id` matches `d.id`.
 - Villeneuve has no movies, so `EXISTS` is false for that row.
+- `SELECT 1` inside `EXISTS` is enough — only “any row?” matters, not the columns.
 
 Result:
 
@@ -81,6 +90,7 @@ Result:
 - Forgetting the correlation (`m.director_id = d.id`) — then every director may match or none may.
 - Using `SELECT *` inside `EXISTS` and worrying about columns — `EXISTS` only cares whether any row appears; `SELECT 1` is a clear habit.
 - Confusing `EXISTS` with `IN` — both can work here; this lesson practices the `EXISTS` form.
+- Comparing many values at once with `ANY` / `ALL` is covered later in `any-all-subquery`.
 
 ## Your turn
 

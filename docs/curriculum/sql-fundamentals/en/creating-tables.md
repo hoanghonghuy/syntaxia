@@ -8,6 +8,7 @@ order: 29
 published: true
 objectives:
   - Understand CREATE TABLE column definitions
+  - Match INSERT column lists to typed columns
   - Insert into a prepared empty table
 exercise:
   starter: "SELECT id, name FROM actors;"
@@ -39,17 +40,25 @@ CREATE TABLE actors (
 );
 ```
 
-- `INT` means whole numbers.
-- `TEXT` means words or names.
-- Each column has a name and a type so the database knows what kind of value belongs there.
+| Part | Meaning |
+| --- | --- |
+| `actors` | table name |
+| `id INT` | whole-number column |
+| `name TEXT` | text column |
 
-Example shape after you add a row:
+In this sandbox the empty `actors` table is already created for you (same shape). Your job is to add the first row with `INSERT`.
+
+**actors** (before your insert)
+
+| id | name |
+| --- | --- |
+|  |  |
+
+**actors** (after a successful insert)
 
 | id | name |
 | --- | --- |
 | 1 | DiCaprio |
-
-In this sandbox the empty `actors` table is already created for you (same shape as above). Your job is to add the first row with `INSERT`.
 
 ## Worked example
 
@@ -58,13 +67,16 @@ INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');
 ```
 
 - You do not need to run `CREATE TABLE` here — it is already done.
+- `(id, name)` lists the columns you fill.
 - `VALUES (1, 'DiCaprio')` fills `id` then `name` in that order.
+- Text values use **single** quotes.
 
 ## Common mistakes
 
 - Trying to `CREATE TABLE actors` again — the table already exists in the sandbox.
 - Using double quotes around the name (`"DiCaprio"`) instead of single quotes.
 - Inserting into the wrong table name (`movies` instead of `actors`).
+- Wanting UNIQUE / CHECK / DEFAULT on columns — see the later lesson `table-constraints`.
 
 ## Your turn
 

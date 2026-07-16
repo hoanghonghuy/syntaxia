@@ -3,12 +3,13 @@ id: sql-33-fk
 track: sql-fundamentals
 locale: vi
 slug: foreign-key
-title: Khóa ngoại (FOREIGN KEY)
+title: Khóa ngoại
 order: 33
 published: true
 objectives:
   - Giải thích FOREIGN KEY nối bảng thế nào
-  - INSERT dòng con tham chiếu đúng dòng cha
+  - Insert dòng con tham chiếu parent hợp lệ
+  - Thấy vì sao id parent lạ bị từ chối
 exercise:
   starter: "INSERT INTO movies (id, title, director_id) VALUES "
   hints:
@@ -33,15 +34,19 @@ sandbox_seed:
     - "CREATE TEMP TABLE movies (id INT PRIMARY KEY, title TEXT, director_id INT REFERENCES directors(id));"
 ---
 
-**Khóa ngoại** (foreign key) là cột trỏ tới khóa chính ở bảng khác — như ghi mã nhân viên trên bảng chấm công để mỗi dòng gắn với một người.
+**Khóa ngoại** (foreign key) là cột trỏ tới khóa chính ở bảng khác — như ghi mã nhân viên trên timesheet để mỗi dòng gắn với một người.
 
-Bảng cha `directors`:
+**directors** (parent — đã có dữ liệu)
 
 | id | name |
 | --- | --- |
 | 1 | Nolan |
 
-Bảng con `movies` (trống) có `director_id` phải khớp `directors.id`:
+**movies** (child — trống; `director_id` phải khớp một `directors.id`)
+
+| id | title | director_id |
+| --- | --- | --- |
+|  |  |  |
 
 ```sql
 CREATE TABLE movies (
@@ -51,9 +56,13 @@ CREATE TABLE movies (
 );
 ```
 
-- `REFERENCES directors(id)` nghĩa là mọi `director_id` phải tồn tại trong `directors` (hoặc null, nếu được phép).
-- INSERT `director_id = 99` sẽ lỗi khi không có đạo diễn đó.
-- Cả hai bảng đã có trong sandbox; `directors` đã có Nolan.
+| `director_id` | Được phép? |
+| --- | --- |
+| 1 | có — Nolan tồn tại |
+| 99 | không — không có đạo diễn đó |
+| NULL | tùy nullability cột (bài này không dùng) |
+
+Cả hai bảng đã có trong sandbox; `directors` đã có Nolan.
 
 ## Ví dụ mẫu
 
@@ -61,16 +70,22 @@ CREATE TABLE movies (
 INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);
 ```
 
-- `id = 1` là khóa chính của phim này.
+- `id = 1` là khóa chính của chính phim này.
 - `director_id = 1` khớp Nolan trong `directors`.
-- Khóa ngoại chấp nhận dòng vì khóa cha tồn tại.
+- Khóa ngoại chấp nhận dòng vì khóa parent tồn tại.
+
+Kết quả trong `movies`:
+
+| id | title | director_id |
+| --- | --- | --- |
+| 1 | Inception | 1 |
 
 ## Lỗi thường gặp
 
 - Dùng `director_id` không có trong `directors` — khóa ngoại từ chối.
 - Nhầm `id` của phim với `director_id` — đó là hai cột khác nhau.
-- INSERT vào `directors` thay vì `movies`.
+- Insert vào `directors` thay vì `movies`.
 
 ## Thử ngay
 
-Thêm phim `id = 1`, `title = 'Inception'`, `director_id = 1`.
+Insert phim `id = 1`, `title = 'Inception'`, `director_id = 1`.

@@ -7,13 +7,14 @@ title: Xóa bảng với DROP TABLE
 order: 31
 published: true
 objectives:
-  - Xóa một bảng không còn dùng
-  - Giữ nguyên các bảng khác
+  - Drop một bảng không còn dùng
+  - Để các bảng khác nguyên
+  - Phân biệt DROP TABLE với DELETE (chỉ dòng)
 exercise:
   starter: "DROP TABLE "
   hints:
     - "DROP TABLE xóa cả bảng, không chỉ các dòng."
-    - "Chỉ nêu bảng cần bỏ — để keepers yên."
+    - "Chỉ đặt tên bảng cần xóa — để keepers lại."
     - "Thử: DROP TABLE obsolete;"
   solution: "DROP TABLE obsolete;"
   preview:
@@ -38,12 +39,17 @@ sandbox_seed:
 
 Bạn có hai bảng tạm:
 
-| table | purpose |
-| --- | --- |
-| obsolete | không còn cần |
-| keepers | vẫn dùng (có một dòng) |
+| table | mục đích | dòng mẫu |
+| --- | --- | --- |
+| obsolete | không còn cần | trống |
+| keepers | vẫn dùng | một dòng (`id = 1`) |
 
-Chỉ xóa `obsolete`. `keepers` phải còn lại.
+| Lệnh | Xóa gì |
+| --- | --- |
+| `DELETE FROM obsolete` | chỉ dòng — bảng trống vẫn còn |
+| `DROP TABLE obsolete` | cả bảng |
+
+Chỉ drop `obsolete`. `keepers` phải còn.
 
 ## Ví dụ mẫu
 
@@ -52,15 +58,15 @@ DROP TABLE obsolete;
 ```
 
 - `DROP TABLE` là lệnh.
-- `obsolete` là bảng cần bỏ.
-- Sau đó, truy vấn vào `obsolete` sẽ lỗi; `keepers` không đổi.
+- `obsolete` là bảng cần xóa.
+- Sau đó truy vấn `obsolete` sẽ lỗi; `keepers` không đổi.
 
 ## Lỗi thường gặp
 
-- Xóa nhầm `keepers` — đọc kỹ tên bảng.
-- Dùng `DELETE FROM obsolete` — lệnh đó chỉ xóa dòng, bảng trống vẫn còn.
-- Viết `DROP TABLE obsolete, keepers` khi bài chỉ yêu cầu một bảng.
+- Drop nhầm `keepers` — đọc kỹ tên bảng.
+- Dùng `DELETE FROM obsolete` — xóa dòng nhưng để lại bảng trống.
+- Viết `DROP TABLE obsolete, keepers` khi đề chỉ yêu cầu một bảng.
 
 ## Thử ngay
 
-Xóa bảng `obsolete`. Giữ nguyên `keepers`.
+Drop bảng `obsolete`. Để `keepers` nguyên.

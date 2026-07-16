@@ -7,12 +7,13 @@ title: Đổi bảng với ALTER TABLE
 order: 30
 published: true
 objectives:
-  - Thêm cột bằng ALTER TABLE
-  - Xác nhận cột mới đã xuất hiện trên bảng
+  - Thêm cột bằng ALTER TABLE … ADD COLUMN
+  - Chọn kiểu cho cột mới
+  - Xác nhận cột mới tồn tại trên bảng
 exercise:
   starter: "ALTER TABLE movies ADD COLUMN "
   hints:
-    - "ALTER TABLE thay đổi bảng có sẵn mà không tạo lại từ đầu."
+    - "ALTER TABLE đổi bảng đã có mà không cần tạo lại."
     - "ADD COLUMN đặt tên cột mới và kiểu của nó."
     - "Thử: ALTER TABLE movies ADD COLUMN year INT;"
   solution: "ALTER TABLE movies ADD COLUMN year INT;"
@@ -30,15 +31,20 @@ sandbox_seed:
     - "CREATE TEMP TABLE movies (id INT, title TEXT);"
 ---
 
-Bảng thay đổi theo thời gian. `ALTER TABLE` thêm (hoặc chỉnh) cột trên bảng đã có — như chèn thêm tiêu đề vào sheet mà không làm lại từ đầu.
+Bảng thay đổi theo thời gian. `ALTER TABLE` thêm (hoặc chỉnh) cột trên bảng đã có — như chèn thêm tiêu đề vào spreadsheet mà không bắt đầu lại.
 
-Hình dạng ban đầu:
+**movies** (hình dạng ban đầu)
 
 | id | title |
 | --- | --- |
 |  |  |
 
-Sau khi thêm `year`, bảng có thể lưu năm phát hành.
+| Bước | Hình dạng |
+| --- | --- |
+| Trước | `id`, `title` |
+| Sau `ADD COLUMN year INT` | `id`, `title`, `year` |
+
+Dòng sẵn có sẽ nhận `NULL` ở `year` cho đến khi bạn điền. Sandbox này bắt đầu trống và kiểm tra cột tên `year` có tồn tại.
 
 ## Ví dụ mẫu
 
@@ -46,17 +52,15 @@ Sau khi thêm `year`, bảng có thể lưu năm phát hành.
 ALTER TABLE movies ADD COLUMN year INT;
 ```
 
-- `ALTER TABLE movies` chỉ rõ bảng cần đổi.
-- `ADD COLUMN year INT` tạo cột mới tên `year` chứa số nguyên.
-- Các dòng cũ nhận `NULL` ở cột mới cho đến khi bạn điền.
-
-Sandbox sẽ INSERT một dòng mẫu rồi kiểm tra cột `year`.
+- `ALTER TABLE movies` chỉ định bảng cần đổi.
+- `ADD COLUMN year INT` tạo cột mới `year` chứa số nguyên.
+- Bạn không tạo lại bảng bằng `CREATE TABLE` — bạn mở rộng nó.
 
 ## Lỗi thường gặp
 
 - Viết `CREATE TABLE` lần nữa thay vì `ALTER TABLE` — bảng đã tồn tại.
 - Quên kiểu (`ADD COLUMN year` thiếu `INT`).
-- Dùng sai tên bảng (`actors` thay vì `movies`).
+- Sai tên bảng (`actors` thay vì `movies`).
 
 ## Thử ngay
 

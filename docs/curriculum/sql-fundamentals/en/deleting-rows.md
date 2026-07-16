@@ -17,38 +17,55 @@ exercise:
     - "Try: DELETE FROM movies WHERE year < 2000;"
   solution: "DELETE FROM movies WHERE year < 2000;"
   preview:
-    columns: ["id", "title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - [1, "Inception", 2010]
-      - [2, "The Matrix", 1999]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Old Cut", 1985, "Unknown"]
   expected:
     columns: ["id", "title", "year"]
     rows:
       - [1, "Inception", 2010]
+      - [3, "Dune", 2021]
 sandbox_seed:
   allow_mutations: true
   verify_sql: "SELECT id, title, year FROM movies ORDER BY id;"
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Old Cut', 1985, 'Unknown');"
 ---
 
 `DELETE` removes whole rows. Like `UPDATE`, always add `WHERE` so you do not wipe the entire table.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | Inception | 2010 |
-| 2 | The Matrix | 1999 |
+**movies** — before delete (four films)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Old Cut | 1985 | Unknown |
+
+Films before year 2000 should go: The Matrix and Old Cut.
 
 ## Worked example
 
 ```sql
-DELETE FROM movies WHERE year < 2000;
+DELETE FROM movies
+WHERE year < 2000;
 ```
 
 - `DELETE FROM movies` names the table.
-- `WHERE year < 2000` keeps only matching rows for deletion.
-- The Matrix (1999) is removed; Inception (2010) stays.
+- `WHERE year < 2000` selects which rows to remove.
+- The Matrix (1999) and Old Cut (1985) are removed; Inception and Dune stay.
+
+**movies** — after delete (what the checker reads)
+
+| id | title | year |
+| --- | --- | --- |
+| 1 | Inception | 2010 |
+| 3 | Dune | 2021 |
 
 ## Common mistakes
 

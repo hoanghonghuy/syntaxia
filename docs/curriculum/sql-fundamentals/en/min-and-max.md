@@ -17,28 +17,34 @@ exercise:
     - "Try: SELECT MAX(year) AS newest_year FROM movies;"
   solution: "SELECT MAX(year) AS newest_year FROM movies;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception", 2010]
-      - ["The Matrix", 1999]
-      - ["Dune", 2021]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["newest_year"]
     rows:
       - [2021]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 Sometimes you do not need every row — you need the smallest or largest number in a column, like the earliest or latest year in a list.
 
-| title | year |
-| --- | --- |
-| Inception | 2010 |
-| The Matrix | 1999 |
-| Dune | 2021 |
+**movies** (full table)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Years in the column: 2010, 1999, 2021, 2014 → smallest **1999**, largest **2021**.
 
 ## Worked example
 
@@ -50,11 +56,13 @@ SELECT MIN(year) AS oldest_year FROM movies;
 - `MAX(year)` would keep the largest (`2021`).
 - `AS oldest_year` names the result column so the output is easier to read.
 
-Result:
+Result of `MIN`:
 
 | oldest_year |
 | --- |
 | 1999 |
+
+Your exercise asks for `MAX` under the name `newest_year` → `2021`.
 
 ## Common mistakes
 

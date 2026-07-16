@@ -9,6 +9,7 @@ published: true
 objectives:
   - Drop an unused table
   - Leave other tables untouched
+  - Contrast DROP TABLE with DELETE (rows only)
 exercise:
   starter: "DROP TABLE "
   hints:
@@ -38,10 +39,15 @@ sandbox_seed:
 
 You have two temporary tables:
 
-| table | purpose |
+| table | purpose | sample rows |
+| --- | --- | --- |
+| obsolete | no longer needed | empty |
+| keepers | still in use | one row (`id = 1`) |
+
+| Command | What it removes |
 | --- | --- |
-| obsolete | no longer needed |
-| keepers | still in use (has one row) |
+| `DELETE FROM obsolete` | rows only — empty table remains |
+| `DROP TABLE obsolete` | the whole table |
 
 Drop only `obsolete`. `keepers` must remain.
 

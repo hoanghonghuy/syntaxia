@@ -17,44 +17,60 @@ exercise:
     - "Try: SELECT title FROM movies WHERE year BETWEEN 2000 AND 2020 ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year BETWEEN 2000 AND 2020 ORDER BY title;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception", 2010]
-      - ["The Matrix", 1999]
-      - ["Dune", 2021]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["title"]
     rows:
       - ["Inception"]
+      - ["Interstellar"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
 A range filter keeps values from a low bound through a high bound — like “years from 2000 to 2020 inclusive”. `BETWEEN` writes that clearly.
 
-| title | year |
-| --- | --- |
-| Inception | 2010 |
-| The Matrix | 1999 |
-| Dune | 2021 |
+**movies** (full table)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+| title | year | Inside 2000–2020? |
+| --- | --- | --- |
+| Inception | 2010 | yes |
+| The Matrix | 1999 | no (too early) |
+| Dune | 2021 | no (too late) |
+| Interstellar | 2014 | yes |
 
 ## Worked example
 
 ```sql
-SELECT title FROM movies WHERE year BETWEEN 2000 AND 2020 ORDER BY title;
+SELECT title
+FROM movies
+WHERE year BETWEEN 2000 AND 2020
+ORDER BY title;
 ```
 
 - `BETWEEN 2000 AND 2020` means `year >= 2000` and `year <= 2020`.
-- Inception (2010) is inside the range; The Matrix (1999) and Dune (2021) are outside.
 - Both endpoints are included when they appear in the data.
+- Inception and Interstellar stay; The Matrix and Dune drop out.
 
 Result:
 
 | title |
 | --- |
 | Inception |
+| Interstellar |
 
 ## Common mistakes
 

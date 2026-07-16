@@ -17,32 +17,42 @@ exercise:
     - "Try: SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
   solution: "SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["The Matrix", 1999]
-      - ["Inception", 2010]
+      - [1, "The Matrix", 1999, "Wachowski"]
+      - [2, "Inception", 2010, "Nolan"]
+      - [3, "Interstellar", 2014, "Nolan"]
+      - [4, "Dune", 2021, "Villeneuve"]
   expected:
     columns: ["film_name", "release_year"]
     rows:
       - ["The Matrix", 1999]
       - ["Inception", 2010]
+      - ["Interstellar", 2014]
+      - ["Dune", 2021]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'The Matrix', 1999, 'Wachowski'), (2, 'Inception', 2010, 'Nolan'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
 Column names in the table may be short or technical. `AS` renames a column in the **result** only — like a display label on a spreadsheet export, without renaming the real column.
 
-| title | year |
-| --- | --- |
-| The Matrix | 1999 |
-| Inception | 2010 |
+**movies** (full table — real column names stay `title` and `year`)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | The Matrix | 1999 | Wachowski |
+| 2 | Inception | 2010 | Nolan |
+| 3 | Interstellar | 2014 | Nolan |
+| 4 | Dune | 2021 | Villeneuve |
 
 ## Worked example
 
 ```sql
-SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;
+SELECT title AS film_name, year AS release_year
+FROM movies
+ORDER BY release_year;
 ```
 
 - `title AS film_name` shows the title under the heading `film_name`.
@@ -55,6 +65,10 @@ Result:
 | --- | --- |
 | The Matrix | 1999 |
 | Inception | 2010 |
+| Interstellar | 2014 |
+| Dune | 2021 |
+
+The stored table still uses `title` and `year` — only this query’s output headings changed.
 
 ## Common mistakes
 

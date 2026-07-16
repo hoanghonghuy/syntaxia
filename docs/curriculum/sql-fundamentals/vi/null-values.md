@@ -7,59 +7,72 @@ title: Dữ liệu thiếu với NULL
 order: 8
 published: true
 objectives:
-  - Hiểu NULL là dữ liệu thiếu, không phải số 0 hay chuỗi rỗng
+  - Coi NULL là dữ liệu thiếu, không phải số 0 hay chữ rỗng
   - Tìm hàng bằng IS NULL
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "Điểm còn thiếu được lưu là NULL — không phải chữ 'NULL' và không phải 0."
-    - "Dùng IS NULL trong WHERE; = NULL không hoạt động như người mới thường nghĩ."
-    - "Thử: SELECT title FROM movies WHERE rating IS NULL;"
-  solution: "SELECT title FROM movies WHERE rating IS NULL;"
+    - "Rating thiếu được lưu là NULL — không phải chữ 'NULL' và không phải 0."
+    - "Dùng IS NULL trong WHERE; = NULL không hoạt động như người mới nghĩ."
+    - "Thử: SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
+  solution: "SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
   preview:
-    columns: ["id", "title", "rating"]
+    columns: ["id", "title", "year", "rating"]
     rows:
-      - [1, "Inception", 8.8]
-      - [2, "The Matrix", null]
+      - [1, "Inception", 2010, 8.8]
+      - [2, "The Matrix", 1999, null]
+      - [3, "Dune", 2021, 8.0]
+      - [4, "Old Cut", 1985, null]
   expected:
     columns: ["title"]
     rows:
+      - ["Old Cut"]
       - ["The Matrix"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, rating DOUBLE PRECISION);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 8.8), (2, 'The Matrix', NULL);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, rating DOUBLE PRECISION);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 8.8), (2, 'The Matrix', 1999, NULL), (3, 'Dune', 2021, 8.0), (4, 'Old Cut', 1985, NULL);"
 ---
 
-Một số ô chưa có giá trị — giống ô trống trong Excel. Trong SQL, giá trị thiếu đó gọi là `NULL`. Nó không phải số 0, cũng không phải chữ “NULL”.
+Một số ô chưa có giá trị — như ô trống trong spreadsheet. Trong SQL giá trị thiếu đó gọi là `NULL`. Không phải số 0, cũng không phải chữ “NULL”.
 
-| id | title | rating |
-| --- | --- | --- |
-| 1 | Inception | 8.8 |
-| 2 | The Matrix |  |
+**movies** (bảng đầy đủ — ô rating trống là `NULL`)
+
+| id | title | year | rating |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | 8.8 |
+| 2 | The Matrix | 1999 | *(thiếu)* |
+| 3 | Dune | 2021 | 8.0 |
+| 4 | Old Cut | 1985 | *(thiếu)* |
+
+Hai phim có rating; hai phim không có.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title FROM movies WHERE rating IS NULL;
+SELECT title
+FROM movies
+WHERE rating IS NULL
+ORDER BY title;
 ```
 
-- Inception có `rating` là `8.8`, nên không khớp bộ lọc này.
-- The Matrix chưa có điểm (`NULL`), nên khớp `IS NULL`.
-- Dùng `IS NULL` (hoặc `IS NOT NULL`) — so sánh bằng `= NULL` không chọn được giá trị thiếu.
+- Inception (`8.8`) và Dune (`8.0`) có rating thật — không khớp.
+- The Matrix và Old Cut có rating `NULL` — khớp `IS NULL`.
+- Dùng `IS NULL` (hoặc `IS NOT NULL`) — so sánh `= NULL` không tìm được giá trị thiếu.
 
 Kết quả:
 
 | title |
 | --- |
+| Old Cut |
 | The Matrix |
 
 ## Lỗi thường gặp
 
-- Viết `WHERE rating = NULL` — so sánh đó không tìm được giá trị thiếu; hãy dùng `IS NULL`.
-- Tìm chuỗi `'NULL'` — đó là chữ, không phải giá trị thiếu.
-- Coi `NULL` như `0` — số 0 là một số thật; `NULL` nghĩa là “chưa biết / chưa điền”.
+- Viết `WHERE rating = NULL` — so sánh đó không tìm được giá trị thiếu; dùng `IS NULL`.
+- Tìm chữ `'NULL'` — đó là chuỗi, không phải giá trị thiếu.
+- Coi `NULL` như `0` — số không là số thật; `NULL` nghĩa là “chưa biết / chưa điền”.
 
 ## Thử ngay
 
-Liệt kê `title` của mọi phim có `rating` còn thiếu (`IS NULL`).
+Liệt kê `title` mọi phim có `rating` thiếu (`IS NULL`), sắp theo `title`.

@@ -7,38 +7,44 @@ title: Đếm hàng với COUNT
 order: 13
 published: true
 objectives:
-  - Đếm số hàng trong bảng
+  - Đếm số hàng của một bảng
   - Đặt tên cột kết quả bằng AS
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
     - "COUNT(*) đếm mọi hàng trong bảng."
-    - "Thường nên đặt tên cột, ví dụ movie_count."
+    - "Thường cần một cột có tên, ví dụ movie_count."
     - "Thử: SELECT COUNT(*) AS movie_count FROM movies;"
   solution: "SELECT COUNT(*) AS movie_count FROM movies;"
   preview:
-    columns: ["title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - ["Inception", 2010]
-      - ["The Matrix", 1999]
-      - ["Dune", 2021]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["movie_count"]
     rows:
-      - [3]
+      - [4]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Dune', 2021);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Excel có thể cho biết bạn có bao nhiêu hàng. Trong SQL, `COUNT` trả lời “bao nhiêu?” mà không cần liệt kê từng hàng.
+Spreadsheet có thể cho biết bạn có bao nhiêu hàng đã điền. Trong SQL, `COUNT` trả lời “bao nhiêu?” mà không liệt kê từng hàng.
 
-| title | year |
-| --- | --- |
-| Inception | 2010 |
-| The Matrix | 1999 |
-| Dune | 2021 |
+**movies** (bảng đầy đủ — hãy đếm các hàng này)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+Có **bốn** phim.
 
 ## Ví dụ mẫu
 
@@ -47,20 +53,20 @@ SELECT COUNT(*) AS movie_count FROM movies;
 ```
 
 - `COUNT(*)` đếm mọi hàng trong `movies`.
-- Bảng có ba phim, nên kết quả là `3`.
-- `AS movie_count` gắn nhãn rõ ràng cho số đó.
+- Bốn hàng → kết quả là `4`.
+- `AS movie_count` gắn nhãn rõ cho con số đó.
 
 Kết quả:
 
 | movie_count |
 | --- |
-| 3 |
+| 4 |
 
 ## Lỗi thường gặp
 
 - Viết `COUNT(title)` khi ý là “mọi hàng” — `COUNT(*)` đếm hàng; `COUNT(cột)` bỏ qua `NULL` ở cột đó.
-- Mong đợi danh sách tiêu đề — `COUNT` trả về một số, không phải tên phim.
-- Quên `AS` khi bài yêu cầu tên cột cụ thể như `movie_count`.
+- Mong danh sách tiêu đề — `COUNT` trả một số, không phải tên phim.
+- Quên `AS` khi grader đòi tên cột cụ thể như `movie_count`.
 
 ## Thử ngay
 

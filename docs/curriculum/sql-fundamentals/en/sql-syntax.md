@@ -14,46 +14,63 @@ exercise:
   hints:
     - "A basic query names columns after SELECT, then the table after FROM."
     - "You only need the title column — not every column."
-    - "Run: SELECT title FROM movies;"
-  solution: "SELECT title FROM movies;"
+    - "Run: SELECT title FROM movies ORDER BY title;"
+  solution: "SELECT title FROM movies ORDER BY title;"
   preview:
-    columns: ["id", "title", "year"]
+    columns: ["id", "title", "year", "director"]
     rows:
-      - [1, "Inception", 2010]
-      - [2, "The Matrix", 1999]
+      - [1, "Inception", 2010, "Nolan"]
+      - [2, "The Matrix", 1999, "Wachowski"]
+      - [3, "Dune", 2021, "Villeneuve"]
+      - [4, "Interstellar", 2014, "Nolan"]
   expected:
     columns: ["title"]
     rows:
+      - ["Dune"]
       - ["Inception"]
+      - ["Interstellar"]
       - ["The Matrix"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT);"
-    - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999);"
+    - "CREATE TEMP TABLE movies (id INT, title TEXT, year INT, director TEXT);"
+    - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-SQL is a language for asking questions of tables. A short query reads like a sentence: which columns, from which table.
+SQL is a language for asking questions of tables. A short query reads like a sentence: **which columns**, **from which table**.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | Inception | 2010 |
-| 2 | The Matrix | 1999 |
+**movies** (full practice table)
+
+| id | title | year | director |
+| --- | --- | --- | --- |
+| 1 | Inception | 2010 | Nolan |
+| 2 | The Matrix | 1999 | Wachowski |
+| 3 | Dune | 2021 | Villeneuve |
+| 4 | Interstellar | 2014 | Nolan |
+
+The table has four columns. Today you will ask for only one of them: `title`.
 
 ## Worked example
 
 ```sql
-SELECT title FROM movies;
+SELECT title
+FROM movies
+ORDER BY title;
 ```
 
-- `SELECT` starts the request — “show me these columns”.
-- `title` is the column you want.
-- `FROM movies` names the table (like a sheet name in a spreadsheet).
+| Piece | Meaning |
+| --- | --- |
+| `SELECT` | Start of the request — “show me these columns” |
+| `title` | The column you want |
+| `FROM movies` | Look in the table named `movies` |
+| `ORDER BY title` | Sort titles A→Z so the result is stable |
 
 Result:
 
 | title |
 | --- |
+| Dune |
 | Inception |
+| Interstellar |
 | The Matrix |
 
 Every SQL statement ends with a semicolon (`;`). Keywords are usually written in uppercase so they stand out from table and column names.
@@ -66,4 +83,4 @@ Every SQL statement ends with a semicolon (`;`). Keywords are usually written in
 
 ## Your turn
 
-Run a query that returns only the `title` column from `movies`.
+Return only the `title` column from `movies`, sorted by `title`.
