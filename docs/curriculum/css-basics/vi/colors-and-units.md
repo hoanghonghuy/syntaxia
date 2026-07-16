@@ -10,6 +10,24 @@ objectives:
   - Đặt màu bằng tên, hex và rgb() cơ bản
   - Phân biệt px, em, rem và %
   - Chọn đơn vị phù hợp cho chữ và khoảng cách đơn giản
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Set color and font-size on .note */
+    
+  hints:
+    - font-size nhận giá trị rem như 1.25rem.
+    - color có thể là tên màu hoặc hex.
+    - Cả hai nằm trong một rule .note.
+  solution: |
+    .note { color: teal; font-size: 1.25rem; }
+  expected:
+    type: cssIncludes
+    needles:
+      - rem
+      - color
 ---
 
 CSS cần **giá trị** có đơn vị rõ ràng cho kích thước, và nhiều cách ghi **màu**. Bắt đầu với vài dạng đủ dùng hàng ngày; không cần thuộc hết mọi hàm màu.
@@ -56,4 +74,4 @@ Với chữ trên trang học, nhiều người ưu tiên `rem` cho `font-size` 
 
 ## Thử ngay
 
-Với ví dụ mẫu, chỉ ra đâu là màu hex, đâu là `rem`, đâu là `%`. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để đặt color và font-size bằng rem. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

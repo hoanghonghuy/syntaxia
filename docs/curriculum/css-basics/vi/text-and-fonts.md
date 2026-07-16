@@ -10,6 +10,23 @@ objectives:
   - Đặt font-family với danh sách dự phòng
   - Điều chỉnh font-size, font-weight và line-height
   - Căn chữ bằng text-align
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Set a font stack on .note */
+    
+  hints:
+    - font-family liệt kê font cách nhau bằng dấu phẩy.
+    - Đặt họ chữ generic cuối (serif, sans-serif).
+    - Bọc tên font có dấu cách trong ngoặc kép nếu cần.
+  solution: |
+    .note { font-family: Georgia, serif; }
+  expected:
+    type: cssIncludes
+    needles:
+      - font-family
 ---
 
 Phần lớn trang web là **chữ**. CSS điều khiển họ font, cỡ chữ, độ đậm, khoảng cách dòng và cách căn dòng — tách khỏi ý nghĩa HTML (`h1`, `p`, `strong`).
@@ -60,4 +77,4 @@ Tên font có khoảng trắng cần nằm trong dấu ngoặc kép: `"Times New
 
 ## Thử ngay
 
-Đọc lại ví dụ: nói property nào chỉ ảnh hưởng `h1` và property nào ảnh hưởng cả bài. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để đặt font-family cho .note. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

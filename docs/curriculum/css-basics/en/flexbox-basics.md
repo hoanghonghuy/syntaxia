@@ -10,6 +10,24 @@ objectives:
   - Turn a container into a flex formatting context
   - Control direction and gap between items
   - Align items with justify-content and align-items
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="row"><span>A</span><span>B</span></div>
+  starter: |
+    /* Lay out .row with flex */
+    
+  hints:
+    - "display: flex turns on flex layout."
+    - gap adds space between flex items.
+    - Apply both on the .row container.
+  solution: |
+    .row { display: flex; gap: 1rem; }
+  expected:
+    type: cssIncludes
+    needles:
+      - "display: flex"
+      - gap
 ---
 
 **Flexbox** is a layout model for arranging items in a row or a column. You set `display: flex` on a **container**; its children become **flex items**. Flexbox shines for toolbars, card rows, and centering — one-dimensional layouts (a single row *or* a single column).
@@ -56,4 +74,4 @@ Start with the container properties above before diving into per-item `flex-grow
 
 ## Your turn
 
-Compare `.toolbar` and `.stack` in the worked example. Notice which property switches row vs column, and which properties space and align the toolbar items. Then mark this lesson complete.
+Use the sandbox below to lay out .row with flexbox. When the checker shows **Correct**, mark this lesson complete.

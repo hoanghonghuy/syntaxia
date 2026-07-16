@@ -105,4 +105,4 @@ With web open at `http://localhost:3001`:
 - [`i18n.md`](./i18n.md)
 - [`catalog-architecture.md`](./catalog-architecture.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md) (#12)
-- Scripts: `scripts/docker-up.ps1`, `scripts/release-smoke.ps1`, `scripts/e2e-sql-fundamentals.ps1`, `scripts/check-catalog.ps1`, `scripts/check-javascript-basics.ps1`
+- Scripts: `scripts/docker-up.ps1`, `scripts/release-smoke.ps1`, `scripts/e2e-sql-fundamentals.ps1`, `scripts/check-catalog.ps1`, `scripts/check-javascript-basics.ps1`, `scripts/check-js-sandbox.ps1`, `scripts/check-htmlcss-sandbox.ps1`

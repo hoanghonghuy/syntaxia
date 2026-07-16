@@ -10,6 +10,24 @@ objectives:
   - Set background-color and simple background images
   - Draw borders with width, style, and color
   - Round corners with border-radius
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="card">Card</div>
+  starter: |
+    /* Style .card background and corners */
+    
+  hints:
+    - background fills the box behind content.
+    - border-radius rounds corners.
+    - "Hex colors like #eef work for backgrounds."
+  solution: |
+    .card { background: #eef; border-radius: 8px; }
+  expected:
+    type: cssIncludes
+    needles:
+      - border-radius
+      - background
 ---
 
 **Backgrounds** fill the area behind content (and padding). **Borders** draw an edge around the box. Together they define surfaces: cards, callouts, buttons, and page sections. `border-radius` softens sharp corners.
@@ -57,4 +75,4 @@ You can set each border side separately (`border-top`, and so on) when only one 
 
 ## Your turn
 
-Compare `.card` and `.hero` in the worked example. Notice which properties create the edge, the fill, and the rounded corners. Then mark this lesson complete.
+Use the sandbox below to add background and border-radius to .card. When the checker shows **Correct**, mark this lesson complete.

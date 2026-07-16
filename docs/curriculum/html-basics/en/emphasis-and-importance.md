@@ -10,6 +10,24 @@ objectives:
   - Mark stress in a sentence with em
   - Mark strong importance with strong
   - Prefer semantic emphasis over presentational tags
+exercise:
+  mode: html
+  starter: |
+    <!-- Wrap words with em and strong inside a paragraph -->
+    
+  hints:
+    - Wrap one word with em for stress.
+    - Wrap another word with strong for importance.
+    - Keep both inside one p element.
+  solution: |
+    <p><em>quietly</em> and <strong>important</strong></p>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: em
+        minCount: 1
+      - tag: strong
+        minCount: 1
 ---
 
 Sometimes a word needs extra weight in meaning, not just a different look. HTML has elements for **emphasis** and **strong importance**. Browsers often italicize `em` and bold `strong`, but the real job of these tags is to carry meaning — including for screen readers that may change voice stress.
@@ -42,4 +60,4 @@ Older pages sometimes use `<i>` and `<b>` for looks alone. For stress and import
 
 ## Your turn
 
-In the worked example, say aloud which phrase is stress (`em`) and which is importance (`strong`). When the difference is clear, mark this lesson complete.
+Use the sandbox below to mark stress and importance with em and strong. When the checker shows **Correct**, mark this lesson complete.

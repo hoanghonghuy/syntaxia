@@ -10,6 +10,23 @@ objectives:
   - Phân biệt descendant (khoảng trắng) và child (`>`)
   - Nhận biết sibling (`+`, `~`) ở mức cơ bản
   - Nhóm nhiều selector bằng dấu phẩy
+exercise:
+  mode: both
+  starterHtml: |
+    <article><p>A</p></article>
+  starter: |
+    /* Style paragraphs inside article */
+    
+  hints:
+    - "Selector con cháu: article rồi dấu cách rồi p."
+    - Thêm khai báo color.
+    - Dấu cách nghĩa là “bên trong”, không chỉ con trực tiếp.
+  solution: |
+    article p { color: green; }
+  expected:
+    type: cssIncludes
+    needles:
+      - article p
 ---
 
 **Combinator** nối các phần selector để mô tả *quan hệ* giữa phần tử: nằm bên trong, là con trực tiếp, hoặc là anh/em kế bên. **Danh sách selector** dùng dấu phẩy để áp cùng style cho nhiều selector khác nhau.
@@ -66,4 +83,4 @@ h2, .tip {
 
 ## Thử ngay
 
-Với HTML mẫu, chỉ ra đoạn nào khớp `h2 + p` và đoạn nào không khớp `article p`. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để chọn p bên trong article. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

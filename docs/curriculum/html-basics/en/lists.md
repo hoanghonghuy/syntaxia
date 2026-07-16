@@ -10,6 +10,27 @@ objectives:
   - Build unordered and ordered lists
   - Place each item in an li
   - Recognize a simple description list
+exercise:
+  mode: html
+  starter: |
+    <!-- Build an unordered list with two items -->
+    
+  hints:
+    - Start with a ul opening tag.
+    - Each item needs an li element.
+    - Add at least two li items.
+  solution: |
+    <ul>
+      <li>One</li>
+      <li>Two</li>
+    </ul>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: ul
+        minCount: 1
+      - tag: li
+        minCount: 2
 ---
 
 Lists turn a pile of related items into a clear sequence or bullet set. HTML has **unordered lists** (bullets), **ordered lists** (numbers), and **description lists** (term + definition pairs). Choosing the right list tells readers — and assistive tools — how the items relate.
@@ -57,4 +78,4 @@ Never put bare text as a direct child of `ul` or `ol` — always use `li`.
 
 ## Your turn
 
-Decide which sample above should stay bullets, which should stay numbers, and why. Re-read the table if unsure, then mark this lesson complete.
+Use the sandbox below to build an unordered list with two items. When the checker shows **Correct**, mark this lesson complete.

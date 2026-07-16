@@ -10,6 +10,27 @@ objectives:
   - Tạo danh sách không thứ tự (ul) và có thứ tự (ol)
   - Đặt mỗi mục trong thẻ li
   - Nhận biết danh sách định nghĩa (dl) ở mức giới thiệu
+exercise:
+  mode: html
+  starter: |
+    <!-- Build an unordered list with two items -->
+    
+  hints:
+    - Bắt đầu bằng thẻ mở ul.
+    - Mỗi mục cần một phần tử li.
+    - Thêm ít nhất hai mục li.
+  solution: |
+    <ul>
+      <li>One</li>
+      <li>Two</li>
+    </ul>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: ul
+        minCount: 1
+      - tag: li
+        minCount: 2
 ---
 
 Khi bạn liệt kê bước làm hoặc liệt kê món hàng, HTML có **danh sách**. Có danh sách không cần số thứ tự (`ul`), danh sách có thứ tự (`ol`), và danh sách dạng thuật ngữ–định nghĩa (`dl`).
@@ -59,4 +80,4 @@ Giới thiệu nhanh `dl`:
 
 ## Thử ngay
 
-So sánh hai list trong ví dụ: cái nào đổi thứ tự mục vẫn ổn? Cái nào sẽ sai nghĩa nếu đổi thứ tự? Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để tạo danh sách không thứ tự với hai mục. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

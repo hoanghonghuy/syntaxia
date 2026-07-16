@@ -10,6 +10,24 @@ objectives:
   - Phân biệt em (nhấn mạnh) và strong (tầm quan trọng)
   - Giải thích vì sao không dùng b/i chỉ để “làm đẹp”
   - Đặt đúng chỗ em/strong trong một câu
+exercise:
+  mode: html
+  starter: |
+    <!-- Wrap words with em and strong inside a paragraph -->
+    
+  hints:
+    - Bọc một từ bằng em để nhấn giọng.
+    - Bọc từ khác bằng strong để đánh dấu quan trọng.
+    - Giữ cả hai trong một phần tử p.
+  solution: |
+    <p><em>quietly</em> and <strong>important</strong></p>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: em
+        minCount: 1
+      - tag: strong
+        minCount: 1
 ---
 
 Trong văn bản, đôi khi bạn *nhấn giọng* một từ, đôi khi bạn muốn nói từ đó **quan trọng**. HTML có thẻ riêng cho hai ý này: `em` và `strong`.
@@ -41,4 +59,4 @@ Trình duyệt thường hiện `em` nghiêng và `strong` đậm — nhưng ý 
 
 ## Thử ngay
 
-Đọc hai câu trong ví dụ mẫu và nói rõ câu nào dùng nhấn mạnh (`em`), câu nào dùng tầm quan trọng (`strong`). Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để đánh dấu nhấn mạnh và tầm quan trọng bằng em và strong. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

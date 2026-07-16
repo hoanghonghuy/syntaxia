@@ -10,6 +10,25 @@ objectives:
   - Đổi ký hiệu danh sách bằng list-style-type và list-style
   - Style liên kết trong và ngoài danh sách bằng class và pseudo-class
   - Bỏ gạch chân mặc định một cách có chủ đích
+exercise:
+  mode: both
+  starterHtml: |
+    <ul class="menu"><li><a href="#">Home</a></li></ul>
+  starter: |
+    /* Remove bullets and link underline */
+    
+  hints:
+    - "list-style: none bỏ dấu đầu dòng."
+    - Chọn liên kết bằng .menu a.
+    - "text-decoration: none bỏ gạch chân."
+  solution: |
+    .menu { list-style: none; }
+    .menu a { text-decoration: none; }
+  expected:
+    type: cssIncludes
+    needles:
+      - list-style
+      - text-decoration
 ---
 
 Danh sách (`ul` / `ol`) và liên kết (`a`) có kiểu mặc định của trình duyệt: dấu đầu dòng, số thứ tự, chữ xanh gạch chân. CSS chỉnh các mặc định đó cho khớp giao diện — vẫn giữ HTML đúng nghĩa.
@@ -63,4 +82,4 @@ Menu điều hướng thường bỏ dấu đầu dòng; danh sách nội dung b
 
 ## Thử ngay
 
-Nhìn ví dụ: nói rule nào gỡ dấu đầu dòng và rule nào hiện gạch chân khi focus. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để style danh sách menu và liên kết. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

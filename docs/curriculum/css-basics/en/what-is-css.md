@@ -10,6 +10,23 @@ objectives:
   - Explain CSS as the presentation layer of a web page
   - Distinguish HTML structure from CSS style
   - Recognize how a stylesheet attaches to a page
+exercise:
+  mode: both
+  starterHtml: |
+    <h1>Welcome</h1>
+  starter: |
+    /* Style the h1 heading */
+    
+  hints:
+    - Target h1 with a type selector.
+    - Add a color property inside curly braces.
+    - End the declaration with a semicolon.
+  solution: |
+    h1 { color: teal; }
+  expected:
+    type: cssIncludes
+    needles:
+      - color
 ---
 
 HTML labels *what* content is (a heading, a paragraph, a link). **CSS** (Cascading Style Sheets) describes *how* that content should look: colors, spacing, fonts, and layout. Without CSS, pages are readable but plain. With CSS, the same HTML can look like a newspaper, a product card, or a quiet reading layout.
@@ -45,4 +62,4 @@ CSS does not replace HTML. It only styles elements that already exist in the doc
 
 ## Your turn
 
-Re-read the table and the worked example. In your own words, say what HTML does, what CSS does, and which part of the rule is the selector. Then mark this lesson complete.
+Use the sandbox below to style the heading color. When the checker shows **Correct**, mark this lesson complete.

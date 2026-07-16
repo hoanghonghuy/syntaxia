@@ -10,6 +10,24 @@ objectives:
   - Đặt background-color và hiểu background-image ở mức giới thiệu
   - Viết border theo độ dày, kiểu và màu
   - Bo góc bằng border-radius
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="card">Card</div>
+  starter: |
+    /* Style .card background and corners */
+    
+  hints:
+    - background tô nền phía sau nội dung.
+    - border-radius bo góc.
+    - "Màu hex như #eef dùng được cho background."
+  solution: |
+    .card { background: #eef; border-radius: 8px; }
+  expected:
+    type: cssIncludes
+    needles:
+      - border-radius
+      - background
 ---
 
 **Nền** (background) tô phía sau nội dung; **viền** (border) vẽ cạnh hộp. Cùng với `border-radius`, bạn có thể tạo khối nổi bật đơn giản mà chưa cần ảnh phức tạp.
@@ -58,4 +76,4 @@ objectives:
 
 ## Thử ngay
 
-Với rule `.panel`, nói rõ đâu là nền, đâu là viền, đâu là bo góc. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm background và border-radius cho .card. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

@@ -10,6 +10,24 @@ objectives:
   - Explain how conflicting declarations are resolved
   - Compare type, class, and ID specificity at a beginner level
   - Recognize inheritance for properties like color and font
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Make .note purple */
+    
+  hints:
+    - Class selector beats bare element names.
+    - "Use .note { } to target the paragraph."
+    - Set color to any value you like.
+  solution: |
+    .note { color: purple; }
+  expected:
+    type: cssIncludes
+    needles:
+      - .note
+      - color
 ---
 
 When two rules target the same element and set the same property, the browser must pick a winner. That decision process is the **cascade**. **Specificity** is one of its main tools: more specific selectors beat less specific ones. Some properties also **inherit** from parent to child (for example, `color` and `font-family`).
@@ -55,4 +73,4 @@ If two class rules conflict and neither uses an ID, the one that appears **later
 
 ## Your turn
 
-Look at the three rules and the sample paragraph with both `id` and `class`. Decide which `color` wins and why. Then mark this lesson complete.
+Use the sandbox below to set .note text color. When the checker shows **Correct**, mark this lesson complete.

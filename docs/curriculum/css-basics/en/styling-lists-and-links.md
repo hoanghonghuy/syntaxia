@@ -10,6 +10,25 @@ objectives:
   - Change list markers with list-style properties
   - Style navigation lists without default bullets
   - Combine link pseudo-classes with list layout
+exercise:
+  mode: both
+  starterHtml: |
+    <ul class="menu"><li><a href="#">Home</a></li></ul>
+  starter: |
+    /* Remove bullets and link underline */
+    
+  hints:
+    - "list-style: none removes bullets."
+    - Target links with .menu a.
+    - "text-decoration: none removes underlines."
+  solution: |
+    .menu { list-style: none; }
+    .menu a { text-decoration: none; }
+  expected:
+    type: cssIncludes
+    needles:
+      - list-style
+      - text-decoration
 ---
 
 Lists and links appear on almost every page. CSS lets you change **markers** (bullets and numbers), spacing inside lists, and the look of anchors — especially inside a navigation list where default underlines and bullets often get in the way.
@@ -62,4 +81,4 @@ Keep the HTML as a real `ul`/`ol`/`li` structure for accessibility — style awa
 
 ## Your turn
 
-In the worked example, notice how the list loses its bullets and how the nav links show an underline only in interactive states. Then mark this lesson complete.
+Use the sandbox below to style the menu list and links. When the checker shows **Correct**, mark this lesson complete.

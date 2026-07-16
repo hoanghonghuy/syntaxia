@@ -84,6 +84,10 @@ Step "JavaScript sandbox grade"
 & (Join-Path $PSScriptRoot "check-js-sandbox.ps1") -BaseUrl $BaseUrl
 if ($LASTEXITCODE -ne 0) { Fail "check-js-sandbox.ps1 exited $LASTEXITCODE" }
 
+Step "HTML/CSS sandbox grade"
+& (Join-Path $PSScriptRoot "check-htmlcss-sandbox.ps1") -BaseUrl $BaseUrl
+if ($LASTEXITCODE -ne 0) { Fail "check-htmlcss-sandbox.ps1 exited $LASTEXITCODE" }
+
 Step "Go package tests"
 Remove-Item Env:GOOS -ErrorAction SilentlyContinue
 Remove-Item Env:GOARCH -ErrorAction SilentlyContinue

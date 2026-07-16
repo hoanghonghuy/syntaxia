@@ -10,6 +10,25 @@ objectives:
   - Read a CSS rule as selector plus declarations
   - Recognize property–value pairs and the semicolon
   - Compare external and internal stylesheets
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Style .note text */
+    
+  hints:
+    - Class selectors start with a dot.
+    - "Put declarations inside { }."
+    - Use color to change text color.
+  solution: |
+    .note { color: blue; }
+  expected:
+    type: cssIncludes
+    needles:
+      - .note
+      - "{"
+      - color
 ---
 
 A **CSS rule** always has the same shape: a selector, then curly braces, then one or more declarations. A **stylesheet** is simply a file (or a block) that holds many rules. Browsers read those rules and apply them to matching HTML.
@@ -51,4 +70,4 @@ Keep one declaration per line when you are learning — it is easier to spot mis
 
 ## Your turn
 
-Look at the worked example and point to the selector, one property, one value, and the closing brace of the first rule. When you can name each piece, mark this lesson complete.
+Use the sandbox below to write a CSS rule for .note. When the checker shows **Correct**, mark this lesson complete.

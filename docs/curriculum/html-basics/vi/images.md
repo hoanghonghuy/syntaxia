@@ -10,6 +10,22 @@ objectives:
   - Chèn ảnh bằng img với src và alt
   - Viết alt mô tả nội dung ảnh cho người không thấy hình
   - Hiểu vai trò width/height ở mức cơ bản
+exercise:
+  mode: html
+  starter: |
+    <!-- Add an image with src and alt -->
+    
+  hints:
+    - Dùng một thẻ img (tự đóng).
+    - src trỏ tới file ảnh.
+    - alt mô tả ảnh cho khả năng truy cập.
+  solution: |
+    <img src="cat.png" alt="A cat">
+  expected:
+    type: htmlIncludes
+    needles:
+      - alt=
+      - <img
 ---
 
 Ảnh làm trang dễ hiểu hơn, nhưng ảnh cũng cần “chữ thay thế” khi không tải được hoặc khi dùng trình đọc màn hình. Thẻ `img` là phần tử *rỗng* (không có thẻ đóng); thông tin nằm ở thuộc tính.
@@ -46,4 +62,4 @@ Nếu ảnh chỉ trang trí và không mang thông tin, `alt=""` (rỗng) có t
 
 ## Thử ngay
 
-Đọc lại thuộc tính trong ví dụ: `src` nói gì, `alt` nói gì, và vì sao `alt` không nên chỉ là “cat.jpg”. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm ảnh có src và alt. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

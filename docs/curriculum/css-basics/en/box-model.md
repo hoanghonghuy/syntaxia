@@ -10,6 +10,24 @@ objectives:
   - Name content, padding, border, and margin
   - Explain how width relates to the box by default
   - Use box-sizing: border-box for predictable sizing
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="box">Box</div>
+  starter: |
+    /* Add padding and margin to .box */
+    
+  hints:
+    - padding adds space inside the border.
+    - margin adds space outside the border.
+    - rem is a common unit for spacing.
+  solution: |
+    .box { padding: 1rem; margin: 1rem; }
+  expected:
+    type: cssIncludes
+    needles:
+      - padding
+      - margin
 ---
 
 Every element is drawn as a rectangular **box**. From the inside out you have **content**, **padding** (inner space), **border**, and **margin** (outer space that separates this box from neighbors). Understanding this model is the key to controlling size and spacing.
@@ -51,4 +69,4 @@ Margins can collapse between stacked block boxes — adjacent vertical margins m
 
 ## Your turn
 
-Re-read the layers table and the `.card` rule. Name the four layers from inside out, and notice what `box-sizing: border-box` is for. Then mark this lesson complete.
+Use the sandbox below to add padding and margin to .box. When the checker shows **Correct**, mark this lesson complete.

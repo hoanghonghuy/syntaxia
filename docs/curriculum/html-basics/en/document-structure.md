@@ -10,6 +10,39 @@ objectives:
   - Sketch the skeleton of an HTML document
   - Explain what the head and body are for
   - Set lang, charset, and title correctly
+exercise:
+  mode: html
+  starter: |
+    <!DOCTYPE html>
+    <!-- Complete html, head with title, and body -->
+    
+  hints:
+    - Add html, head, body, and title elements.
+    - Put charset meta and title inside head.
+    - Put visible content inside body.
+  solution: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>My Page</title>
+    </head>
+    <body>
+      <p>Hello</p>
+    </body>
+    </html>
+    
+  expected:
+    type: htmlTags
+    tags:
+      - tag: html
+        minCount: 1
+      - tag: head
+        minCount: 1
+      - tag: body
+        minCount: 1
+      - tag: title
+        minCount: 1
 ---
 
 Every HTML page follows a shared **document skeleton**. The browser expects a doctype, an `html` root, a `head` for metadata, and a `body` for what the visitor sees. Without this shape, tools and browsers cannot treat the file as a complete page.
@@ -52,4 +85,4 @@ Compare it to a book: the cover and copyright page are not the story, but they i
 
 ## Your turn
 
-Look back at the skeleton table and the worked example. Confirm you can say, in one sentence each, what `head` and `body` are for. Then mark this lesson complete.
+Use the sandbox below to complete the minimal document skeleton. When the checker shows **Correct**, mark this lesson complete.

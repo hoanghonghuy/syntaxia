@@ -10,6 +10,23 @@ objectives:
   - Read descendant and child combinators
   - Recognize adjacent and general sibling combinators
   - Group selectors with a comma list
+exercise:
+  mode: both
+  starterHtml: |
+    <article><p>A</p></article>
+  starter: |
+    /* Style paragraphs inside article */
+    
+  hints:
+    - "Descendant selector: article then a space then p."
+    - Add a color declaration.
+    - The space means “inside”, not direct child only.
+  solution: |
+    article p { color: green; }
+  expected:
+    type: cssIncludes
+    needles:
+      - article p
 ---
 
 Often you need to style an element only when it sits in a certain place in the HTML tree. **Combinators** connect selectors to describe that relationship. A **selector list** (comma-separated) applies the same declarations to several targets at once.
@@ -59,4 +76,4 @@ Combinators describe structure already present in HTML. They do not create new e
 
 ## Your turn
 
-In the worked example, find one descendant selector, one child selector, and one selector list. Notice how the space, `>`, and comma change the meaning. Then mark this lesson complete.
+Use the sandbox below to target p inside article. When the checker shows **Correct**, mark this lesson complete.

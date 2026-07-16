@@ -10,6 +10,24 @@ objectives:
   - Giải thích cascade: nhiều rule cùng nhắm một phần tử
   - So sánh specificity cơ bản giữa type, class và id
   - Nhận biết inheritance (thừa kế) với color và font
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Make .note purple */
+    
+  hints:
+    - Selector class mạnh hơn tên thẻ trần.
+    - "Dùng .note { } để chọn đoạn p."
+    - Đặt color thành giá trị bạn muốn.
+  solution: |
+    .note { color: purple; }
+  expected:
+    type: cssIncludes
+    needles:
+      - .note
+      - color
 ---
 
 Khi nhiều rule cùng nhắm một phần tử, trình duyệt không “chọn ngẫu nhiên”. **Cascade** (xếp tầng) quyết định rule nào thắng dựa trên nguồn, độ cụ thể (**specificity**), rồi thứ tự trong stylesheet. Một số property còn **inherit** (thừa kế) từ phần tử cha — ví dụ `color` và `font-family` thường lan xuống chữ bên trong.
@@ -57,4 +75,4 @@ Nếu hai rule cùng specificity, rule khai báo *sau* trong stylesheet thườn
 
 ## Thử ngay
 
-Với ví dụ mẫu, giải thích vì sao chữ màu navy chứ không phải teal. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để đặt màu chữ cho .note. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

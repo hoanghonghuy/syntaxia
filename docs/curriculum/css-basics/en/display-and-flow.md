@@ -10,6 +10,23 @@ objectives:
   - Contrast block and inline layout in normal flow
   - Use inline-block when you need both width and side-by-side placement
   - Hide elements with display: none
+exercise:
+  mode: both
+  starterHtml: |
+    <span class="box">A</span>
+  starter: |
+    /* Change how .box flows in the line */
+    
+  hints:
+    - display changes layout behavior.
+    - inline-block keeps items in a line but allows box sizing.
+    - "Write display: inline-block; inside the rule."
+  solution: |
+    .box { display: inline-block; }
+  expected:
+    type: cssIncludes
+    needles:
+      - display
 ---
 
 The `display` property controls how a box participates in **normal flow** — the default top-to-bottom, left-to-right arrangement of content. The most important beginner values are `block`, `inline`, `inline-block`, and `none`.
@@ -56,4 +73,4 @@ Changing `display` does not change the HTML meaning — a `span` is still a span
 
 ## Your turn
 
-Re-read the table and point to which display value fits a full-width paragraph, a word inside a sentence, and a chip with padding. Then mark this lesson complete.
+Use the sandbox below to set display on .box. When the checker shows **Correct**, mark this lesson complete.

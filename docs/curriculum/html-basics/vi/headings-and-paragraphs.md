@@ -10,6 +10,25 @@ objectives:
   - Dùng h1–h6 để tạo khung đề mục có thứ bậc
   - Viết đoạn văn bằng thẻ p
   - Tránh nhảy cấp tiêu đề (ví dụ h1 rồi h3)
+exercise:
+  mode: html
+  starter: |
+    <!-- Add an h1 and a paragraph -->
+    
+  hints:
+    - Dùng h1 làm tiêu đề chính.
+    - Dùng p cho đoạn văn bên dưới.
+    - Bọc chữ trong cặp thẻ mở/đóng.
+  solution: |
+    <h1>Welcome</h1>
+    <p>This is a short paragraph.</p>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: h1
+        minCount: 1
+      - tag: p
+        minCount: 1
 ---
 
 Khi đọc sách hoặc tài liệu, bạn nhìn tiêu đề lớn rồi tiêu đề nhỏ hơn. HTML cũng vậy: **tiêu đề** (`h1`–`h6`) tạo khung đề mục; **đoạn văn** (`p`) chứa câu chữ thường.
@@ -44,4 +63,4 @@ Thứ bậc tiêu đề giúp người đọc (và trình đọc màn hình) hi�
 
 ## Thử ngay
 
-Đọc lại ví dụ: đếm có bao nhiêu heading và bao nhiêu paragraph; kiểm tra thứ bậc có liền mạch không. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm tiêu đề chính và một đoạn văn. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

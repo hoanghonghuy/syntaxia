@@ -10,6 +10,23 @@ objectives:
   - Set font-family with a fallback stack
   - Control size, weight, line-height, and alignment
   - Keep body text readable for long reading
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Set a font stack on .note */
+    
+  hints:
+    - font-family lists fonts separated by commas.
+    - Put a generic family last (serif, sans-serif).
+    - Quote font names with spaces if needed.
+  solution: |
+    .note { font-family: Georgia, serif; }
+  expected:
+    type: cssIncludes
+    needles:
+      - font-family
 ---
 
 Text styling covers the **font family**, **size**, **weight**, **line height**, and **alignment**. Good defaults make lessons and articles comfortable to read; flashy settings often hurt long-form text.
@@ -62,4 +79,4 @@ Font choice and spacing matter more for readability than decorative effects.
 
 ## Your turn
 
-Re-read the worked example and identify the font stack, the body line-height, and how the heading weight differs from normal text. Then mark this lesson complete.
+Use the sandbox below to set font-family on .note. When the checker shows **Correct**, mark this lesson complete.

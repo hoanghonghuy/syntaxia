@@ -10,6 +10,39 @@ objectives:
   - Nhận biết khung trang: doctype, html, head, body
   - Giải thích vai trò của charset, title và lang
   - Phân biệt nội dung trong head với nội dung trong body
+exercise:
+  mode: html
+  starter: |
+    <!DOCTYPE html>
+    <!-- Complete html, head with title, and body -->
+    
+  hints:
+    - Thêm các phần tử html, head, body và title.
+    - Đặt meta charset và title trong head.
+    - Đặt nội dung hiển thị trong body.
+  solution: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>My Page</title>
+    </head>
+    <body>
+      <p>Hello</p>
+    </body>
+    </html>
+    
+  expected:
+    type: htmlTags
+    tags:
+      - tag: html
+        minCount: 1
+      - tag: head
+        minCount: 1
+      - tag: body
+        minCount: 1
+      - tag: title
+        minCount: 1
 ---
 
 Một tệp HTML không chỉ là vài thẻ rời. Nó là một *tài liệu* có khung cố định: khai báo loại tài liệu, phần thông tin cho trình duyệt (head), và phần nội dung người dùng nhìn thấy (body).
@@ -52,4 +85,4 @@ Hãy nghĩ như tờ giấy có phần tiêu đề hồ sơ (meta) và phần n�
 
 ## Thử ngay
 
-Nhìn lại ví dụ mẫu: chỉ ra dòng nào thuộc head, dòng nào thuộc body, và `title` xuất hiện ở đâu trên trình duyệt. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để hoàn thiện khung tài liệu HTML tối thiểu. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

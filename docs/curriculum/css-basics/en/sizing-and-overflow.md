@@ -10,6 +10,24 @@ objectives:
   - Set width, height, min, and max constraints
   - Predict when content overflows its box
   - Choose overflow values for clipping or scrolling
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="panel">Long text here</div>
+  starter: |
+    /* Limit width and handle overflow */
+    
+  hints:
+    - max-width limits how wide the box can grow.
+    - "overflow: auto adds scrollbars when needed."
+    - rem works well for max-width.
+  solution: |
+    .panel { max-width: 12rem; overflow: auto; }
+  expected:
+    type: cssIncludes
+    needles:
+      - max-width
+      - overflow
 ---
 
 **Sizing** properties set how large a box may be. **Overflow** controls what happens when content does not fit. Together they keep layouts from breaking when text is long or images are wide.
@@ -61,4 +79,4 @@ Prefer `max-width` on reading columns over a rigid `width` alone, so small scree
 
 ## Your turn
 
-Re-read the three rules. Say which one limits reading width, which one scrolls extra content, and which one clips. Then mark this lesson complete.
+Use the sandbox below to cap width and set overflow on .panel. When the checker shows **Correct**, mark this lesson complete.

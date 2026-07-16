@@ -10,6 +10,23 @@ objectives:
   - Use checkbox, radio, select, and textarea controls
   - Group related radios with a shared name
   - Mark a field as required when the answer is mandatory
+exercise:
+  mode: html
+  starter: |
+    <!-- Add a checkbox and a select menu -->
+    
+  hints:
+    - 'Checkbox uses input type="checkbox".'
+    - Select wraps option elements.
+    - Both can live in the same snippet.
+  solution: |
+    <label><input type="checkbox"> Agree</label>
+    <select><option>One</option></select>
+  expected:
+    type: htmlIncludes
+    needles:
+      - 'type="checkbox"'
+      - <select
 ---
 
 Text boxes are only one kind of answer. Forms also need **yes/no choices**, **one-of-many choices**, **dropdown lists**, and **multi-line text**. Each control has a suitable HTML element or `input` type. The `required` attribute tells the browser a value must be filled before submit.
@@ -71,4 +88,4 @@ Match the control to the question: a short comment needs `textarea`; a country l
 
 ## Your turn
 
-Scan the worked example and name each control type (checkbox, radio group, select, textarea). Confirm the two radios share one `name`. Then mark this lesson complete.
+Use the sandbox below to add a checkbox and a select control. When the checker shows **Correct**, mark this lesson complete.

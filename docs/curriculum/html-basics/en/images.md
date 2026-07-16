@@ -10,6 +10,22 @@ objectives:
   - Embed an image with img, src, and alt
   - Write alt text that describes the image’s role
   - Optionally set width and height for layout stability
+exercise:
+  mode: html
+  starter: |
+    <!-- Add an image with src and alt -->
+    
+  hints:
+    - Use a single img tag (self-closing).
+    - src points to the image file.
+    - alt describes the image for accessibility.
+  solution: |
+    <img src="cat.png" alt="A cat">
+  expected:
+    type: htmlIncludes
+    needles:
+      - alt=
+      - <img
 ---
 
 Images are empty elements: they do not wrap text the way a paragraph does. The `img` tag points to a file with `src` and describes the image for people who cannot see it with `alt`. Good `alt` text is part of accessible HTML, not an optional caption trick.
@@ -47,4 +63,4 @@ If an image is purely decorative, `alt=""` (empty) can be appropriate. For learn
 
 ## Your turn
 
-Re-read the `alt` in the worked example and ask: would that text still make sense if the picture were missing? When you agree it would, mark this lesson complete.
+Use the sandbox below to add an image with src and alt. When the checker shows **Correct**, mark this lesson complete.

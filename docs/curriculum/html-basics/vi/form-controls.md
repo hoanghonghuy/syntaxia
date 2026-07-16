@@ -10,6 +10,23 @@ objectives:
   - Dùng checkbox, radio, select và textarea
   - Hiểu required yêu cầu người dùng điền trước khi gửi
   - Chọn đúng loại điều khiển theo kiểu dữ liệu cần thu
+exercise:
+  mode: html
+  starter: |
+    <!-- Add a checkbox and a select menu -->
+    
+  hints:
+    - 'Checkbox dùng input type="checkbox".'
+    - Select bọc các phần tử option.
+    - Cả hai có thể nằm trong cùng một đoạn.
+  solution: |
+    <label><input type="checkbox"> Agree</label>
+    <select><option>One</option></select>
+  expected:
+    type: htmlIncludes
+    needles:
+      - 'type="checkbox"'
+      - <select
 ---
 
 Ngoài ô chữ một dòng, form còn có hộp chọn, nút chọn một phương án, danh sách thả, và ô nhiều dòng. Mỗi loại phù hợp một kiểu câu hỏi.
@@ -66,4 +83,4 @@ Ngoài ô chữ một dòng, form còn có hộp chọn, nút chọn một phư�
 
 ## Thử ngay
 
-Đọc ví dụ và nói: phần nào cho chọn nhiều, phần nào chỉ chọn một, phần nào là văn bản dài. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm checkbox và menu select. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

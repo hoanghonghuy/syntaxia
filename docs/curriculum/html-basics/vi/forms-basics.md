@@ -10,6 +10,32 @@ objectives:
   - Tạo form với form, input và button
   - Ghép label với input bằng for và id
   - Giải thích vì sao nhãn rõ ràng giúp mọi người điền form
+exercise:
+  mode: html
+  starter: |
+    <!-- Build a form with label, input, and button -->
+    
+  hints:
+    - Bọc các control trong phần tử form.
+    - Ghép label với input bằng for và id.
+    - Thêm nút button để gửi.
+  solution: |
+    <form>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email">
+      <button type="submit">Send</button>
+    </form>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: form
+        minCount: 1
+      - tag: label
+        minCount: 1
+      - tag: input
+        minCount: 1
+      - tag: button
+        minCount: 1
 ---
 
 Form (biểu mẫu) thu thập thông tin: tên, email, tìm kiếm… HTML dùng `form` bao các điều khiển; `label` gắn chữ hướng dẫn với ô nhập.
@@ -46,4 +72,4 @@ Form (biểu mẫu) thu thập thông tin: tên, email, tìm kiếm… HTML dùn
 
 ## Thử ngay
 
-Trong ví dụ, chỉ ra cặp `for`/`id`, vai trò của `name`, và nút nào gửi form. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để tạo form có label, input và button. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

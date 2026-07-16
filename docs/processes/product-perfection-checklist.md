@@ -38,11 +38,12 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 24 | **JS code sandbox** | done | 23 | Web Worker + grade API; **9/9** lessons with exercise (W3Schools map); see `javascript-basics-w3schools-map.md` |
 | 25 | **Progress ↔ sandbox sync** | done | 24 | Auto-complete on grade pass (JS+SQL); lesson checklist on `/progress`; see `progress-sandbox-sync.md` |
 | 26 | **HTML + CSS basics tracks** | done | 25 | Category `web`; `html-basics` **12** + `css-basics` **14** Phase 1 — see `html-css-basics-tracks.md` |
+| 27 | **HTML / CSS sandbox** | done | 26 | iframe `srcdoc` + `POST /sandbox/htmlcss/grade`; **26/26** exercises — see `html-css-sandbox.md` |
 | — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
 ## Current focus
 
-**Checklist rows 0–26 complete** (2026-07-16). Next optional: HTML/CSS sandbox research. Guest static FE and Google/Drive remain deferred.
+**Checklist rows 0–27 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
 
 ## Related
 

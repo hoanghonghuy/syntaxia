@@ -10,6 +10,24 @@ objectives:
   - Write colors with keywords, hex, and rgb
   - Choose among px, em, rem, and percentages
   - Prefer rem for scalable text sizing
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Set color and font-size on .note */
+    
+  hints:
+    - font-size accepts rem values like 1.25rem.
+    - color can be a named color or hex.
+    - Both go inside one .note rule.
+  solution: |
+    .note { color: teal; font-size: 1.25rem; }
+  expected:
+    type: cssIncludes
+    needles:
+      - rem
+      - color
 ---
 
 CSS values need both a **color** language and a set of **units** for length. Colors can be named keywords, hex codes, or `rgb()` functions. Lengths may be absolute (`px`) or relative (`em`, `rem`, `%`) so layouts can adapt.
@@ -60,4 +78,4 @@ When sizing text, prefer `rem` so nested elements do not multiply sizes accident
 
 ## Your turn
 
-In the worked example, find one hex color, one `rgb()` color, one `rem` length, and one percentage. Notice why `.lead` uses `rem`. Then mark this lesson complete.
+Use the sandbox below to set color and font-size with rem. When the checker shows **Correct**, mark this lesson complete.

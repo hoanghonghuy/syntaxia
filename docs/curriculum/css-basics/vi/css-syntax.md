@@ -10,6 +10,25 @@ objectives:
   - Đọc một rule CSS: selector, khối declaration, property và value
   - Phân biệt stylesheet ngoài (external) với style trong thẻ style (internal)
   - Nhận biết dấu `;` và `:` trong declaration
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note">Hi</p>
+  starter: |
+    /* Style .note text */
+    
+  hints:
+    - Selector class bắt đầu bằng dấu chấm.
+    - "Đặt khai báo bên trong { }."
+    - Dùng color để đổi màu chữ.
+  solution: |
+    .note { color: blue; }
+  expected:
+    type: cssIncludes
+    needles:
+      - .note
+      - "{"
+      - color
 ---
 
 Một **rule** (quy tắc) CSS gồm selector rồi một khối `{ ... }` chứa các **declaration** (khai báo). Mỗi declaration là `property: value;` — hai chấm giữa tên và giá trị, chấm phẩy kết thúc.
@@ -56,4 +75,4 @@ Cùng cú pháp cũng chạy trong `<style>h1 { color: navy; }</style>` — ch�
 
 ## Thử ngay
 
-Nhìn ví dụ mẫu: chỉ ra selector, hai property, và chỗ trang gắn stylesheet. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để viết rule CSS cho .note. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

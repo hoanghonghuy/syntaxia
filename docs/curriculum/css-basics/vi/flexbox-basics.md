@@ -10,6 +10,24 @@ objectives:
   - Bật Flexbox bằng display: flex trên phần tử cha
   - Đổi hướng hàng/cột bằng flex-direction và khoảng cách bằng gap
   - Căn item bằng justify-content và align-items ở mức giới thiệu
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="row"><span>A</span><span>B</span></div>
+  starter: |
+    /* Lay out .row with flex */
+    
+  hints:
+    - "display: flex bật bố cục flex."
+    - gap thêm khoảng cách giữa các item.
+    - Áp dụng cả hai lên container .row.
+  solution: |
+    .row { display: flex; gap: 1rem; }
+  expected:
+    type: cssIncludes
+    needles:
+      - "display: flex"
+      - gap
 ---
 
 **Flexbox** là mô hình bố cục một chiều: xếp các phần tử con thành hàng hoặc cột, rồi căn và phân khoảng cách một cách có kiểm soát. Bạn đặt `display: flex` trên **container** (cha); các **flex item** (con trực tiếp) tuân theo quy tắc flex.
@@ -57,4 +75,4 @@ Thử `justify-content: space-between` để đẩy item ra hai đầu khi thanh
 
 ## Thử ngay
 
-Nhìn `.toolbar`: nói property nào xếp hàng, property nào tạo khoảng 12px. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để bố cục .row bằng flexbox. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

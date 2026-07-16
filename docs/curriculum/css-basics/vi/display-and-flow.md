@@ -10,6 +10,23 @@ objectives:
   - Phân biệt block và inline trong luồng bình thường
   - Dùng inline-block khi cần vừa xếp ngang vừa đặt width
   - Ẩn phần tử bằng display: none
+exercise:
+  mode: both
+  starterHtml: |
+    <span class="box">A</span>
+  starter: |
+    /* Change how .box flows in the line */
+    
+  hints:
+    - display thay đổi cách bố cục.
+    - inline-block giữ phần tử trên dòng nhưng cho phép kích thước hộp.
+    - "Viết display: inline-block; trong rule."
+  solution: |
+    .box { display: inline-block; }
+  expected:
+    type: cssIncludes
+    needles:
+      - display
 ---
 
 Trình duyệt xếp phần tử theo **normal flow** (luồng bình thường). Property `display` quyết định hộp tham gia luồng thế nào: chiếm cả hàng (**block**), nằm trong dòng chữ (**inline**), kết hợp (**inline-block**), hoặc không hiện (**none**).
@@ -62,4 +79,4 @@ Thẻ như `p`, `div`, `h1` mặc định thường là block; `a`, `span`, `str
 
 ## Thử ngay
 
-Nói sự khác nhau giữa `inline-block` trên `.chip` và `none` trên `.hidden-label`. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để đặt display cho .box. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

@@ -10,6 +10,33 @@ objectives:
   - Build a data table with table, tr, th, and td
   - Separate header and body with thead and tbody
   - Use tables for data, not for page layout
+exercise:
+  mode: html
+  starter: |
+    <!-- Build a small table with header and data cells -->
+    
+  hints:
+    - Wrap rows in table and tr.
+    - Use th for a header cell.
+    - Use td for a data cell.
+  solution: |
+    <table>
+      <tr>
+        <th>Name</th>
+        <td>Alex</td>
+      </tr>
+    </table>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: table
+        minCount: 1
+      - tag: tr
+        minCount: 1
+      - tag: th
+        minCount: 1
+      - tag: td
+        minCount: 1
 ---
 
 A **table** shows information in rows and columns — schedules, comparisons, score sheets. HTML tables are for *tabular data*, not for drawing the whole page layout. Layout belongs to CSS; tables keep cells aligned with meaning.
@@ -61,4 +88,4 @@ Screen readers can announce header cells with the data they describe when the ma
 
 ## Your turn
 
-Count the columns in the worked example and confirm each body row has the same number of cells as the header. Then mark this lesson complete.
+Use the sandbox below to build a small data table. When the checker shows **Correct**, mark this lesson complete.

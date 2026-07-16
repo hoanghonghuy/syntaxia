@@ -10,6 +10,23 @@ objectives:
   - Giải thích CSS bằng lời đơn giản (trang trí giao diện, không phải cấu trúc)
   - Phân biệt HTML (cấu trúc) với CSS (kiểu hiển thị)
   - Nhận biết cách gắn style vào trang ở mức khái niệm
+exercise:
+  mode: both
+  starterHtml: |
+    <h1>Welcome</h1>
+  starter: |
+    /* Style the h1 heading */
+    
+  hints:
+    - Chọn h1 bằng selector kiểu thẻ.
+    - Thêm thuộc tính color trong ngoặc nhọn.
+    - Kết thúc khai báo bằng dấu chấm phẩy.
+  solution: |
+    h1 { color: teal; }
+  expected:
+    type: cssIncludes
+    needles:
+      - color
 ---
 
 HTML nói *cái gì* nằm trên trang: tiêu đề, đoạn văn, liên kết. **CSS** (Cascading Style Sheets) nói trang *trông như thế nào*: màu chữ, khoảng cách, khung viền.
@@ -50,4 +67,4 @@ CSS không thay thế HTML: bạn vẫn cần cấu trúc đúng; CSS chỉ đi�
 
 ## Thử ngay
 
-Đọc lại bảng ba ý và ví dụ mẫu. Tự nói: đâu là selector, đâu là property, đâu là value. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để tô màu tiêu đề. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

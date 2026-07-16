@@ -10,6 +10,24 @@ objectives:
   - Đặt width, height và giới hạn min/max
   - Giải thích overflow khi nội dung lớn hơn hộp
   - Chọn visible, hidden hoặc auto/scroll ở mức cơ bản
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="panel">Long text here</div>
+  starter: |
+    /* Limit width and handle overflow */
+    
+  hints:
+    - max-width giới hạn chiều rộng tối đa.
+    - "overflow: auto thêm thanh cuộn khi cần."
+    - rem phù hợp cho max-width.
+  solution: |
+    .panel { max-width: 12rem; overflow: auto; }
+  expected:
+    type: cssIncludes
+    needles:
+      - max-width
+      - overflow
 ---
 
 Đôi khi bạn cần kiểm soát **kích thước** hộp: rộng bao nhiêu, cao tối thiểu bao nhiêu. Khi nội dung *nhiều hơn* chỗ chứa, **overflow** quyết định phần tràn bị cắt, cuộn, hay vẫn tràn ra ngoài.
@@ -55,4 +73,4 @@ objectives:
 
 ## Thử ngay
 
-Với `.preview`, nói điều gì xảy ra nếu chữ dài hơn 80px chiều cao. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để giới hạn chiều rộng và đặt overflow cho .panel. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

@@ -10,6 +10,25 @@ objectives:
   - Use type selectors for element names
   - Target reusable groups with class selectors
   - Reserve ID selectors for unique elements
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note" id="hero">Hi</p>
+  starter: |
+    /* Style .note and #hero */
+    
+  hints:
+    - "Classes use .name; ids use #name."
+    - You can write two separate rules.
+    - "font-weight: bold makes text heavier."
+  solution: |
+    .note { color: navy; }
+    #hero { font-weight: bold; }
+  expected:
+    type: cssIncludes
+    needles:
+      - .note
+      - "#hero"
 ---
 
 **Selectors** tell the browser which elements a rule should affect. Three selectors appear in almost every beginner stylesheet: the **type** selector (element name), the **class** selector (a reusable label), and the **ID** selector (a unique label on one element).
@@ -52,4 +71,4 @@ Prefer classes for most styling. Use type selectors for broad defaults. Use IDs 
 
 ## Your turn
 
-Re-read the table and worked example. For each rule, say whether it is type, class, or ID, and what HTML attribute (if any) must be present. Then mark this lesson complete.
+Use the sandbox below to style the class and id selectors. When the checker shows **Correct**, mark this lesson complete.

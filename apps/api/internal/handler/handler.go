@@ -65,6 +65,7 @@ func (h *Handler) RegisterRoutes(r *gin.Engine) {
 		{
 			authed.POST("/sandbox/run", h.sandboxRun)
 			authed.POST("/sandbox/js/grade", h.sandboxJsGrade)
+			authed.POST("/sandbox/htmlcss/grade", h.sandboxHtmlCssGrade)
 			authed.GET("/progress", h.listProgress)
 			authed.PUT("/progress/:lessonId", h.setProgress)
 			authed.GET("/notes", h.listAllNotes)
@@ -429,6 +430,36 @@ func (h *Handler) sandboxJsGrade(c *gin.Context) {
 		req.Locale,
 		req.ReturnValue,
 		req.ConsoleLines,
+	)
+	if err != nil {
+		middleware.JSONError(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, result)
+}
+
+func (h *Handler) sandboxHtmlCssGrade(c *gin.Context) {
+	var req struct {
+		LessonID string `json:"lessonId"`
+		Slug     string `json:"slug"`
+		Locale   string `json:"locale"`
+		HTML     string `json:"html"`
+		CSS      string `json:"css"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		middleware.JSONError(c, apperrors.Validation("invalid body"))
+		return
+	}
+	if req.Locale == "" {
+		req.Locale = constants.DefaultLocale
+	}
+	result, err := h.svc.Sandbox.GradeHtmlCssForLesson(
+		c.Request.Context(),
+		req.LessonID,
+		req.Slug,
+		req.Locale,
+		req.HTML,
+		req.CSS,
 	)
 	if err != nil {
 		middleware.JSONError(c, err)

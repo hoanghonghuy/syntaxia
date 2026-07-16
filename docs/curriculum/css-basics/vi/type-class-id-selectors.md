@@ -10,6 +10,25 @@ objectives:
   - Dùng type selector theo tên thẻ
   - Dùng class selector với dấu chấm và thuộc tính class
   - Dùng id selector với dấu # và thuộc tính id
+exercise:
+  mode: both
+  starterHtml: |
+    <p class="note" id="hero">Hi</p>
+  starter: |
+    /* Style .note and #hero */
+    
+  hints:
+    - "Class dùng .tên; id dùng #tên."
+    - Có thể viết hai rule riêng.
+    - "font-weight: bold làm chữ đậm hơn."
+  solution: |
+    .note { color: navy; }
+    #hero { font-weight: bold; }
+  expected:
+    type: cssIncludes
+    needles:
+      - .note
+      - "#hero"
 ---
 
 **Selector** chọn phần tử HTML nào nhận style. Ba loại cơ bản nhất: **type** (theo tên thẻ), **class** (theo nhóm), **id** (theo một phần tử duy nhất trên trang).
@@ -58,4 +77,4 @@ Trong HTML, class viết không có dấu chấm (`class="note"`); trong CSS, cl
 
 ## Thử ngay
 
-Với HTML mẫu, nói rõ rule nào áp vào đoạn nào. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để style selector class và id. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

@@ -10,6 +10,33 @@ objectives:
   - Dựng bảng bằng table, tr, th, td
   - Phân biệt ô tiêu đề (th) và ô dữ liệu (td)
   - Nhận biết thead và tbody ở mức cơ bản
+exercise:
+  mode: html
+  starter: |
+    <!-- Build a small table with header and data cells -->
+    
+  hints:
+    - Bọc hàng trong table và tr.
+    - Dùng th cho ô tiêu đề.
+    - Dùng td cho ô dữ liệu.
+  solution: |
+    <table>
+      <tr>
+        <th>Name</th>
+        <td>Alex</td>
+      </tr>
+    </table>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: table
+        minCount: 1
+      - tag: tr
+        minCount: 1
+      - tag: th
+        minCount: 1
+      - tag: td
+        minCount: 1
 ---
 
 Bảng HTML phù hợp khi dữ liệu có hàng và cột — như bảng điểm hoặc danh sách sản phẩm. Không dùng bảng chỉ để “xếp bố cục trang” (việc đó thuộc CSS).
@@ -64,4 +91,4 @@ Kết quả ý nghĩa:
 
 ## Thử ngay
 
-Đếm trong ví dụ: có bao nhiêu hàng tiêu đề, bao nhiêu hàng dữ liệu, và cột nào dùng `th`. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để tạo bảng dữ liệu nhỏ. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

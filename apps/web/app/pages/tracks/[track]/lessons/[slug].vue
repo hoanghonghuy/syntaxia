@@ -19,16 +19,17 @@
         <AppBreadcrumb :items="crumbs" />
         <h1>{{ lesson.title }}</h1>
         <article class="prose-lesson" v-html="lesson.bodyHtml" />
-        <SqlSandbox
-          v-if="lesson.exercise && trackId !== 'javascript-basics'"
+        <HtmlCssSandbox
+          v-if="lesson.exercise && isHtmlCssTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
           :locale="locale"
-          :starter="exerciseStarter"
+          :mode="htmlCssExerciseMode"
+          :starter-html="htmlCssStarterHtml"
+          :starter-css="htmlCssStarterCss"
           :hints="exerciseHints"
           :solution-available="exerciseSolutionAvailable"
-          :preview="exercisePreview"
           :can-run="!auth.loading && !!auth.user"
           :login-path="authLoginPath"
           @passed="onSandboxPassed"
@@ -42,6 +43,20 @@
           :starter="jsExerciseStarter"
           :hints="exerciseHints"
           :solution-available="exerciseSolutionAvailable"
+          :can-run="!auth.loading && !!auth.user"
+          :login-path="authLoginPath"
+          @passed="onSandboxPassed"
+        />
+        <SqlSandbox
+          v-else-if="lesson.exercise"
+          :key="lesson.id"
+          :lesson-id="lesson.id"
+          :lesson-slug="slug"
+          :locale="locale"
+          :starter="exerciseStarter"
+          :hints="exerciseHints"
+          :solution-available="exerciseSolutionAvailable"
+          :preview="exercisePreview"
           :can-run="!auth.loading && !!auth.user"
           :login-path="authLoginPath"
           @passed="onSandboxPassed"
@@ -212,6 +227,35 @@ const exerciseStarter = computed(() => {
 const jsExerciseStarter = computed(() => {
   const ex = lesson.value?.exercise as Record<string, unknown> | undefined
   return (ex?.starter as string) || '// write JavaScript here\n'
+})
+
+const isHtmlCssTrack = computed(
+  () => trackId.value === 'html-basics' || trackId.value === 'css-basics',
+)
+
+const htmlCssExerciseMode = computed(() => {
+  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
+  const mode = ex?.mode
+  if (mode === 'css' || mode === 'both' || mode === 'html') return mode
+  return trackId.value === 'css-basics' ? 'css' : 'html'
+})
+
+const htmlCssStarterHtml = computed(() => {
+  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
+  if (typeof ex?.starterHtml === 'string') return ex.starterHtml
+  if (htmlCssExerciseMode.value === 'html' || htmlCssExerciseMode.value === 'both') {
+    return (ex?.starter as string) || '<!-- write HTML here -->\n'
+  }
+  return '<p class="note">Preview</p>\n'
+})
+
+const htmlCssStarterCss = computed(() => {
+  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
+  if (typeof ex?.starterCss === 'string') return ex.starterCss
+  if (htmlCssExerciseMode.value === 'css' || htmlCssExerciseMode.value === 'both') {
+    return (ex?.starter as string) || '/* write CSS here */\n'
+  }
+  return ''
 })
 
 const exerciseHints = computed(() => {

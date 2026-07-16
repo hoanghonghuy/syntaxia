@@ -69,6 +69,11 @@ export function useApi() {
         method: 'POST',
         body: JSON.stringify({ lessonId, locale, returnValue, consoleLines }),
       }),
+    gradeHtmlCssSandbox: (lessonId: string, locale: string, html: string, css: string) =>
+      request<SandboxResult>('/api/v1/sandbox/htmlcss/grade', {
+        method: 'POST',
+        body: JSON.stringify({ lessonId, locale, html, css }),
+      }),
     listProgress: () => request<Progress[]>('/api/v1/progress'),
     setProgress: (lessonId: string, locale: string, completed: boolean) =>
       request<Progress>(`/api/v1/progress/${lessonId}`, {

@@ -10,6 +10,21 @@ objectives:
   - Tạo liên kết bằng thẻ a và thuộc tính href
   - Phân biệt URL tuyệt đối và đường dẫn tương đối
   - Viết chữ liên kết rõ ràng (không chỉ “bấm vào đây”)
+exercise:
+  mode: html
+  starter: |
+    <!-- Add a link to https://example.com -->
+    
+  hints:
+    - Dùng phần tử a cho liên kết.
+    - Đặt href là URL đầy đủ.
+    - Đặt chữ hiển thị giữa hai thẻ anchor.
+  solution: |
+    <a href="https://example.com">Example</a>
+  expected:
+    type: htmlIncludes
+    needles:
+      - href=
 ---
 
 Liên kết (link) đưa người đọc sang trang khác hoặc vị trí khác. Trong HTML, thẻ `a` (anchor) cùng thuộc tính `href` tạo liên kết.
@@ -49,4 +64,4 @@ Liên kết (link) đưa người đọc sang trang khác hoặc vị trí khác
 
 ## Thử ngay
 
-Trong ví dụ mẫu, chỉ ra liên kết nào tuyệt đối, liên kết nào tương đối, và chữ hiển thị của mỗi liên kết là gì. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm liên kết có href. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

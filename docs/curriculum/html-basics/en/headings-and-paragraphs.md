@@ -10,6 +10,25 @@ objectives:
   - Use h1–h6 to outline a page
   - Wrap ordinary text in p elements
   - Avoid skipping heading levels for looks
+exercise:
+  mode: html
+  starter: |
+    <!-- Add an h1 and a paragraph -->
+    
+  hints:
+    - Use h1 for the main heading.
+    - Use p for the paragraph below it.
+    - Wrap text inside each tag pair.
+  solution: |
+    <h1>Welcome</h1>
+    <p>This is a short paragraph.</p>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: h1
+        minCount: 1
+      - tag: p
+        minCount: 1
 ---
 
 Long pages need a clear outline. **Headings** (`h1` through `h6`) mark titles and section names. **Paragraphs** (`p`) hold ordinary blocks of text. Together they give the page a readable structure — for people scanning with their eyes and for tools that jump by heading.
@@ -50,4 +69,4 @@ Headings are for structure, not for making text large. Size and color come later
 
 ## Your turn
 
-Re-read the worked example and check that each heading sits one level deeper than its parent section. When the outline feels clear to you, mark this lesson complete.
+Use the sandbox below to add a main heading and a paragraph. When the checker shows **Correct**, mark this lesson complete.

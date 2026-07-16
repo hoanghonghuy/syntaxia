@@ -10,6 +10,32 @@ objectives:
   - Wrap fields in a form element
   - Connect a label to an input with for and id
   - Add a button to submit the form
+exercise:
+  mode: html
+  starter: |
+    <!-- Build a form with label, input, and button -->
+    
+  hints:
+    - Wrap controls in a form element.
+    - Pair label with input using for and id.
+    - Add a button to submit.
+  solution: |
+    <form>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email">
+      <button type="submit">Send</button>
+    </form>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: form
+        minCount: 1
+      - tag: label
+        minCount: 1
+      - tag: input
+        minCount: 1
+      - tag: button
+        minCount: 1
 ---
 
 A **form** collects answers: a name, an email, a search query. The `form` element groups the fields. Each visible field should have a **label** so visitors know what to type — and so clicking the label focuses the control.
@@ -49,4 +75,4 @@ Always associate labels with controls. Placeholder text alone is not a substitut
 
 ## Your turn
 
-In the worked example, verify that `for` and `id` use the same value, and notice which attributes are for people (`label` text) versus for submission (`name`). Then mark this lesson complete.
+Use the sandbox below to build a form with label, input, and button. When the checker shows **Correct**, mark this lesson complete.

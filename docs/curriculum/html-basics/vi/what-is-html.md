@@ -10,6 +10,22 @@ objectives:
   - Giải thích HTML bằng lời đơn giản (cấu trúc trang, không phải trang trí)
   - Nhận biết phần tử (element), thẻ (tag) và thuộc tính (attribute)
   - Đọc một đoạn HTML ngắn và nói từng phần làm gì
+exercise:
+  mode: html
+  starter: |
+    <!-- Add a paragraph about HTML -->
+    
+  hints:
+    - Dùng thẻ p cho đoạn văn.
+    - Đặt nội dung giữa thẻ mở và thẻ đóng của p.
+    - Đoạn văn có thể mô tả HTML làm gì.
+  solution: |
+    <p>HTML marks up meaning.</p>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: p
+        minCount: 1
 ---
 
 Trang web hiện chữ, ảnh và nút. **HTML** (HyperText Markup Language) là ngôn ngữ dùng để *đánh dấu* nội dung: đây là tiêu đề, đây là đoạn văn, đây là liên kết. Trình duyệt đọc HTML rồi dựng trang bạn nhìn thấy.
@@ -44,4 +60,4 @@ Trình duyệt sẽ hiện khoảng: Xin chào, **Syntaxia**.
 
 ## Thử ngay
 
-Đọc lại bảng ba ý và ví dụ mẫu. Tự nói to (hoặc ghi chú): đâu là thẻ mở, đâu là nội dung, đâu là thẻ đóng. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm một đoạn văn về HTML. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

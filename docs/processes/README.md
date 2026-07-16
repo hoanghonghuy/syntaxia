@@ -49,6 +49,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [javascript-basics-w3schools-map.md](./javascript-basics-w3schools-map.md) | JS Basics: one exercise per lesson (W3Schools map) |
 | [javascript-sandbox.md](./javascript-sandbox.md) | JS Web Worker runner + server-side grade |
 | [html-css-basics-tracks.md](./html-css-basics-tracks.md) | HTML/CSS tracks (**locked**) — category `web`, Phase 1 no sandbox |
+| [html-css-sandbox.md](./html-css-sandbox.md) | HTML/CSS iframe preview + server grade (**done** #27) |
 | [catalog-architecture.md](./catalog-architecture.md) | Category → Level → Track → Lessons; add a track |
 
 Add a row here whenever you create a new process file.

@@ -88,20 +88,21 @@ Map from MDN CSS fundamentals §§3.1–3.8 + text styling essentials + Flexbox 
 | **2** | Publish `html-basics` 0–11 en+vi Depth B | **done** — 12×2 lessons |
 | **3** | Publish `css-basics` 0–13 en+vi Depth B | **done** — 14×2 lessons |
 | **4** | Checklist + track-completion snapshot | **done** |
-| **5** | `/opsx-research` HTML/CSS sandbox | next when owner asks |
+| **5** | `/opsx-research` HTML/CSS sandbox | **done** — see [`html-css-sandbox.md`](./html-css-sandbox.md) |
+| **6** | Implement HTML/CSS sandbox + exercises | **done** — grader API, `HtmlCssSandbox`, **26/26** lessons with `exercise` |
 
 ## Do / Don't
 
 **Do**
 
 - One MDN concept ≈ one slug; ship en+vi together.
-- Put sample markup/CSS in Markdown fences; “Your turn” → Mark complete until Phase 5.
+- Put sample markup/CSS in Markdown fences; “Your turn” uses the HTML/CSS sandbox when `exercise` is present.
 - Finish `html-basics` before expanding CSS beyond the locked table.
 
 **Don't**
 
 - Invent topics outside the tables above.
-- Reuse SQL/`JsSandbox` for HTML/CSS grading in Phase 1.
+- Reuse SQL/`JsSandbox` for HTML/CSS grading — use `HtmlCssSandbox` + `POST /sandbox/htmlcss/grade`.
 - Merge HTML+CSS into a single track.
 - Put video/audio, Grid, or responsive modules into v1.
 

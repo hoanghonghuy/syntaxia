@@ -10,6 +10,21 @@ objectives:
   - Create an anchor with href
   - Tell absolute URLs from relative paths
   - Write link text that describes the destination
+exercise:
+  mode: html
+  starter: |
+    <!-- Add a link to https://example.com -->
+    
+  hints:
+    - Use an a element for the link.
+    - Set href to the full URL.
+    - Put visible text between the anchor tags.
+  solution: |
+    <a href="https://example.com">Example</a>
+  expected:
+    type: htmlIncludes
+    needles:
+      - href=
 ---
 
 **Links** connect pages. The `a` (anchor) element wraps the clickable text or content, and the `href` attribute holds the destination address. Without good link text, visitors cannot tell where a click will take them.
@@ -50,4 +65,4 @@ Keep link text short and specific. Avoid empty “click here” when you can nam
 
 ## Your turn
 
-In the worked example, identify which `href` is absolute and which is relative, and notice how the visible text names the target. Then mark this lesson complete.
+Use the sandbox below to add a link with href. When the checker shows **Correct**, mark this lesson complete.

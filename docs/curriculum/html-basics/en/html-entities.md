@@ -10,6 +10,21 @@ objectives:
   - Write reserved characters with HTML entities
   - Use br and hr for a line break and a thematic break
   - Recognize light helpers such as abbr and time
+exercise:
+  mode: html
+  starter: |
+    <!-- Show AT&amp;T using an entity for & -->
+    
+  hints:
+    - Ampersand in text needs an entity.
+    - "Write &amp; to show & safely."
+    - Wrap the company name in a paragraph.
+  solution: |
+    <p>AT&amp;T</p>
+  expected:
+    type: htmlIncludes
+    needles:
+      - "&amp;"
 ---
 
 Some characters are special in HTML source. The less-than sign starts a tag, so you cannot type raw `<` inside ordinary text and expect it to show as a symbol. **Character entities** (and numeric character references) let you include those symbols safely. A few small elements — `br`, `hr`, `abbr`, `time` — help with line breaks, breaks in topic, abbreviations, and dates.
@@ -57,4 +72,4 @@ Prefer new paragraphs (`p`) over many `br` breaks for ordinary prose.
 
 ## Your turn
 
-In the worked example, find one entity (`&lt;` or `&amp;`), one `br` or `hr`, and either `abbr` or `time`. When you can explain why each is there, mark this lesson complete.
+Use the sandbox below to show AT&T with an HTML entity. When the checker shows **Correct**, mark this lesson complete.

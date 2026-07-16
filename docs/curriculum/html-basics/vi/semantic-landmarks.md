@@ -10,6 +10,28 @@ objectives:
   - Nhận biết các vùng semantic: header, nav, main, article, section, footer
   - Giải thích vì sao landmark giúp điều hướng và tiếp cận
   - Phác khung trang đơn giản bằng các vùng này
+exercise:
+  mode: html
+  starter: |
+    <!-- Add header, main, and footer regions -->
+    
+  hints:
+    - Thêm phần tử header cho vùng đầu trang.
+    - Bọc nội dung chính trong main.
+    - Kết thúc bằng phần tử footer.
+  solution: |
+    <header>Top</header>
+    <main>Content</main>
+    <footer>Bottom</footer>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: header
+        minCount: 1
+      - tag: main
+        minCount: 1
+      - tag: footer
+        minCount: 1
 ---
 
 Trang web thường có phần đầu, menu, nội dung chính và chân trang. HTML hiện đại có thẻ **landmark** (vùng trang) để nói rõ từng khu vực — không chỉ dùng nhiều `div` vô danh.
@@ -59,4 +81,4 @@ Trang web thường có phần đầu, menu, nội dung chính và chân trang. 
 
 ## Thử ngay
 
-Nhìn khung ví dụ và kể lần lượt: phần nào là menu, phần nào là nội dung chính, phần nào là chân trang. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm các vùng header, main và footer. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

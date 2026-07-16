@@ -10,6 +10,23 @@ objectives:
   - Style link states with :link, :visited, :hover, and :focus
   - Explain what a pseudo-class represents
   - Prefer visible focus styles for keyboard users
+exercise:
+  mode: both
+  starterHtml: |
+    <a href="#">Link</a>
+  starter: |
+    /* Style the link on hover */
+    
+  hints:
+    - "Pseudo-class attaches with a colon: :hover."
+    - "Write a:hover before the curly braces."
+    - Change color on hover.
+  solution: |
+    a:hover { color: orange; }
+  expected:
+    type: cssIncludes
+    needles:
+      - ":hover"
 ---
 
 A **pseudo-class** styles an element in a special *state*, without adding a new class in HTML. Link styling is the classic beginner use: unvisited, visited, hovered, and focused. The colon (`:`) marks the pseudo-class name.
@@ -59,4 +76,4 @@ A common order for link rules is link → visited → hover → focus → active
 
 ## Your turn
 
-Re-read the worked example and name the four states shown. Notice which rule helps keyboard users. Then mark this lesson complete.
+Use the sandbox below to style links on hover. When the checker shows **Correct**, mark this lesson complete.

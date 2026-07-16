@@ -10,6 +10,23 @@ objectives:
   - Giải thích pseudo-class là trạng thái hoặc điều kiện của phần tử
   - Style liên kết với :link, :visited, :hover, :focus
   - Hiểu :focus giúp bàn phím và tiếp cận
+exercise:
+  mode: both
+  starterHtml: |
+    <a href="#">Link</a>
+  starter: |
+    /* Style the link on hover */
+    
+  hints:
+    - "Pseudo-class gắn bằng dấu hai chấm: :hover."
+    - "Viết a:hover trước ngoặc nhọn."
+    - Đổi color khi hover.
+  solution: |
+    a:hover { color: orange; }
+  expected:
+    type: cssIncludes
+    needles:
+      - ":hover"
 ---
 
 **Pseudo-class** (lớp giả) chọn phần tử theo *trạng thái* — ví dụ liên kết chưa mở, đã mở, đang hover chuột, hoặc đang có focus bàn phím — mà không cần thêm class trong HTML.
@@ -62,4 +79,4 @@ Thứ tự khai báo các trạng thái liên kết thường được khuyên l
 
 ## Thử ngay
 
-Đọc lại bảng bốn trạng thái và nói mỗi cái xảy ra khi nào. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để style liên kết khi hover. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

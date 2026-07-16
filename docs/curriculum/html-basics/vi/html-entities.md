@@ -10,6 +10,21 @@ objectives:
   - Dùng entity khi cần hiện ký tự đặc biệt như < và &
   - Nhận biết br và hr ở mức đúng chỗ
   - Giới thiệu abbr và time như thẻ chữ bổ trợ
+exercise:
+  mode: html
+  starter: |
+    <!-- Show AT&amp;T using an entity for & -->
+    
+  hints:
+    - "Dấu & trong chữ cần entity."
+    - "Viết &amp; để hiện & an toàn."
+    - Bọc tên công ty trong đoạn p.
+  solution: |
+    <p>AT&amp;T</p>
+  expected:
+    type: htmlIncludes
+    needles:
+      - "&amp;"
 ---
 
 Đôi khi bạn muốn hiện đúng ký tự `<` hoặc `&` trên trang. Nếu gõ thẳng vào HTML, trình duyệt có thể hiểu nhầm là mã. **Entity** (thực thể ký tự) là cách viết an toàn cho những ký tự đó.
@@ -52,4 +67,4 @@ Ngoài ra có vài thẻ chữ nhỏ hữu ích: xuống dòng cưỡng bức, �
 
 ## Thử ngay
 
-Trong ví dụ mẫu, chỉ ra chỗ nào dùng entity để hiện thẻ, chỗ nào là `abbr`, và `br` đang làm gì. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để hiện AT&T bằng HTML entity. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

@@ -451,3 +451,31 @@ func (s *SandboxService) GradeJSForLesson(
 	}
 	return result, nil
 }
+
+func (s *SandboxService) GradeHtmlCssForLesson(
+	ctx context.Context,
+	lessonID, slug, locale string,
+	html, css string,
+) (domain.SandboxResult, error) {
+	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale)
+	if err != nil {
+		return domain.SandboxResult{}, err
+	}
+	expected, err := sandboxExerciseExpected(lesson.Exercise)
+	if err != nil {
+		return domain.SandboxResult{}, err
+	}
+	passed, code, msg := sandbox.GradeHtmlCss(expected, sandbox.HtmlCssGradeInput{
+		HTML: html,
+		CSS:  css,
+	})
+	return domain.SandboxResult{
+		Passed:  passed,
+		Code:    code,
+		Message: msg,
+		Meta: map[string]any{
+			"html": html,
+			"css":  css,
+		},
+	}, nil
+}

@@ -10,6 +10,24 @@ objectives:
   - Đặt tên bốn lớp: content, padding, border, margin
   - Phân biệt khoảng trong (padding) và khoảng ngoài (margin)
   - Biết box-sizing: border-box giúp tính kích thước dễ hơn
+exercise:
+  mode: both
+  starterHtml: |
+    <div class="box">Box</div>
+  starter: |
+    /* Add padding and margin to .box */
+    
+  hints:
+    - padding thêm khoảng trống bên trong viền.
+    - margin thêm khoảng trống bên ngoài viền.
+    - rem là đơn vị phổ biến cho khoảng cách.
+  solution: |
+    .box { padding: 1rem; margin: 1rem; }
+  expected:
+    type: cssIncludes
+    needles:
+      - padding
+      - margin
 ---
 
 Mọi phần tử trên trang được trình duyệt vẽ như một **box** (hộp). **Box model** gồm bốn lớp từ trong ra ngoài: nội dung (content), đệm trong (padding), viền (border), và khoảng ngoài (margin).
@@ -54,4 +72,4 @@ Không có `border-box`, nhiều trình duyệt mặc định cộng padding/bor
 
 ## Thử ngay
 
-Nhìn rule `.card` và nói từng dòng thuộc lớp nào của box model. Rồi đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới để thêm padding và margin cho .box. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.

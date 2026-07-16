@@ -10,6 +10,28 @@ objectives:
   - Place header, nav, main, and footer landmarks
   - Use section and article for meaningful chunks
   - Prefer semantic regions over anonymous divs for page layout roles
+exercise:
+  mode: html
+  starter: |
+    <!-- Add header, main, and footer regions -->
+    
+  hints:
+    - Add a header element for the top region.
+    - Wrap main content in main.
+    - Close with a footer element.
+  solution: |
+    <header>Top</header>
+    <main>Content</main>
+    <footer>Bottom</footer>
+  expected:
+    type: htmlTags
+    tags:
+      - tag: header
+        minCount: 1
+      - tag: main
+        minCount: 1
+      - tag: footer
+        minCount: 1
 ---
 
 A long page is easier to navigate when major regions have names. HTML’s **landmark** elements — such as `header`, `nav`, `main`, and `footer` — mark those regions. Assistive tools can jump between them; future CSS can target them cleanly.
@@ -65,4 +87,4 @@ Generic `div` boxes still have a place for styling hooks, but they do not name a
 
 ## Your turn
 
-Trace the worked example from top to bottom and name each landmark out loud (`header`, `nav`, `main`, `footer`). When the map feels settled, mark this lesson complete.
+Use the sandbox below to add header, main, and footer landmarks. When the checker shows **Correct**, mark this lesson complete.
