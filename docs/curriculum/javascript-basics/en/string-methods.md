@@ -10,6 +10,21 @@ objectives:
   - Read a string's length
   - Change case with toUpperCase and toLowerCase
   - Take a slice of text with slice
+exercise:
+  starter: |
+    const code = "Syntaxia";
+    // return the first three letters
+    return code.slice(0, 3);
+  hints:
+    - "slice(start, end) takes from start up to (not including) end."
+    - "Start at index 0; end before index 3."
+    - 'The answer is three letters: Syn.'
+  solution: |
+    const code = "Syntaxia";
+    return code.slice(0, 3);
+  expected:
+    type: returnValue
+    value: "Syn"
 ---
 
 A string is more than a label on a box — it is text you can **inspect** and **reshape** a little. JavaScript gives each string small built-in tools called **methods**. You call them with a dot after the string (or a variable holding text).
@@ -46,4 +61,4 @@ console.log(short);
 
 ## Your turn
 
-What does `code.slice(0, 3)` produce for `"Syntaxia"`? Say the three letters out loud, then mark this lesson complete.
+Return `code.slice(0, 3)` for `"Syntaxia"` in the sandbox. Mark complete when you get **Syn**.

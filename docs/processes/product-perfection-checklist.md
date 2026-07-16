@@ -33,12 +33,14 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 19 | **Track hub + account shell** | done | 18 | HubHeader on track hub, account shared CSS, load error + retry; see `home-hub-ui-polish.md` |
 | 20 | **Release smoke verification** | done | 19 | `scripts/release-smoke.ps1` green 2026-07-15; see `release-hardening.md` |
 | 21 | **JavaScript Basics expansion** | done | 20 | Lessons 3–5 (strings, string-methods, arrays) en+vi; see `javascript-track.md` |
-| 22 | **JavaScript Basics completion** | pending | 21 | Lessons 6–8 (conditionals, loops, functions) en+vi; see `curriculum-track-completion.md` |
+| 22 | **JavaScript Basics completion** | done | 21 | Lessons 6–8 (conditionals, loops, functions) en+vi; see `curriculum-track-completion.md` |
+| 23 | **Production deploy readiness** | done | 22 | `check-javascript-basics.ps1` + `production-deploy.md`; release smoke green |
+| 24 | **JS code sandbox** | done | 23 | Web Worker + grade API; **9/9** lessons with exercise (W3Schools map); see `javascript-basics-w3schools-map.md` |
 | — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
 ## Current focus
 
-**Finish `javascript-basics` first (row 22).** Rows 0–21 done. Do not expand SQL tracks or start a new code track until row 22 passes Definition of done in [`curriculum-track-completion.md`](./curriculum-track-completion.md).
+**Checklist rows 0–24 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
 
 ## Related
 
@@ -47,7 +49,8 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 - [`release-hardening.md`](./release-hardening.md)  
 - [`e2e-smoke.md`](./e2e-smoke.md)  
 - [`postgresql-track.md`](./postgresql-track.md)  
-- [`javascript-track.md`](./javascript-track.md)  
+- [`javascript-track.md`](./javascript-track.md)
+- [`javascript-sandbox.md`](./javascript-sandbox.md)  
 - [`catalog-architecture.md`](./catalog-architecture.md)  
 - [`curriculum-pedagogy.md`](./curriculum-pedagogy.md)  
 - [`lesson-reader.md`](./lesson-reader.md)  

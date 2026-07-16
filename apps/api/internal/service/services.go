@@ -421,3 +421,33 @@ func (s *SandboxService) RunForLesson(ctx context.Context, lessonID, slug, local
 	}
 	return s.runner.Run(ctx, sql, lesson.SandboxSeed, expected)
 }
+
+func (s *SandboxService) GradeJSForLesson(
+	ctx context.Context,
+	lessonID, slug, locale string,
+	returnValue any,
+	consoleLines []string,
+) (domain.SandboxResult, error) {
+	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale)
+	if err != nil {
+		return domain.SandboxResult{}, err
+	}
+	expected, err := sandboxExerciseExpected(lesson.Exercise)
+	if err != nil {
+		return domain.SandboxResult{}, err
+	}
+	passed, code, msg := sandbox.GradeJs(expected, sandbox.JsGradeInput{
+		ReturnValue:  returnValue,
+		ConsoleLines: consoleLines,
+	})
+	result := domain.SandboxResult{
+		Passed: passed,
+		Code:   code,
+		Message: msg,
+		Meta: map[string]any{
+			"returnValue":  returnValue,
+			"consoleLines": consoleLines,
+		},
+	}
+	return result, nil
+}

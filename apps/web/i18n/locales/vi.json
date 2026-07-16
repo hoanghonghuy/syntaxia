@@ -98,7 +98,11 @@
   },
   "lesson": {
     "run": "Chạy truy vấn",
+    "runJs": "Chạy mã",
     "runHint": "Ctrl+Enter",
+    "runHintJs": "Ctrl+Enter",
+    "jsOutput": "Kết quả console",
+    "jsReturn": "Giá trị return",
     "passed": "Đúng rồi!",
     "failed": "Chưa đúng — kiểm tra lại truy vấn.",
     "failedWrongResult": "Truy vấn đã chạy, nhưng kết quả chưa khớp đáp án. So sánh cột và hàng với kết quả mong đợi.",
@@ -118,6 +122,7 @@
     "showSolution": "Xem đáp án",
     "solutionLabel": "Đáp án",
     "useSolution": "Dùng truy vấn này",
+    "useSolutionJs": "Dùng mã này",
     "attemptsHint": "Sau {n} lần chạy sai bạn có thể xem đáp án.",
     "pagerNav": "Điều hướng bài học",
     "loadErrorTitle": "Không tải được bài học",
@@ -129,6 +134,8 @@
       "undefinedColumn": "Không tìm thấy tên cột đó. Đối chiếu chính tả với bảng mẫu.",
       "undefinedTable": "Không tìm thấy tên bảng đó. Đối chiếu chính tả với bảng mẫu.",
       "permission": "Câu lệnh này không được phép trong sandbox của bài tập này.",
+      "timeout": "Mã chạy quá lâu. Kiểm tra vòng lặp vô hạn.",
+      "nonSerializableReturn": "Giá trị return phải có thể chuyển sang JSON (số, chuỗi, boolean, mảng hoặc object).",
       "generic": "Không chạy được truy vấn. Kiểm tra lại SQL rồi thử lại."
     }
   },

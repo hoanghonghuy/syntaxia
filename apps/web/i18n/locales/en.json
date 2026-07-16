@@ -98,7 +98,11 @@
   },
   "lesson": {
     "run": "Run query",
+    "runJs": "Run code",
     "runHint": "Ctrl+Enter",
+    "runHintJs": "Ctrl+Enter",
+    "jsOutput": "Console output",
+    "jsReturn": "Return value",
     "passed": "Correct!",
     "failed": "Not quite — check your query.",
     "failedWrongResult": "Your query ran, but the result is not quite right. Compare columns and rows with the expected answer.",
@@ -118,6 +122,7 @@
     "showSolution": "Show solution",
     "solutionLabel": "Solution",
     "useSolution": "Use this query",
+    "useSolutionJs": "Use this code",
     "attemptsHint": "After {n} failed attempts you can reveal the solution.",
     "pagerNav": "Lesson navigation",
     "loadErrorTitle": "Could not load lesson",
@@ -129,6 +134,8 @@
       "undefinedColumn": "That column name was not found. Check the spelling against the sample table.",
       "undefinedTable": "That table name was not found. Check the spelling against the sample table.",
       "permission": "This statement is not allowed in the sandbox for this exercise.",
+      "timeout": "Your code took too long. Check for infinite loops.",
+      "nonSerializableReturn": "Return value must be JSON-serializable (number, string, boolean, array, or plain object).",
       "generic": "Your query could not be run. Check the SQL and try again."
     }
   },

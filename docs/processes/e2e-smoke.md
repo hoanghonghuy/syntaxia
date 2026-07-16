@@ -37,8 +37,9 @@ Automated API-level smoke gate for the SQL Fundamentals learning path: register 
 | Register | `POST /api/v1/auth/register` | `201` + cookie `syntaxia_token` (Path `/`) |
 | Me | `GET /api/v1/auth/me` | same email (cookie jar) |
 | List | `GET /api/v1/lessons?track=sql-fundamentals&locale=en` | ≥ 10 lessons, includes `what-is-sql` |
-| Lesson | `GET /api/v1/lessons/what-is-sql?locale=en` | `exercise.hints`, `exercise.solution`, `bodyHtml` contains `<table>`, `sandboxSeed` |
-| Sandbox | `POST /api/v1/sandbox/run` with `SELECT * FROM movies;` + lesson seed/expected | `passed=true` (auth required) |
+| Lesson | `GET /api/v1/lessons/what-is-sql?locale=en` | `exercise.hints`, `exercise.solutionAvailable`; **no** `exercise.solution`, `exercise.expected`, or `sandboxSeed`; `bodyHtml` contains `<table>` |
+| Solution | `GET /api/v1/lessons/what-is-sql/solution?locale=en` | non-empty `solution` (auth required) |
+| Sandbox | `POST /api/v1/sandbox/run` with `{ sql, lessonId, locale }` | `passed=true` (auth required; server-side grading) |
 | Progress | `PUT /api/v1/progress/{lessonId}` then `GET /api/v1/progress` | intro completed |
 | Next | first incomplete by `sortOrder` | not intro; `GET` that lesson succeeds |
 

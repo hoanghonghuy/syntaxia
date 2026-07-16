@@ -9,7 +9,22 @@ published: true
 objectives:
   - Explain JavaScript in everyday words
   - See how a short script stores a value and shows a message
-  - Know that Syntaxia lessons use examples you read (no live JS runner yet)
+  - Run a first console.log in the JS sandbox
+exercise:
+  starter: |
+    let name = "Ada";
+    console.log("Hello, " + name);
+  hints:
+    - "Use console.log to print a message."
+    - "Join text with + between quoted strings and the name variable."
+    - 'The line should read Hello, Ada (with a comma after Hello).'
+  solution: |
+    let name = "Ada";
+    console.log("Hello, " + name);
+  expected:
+    type: console
+    lines:
+      - "Hello, Ada"
 ---
 
 A web page can show text and pictures on its own. **JavaScript** is the language that makes a page *do* things — remember a name, calculate a total, or change what you see after you click.
@@ -41,8 +56,8 @@ If you ran this in a browser console, you would see: `Hello, Ada`.
 
 - Thinking JavaScript is the same as HTML or CSS — HTML structures the page, CSS styles it, JavaScript adds behavior.
 - Forgetting quotes around text (`Ada` vs `"Ada"`) — without quotes, the browser looks for a name that does not exist.
-- Expecting Syntaxia to run JS in the SQL sandbox — that runner is for SQL only; these lessons teach with examples until a JS sandbox exists.
+- Expecting Syntaxia to run JS in the SQL sandbox — that runner is for SQL only; use the **JavaScript sandbox** below on this track.
 
 ## Your turn
 
-Re-read the worked example. In your own words, what does the labeled box `name` hold? When you are ready, mark this lesson complete and continue to variables.
+Run the sandbox: print `Hello, Ada` using `console.log` and the `name` variable. When the checker passes, mark this lesson complete.

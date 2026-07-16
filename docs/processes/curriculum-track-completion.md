@@ -20,9 +20,11 @@ Define when a Syntaxia track counts as **complete** for the current scope, so wo
 |-------|----------------|----------------|--------|
 | `sql-fundamentals` | 36 | W3Schools-density portable SQL | **Complete** — E2E gate + voice pass |
 | `postgresql` | 19 | basic→advanced PG-specific (orders 0–6, 10–16, 20–24) | **Complete** — all outline rows published |
-| `javascript-basics` | 6 of 9 | MDN Scripting basics (orders 0–8) | **In progress** — missing 6–8 |
+| `javascript-basics` | 9 | MDN Scripting basics (orders 0–8) | **Complete** (2026-07-16) |
 
-Do not start a second code track or widen SQL tracks until `javascript-basics` hits **Definition of done** below.
+Do not start a second code track or widen SQL tracks until the next `/opsx-research` picks the following slice.
+
+**`javascript-basics` orders 0–8:** complete as of checklist row #22 (2026-07-16).
 
 ### Definition of done — `javascript-basics` (orders 0–8)
 
@@ -40,12 +42,14 @@ Do not start a second code track or widen SQL tracks until `javascript-basics` h
 
 ### After `javascript-basics` is done
 
-Re-run `/opsx-research` to pick among:
+Ordered post-curriculum slices (see [`production-deploy.md`](./production-deploy.md)):
 
-- Deeper **SQL** (only if a mapped public outline gap exists — not ad-hoc topics)
-- **JS sandbox** (OpenSpec — do not bolt on `eval`)
-- **Guest static learning** (`future-guest-static-learning.md`)
-- Production deploy
+| Order | Slice | Gate |
+|------:|-------|------|
+| 1 | Deeper SQL | **Skip** — Fundamentals 36 + PostgreSQL 19 complete per outline |
+| 2 | JS code sandbox | Row **#24** — `/opsx-research` + OpenSpec before code |
+| 3 | Guest static FE | **Deferred** — `future-guest-static-learning.md` |
+| 4 | Production deploy | Row **#23** — `release-smoke.ps1` + `production-deploy.md` |
 
 ## Do
 

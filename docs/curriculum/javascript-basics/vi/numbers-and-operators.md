@@ -10,6 +10,23 @@ objectives:
   - Dùng +, -, *, / với số
   - Lưu kết quả phép tính vào biến
   - Đọc biểu thức ngắn và dùng ngoặc khi cần
+exercise:
+  starter: |
+    const price = 12;
+    const quantity = 3;
+    // return tổng (price * quantity)
+    return price * quantity;
+  hints:
+    - "Nhân price với quantity bằng *."
+    - "Dùng return để trả số về cho checker."
+    - "12 nhân 3 là đáp án."
+  solution: |
+    const price = 12;
+    const quantity = 3;
+    return price * quantity;
+  expected:
+    type: returnValue
+    value: 36
 ---
 
 Máy tính kết hợp số với ký hiệu như + và ×. JavaScript cũng vậy nhờ **toán tử** (operator). Bạn viết số và ký hiệu; trình duyệt tính kết quả.
@@ -46,4 +63,4 @@ console.log((price + 2) * quantity);
 
 ## Thử ngay
 
-Trong ví dụ mẫu, `total` bằng bao nhiêu sau `price * quantity`? Xác nhận số đó, rồi đánh dấu hoàn thành bài.
+Return tổng `price * quantity` trong sandbox (cùng số như ví dụ mẫu). Khi checker báo **Đúng rồi**, đánh dấu hoàn thành.

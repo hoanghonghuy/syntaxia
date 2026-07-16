@@ -46,9 +46,10 @@ Expect exit **0** and `PASS: SQL Fundamentals E2E gate`. Details: [`e2e-smoke.md
 
 ```powershell
 powershell -File scripts/check-catalog.ps1
+powershell -File scripts/check-javascript-basics.ps1
 ```
 
-Expect exit **0** (sql + code categories; tracks include `sql-fundamentals`, `postgresql`, `javascript-basics`).
+Expect exit **0** (sql + code categories; JS track has 9 lessons in order).
 
 ### 4. Frontend parity / TOC gates
 
@@ -104,4 +105,4 @@ With web open at `http://localhost:3001`:
 - [`i18n.md`](./i18n.md)
 - [`catalog-architecture.md`](./catalog-architecture.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md) (#12)
-- Scripts: `scripts/docker-up.ps1`, `scripts/release-smoke.ps1`, `scripts/e2e-sql-fundamentals.ps1`, `scripts/check-catalog.ps1`
+- Scripts: `scripts/docker-up.ps1`, `scripts/release-smoke.ps1`, `scripts/e2e-sql-fundamentals.ps1`, `scripts/check-catalog.ps1`, `scripts/check-javascript-basics.ps1`

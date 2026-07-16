@@ -28,25 +28,20 @@ Primary references:
 | 3 | `strings` | Creating and joining text | Handling text — strings | **Published** |
 | 4 | `string-methods` | Length, slice, case | Useful string methods | **Published** |
 | 5 | `arrays` | Lists under one name | Arrays | **Published** |
+| 6 | `conditionals` | `if` / `else` decisions | Conditionals | **Published** |
+| 7 | `loops` | Repeating work | Loops | **Published** |
+| 8 | `functions` | Reusable blocks | Functions | **Published** |
 
-### Next basics (future — document only)
+### Beyond basics (future — document only)
 
-| Order | Slug (planned) | Topic | MDN map |
-|------:|----------------|-------|---------|
-| 6 | `conditionals` | `if` / `else` decisions | Conditionals |
-| 7 | `loops` | Repeating work | Loops |
-| 8 | `functions` | Reusable blocks | Functions |
-
-Do **not** ship empty published stubs for these. Prefer this list until Depth-B lessons exist.
-
-DOM, events, fetch, JSON, and frameworks stay **out of scope** for this basics track until a later checklist row.
+DOM, events, fetch, JSON, and frameworks stay **out of scope** until a later checklist row and `/opsx-research`.
 
 ## Sandbox strategy (locked — TDD document first)
 
 | Phase | Behavior |
 |-------|----------|
-| **Now (#11)** | **No code execution** in the API for JS. Lessons teach with Markdown code fences. Omit `exercise` and `sandbox_seed` (or leave them absent). Learners read + **Mark complete**. Frontend already hides `SqlSandbox` when `lesson.exercise` is missing/falsy. |
-| **Later** | Isolated client eval (prefer **Web Worker** / sandboxed iframe), never `eval` on the main thread against untrusted lesson code without isolation. Grade by comparing return values or console-captured output — design under a dedicated process + OpenSpec before building. |
+| **Now (#11–#22)** | **No code execution** in the API for JS. Lessons teach with Markdown code fences. Omit `exercise` and `sandbox_seed`. Learners read + **Mark complete**. Frontend hides `SqlSandbox` when `lesson.exercise` is missing. |
+| **#24 (shipped)** | **Web Worker** + server grade on **all 9 lessons** — see [`javascript-sandbox.md`](./javascript-sandbox.md), exercise map [`javascript-basics-w3schools-map.md`](./javascript-basics-w3schools-map.md). |
 | **Do not** | Reuse the Postgres SQL sandbox for JavaScript. Do not add a server-side Node `vm` runner in this item. |
 
 Authoring rule until a JS sandbox exists: **examples in the body only**; “Your turn” is a short reflection or “re-read then mark complete” — not a graded run.
@@ -55,7 +50,7 @@ Authoring rule until a JS sandbox exists: **examples in the body only**; “Your
 
 - Track id: **`javascript-basics`** (seeded; category `code`, level `basic`)
 - Path: `docs/curriculum/javascript-basics/<locale>/<slug>.md`
-- Frontmatter: `track: javascript-basics`, `order` 0–5 for published basics
+- Frontmatter: `track: javascript-basics`, `order` 0–8 for published basics (MDN scripting block complete)
 
 ## Pedagogy adaptation (Depth B for code)
 
@@ -97,6 +92,8 @@ Follow [`curriculum-pedagogy.md`](./curriculum-pedagogy.md) voice and shape, wit
 - [`curriculum-pedagogy.md`](./curriculum-pedagogy.md)
 - [`catalog-architecture.md`](./catalog-architecture.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md) (#11)
+- [`javascript-sandbox.md`](./javascript-sandbox.md) (row #24)
+- [`javascript-basics-w3schools-map.md`](./javascript-basics-w3schools-map.md) — exercise per lesson
 - [`sql-sandbox.md`](./sql-sandbox.md) (SQL only — not for JS)
 - `docs/curriculum/javascript-basics/`
 - `docs/curriculum/README.md`

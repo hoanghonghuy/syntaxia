@@ -10,6 +10,21 @@ objectives:
   - Tạo biến bằng let hoặc const
   - Cập nhật biến let và đọc lại giá trị
   - Ưu tiên const khi giá trị không nên đổi
+exercise:
+  starter: |
+    let name = "Syntaxia";
+    // return số ký tự trong name
+    return name.length;
+  hints:
+    - "Chuỗi có thuộc tính .length."
+    - "Dùng return ở cuối với name.length."
+    - "Đáp án là số, không phải chữ."
+  solution: |
+    let name = "Syntaxia";
+    return name.length;
+  expected:
+    type: returnValue
+    value: 8
 ---
 
 Trong đời thường bạn dán giấy ghi chú lên hộp: “táo = 4”. Sau đó bạn có thể đổi số hoặc đọc lại. Trong JavaScript, hộp có nhãn đó gọi là **biến** (variable).
@@ -44,4 +59,4 @@ console.log(player + " scored " + score);
 
 ## Thử ngay
 
-Nhìn ví dụ mẫu. Giá trị nào được phép đổi, giá trị nào giữ cố định? Khi đã rõ, đánh dấu hoàn thành bài.
+Dùng sandbox bên dưới: return độ dài chuỗi `"Syntaxia"`. Khi checker báo **Đúng rồi**, đánh dấu hoàn thành bài.

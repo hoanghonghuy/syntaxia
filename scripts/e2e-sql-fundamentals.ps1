@@ -4,8 +4,9 @@
   SQL Fundamentals API E2E smoke gate (checklist #8).
 
 .DESCRIPTION
-  Register -> list intro lessons -> load what-is-sql (hints/solution/table) ->
-  sandbox SELECT pass -> set progress -> next lesson available.
+  Register -> list intro lessons -> load what-is-sql (hints/solutionAvailable/table) ->
+  authed solution reveal -> sandbox SELECT pass (server-side grading) ->
+  set progress -> next lesson available.
 
   Auth cookie: syntaxia_token (HttpOnly, path /) via -SessionVariable.
 
@@ -182,28 +183,35 @@ $hints = @($lesson.exercise.hints)
 if ($hints.Count -lt 1) {
   Fail "exercise.hints missing or empty"
 }
-if (-not $lesson.exercise.solution) {
-  Fail "exercise.solution missing"
+if ($lesson.exercise.solution) {
+  Fail "exercise.solution must not be exposed on public lesson GET"
+}
+if (-not $lesson.exercise.solutionAvailable) {
+  Fail "exercise.solutionAvailable missing (lesson has a solution server-side)"
 }
 if (-not $lesson.bodyHtml -or ($lesson.bodyHtml -notmatch "(?i)<table")) {
   Fail "bodyHtml missing or has no <table>"
 }
-if (-not $lesson.sandboxSeed) {
-  Fail "sandboxSeed missing"
+if ($null -ne $lesson.sandboxSeed) {
+  Fail "sandboxSeed must not be exposed on public lesson GET"
 }
-$expected = $lesson.exercise.expected
-if (-not $expected) {
-  Fail "exercise.expected missing"
+if ($lesson.exercise.expected) {
+  Fail "exercise.expected must not be exposed on public lesson GET"
 }
-Ok "what-is-sql has hints($($hints.Count)), solution, table in bodyHtml, sandboxSeed"
+Ok "what-is-sql has hints($($hints.Count)), solutionAvailable, table in bodyHtml; grading fields stripped"
 
-# 5) Sandbox run — rebuild JSON from raw lesson payload to preserve arrays
-$lessonRaw = $lessonResp.Response.Content | ConvertFrom-Json
-# Use raw Content substring approach: build body from lesson fields via ConvertTo-Json
+# 4b) Solution reveal (authed only)
+$solResp = Invoke-Api -Method GET -Path "/api/v1/lessons/what-is-sql/solution?locale=en" -Session $session
+if (-not $solResp.Json.solution -or [string]::IsNullOrWhiteSpace([string]$solResp.Json.solution)) {
+  Fail "GET /lessons/what-is-sql/solution missing solution text"
+}
+Ok "solution reveal returns SQL ($($solResp.Json.solution.Length) chars)"
+
+# 5) Sandbox run — server loads seed/expected from lesson id
 $sandboxObj = [ordered]@{
   sql      = "SELECT * FROM movies;"
-  seed     = $lessonRaw.sandboxSeed
-  expected = $lessonRaw.exercise.expected
+  lessonId = $lesson.id
+  locale   = "en"
 }
 $sandboxJson = $sandboxObj | ConvertTo-Json -Depth 20 -Compress
 $sandbox = Invoke-Api -Method POST -Path "/api/v1/sandbox/run" -JsonBody $sandboxJson -Session $session

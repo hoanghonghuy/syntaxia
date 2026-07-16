@@ -10,6 +10,22 @@ objectives:
   - Lưu chữ trong chuỗi bằng dấu ngoặc
   - Nối hai chuỗi bằng +
   - Phân biệt chữ với số
+exercise:
+  starter: |
+    const greeting = "Hello";
+    const name = "Sam";
+    return greeting + ", " + name + "!";
+  hints:
+    - "Dùng + giữa các chuỗi để nối."
+    - "Thêm dấu phẩy và khoảng trắng giữa greeting và name."
+    - "Kết thúc bằng dấu chấm than sau tên."
+  solution: |
+    const greeting = "Hello";
+    const name = "Sam";
+    return greeting + ", " + name + "!";
+  expected:
+    type: returnValue
+    value: "Hello, Sam!"
 ---
 
 Chữ trên trang web là **văn bản**. Trong JavaScript, một đoạn chữ gọi là **chuỗi** (string). Bạn bọc chữ trong dấu ngoặc để máy biết đó là chữ, không phải tên lệnh.
@@ -44,4 +60,4 @@ console.log("Điểm: " + 10);
 
 ## Thử ngay
 
-Trong ví dụ mẫu, `message` sau khi nối là đoạn chữ đầy đủ nào? Đọc to một lần, rồi đánh dấu hoàn thành bài.
+Ghép lời chào đầy đủ `Hello, Sam!` bằng `+` và **return** trong sandbox. Đánh dấu hoàn thành khi checker báo đúng.

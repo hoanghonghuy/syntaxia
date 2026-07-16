@@ -10,6 +10,21 @@ objectives:
   - Create a variable with let or const
   - Update a let variable and read its value
   - Prefer const when the value should not change
+exercise:
+  starter: |
+    let name = "Syntaxia";
+    // return how many characters are in name
+    return name.length;
+  hints:
+    - "Strings have a .length property."
+    - "Use return at the end with name.length."
+    - "The answer is a number, not text."
+  solution: |
+    let name = "Syntaxia";
+    return name.length;
+  expected:
+    type: returnValue
+    value: 8
 ---
 
 In everyday life you put a sticky note on a box: “apples = 4”. Later you can change the number or read it again. In JavaScript, that labeled box is a **variable**.
@@ -44,4 +59,4 @@ console.log(player + " scored " + score);
 
 ## Your turn
 
-Look at the worked example. Which value is allowed to change, and which stays fixed? When that is clear, mark this lesson complete.
+Use the sandbox below: return the length of the string `"Syntaxia"`. When the checker says **Correct**, mark this lesson complete.

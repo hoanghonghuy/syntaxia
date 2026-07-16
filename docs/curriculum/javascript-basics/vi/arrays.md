@@ -10,6 +10,22 @@ objectives:
   - Tạo mảng bằng dấu ngoặc vuông
   - Đọc một phần tử theo chỉ số bắt đầu từ 0
   - Thêm phần tử bằng push và đọc length
+exercise:
+  starter: |
+    const fruits = ["apple", "pear", "orange"];
+    fruits.push("mango");
+    return fruits.length;
+  hints:
+    - "push thêm một phần tử vào cuối mảng."
+    - "length đếm số phần tử trong danh sách."
+    - "Có 3 quả, thêm 1 — tổng bao nhiêu?"
+  solution: |
+    const fruits = ["apple", "pear", "orange"];
+    fruits.push("mango");
+    return fruits.length;
+  expected:
+    type: returnValue
+    value: 4
 ---
 
 Danh sách mua sắm giữ nhiều tên theo thứ tự. **Mảng** (array) là danh sách có thứ tự trong JavaScript — nhiều giá trị dưới một tên biến.
@@ -45,4 +61,4 @@ console.log(fruits[fruits.length - 1]);
 
 ## Thử ngay
 
-Sau `push("mango")`, `fruits` có bao nhiêu phần tử? Đếm trên tay, rồi đánh dấu hoàn thành bài.
+`push("mango")` vào `fruits` rồi **return** `.length` mới trong sandbox. Đánh dấu hoàn thành khi checker báo đúng.

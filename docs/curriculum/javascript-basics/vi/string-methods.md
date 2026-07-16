@@ -10,6 +10,21 @@ objectives:
   - Đọc độ dài chuỗi
   - Đổi hoa thường bằng toUpperCase và toLowerCase
   - Lấy một đoạn chữ bằng slice
+exercise:
+  starter: |
+    const code = "Syntaxia";
+    // return ba chữ cái đầu
+    return code.slice(0, 3);
+  hints:
+    - "slice(start, end) lấy từ start đến trước end."
+    - "Bắt đầu chỉ số 0; kết thúc trước chỉ số 3."
+    - "Đáp án là ba chữ: Syn."
+  solution: |
+    const code = "Syntaxia";
+    return code.slice(0, 3);
+  expected:
+    type: returnValue
+    value: "Syn"
 ---
 
 Chuỗi không chỉ là nhãn trên hộp — đó là chữ bạn có thể **xem** và **chỉnh nhẹ**. JavaScript cho mỗi chuỗi vài công cụ nhỏ gọi là **phương thức** (method). Bạn gọi bằng dấu chấm sau chuỗi (hoặc biến đang giữ chữ).
@@ -46,4 +61,4 @@ console.log(short);
 
 ## Thử ngay
 
-`code.slice(0, 3)` với `"Syntaxia"` cho ra ba chữ nào? Đọc to một lần, rồi đánh dấu hoàn thành bài.
+Return `code.slice(0, 3)` với `"Syntaxia"` trong sandbox. Đánh dấu hoàn thành khi được **Syn**.

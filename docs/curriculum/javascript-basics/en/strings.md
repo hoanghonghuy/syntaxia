@@ -10,6 +10,22 @@ objectives:
   - Store text in a string with quotes
   - Join two strings with +
   - Tell text apart from numbers
+exercise:
+  starter: |
+    const greeting = "Hello";
+    const name = "Sam";
+    return greeting + ", " + name + "!";
+  hints:
+    - "Use + between strings to join them."
+    - "Put a comma and space between greeting and name."
+    - 'End with an exclamation mark after the name.'
+  solution: |
+    const greeting = "Hello";
+    const name = "Sam";
+    return greeting + ", " + name + "!";
+  expected:
+    type: returnValue
+    value: "Hello, Sam!"
 ---
 
 Words on a page are **text**. In JavaScript, a piece of text is called a **string**. You wrap it in quotes so the computer knows it is words, not a command name.
@@ -44,4 +60,4 @@ console.log("Score: " + 10);
 
 ## Your turn
 
-In the worked example, what full text does `message` hold after the joins? Read it aloud once, then mark this lesson complete.
+Build the full greeting `Hello, Sam!` with `+` and **return** it in the sandbox. Mark complete when the checker passes.

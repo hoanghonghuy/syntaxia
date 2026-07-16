@@ -33,6 +33,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [appearance-theme.md](./appearance-theme.md) | Light/dark mode + accent presets/hex picker |
 | [home-hub-ui-polish.md](./home-hub-ui-polish.md) | Shared home/tracks/hub layout + card polish |
 | [curriculum-track-completion.md](./curriculum-track-completion.md) | Finish one track before starting the next |
+| [production-deploy.md](./production-deploy.md) | Production env + release gates |
 | [audit-remediation-checklist.md](./audit-remediation-checklist.md) | Ordered TDD fixes from security/UX audit |
 | [future-guest-static-learning.md](./future-guest-static-learning.md) | **Deferred** guest FE-only vs member full-stack |
 | [environment.md](./environment.md) | Syntaxia `.env` + Compose ports |
@@ -42,7 +43,9 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [e2e-smoke.md](./e2e-smoke.md) | SQL Fundamentals API E2E smoke gate |
 | [release-hardening.md](./release-hardening.md) | Ordered release smoke + light a11y/env gate |
 | [postgresql-track.md](./postgresql-track.md) | PostgreSQL track levels + scaffold lessons |
-| [javascript-track.md](./javascript-track.md) | JS Basics (MDN map) + deferred code sandbox |
+| [javascript-track.md](./javascript-track.md) | JS Basics (MDN map) + code sandbox (row #24) |
+| [javascript-basics-w3schools-map.md](./javascript-basics-w3schools-map.md) | JS Basics: one exercise per lesson (W3Schools map) |
+| [javascript-sandbox.md](./javascript-sandbox.md) | JS Web Worker runner + server-side grade |
 | [catalog-architecture.md](./catalog-architecture.md) | Category → Level → Track → Lessons; add a track |
 
 Add a row here whenever you create a new process file.

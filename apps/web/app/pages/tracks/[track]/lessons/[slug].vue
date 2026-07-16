@@ -20,7 +20,7 @@
         <h1>{{ lesson.title }}</h1>
         <article class="prose-lesson" v-html="lesson.bodyHtml" />
         <SqlSandbox
-          v-if="lesson.exercise"
+          v-if="lesson.exercise && trackId !== 'javascript-basics'"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -29,6 +29,18 @@
           :hints="exerciseHints"
           :solution-available="exerciseSolutionAvailable"
           :preview="exercisePreview"
+          :can-run="!auth.loading && !!auth.user"
+          :login-path="authLoginPath"
+        />
+        <JsSandbox
+          v-else-if="lesson.exercise && trackId === 'javascript-basics'"
+          :key="lesson.id"
+          :lesson-id="lesson.id"
+          :lesson-slug="slug"
+          :locale="locale"
+          :starter="jsExerciseStarter"
+          :hints="exerciseHints"
+          :solution-available="exerciseSolutionAvailable"
           :can-run="!auth.loading && !!auth.user"
           :login-path="authLoginPath"
         />
@@ -176,6 +188,11 @@ const tocItems = computed(() => extractToc(lesson.value?.bodyHtml))
 const exerciseStarter = computed(() => {
   const ex = lesson.value?.exercise as Record<string, unknown> | undefined
   return (ex?.starter as string) || 'SELECT * FROM movies;'
+})
+
+const jsExerciseStarter = computed(() => {
+  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
+  return (ex?.starter as string) || '// write JavaScript here\n'
 })
 
 const exerciseHints = computed(() => {

@@ -19,7 +19,7 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 |-------|-------|-------|
 | `sql-fundamentals` | basic | W3Schools-density portable SQL (**36** lessons) |
 | `postgresql` | intermediate | PG-specific basic→advanced (**19** lessons) |
-| `javascript-basics` | basic | MDN-mapped reading lessons (**6** en+vi pairs); JS sandbox deferred |
+| `javascript-basics` | basic | MDN scripting basics complete (**9** en+vi pairs); JS sandbox deferred |
 
 ## SQL Fundamentals (published order)
 
@@ -72,3 +72,6 @@ SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](.
 | 3 | strings |
 | 4 | string-methods |
 | 5 | arrays |
+| 6 | conditionals |
+| 7 | loops |
+| 8 | functions |

@@ -108,7 +108,21 @@ describe('JavaScript Basics lesson locale pairs', () => {
       { onlyEn: [], onlyVi: [], enCount: en.length, viCount: en.length },
       `lesson pair mismatch — onlyEn=${JSON.stringify(onlyEn)} onlyVi=${JSON.stringify(onlyVi)}`,
     )
-    assert.equal(en.length, 6, 'javascript-basics should have 6 published lessons')
+    assert.equal(en.length, 9, 'javascript-basics should have 9 published lessons')
     console.log(`javascript-basics lessons: en=${en.length} vi=${vi.length}`)
+  })
+
+  it('every lesson has exercise frontmatter in en and vi', () => {
+    for (const locale of ['en', 'vi']) {
+      const dir = join(curriculumRoot, 'javascript-basics', locale)
+      for (const file of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
+        const raw = readFileSync(join(dir, file), 'utf8')
+        const fm = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+        assert.ok(fm, `${locale}/${file} missing frontmatter`)
+        assert.match(fm[1], /^exercise:/m, `${locale}/${file} missing exercise block`)
+        assert.match(fm[1], /^\s+expected:/m, `${locale}/${file} missing exercise.expected`)
+        assert.match(fm[1], /hints:/, `${locale}/${file} missing exercise.hints`)
+      }
+    }
   })
 })

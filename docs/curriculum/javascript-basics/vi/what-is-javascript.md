@@ -9,7 +9,22 @@ published: true
 objectives:
   - Giải thích JavaScript bằng lời đơn giản
   - Nhìn một đoạn mã ngắn lưu giá trị và hiện thông báo
-  - Biết bài học Syntaxia dùng ví dụ để đọc (chưa có trình chạy JS)
+  - Chạy console.log đầu tiên trong sandbox JS
+exercise:
+  starter: |
+    let name = "Ada";
+    console.log("Hello, " + name);
+  hints:
+    - "Dùng console.log để in thông báo."
+    - "Nối chữ bằng + giữa chuỗi trong ngoặc và biến name."
+    - "Dòng kết quả phải là Hello, Ada (có dấu phẩy sau Hello)."
+  solution: |
+    let name = "Ada";
+    console.log("Hello, " + name);
+  expected:
+    type: console
+    lines:
+      - "Hello, Ada"
 ---
 
 Một trang web có thể hiện chữ và hình ảnh. **JavaScript** là ngôn ngữ giúp trang *làm* việc — nhớ một tên, tính tổng, hoặc đổi nội dung sau khi bạn bấm.
@@ -41,8 +56,8 @@ Nếu chạy trong console trình duyệt, bạn sẽ thấy: `Hello, Ada`.
 
 - Nghĩ JavaScript giống HTML hoặc CSS — HTML dựng cấu trúc trang, CSS trang trí, JavaScript thêm hành vi.
 - Quên dấu ngoặc quanh chữ (`Ada` thay vì `"Ada"`) — không có ngoặc, trình duyệt tìm một tên không tồn tại.
-- Mong Syntaxia chạy JS trong sandbox SQL — trình chạy đó chỉ dành cho SQL; các bài này dạy bằng ví dụ cho đến khi có sandbox JS.
+- Mong Syntaxia chạy JS trong sandbox SQL — trình chạy đó chỉ dành cho SQL; dùng **sandbox JavaScript** bên dưới trên lộ trình này.
 
 ## Thử ngay
 
-Đọc lại ví dụ mẫu. Bằng lời của bạn, hộp có nhãn `name` đang giữ gì? Khi sẵn sàng, đánh dấu hoàn thành bài và sang phần biến.
+Chạy sandbox: in `Hello, Ada` bằng `console.log` và biến `name`. Khi checker báo đúng, đánh dấu hoàn thành bài.

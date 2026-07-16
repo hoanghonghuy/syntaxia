@@ -76,7 +76,17 @@ Step "Catalog architecture"
 & (Join-Path $PSScriptRoot "check-catalog.ps1") -BaseUrl $BaseUrl
 if ($LASTEXITCODE -ne 0) { Fail "check-catalog.ps1 exited $LASTEXITCODE" }
 
+Step "JavaScript Basics curriculum"
+& (Join-Path $PSScriptRoot "check-javascript-basics.ps1") -BaseUrl $BaseUrl
+if ($LASTEXITCODE -ne 0) { Fail "check-javascript-basics.ps1 exited $LASTEXITCODE" }
+
+Step "JavaScript sandbox grade"
+& (Join-Path $PSScriptRoot "check-js-sandbox.ps1") -BaseUrl $BaseUrl
+if ($LASTEXITCODE -ne 0) { Fail "check-js-sandbox.ps1 exited $LASTEXITCODE" }
+
 Step "Go package tests"
+Remove-Item Env:GOOS -ErrorAction SilentlyContinue
+Remove-Item Env:GOARCH -ErrorAction SilentlyContinue
 Push-Location (Join-Path $Root "apps\api")
 try {
   go test ./internal/learning ./internal/sandbox ./internal/markdown ./internal/content ./internal/service/...

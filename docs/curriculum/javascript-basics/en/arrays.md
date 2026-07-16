@@ -10,6 +10,22 @@ objectives:
   - Create an array with square brackets
   - Read one item by index starting at 0
   - Add an item with push and read length
+exercise:
+  starter: |
+    const fruits = ["apple", "pear", "orange"];
+    fruits.push("mango");
+    return fruits.length;
+  hints:
+    - "push adds one item to the end of the array."
+    - "length counts how many items are in the list."
+    - "There were 3 fruits, then one more — how many total?"
+  solution: |
+    const fruits = ["apple", "pear", "orange"];
+    fruits.push("mango");
+    return fruits.length;
+  expected:
+    type: returnValue
+    value: 4
 ---
 
 A shopping list holds many item names in order. An **array** is JavaScript’s ordered list — several values under one variable name.
@@ -45,4 +61,4 @@ console.log(fruits[fruits.length - 1]);
 
 ## Your turn
 
-After `push("mango")`, how many items are in `fruits`? Count on your fingers, then mark this lesson complete.
+Push `"mango"` onto `fruits` and **return** the new `.length` in the sandbox. Mark complete when the checker passes.
