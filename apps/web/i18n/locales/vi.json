@@ -68,8 +68,8 @@
     }
   },
   "home": {
-    "title": "Học SQL thực hành",
-    "subtitle": "Bài học có cấu trúc, bài tập tương tác và PostgreSQL thật — theo lộ trình đã được kiểm chứng.",
+    "title": "Học IT thực hành",
+    "subtitle": "Lộ trình có cấu trúc, sandbox tương tác và luyện thật — SQL, web và thêm nữa, theo chương trình đã được kiểm chứng.",
     "cta": "Bắt đầu học",
     "continue": "Tiếp tục học",
     "loginSecondary": "Đăng nhập để lưu tiến độ",

@@ -206,6 +206,14 @@ describe('shell UX foundation', () => {
     assert.match(css, /\.account-section/)
     assert.match(css, /\.hub-filter/)
     assert.match(css, /router-link-exact-active/)
+    // Hero wash follows accent token (not fixed pastel-green)
+    assert.match(css, /\.hero\s*\{[^}]*--color-hero-from/s)
+    assert.doesNotMatch(css, /\.hero\s*\{[^}]*--color-pastel-green/s)
+    // Hub pages center in the main column
+    assert.match(css, /\.hub-page\s*\{[^}]*margin:\s*0\s+auto/s)
+    // Featured track cards equalize height + pin actions
+    assert.match(css, /\.track-grid\s*>\s*\.card\s*\{[^}]*flex-direction:\s*column/s)
+    assert.match(css, /\.track-grid\s*>\s*\.card\s+\.card-actions\s*\{[^}]*margin-top:\s*auto/s)
     for (const file of [
       'app/pages/search.vue',
       'app/pages/notes.vue',
@@ -221,6 +229,9 @@ describe('shell UX foundation', () => {
     assert.match(read('app/pages/tracks/[track]/index.vue'), /hub-page/)
     assert.match(read('app/pages/tracks/[track]/index.vue'), /HubHeader/)
     assert.match(read('app/pages/tracks/[track]/index.vue'), /retryLoad/)
+    // Desktop track hub: lesson list lives in sidebar — hub shows list only when narrow
+    assert.match(read('app/pages/tracks/[track]/index.vue'), /isNarrow/)
+    assert.doesNotMatch(read('app/pages/tracks/[track]/index.vue'), /stats\.total > 0 && !isNarrow/)
     assert.match(read('app/pages/account.vue'), /hub-footer-links/)
     assert.match(read('app/pages/index.vue'), /card-title/)
     assert.match(read('app/pages/index.vue'), /hub-error-panel/)

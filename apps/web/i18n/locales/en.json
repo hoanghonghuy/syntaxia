@@ -68,8 +68,8 @@
     }
   },
   "home": {
-    "title": "Learn SQL the practical way",
-    "subtitle": "Structured lessons, interactive exercises, and real PostgreSQL — mapped from proven curricula.",
+    "title": "Learn IT the practical way",
+    "subtitle": "Structured tracks, interactive sandboxes, and real practice — SQL, web, and more from proven curricula.",
     "cta": "Start learning",
     "continue": "Continue learning",
     "loginSecondary": "Log in to save progress",

@@ -28,7 +28,7 @@
         </template>
       </HubHeader>
 
-      <ul v-if="stats.total > 0 && !isNarrow" class="nav-list hub-list">
+      <ul v-if="stats.total > 0 && isNarrow" class="nav-list hub-list">
         <li v-for="item in catalog.lessons" :key="item.id">
           <NuxtLink
             class="nav-link"
