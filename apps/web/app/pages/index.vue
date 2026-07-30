@@ -26,55 +26,53 @@
             {{ t('home.continue') }}
             <template v-if="resumeLessonTitle">: {{ resumeLessonTitle }}</template>
           </NuxtLink>
-          <template v-else>
-            <NuxtLink
-              v-if="startTrackPath"
-              class="btn btn-primary"
-              :to="startTrackPath"
-            >
-              {{ t('home.cta') }}
-            </NuxtLink>
-            <NuxtLink
-              v-else
-              class="btn btn-primary"
-              :to="localePath('/tracks')"
-            >
-              {{ t('catalog.viewAllTracks') }}
-            </NuxtLink>
-            <NuxtLink
-              v-if="!auth.user"
-              class="btn btn-ghost"
-              :to="localePath('/login')"
-            >
-              {{ t('home.loginSecondary') }}
-            </NuxtLink>
-          </template>
+          <NuxtLink
+            v-else-if="startTrackPath"
+            class="btn btn-primary"
+            :to="startTrackPath"
+          >
+            {{ t('home.cta') }}
+          </NuxtLink>
+          <NuxtLink
+            v-else
+            class="btn btn-primary"
+            :to="localePath('/tracks')"
+          >
+            {{ t('catalog.viewAllTracks') }}
+          </NuxtLink>
+          <NuxtLink
+            v-if="!auth.user && !continueLink"
+            class="btn btn-ghost"
+            :to="localePath('/login')"
+          >
+            {{ t('home.loginSecondary') }}
+          </NuxtLink>
+          <NuxtLink
+            v-else-if="continueLink || startTrackPath"
+            class="btn btn-ghost"
+            :to="localePath('/tracks')"
+          >
+            {{ t('catalog.viewAllTracks') }}
+          </NuxtLink>
         </div>
       </section>
 
-      <div v-if="previewGroups.length === 0" class="hub-empty hub-empty--center">
+      <div v-if="featured.length === 0" class="hub-empty hub-empty--center">
         <p>{{ t('home.emptyCatalog') }}</p>
         <NuxtLink class="btn btn-ghost" :to="localePath('/tracks')">
           {{ t('catalog.viewAllTracks') }}
         </NuxtLink>
       </div>
 
-      <section
-        v-for="group in previewGroups"
-        :key="group.category"
-        class="catalog-section"
-      >
+      <section v-else class="catalog-section">
         <div class="catalog-heading-row">
-          <h2 class="catalog-heading">{{ t(`catalog.category.${group.category}`) }}</h2>
-          <NuxtLink
-            class="catalog-more"
-            :to="localePath({ path: '/tracks', query: { category: group.category } })"
-          >
+          <h2 class="catalog-heading">{{ t('home.featured') }}</h2>
+          <NuxtLink class="catalog-more" :to="localePath('/tracks')">
             {{ t('catalog.viewAllTracks') }}
           </NuxtLink>
         </div>
         <div class="track-grid track-grid--flush">
-          <article v-for="track in group.tracks" :key="track.id" class="card">
+          <article v-for="track in featured" :key="track.id" class="card">
             <p class="track-meta">
               {{ t(`catalog.category.${track.category || 'sql'}`) }}
               ·
@@ -120,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { firstTrackId, previewTracksByCategory } from '~/utils/catalogBrowse'
+import { featuredTracks, firstTrackId } from '~/utils/catalogBrowse'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
 import { overallProgress } from '~/utils/learningPath'
 
@@ -152,7 +150,7 @@ const overall = computed(() =>
   overallProgress(catalog.lessonsByTrack, catalog.progress, locale.value),
 )
 
-const previewGroups = computed(() => previewTracksByCategory(catalog.tracks))
+const featured = computed(() => featuredTracks(catalog.tracks))
 
 async function retryCatalog() {
   loading.value = true

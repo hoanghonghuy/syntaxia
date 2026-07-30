@@ -73,6 +73,7 @@
     "cta": "Start learning",
     "continue": "Continue learning",
     "loginSecondary": "Log in to save progress",
+    "featured": "Featured tracks",
     "emptyCatalog": "No learning tracks are available yet. Check back soon."
   },
   "catalog": {
@@ -239,7 +240,8 @@
   "notes": {
     "title": "Your notes",
     "lead": "Review what you wrote while learning. Open a note to return to that lesson.",
-    "guestBody": "Log in to save notes on lessons and review them here.",
+    "guestBody": "Log in to save notes on lessons and review them here. You can still browse tracks and practice as a guest.",
+    "guestBrowse": "Browse tracks",
     "empty": "No notes yet. Open a lesson, write a short note, and save it.",
     "noMatch": "No notes match that filter.",
     "filter": "Filter notes",

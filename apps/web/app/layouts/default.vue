@@ -14,7 +14,6 @@
         <ThemeMenu />
         <NuxtLink class="default-header-link" :to="localePath('/tracks')">{{ t('nav.tracks') }}</NuxtLink>
         <NuxtLink class="default-header-link" :to="localePath('/progress')">{{ t('nav.progress') }}</NuxtLink>
-        <NuxtLink class="default-header-link" :to="localePath('/notes')">{{ t('nav.notes') }}</NuxtLink>
         <NuxtLink
           :to="switchLocalePath(locale === 'vi' ? 'en' : 'vi')"
           :aria-label="localeSwitchAriaLabel(locale, t)"
@@ -34,10 +33,6 @@
       <slot />
     </div>
     <nav class="learn-footer default-footer" :aria-label="t('nav.footerNav')">
-      <NuxtLink class="learn-footer-item" :to="localePath('/')">
-        <span class="learn-footer-mark" aria-hidden="true" />
-        <span>{{ t('nav.home') }}</span>
-      </NuxtLink>
       <NuxtLink class="learn-footer-item footer-tracks" :to="localePath('/tracks')">
         <span class="learn-footer-mark learn-footer-mark-menu" aria-hidden="true" />
         <span>{{ t('nav.tracks') }}</span>
@@ -46,17 +41,16 @@
         <span class="learn-footer-mark learn-footer-mark-search" aria-hidden="true" />
         <span>{{ t('nav.search') }}</span>
       </NuxtLink>
-      <NuxtLink class="learn-footer-item" :to="localePath('/notes')">
-        <span class="learn-footer-mark learn-footer-mark-notes" aria-hidden="true" />
-        <span>{{ t('nav.notes') }}</span>
-      </NuxtLink>
       <NuxtLink class="learn-footer-item" :to="localePath('/progress')">
         <span class="learn-footer-mark learn-footer-mark-track" aria-hidden="true" />
         <span>{{ t('nav.progress') }}</span>
       </NuxtLink>
-      <NuxtLink class="learn-footer-item" :to="localePath('/account')">
+      <NuxtLink
+        class="learn-footer-item"
+        :to="auth.user ? localePath('/account') : localePath('/login')"
+      >
         <span class="learn-footer-mark learn-footer-mark-user" aria-hidden="true" />
-        <span>{{ t('nav.account') }}</span>
+        <span>{{ auth.user ? t('nav.account') : t('nav.login') }}</span>
       </NuxtLink>
     </nav>
   </div>

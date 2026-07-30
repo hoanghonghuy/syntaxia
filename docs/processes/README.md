@@ -25,7 +25,8 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [lesson-reader.md](./lesson-reader.md) | TOC from headings, mobile nav, prose typography |
 | [responsive-lesson-layout.md](./responsive-lesson-layout.md) | Learn shell: shared sidebar, hamburger, scroll panes |
 | [learn-navigation-ia.md](./learn-navigation-ia.md) | Sidebar = current lessons; `/tracks` catalog + pagination |
-| [homepage-path-first.md](./homepage-path-first.md) | Home brand/Continue/progress + catalog preview (not full dump) |
+| [homepage-path-first.md](./homepage-path-first.md) | Home brand/Continue/progress + ≤3 featured tracks (not full dump) |
+| [layout-shell-simplify.md](./layout-shell-simplify.md) | 4-tab footer, slim home, lesson/progress/notes rhythm |
 | [snackbar-and-breadcrumb.md](./snackbar-and-breadcrumb.md) | Hand-rolled snackbar + WAI-ARIA breadcrumb |
 | [ui-skeleton-and-shell.md](./ui-skeleton-and-shell.md) | Loading skeletons + scaffold routes for future features |
 | [progress-hub.md](./progress-hub.md) | Cross-track progress page + learningPath helpers |

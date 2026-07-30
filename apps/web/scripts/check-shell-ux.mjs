@@ -117,13 +117,60 @@ describe('shell UX foundation', () => {
     assert.match(src, /nav\.tracks/)
   })
 
-  it('home is path-first with catalog preview (not full dump or quick-nav clutter)', () => {
+  it('mobile footers use 4 tabs without Home/Notes; Account is guest-aware', () => {
+    for (const file of ['app/layouts/default.vue', 'app/layouts/learn.vue']) {
+      const src = read(file)
+      assert.match(src, /learn-footer/, `${file} should ship footer`)
+      assert.match(src, /localePath\('\/tracks'\)/)
+      assert.match(src, /localePath\('\/progress'\)/)
+      assert.match(src, /auth\.user \? localePath\('\/account'\) : localePath\('\/login'\)/)
+      assert.doesNotMatch(src, /localePath\('\/notes'\)/, `${file} should not put Notes in footer`)
+      assert.doesNotMatch(
+        src,
+        /learn-footer-item[^]*localePath\('\/'\)/,
+        `${file} should not put Home in footer`,
+      )
+    }
+    const learn = read('app/layouts/learn.vue')
+    assert.match(learn, /nav\.lessons/)
+    assert.match(learn, /nav\.search/)
+    const def = read('app/layouts/default.vue')
+    assert.match(def, /localePath\('\/search'\)/)
+  })
+
+  it('home is path-first with ≤3 featured tracks (not full dump or quick-nav clutter)', () => {
     const src = read('app/pages/index.vue')
-    assert.match(src, /previewTracksByCategory|HOME_TRACKS/)
+    assert.match(src, /featuredTracks|HOME_FEATURED/)
     assert.match(src, /overallProgress|hero-progress/)
+    assert.doesNotMatch(src, /previewTracksByCategory/)
     assert.doesNotMatch(src, /hero-brand/)
     assert.doesNotMatch(src, /home-quick/)
     assert.doesNotMatch(src, /sql-fundamentals/)
+  })
+
+  it('track hub has no duplicate open-lessons ghost button', () => {
+    const src = read('app/pages/tracks/[track]/index.vue')
+    assert.doesNotMatch(src, /open-lessons-btn/)
+    assert.doesNotMatch(src, /openNav/)
+  })
+
+  it('lesson page puts practice before pager/complete and notes after', () => {
+    const src = read('app/pages/tracks/[track]/lessons/[slug].vue')
+    const prose = src.indexOf('prose-lesson')
+    const sandbox = src.search(/SqlSandbox|JsSandbox|HtmlCssSandbox/)
+    const pager = src.indexOf('lesson-pager')
+    const notes = src.indexOf('notes-card')
+    assert.ok(prose > 0 && sandbox > prose, 'sandbox after prose')
+    assert.ok(pager > sandbox, 'pager after sandbox')
+    assert.ok(notes > pager, 'notes after pager')
+    assert.match(src, /lesson-objectives-mobile/)
+  })
+
+  it('progress hub is summary-first without mega per-track lesson dump', () => {
+    const src = read('app/pages/progress.vue')
+    assert.match(src, /hub-progress-tracks|trackProgressRows/)
+    assert.doesNotMatch(src, /hub-progress-lessons/)
+    assert.doesNotMatch(src, /lessonStatuses|trackLessonStatusRows/)
   })
 
   it('ships slash-to-search shortcut plugin', () => {

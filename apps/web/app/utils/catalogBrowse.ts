@@ -3,7 +3,10 @@ import type { Track } from '~/types/api'
 /** Client page size for the tracks catalog; raise only with UX review. */
 export const TRACKS_PAGE_SIZE = 12
 
-/** Home shows a short preview per category; full list lives on `/tracks`. */
+/** Home shows a short flat featured list; full catalog lives on `/tracks`. */
+export const HOME_FEATURED_TRACKS = 3
+
+/** @deprecated Prefer `featuredTracks` for home; kept for category preview helpers. */
 export const HOME_TRACKS_PER_CATEGORY = 3
 
 export type CatalogCategoryFilter = 'all' | string
@@ -41,7 +44,7 @@ export type TrackCategoryPreview = TrackCategoryGroup & {
   hasMore: boolean
 }
 
-/** Cap tracks per category for the home page; full browse is `/tracks`. */
+/** Cap tracks per category for previews; full browse is `/tracks`. */
 export function previewTracksByCategory(
   tracks: Track[],
   limit: number = HOME_TRACKS_PER_CATEGORY,
@@ -53,6 +56,15 @@ export function previewTracksByCategory(
     total: group.tracks.length,
     hasMore: group.tracks.length > cap,
   }))
+}
+
+/** Flat featured tracks for home (sortOrder, capped). */
+export function featuredTracks(
+  tracks: Track[],
+  limit: number = HOME_FEATURED_TRACKS,
+): Track[] {
+  const cap = Math.max(1, Math.floor(limit) || HOME_FEATURED_TRACKS)
+  return [...tracks].sort((a, b) => a.sortOrder - b.sortOrder).slice(0, cap)
 }
 
 /** First track by sortOrder — guest CTA target when catalog is loaded. */

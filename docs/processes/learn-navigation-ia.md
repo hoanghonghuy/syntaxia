@@ -16,9 +16,9 @@ Keep the learn sidebar focused on **the current track’s lessons**, and put tra
 |---------|----------|------------------|
 | Learn sidebar | Back to catalog (category-aware), current track title → hub, category·level, **lesson list only** | All-tracks switcher, Progress / Notes / Account menu |
 | `/tracks` | Category filters + **paginated** track cards (`TRACKS_PAGE_SIZE = 12`) | Lesson TOC |
-| Learn footer (`< 1100px`) | In track: Tracks · Lessons · Progress · Account. On hubs: Tracks · Search · Progress · Account | Duplicate track lists; orphan “Lessons” drawer with empty sidebar |
-| Header | Tracks / Progress / Notes (desktop) + search + theme; text links hide `< 1100px` (footer covers) | Full lesson list |
-| Default layout (home / `/tracks`) | Mobile footer: Home · Tracks · Progress · Account; search in header ≥768px | Lesson sidebar |
+| Learn footer (`< 1100px`) | In track: Tracks · Lessons · Progress · Account/Login. On hubs: Tracks · Search · Progress · Account/Login | Home; Notes; duplicate track lists |
+| Header | Tracks / Progress (desktop) + search + theme; text links hide `< 1100px` (footer covers) | Notes in primary chrome; full lesson list |
+| Default layout (home / `/tracks`) | Mobile footer: Tracks · Search · Progress · Account/Login; brand = home; search in header ≥768px | Home tab; Notes tab; lesson sidebar |
 
 Hierarchy stays **Category → Level → Track → Lessons** (`catalog-architecture.md`).
 

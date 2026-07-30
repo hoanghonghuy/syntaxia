@@ -25,14 +25,6 @@
             {{ t('lesson.continue') }}: {{ nextLesson.title }}
           </NuxtLink>
           <p v-else class="muted">{{ t('lesson.trackComplete') }}</p>
-          <button
-            v-if="isNarrow"
-            class="btn btn-ghost open-lessons-btn"
-            type="button"
-            @click="openNav"
-          >
-            {{ t('nav.openMenu') }}
-          </button>
         </template>
       </HubHeader>
 
@@ -63,7 +55,7 @@ const localePath = useLocalePath()
 const route = useRoute()
 const catalog = useCatalogStore()
 const auth = useAuthStore()
-const { isNarrow, openNav } = useLearnNav()
+const { isNarrow } = useLearnNav()
 const loading = ref(true)
 
 const trackId = computed(() => route.params.track as string)

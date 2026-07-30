@@ -6,7 +6,9 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   TRACKS_PAGE_SIZE,
+  HOME_FEATURED_TRACKS,
   HOME_TRACKS_PER_CATEGORY,
+  featuredTracks,
   filterTracksByCategory,
   firstTrackId,
   groupTracksByCategory,
@@ -88,5 +90,22 @@ describe('catalogBrowse', () => {
     assert.equal(preview[1].hasMore, false)
     assert.equal(firstTrackId(many), 'a')
     assert.equal(firstTrackId([]), null)
+  })
+
+  it('features a flat capped home list (not per-category dump)', () => {
+    assert.equal(HOME_FEATURED_TRACKS, 3)
+    const many = [
+      track('a', 'sql', 1),
+      track('b', 'sql', 2),
+      track('c', 'code', 3),
+      track('d', 'web', 4),
+    ]
+    const featured = featuredTracks(many)
+    assert.deepEqual(
+      featured.map((t) => t.id),
+      ['a', 'b', 'c'],
+    )
+    assert.equal(featuredTracks(many, 2).length, 2)
+    assert.deepEqual(featuredTracks([]), [])
   })
 })

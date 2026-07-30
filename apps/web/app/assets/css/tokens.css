@@ -94,7 +94,7 @@ html[data-theme='dark'] {
   --toc-width: 240px;
   --header-height: 56px;
   --toolbar-height: 48px;
-  --footer-height: 56px;
+  --footer-height: 64px;
   --bp-md: 768px;
   --bp-lg: 1100px;
 }

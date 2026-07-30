@@ -12,6 +12,9 @@
         <template #actions>
           <NuxtLink class="btn btn-primary" :to="loginPath">{{ t('nav.login') }}</NuxtLink>
           <NuxtLink class="btn btn-ghost" :to="registerPath">{{ t('nav.register') }}</NuxtLink>
+          <NuxtLink class="btn btn-ghost" :to="localePath('/tracks')">
+            {{ t('notes.guestBrowse') }}
+          </NuxtLink>
         </template>
       </HubHeader>
     </template>

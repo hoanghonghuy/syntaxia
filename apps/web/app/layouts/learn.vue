@@ -46,13 +46,6 @@
           {{ t('nav.progress') }}
         </NuxtLink>
         <NuxtLink
-          class="learn-header-link"
-          :to="localePath('/notes')"
-          @click="closeNav"
-        >
-          {{ t('nav.notes') }}
-        </NuxtLink>
-        <NuxtLink
           :to="switchLocalePath(locale === 'vi' ? 'en' : 'vi')"
           :aria-label="localeSwitchAriaLabel(locale, t)"
         >
@@ -109,17 +102,17 @@
         <span class="learn-footer-mark learn-footer-mark-search" aria-hidden="true" />
         <span>{{ t('nav.search') }}</span>
       </NuxtLink>
-      <NuxtLink class="learn-footer-item" :to="localePath('/notes')" @click="closeNav">
-        <span class="learn-footer-mark learn-footer-mark-notes" aria-hidden="true" />
-        <span>{{ t('nav.notes') }}</span>
-      </NuxtLink>
       <NuxtLink class="learn-footer-item" :to="localePath('/progress')" @click="closeNav">
         <span class="learn-footer-mark learn-footer-mark-track" aria-hidden="true" />
         <span>{{ t('nav.progress') }}</span>
       </NuxtLink>
-      <NuxtLink class="learn-footer-item" :to="localePath('/account')" @click="closeNav">
+      <NuxtLink
+        class="learn-footer-item"
+        :to="auth.user ? localePath('/account') : localePath('/login')"
+        @click="closeNav"
+      >
         <span class="learn-footer-mark learn-footer-mark-user" aria-hidden="true" />
-        <span>{{ t('nav.account') }}</span>
+        <span>{{ auth.user ? t('nav.account') : t('nav.login') }}</span>
       </NuxtLink>
     </nav>
   </div>

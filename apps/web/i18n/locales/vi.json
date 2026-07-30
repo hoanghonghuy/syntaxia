@@ -73,6 +73,7 @@
     "cta": "Bắt đầu học",
     "continue": "Tiếp tục học",
     "loginSecondary": "Đăng nhập để lưu tiến độ",
+    "featured": "Lộ trình nổi bật",
     "emptyCatalog": "Chưa có lộ trình học. Quay lại sau nhé."
   },
   "catalog": {
@@ -239,7 +240,8 @@
   "notes": {
     "title": "Ghi chú của bạn",
     "lead": "Xem lại những gì bạn đã ghi khi học. Mở một ghi chú để quay lại bài tương ứng.",
-    "guestBody": "Đăng nhập để lưu ghi chú trên bài học và xem lại tại đây.",
+    "guestBody": "Đăng nhập để lưu ghi chú trên bài học và xem lại tại đây. Bạn vẫn có thể xem lộ trình và luyện tập khi chưa đăng nhập.",
+    "guestBrowse": "Xem lộ trình",
     "empty": "Chưa có ghi chú. Mở một bài, viết vài dòng và lưu lại.",
     "noMatch": "Không có ghi chú khớp bộ lọc này.",
     "filter": "Lọc ghi chú",

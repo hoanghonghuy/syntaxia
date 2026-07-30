@@ -18,6 +18,16 @@
       <main v-else-if="lesson" class="lesson-main">
         <AppBreadcrumb :items="crumbs" />
         <h1>{{ lesson.title }}</h1>
+        <section
+          v-if="lesson.objectives?.length"
+          class="lesson-objectives-mobile"
+          :aria-label="t('lesson.objectives')"
+        >
+          <p class="lesson-objectives-label">{{ t('lesson.objectives') }}</p>
+          <ul class="lesson-objectives-list">
+            <li v-for="obj in lesson.objectives" :key="obj">{{ obj }}</li>
+          </ul>
+        </section>
         <article class="prose-lesson" v-html="lesson.bodyHtml" />
         <HtmlCssSandbox
           v-if="lesson.exercise && isHtmlCssTrack"
@@ -55,42 +65,28 @@
           :preview="exercisePreview"
           @passed="onSandboxPassed"
         />
-        <section v-if="auth.user" class="card notes-card">
-          <h2>{{ t('lesson.notes') }}</h2>
-          <textarea v-model="noteBody" rows="4" class="notes-input" />
-          <div class="notes-actions">
-            <button class="btn btn-primary" type="button" :disabled="savingNote" @click="saveNote">
-              {{ t('lesson.saveNote') }}
-            </button>
+        <div v-if="auth.user" class="lesson-complete-bar">
+          <button
+            v-if="!lessonCompleted"
+            class="btn btn-ghost"
+            type="button"
+            :disabled="markingComplete"
+            @click="markComplete"
+          >
+            {{ t('lesson.complete') }}
+          </button>
+          <template v-else>
+            <span class="lesson-completed-badge">{{ t('lesson.completed') }}</span>
             <button
-              v-if="!lessonCompleted"
               class="btn btn-ghost"
               type="button"
               :disabled="markingComplete"
-              @click="markComplete"
+              @click="markIncomplete"
             >
-              {{ t('lesson.complete') }}
+              {{ t('lesson.markIncomplete') }}
             </button>
-            <template v-else>
-              <span class="lesson-completed-badge">{{ t('lesson.completed') }}</span>
-              <button
-                class="btn btn-ghost"
-                type="button"
-                :disabled="markingComplete"
-                @click="markIncomplete"
-              >
-                {{ t('lesson.markIncomplete') }}
-              </button>
-            </template>
-          </div>
-        </section>
-        <aside v-else class="auth-soft-prompt" role="note">
-          <p>{{ t('auth.loginToSave') }}</p>
-          <div class="auth-soft-actions">
-            <NuxtLink class="btn btn-primary" :to="authLoginPath">{{ t('nav.login') }}</NuxtLink>
-            <NuxtLink class="btn btn-ghost" :to="authRegisterPath">{{ t('nav.register') }}</NuxtLink>
-          </div>
-        </aside>
+          </template>
+        </div>
         <nav class="lesson-pager" :aria-label="t('lesson.pagerNav')">
           <NuxtLink
             v-if="prevLesson"
@@ -108,6 +104,22 @@
             {{ nextLesson.title }} →
           </NuxtLink>
         </nav>
+        <section v-if="auth.user" class="card notes-card">
+          <h2>{{ t('lesson.notes') }}</h2>
+          <textarea v-model="noteBody" rows="4" class="notes-input" />
+          <div class="notes-actions">
+            <button class="btn btn-primary" type="button" :disabled="savingNote" @click="saveNote">
+              {{ t('lesson.saveNote') }}
+            </button>
+          </div>
+        </section>
+        <aside v-else class="auth-soft-prompt" role="note">
+          <p>{{ t('auth.loginToSave') }}</p>
+          <div class="auth-soft-actions">
+            <NuxtLink class="btn btn-primary" :to="authLoginPath">{{ t('nav.login') }}</NuxtLink>
+            <NuxtLink class="btn btn-ghost" :to="authRegisterPath">{{ t('nav.register') }}</NuxtLink>
+          </div>
+        </aside>
       </main>
     </div>
 
@@ -413,8 +425,40 @@ watch([slug, locale, trackId], async ([, , track]) => {
   gap: 0.5rem;
   margin-top: 1rem;
 }
+.lesson-objectives-mobile {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-surface) 90%, var(--color-pastel-blue) 10%);
+}
+.lesson-objectives-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-brand-deep);
+}
+.lesson-objectives-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-ink-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+@media (min-width: 1100px) {
+  .lesson-objectives-mobile {
+    display: none;
+  }
+}
+.lesson-complete-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
 .notes-card {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 .notes-input {
   width: 100%;
@@ -436,7 +480,7 @@ watch([slug, locale, trackId], async ([, , track]) => {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: 2.5rem;
+  margin-top: 1.25rem;
   flex-wrap: wrap;
 }
 .auth-soft-prompt {
