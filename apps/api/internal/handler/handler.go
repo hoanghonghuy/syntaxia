@@ -60,12 +60,18 @@ func (h *Handler) RegisterRoutes(r *gin.Engine) {
 			lessonG.GET("/:slug", h.getLesson)
 		}
 
+		sandboxG := v1.Group("/sandbox")
+		sandboxG.Use(middleware.OptionalAuth(h.svc.Tokens))
+		sandboxG.Use(middleware.RateLimit(30, time.Minute))
+		{
+			sandboxG.POST("/run", h.sandboxRun)
+			sandboxG.POST("/js/grade", h.sandboxJsGrade)
+			sandboxG.POST("/htmlcss/grade", h.sandboxHtmlCssGrade)
+		}
+
 		authed := v1.Group("")
 		authed.Use(middleware.Auth(h.svc.Tokens))
 		{
-			authed.POST("/sandbox/run", h.sandboxRun)
-			authed.POST("/sandbox/js/grade", h.sandboxJsGrade)
-			authed.POST("/sandbox/htmlcss/grade", h.sandboxHtmlCssGrade)
 			authed.GET("/progress", h.listProgress)
 			authed.PUT("/progress/:lessonId", h.setProgress)
 			authed.GET("/notes", h.listAllNotes)

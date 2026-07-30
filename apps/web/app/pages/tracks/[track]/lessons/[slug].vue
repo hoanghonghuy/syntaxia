@@ -30,8 +30,6 @@
           :starter-css="htmlCssStarterCss"
           :hints="exerciseHints"
           :solution-available="exerciseSolutionAvailable"
-          :can-run="!auth.loading && !!auth.user"
-          :login-path="authLoginPath"
           @passed="onSandboxPassed"
         />
         <JsSandbox
@@ -43,8 +41,6 @@
           :starter="jsExerciseStarter"
           :hints="exerciseHints"
           :solution-available="exerciseSolutionAvailable"
-          :can-run="!auth.loading && !!auth.user"
-          :login-path="authLoginPath"
           @passed="onSandboxPassed"
         />
         <SqlSandbox
@@ -57,8 +53,6 @@
           :hints="exerciseHints"
           :solution-available="exerciseSolutionAvailable"
           :preview="exercisePreview"
-          :can-run="!auth.loading && !!auth.user"
-          :login-path="authLoginPath"
           @passed="onSandboxPassed"
         />
         <section v-if="auth.user" class="card notes-card">

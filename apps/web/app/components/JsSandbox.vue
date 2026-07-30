@@ -52,13 +52,7 @@
       </div>
     </div>
 
-    <div v-if="!canRun" class="sandbox-auth-gate">
-      <p>{{ t('auth.loginToRun') }}</p>
-      <NuxtLink v-if="loginPath" class="btn btn-primary" :to="loginPath">
-        {{ t('nav.login') }}
-      </NuxtLink>
-    </div>
-    <div v-else class="sandbox-toolbar">
+    <div class="sandbox-toolbar">
       <button class="btn btn-primary" type="button" :disabled="running" @click="run">
         {{ t('lesson.runJs') }}
         <span class="hint">{{ t('lesson.runHintJs') }}</span>
