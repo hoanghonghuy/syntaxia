@@ -38,9 +38,12 @@ Record the locked product and technical baseline for Syntaxia so agents do not r
 ### Design
 
 - Primary IA: **Mintlify-style** learning layout (nav / lesson prose / TOC; mobile drawer)
+- Visual skin: **digital notebook / bullet-journal** (canvas grid, pastel soft surfaces, Playpen Sans for section headings, larger card/pill radii). See [`app-notebook-theme.md`](./app-notebook-theme.md) and [`lesson-notebook-style.md`](./lesson-notebook-style.md)
 - Custom CSS design tokens; expressive non-default fonts (do not use Inter, Roboto, Arial, or system UI stacks as the brand voice)
+- Brand wordmark: Fraunces; body: Source Sans 3; lesson/section headings: Playpen Sans
 - **Appearance:** learner can choose `system` / `light` / `dark` plus accent presets or custom hex (default emerald `#00b48a`). See [`appearance-theme.md`](./appearance-theme.md)
 - Avoid purple-on-white and cream+terracotta AI-default looks as the *default* brand; custom accents are user-controlled
+- Interactive accent remains brand/emerald (or user preset); pastels are decorative surfaces only
 
 ### Curriculum
 

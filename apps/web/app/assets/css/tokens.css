@@ -88,6 +88,8 @@ html[data-theme='dark'] {
   --radius-md: 10px;
   --radius-card: 16px;
   --radius-pill: 999px;
+  --notebook-grid-size: 24px;
+  --notebook-grid-opacity: 0.35;
   --nav-width: 280px;
   --toc-width: 240px;
   --header-height: 56px;
@@ -113,15 +115,19 @@ body {
   margin: 0;
   font-family: var(--font-body);
   color: var(--color-ink);
-  background: var(--color-canvas);
+  background-color: var(--color-canvas);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-hairline) calc(var(--notebook-grid-opacity) * 100%), transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-hairline) calc(var(--notebook-grid-opacity) * 100%), transparent) 1px, transparent 1px);
+  background-size: var(--notebook-grid-size) var(--notebook-grid-size);
   line-height: 1.55;
 }
 
 h1, h2, h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-hand);
   font-weight: 600;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 a {

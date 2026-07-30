@@ -15,7 +15,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: 0 var(--space-4);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-pastel-blue) 12%);
   border-bottom: 1px solid var(--color-hairline);
   backdrop-filter: blur(8px);
 }
@@ -66,7 +66,7 @@
   height: 2.5rem;
   padding: 0.55rem;
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
   cursor: pointer;
   flex-shrink: 0;
@@ -105,7 +105,7 @@
 }
 
 .learn-sidebar {
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 94%, var(--color-pastel-green) 6%);
   border-right: 1px solid var(--color-hairline);
   padding: var(--space-4);
   overflow-x: hidden;
@@ -169,7 +169,7 @@
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   align-items: stretch;
   border-top: 1px solid var(--color-hairline);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-pastel-yellow) 8%);
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
@@ -274,7 +274,7 @@ body.lesson-nav-locked {
 
 .lesson-toc {
   display: none;
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 94%, var(--color-pastel-blue) 6%);
   border-left: 1px solid var(--color-hairline);
   padding: var(--space-5) var(--space-4);
   font-size: 0.875rem;
@@ -400,7 +400,7 @@ body.lesson-nav-locked {
 .nav-link {
   display: block;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   color: var(--color-ink-muted);
 }
 
@@ -422,7 +422,7 @@ body.lesson-nav-locked {
   justify-content: center;
   gap: var(--space-2);
   padding: 0.6rem 1rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   border: 1px solid transparent;
   font-weight: 600;
   cursor: pointer;
@@ -439,15 +439,20 @@ body.lesson-nav-locked {
 }
 
 .btn-ghost {
-  background: transparent;
+  background: var(--color-surface);
   border-color: var(--color-hairline);
   color: var(--color-ink);
 }
 
+.btn-ghost:hover {
+  background: var(--color-pastel-yellow);
+  border-color: color-mix(in srgb, var(--color-hairline) 70%, var(--color-ink-faint));
+}
+
 .card {
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-pastel-blue) 8%);
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   padding: var(--space-5);
 }
 
@@ -584,8 +589,9 @@ body.lesson-nav-locked {
 .sandbox-panel {
   margin-top: var(--space-6);
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   overflow: hidden;
+  background: var(--color-surface);
 }
 
 .sandbox-editor {
@@ -607,7 +613,7 @@ body.lesson-nav-locked {
   flex-wrap: wrap;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 90%, var(--color-pastel-yellow) 10%);
 }
 
 .result-table {
@@ -635,7 +641,8 @@ body.lesson-nav-locked {
 .hero {
   padding: var(--space-8) var(--space-4);
   text-align: center;
-  background: linear-gradient(165deg, var(--color-hero-from) 0%, var(--color-canvas) 55%);
+  background: linear-gradient(165deg, var(--color-pastel-green) 0%, var(--color-canvas) 55%);
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
 }
 
 .hero h1 {
@@ -746,8 +753,8 @@ body.lesson-nav-locked {
   margin-bottom: var(--space-4);
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-soft);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface-soft) 85%, var(--color-pastel-yellow) 15%);
   color: var(--color-ink-faint);
   font-size: 0.875rem;
   text-decoration: none;
@@ -844,7 +851,7 @@ body.lesson-nav-locked {
 .card-title {
   margin: 0 0 0.35rem;
   font-size: 1.2rem;
-  font-family: var(--font-display);
+  font-family: var(--font-hand);
   font-weight: 600;
   color: var(--color-ink);
 }
@@ -869,7 +876,7 @@ body.lesson-nav-locked {
 }
 
 .catalog-heading {
-  font-family: var(--font-display);
+  font-family: var(--font-hand);
   font-size: 1.25rem;
   margin: 0;
 }
@@ -906,9 +913,9 @@ body.lesson-nav-locked {
   align-items: center;
   min-height: 2rem;
   padding: 0.35rem 0.85rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   border: 1px solid var(--color-hairline);
-  background: var(--color-surface);
+  background: var(--color-pastel-blue);
   color: var(--color-ink-muted);
   font-size: 0.85rem;
   font-weight: 600;
@@ -1087,9 +1094,9 @@ body.lesson-nav-locked {
   display: grid;
   gap: 0.9rem;
   padding: var(--space-5);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-pastel-purple) 8%);
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
 }
 
 .account-facts dt {
@@ -1107,9 +1114,9 @@ body.lesson-nav-locked {
 
 .account-section {
   padding: var(--space-5);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-pastel-blue) 8%);
   border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
 }
 
 .account-section h2 {
@@ -1190,11 +1197,12 @@ body.lesson-nav-locked {
 
 .hub-section h2 {
   margin: 0 0 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
+  font-family: var(--font-hand);
   font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--color-ink);
 }
 
 .hub-skel-list {
