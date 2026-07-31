@@ -27,7 +27,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "==> Ensure track taxonomy + code scaffold (idempotent)"
-foreach ($mig in @("003_track_taxonomy.sql", "004_code_track.sql", "005_web_tracks.sql")) {
+foreach ($mig in @("003_track_taxonomy.sql", "004_code_track.sql", "005_web_tracks.sql", "006_languages_tracks.sql")) {
   $migPath = Join-Path $Root "apps\api\migrations\$mig"
   docker cp $migPath "syntaxia-postgres-1:/tmp/$mig"
   docker compose exec -T postgres psql -U syntaxia -d syntaxia -f "/tmp/$mig"

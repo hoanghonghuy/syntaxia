@@ -80,7 +80,12 @@ const trackEyebrow = computed(() => {
 })
 
 const trackLead = computed(() => {
-  if (stats.value.total === 0) return t('catalog.comingSoon')
+  if (stats.value.total === 0) {
+    if (trackMeta.value?.category === 'languages') {
+      return `${t('catalog.underDevelopment')} ${t('catalog.comingSoon')}`
+    }
+    return t('catalog.comingSoon')
+  }
   return `${t('lesson.progress', { done: stats.value.done, total: stats.value.total })} · ${t('lesson.progressPercent', { percent: stats.value.percent })}`
 })
 

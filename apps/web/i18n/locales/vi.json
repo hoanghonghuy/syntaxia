@@ -81,7 +81,8 @@
     "category": {
       "sql": "SQL",
       "web": "Web",
-      "code": "Lập trình"
+      "code": "Lập trình",
+      "languages": "Ngôn ngữ"
     },
     "level": {
       "basic": "Cơ bản",
@@ -89,6 +90,7 @@
       "advanced": "Nâng cao"
     },
     "comingSoon": "Sắp ra mắt — bài học cho lộ trình này đang được chuẩn bị.",
+    "underDevelopment": "Trải nghiệm học này đang được phát triển.",
     "tracksTitle": "Lộ trình học",
     "tracksLead": "Duyệt theo danh mục. Mở một lộ trình để học — thanh bên chỉ còn danh sách bài của lộ trình đó.",
     "allCategories": "Tất cả",

@@ -81,7 +81,8 @@
     "category": {
       "sql": "SQL",
       "web": "Web",
-      "code": "Code"
+      "code": "Code",
+      "languages": "Languages"
     },
     "level": {
       "basic": "Basic",
@@ -89,6 +90,7 @@
       "advanced": "Advanced"
     },
     "comingSoon": "Coming soon — lessons for this track are on the way.",
+    "underDevelopment": "This learning experience is under development.",
     "tracksTitle": "Learning tracks",
     "tracksLead": "Browse by category. Open a track to study its lessons — the lesson sidebar stays focused on that track.",
     "allCategories": "All",

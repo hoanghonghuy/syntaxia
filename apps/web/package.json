@@ -18,6 +18,7 @@
     "test:catalog-search": "node --experimental-strip-types --test scripts/check-catalog-search.mjs",
     "test:theme": "node --experimental-strip-types --test scripts/check-theme-accent.mjs",
     "test:dark-code": "node --test scripts/check-dark-code-theme.mjs",
+    "test:languages-placeholder": "node --test scripts/check-languages-placeholder.mjs",
     "test:feedback-nav": "node --experimental-strip-types --test scripts/check-feedback-nav.mjs",
     "test:audit-remediation": "node scripts/run-audit-remediation-tests.mjs"
   },
