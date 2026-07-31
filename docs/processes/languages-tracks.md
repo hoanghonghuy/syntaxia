@@ -12,10 +12,11 @@ How Syntaxia reserves a **languages** catalog category for future language learn
 
 ## Locked approach
 
-1. **One app, shared shell/UI** (Mintlify-style Syntaxia chrome) — learners browse languages next to SQL/web/code.
-2. **Separate pedagogy later** — language lessons will not clone SQL/JS sandboxes; design a language-specific experience when implementing (Talkory specs are a reference: HSK 3.0, explain via UI locale vi/en).
-3. **Placeholder first** — seed track metadata only; empty hub shows under-development + coming soon; **no** `docs/curriculum/chinese-hsk/` until real mapped lessons exist.
-4. **Chinese first** — track id `chinese-hsk`, category `languages`, `sort_order` 100 (after IT tracks so home featured stays SQL/web/code).
+1. **One app, shared shell/UI** (Mintlify-style Syntaxia chrome) — learners browse languages next to SQL/web/code **for now** (placeholder only).
+2. **Future IA (shipping):** separate **learning domains** in the UI — **IT** vs **Languages** (see [`learning-domains.md`](./learning-domains.md)). Do **not** stuff language tracks into the same flat category chip list as IT forever. More domains may follow.
+3. **Separate pedagogy later** — language lessons will not clone SQL/JS sandboxes; design a language-specific experience when implementing (Talkory specs are a reference: HSK 3.0, explain via UI locale vi/en).
+4. **Placeholder first** — seed track metadata only; empty hub shows under-development + coming soon; **no** `docs/curriculum/chinese-hsk/` until real mapped lessons exist.
+5. **Chinese first** — track id `chinese-hsk`, category `languages`, `sort_order` 100 (after IT tracks so home featured stays SQL/web/code).
 
 ## Steps (extend)
 
@@ -35,6 +36,7 @@ How Syntaxia reserves a **languages** catalog category for future language learn
 
 - Publish fake lesson Markdown stubs
 - Force language UX into SQL sandbox patterns
+- Treat languages as “just another chip next to SQL forever” once the domain UI ships — split IT vs Languages (and later domains) in navigation/home
 - Merge Talkory SRS/AI/writing into Syntaxia without an OpenSpec change
 
 ## Related

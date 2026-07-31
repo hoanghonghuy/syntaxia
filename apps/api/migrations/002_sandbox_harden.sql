@@ -14,7 +14,14 @@ END
 $$;
 REVOKE ALL ON SCHEMA public FROM syntaxia_sandbox;
 GRANT USAGE ON SCHEMA public TO syntaxia_sandbox;
-ALTER ROLE syntaxia_sandbox NOSUPERUSER NOCREATEDB NOCREATEROLE;
+DO $$
+BEGIN
+  ALTER ROLE syntaxia_sandbox NOSUPERUSER NOCREATEDB NOCREATEROLE;
+EXCEPTION
+  WHEN insufficient_privilege THEN
+    ALTER ROLE syntaxia_sandbox NOCREATEDB NOCREATEROLE;
+END
+$$;
 
 DO $$
 DECLARE r RECORD;

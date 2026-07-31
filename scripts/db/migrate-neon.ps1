@@ -43,7 +43,8 @@ function Invoke-PsqlFile {
 
     $psql = Get-Command psql -ErrorAction SilentlyContinue
     if ($psql) {
-        & psql $Url -v ON_ERROR_STOP=1 -f $FilePath
+        # Force UTF-8 client encoding (Windows consoles often default to a legacy code page).
+        & psql $Url -v ON_ERROR_STOP=1 --set=client_encoding=UTF8 -f $FilePath
         if ($LASTEXITCODE -ne 0) {
             throw "psql failed for $FilePath (exit $LASTEXITCODE)"
         }
@@ -55,8 +56,16 @@ function Invoke-PsqlFile {
         throw "Neither psql nor docker found. Install PostgreSQL client or Docker."
     }
 
-    Get-Content $FilePath -Raw -Encoding UTF8 |
-        docker run --rm -i postgres:16-alpine psql $Url -v ON_ERROR_STOP=1
+    # Mount the file — do NOT pipe through PowerShell (corrupts Vietnamese UTF-8 to '?').
+    $absFile = (Resolve-Path $FilePath).Path
+    $absDir = Split-Path -Parent $absFile
+    $leaf = Split-Path -Leaf $absFile
+    docker run --rm `
+        -e PGCLIENTENCODING=UTF8 `
+        -e LANG=C.UTF-8 `
+        -v "${absDir}:/sql:ro" `
+        postgres:16-alpine `
+        psql $Url -v ON_ERROR_STOP=1 --set=client_encoding=UTF8 -f "/sql/$leaf"
     if ($LASTEXITCODE -ne 0) {
         throw "docker psql failed for $FilePath (exit $LASTEXITCODE)"
     }
@@ -70,16 +79,19 @@ function Invoke-PsqlCommand {
 
     $psql = Get-Command psql -ErrorAction SilentlyContinue
     if ($psql) {
-        & psql $Url -v ON_ERROR_STOP=1 -c $Sql
+        & psql $Url -v ON_ERROR_STOP=1 --set=client_encoding=UTF8 -c $Sql
         if ($LASTEXITCODE -ne 0) {
             throw "psql -c failed (exit $LASTEXITCODE)"
         }
         return
     }
 
-    $Sql | docker run --rm -i postgres:16-alpine psql $Url -v ON_ERROR_STOP=1
-    if ($LASTEXITCODE -ne 0) {
-        throw "docker psql -c failed (exit $LASTEXITCODE)"
+    $tmp = Join-Path $env:TEMP ("syntaxia-psql-" + [guid]::NewGuid().ToString() + ".sql")
+    try {
+        [System.IO.File]::WriteAllText($tmp, $Sql, (New-Object System.Text.UTF8Encoding $false))
+        Invoke-PsqlFile -Url $Url -FilePath $tmp
+    } finally {
+        Remove-Item -Force $tmp -ErrorAction SilentlyContinue
     }
 }
 

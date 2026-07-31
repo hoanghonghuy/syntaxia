@@ -20,7 +20,7 @@ Keep the learn sidebar focused on **the current track’s lessons**, and put tra
 | Header | Tracks / Progress (desktop) + theme + locale + auth; text links hide `< 1100px` (footer covers) | Header search pill; Notes; full lesson list |
 | Default layout (home / `/tracks`) | Mobile footer: Tracks · Search · Progress · Profile; brand = home | Home tab; Notes tab; Login as footer label; header search pill; lesson sidebar |
 
-Hierarchy stays **Category → Level → Track → Lessons** (`catalog-architecture.md`).
+Hierarchy stays **Domain → Category → Level → Track → Lessons** (`catalog-architecture.md`, `learning-domains.md`).
 
 ## Steps
 

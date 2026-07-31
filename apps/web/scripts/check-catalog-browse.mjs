@@ -68,10 +68,11 @@ describe('catalogBrowse', () => {
 
   it('parses category and page from route query', () => {
     assert.deepEqual(parseTracksQuery({ category: 'code', page: '2' }), {
+      domain: 'it',
       category: 'code',
       page: 2,
     })
-    assert.deepEqual(parseTracksQuery({}), { category: 'all', page: 1 })
+    assert.deepEqual(parseTracksQuery({}), { domain: 'it', category: 'all', page: 1 })
   })
 
   it('previews a capped home list per category', () => {

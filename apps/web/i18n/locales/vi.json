@@ -74,8 +74,18 @@
     "cta": "Bắt đầu học",
     "continue": "Tiếp tục học",
     "loginSecondary": "Đăng nhập để lưu tiến độ",
-    "featured": "Lộ trình nổi bật",
+    "featured": "Lộ trình IT nổi bật",
+    "domainsHeading": "Bạn muốn học gì?",
+    "domainsLead": "IT và ngôn ngữ là hai trải nghiệm học riêng trong cùng một app.",
     "emptyCatalog": "Chưa có lộ trình học. Quay lại sau nhé."
+  },
+  "domain": {
+    "it": "IT",
+    "languages": "Ngôn ngữ",
+    "itLead": "SQL, web và lập trình — sandbox tương tác.",
+    "languagesLead": "Tiếng Trung trước (HSK) — cách học ngôn ngữ đang phát triển.",
+    "browse": "Xem lộ trình",
+    "underDevelopment": "Đang phát triển"
   },
   "catalog": {
     "category": {
@@ -92,8 +102,9 @@
     "comingSoon": "Sắp ra mắt — bài học cho lộ trình này đang được chuẩn bị.",
     "underDevelopment": "Trải nghiệm học này đang được phát triển.",
     "tracksTitle": "Lộ trình học",
-    "tracksLead": "Duyệt theo danh mục. Mở một lộ trình để học — thanh bên chỉ còn danh sách bài của lộ trình đó.",
+    "tracksLead": "Chọn lĩnh vực học, rồi duyệt lộ trình. Bộ lọc danh mục chỉ áp dụng trong lĩnh vực đang chọn.",
     "allCategories": "Tất cả",
+    "allDomains": "Mọi lĩnh vực",
     "pageOf": "Trang {page}/{total}",
     "prevPage": "Trước",
     "nextPage": "Sau",

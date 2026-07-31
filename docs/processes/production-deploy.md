@@ -42,6 +42,8 @@ Details: [`scripts/db/README-NEON.md`](../../scripts/db/README-NEON.md).
 
 Build Render `SANDBOX_DATABASE_URL` with the **direct** (non-pooler) host and user `syntaxia_sandbox`. Pooler + TEMP tables will break the SQL sandbox.
 
+If migrate fails on `ALTER ROLE … NOSUPERUSER` (Neon), pull the latest `init.sql` / `002_sandbox_harden.sql` (exception fallback) or reset `public` schema per README-NEON, then re-run.
+
 ### 2. Render (API)
 
 1. New → Blueprint (or Web Service) → select this repo.

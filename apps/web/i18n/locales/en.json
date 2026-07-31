@@ -74,8 +74,18 @@
     "cta": "Start learning",
     "continue": "Continue learning",
     "loginSecondary": "Log in to save progress",
-    "featured": "Featured tracks",
+    "featured": "Featured IT tracks",
+    "domainsHeading": "What do you want to learn?",
+    "domainsLead": "IT and languages are separate learning experiences in the same app.",
     "emptyCatalog": "No learning tracks are available yet. Check back soon."
+  },
+  "domain": {
+    "it": "IT",
+    "languages": "Languages",
+    "itLead": "SQL, web, and programming — interactive sandboxes.",
+    "languagesLead": "Chinese first (HSK) — language pedagogy under development.",
+    "browse": "Browse tracks",
+    "underDevelopment": "Under development"
   },
   "catalog": {
     "category": {
@@ -92,8 +102,9 @@
     "comingSoon": "Coming soon — lessons for this track are on the way.",
     "underDevelopment": "This learning experience is under development.",
     "tracksTitle": "Learning tracks",
-    "tracksLead": "Browse by category. Open a track to study its lessons — the lesson sidebar stays focused on that track.",
+    "tracksLead": "Pick a learning domain, then browse tracks. Category filters apply inside the active domain.",
     "allCategories": "All",
+    "allDomains": "All domains",
     "pageOf": "Page {page} of {total}",
     "prevPage": "Previous",
     "nextPage": "Next",

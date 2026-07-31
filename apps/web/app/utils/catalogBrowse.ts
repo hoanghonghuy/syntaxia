@@ -1,4 +1,9 @@
 import type { Track } from '~/types/api'
+import {
+  type LearningDomainFilter,
+  filterTracksByDomain,
+  parseDomainQuery,
+} from './learningDomains.ts'
 
 /** Client page size for the tracks catalog; raise only with UX review. */
 export const TRACKS_PAGE_SIZE = 12
@@ -23,6 +28,17 @@ export function filterTracksByCategory(
   const sorted = [...tracks].sort((a, b) => a.sortOrder - b.sortOrder)
   if (!category || category === 'all') return sorted
   return sorted.filter((tr) => (tr.category || 'sql') === category)
+}
+
+/**
+ * Domain first, then optional category. Category chips only apply within the domain scope.
+ */
+export function filterTracksByDomainAndCategory(
+  tracks: Track[],
+  domain: LearningDomainFilter,
+  category: CatalogCategoryFilter,
+): Track[] {
+  return filterTracksByCategory(filterTracksByDomain(tracks, domain), category)
 }
 
 export function groupTracksByCategory(tracks: Track[]): TrackCategoryGroup[] {
@@ -58,7 +74,7 @@ export function previewTracksByCategory(
   }))
 }
 
-/** Flat featured tracks for home (sortOrder, capped). */
+/** Flat featured tracks for home (sortOrder, capped). Prefer passing an IT-scoped list. */
 export function featuredTracks(
   tracks: Track[],
   limit: number = HOME_FEATURED_TRACKS,
@@ -102,9 +118,11 @@ export function paginateItems<T>(
 }
 
 export function parseTracksQuery(query: Record<string, unknown>): {
+  domain: LearningDomainFilter
   category: CatalogCategoryFilter
   page: number
 } {
+  const domain = parseDomainQuery(query.domain)
   const rawCat = query.category
   const category =
     typeof rawCat === 'string' && rawCat.trim() ? rawCat.trim() : 'all'
@@ -114,6 +132,7 @@ export function parseTracksQuery(query: Record<string, unknown>): {
       ? Number(rawPage)
       : 1
   return {
+    domain,
     category,
     page: Number.isFinite(pageNum) && pageNum > 0 ? Math.floor(pageNum) : 1,
   }

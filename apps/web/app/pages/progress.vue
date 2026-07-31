@@ -50,6 +50,8 @@
       <section v-if="rows.length" class="hub-progress-tracks" :aria-label="t('nav.tracks')">
         <article v-for="row in rows" :key="row.trackId" class="card card--stack">
           <p class="track-meta">
+            {{ t(`domain.${row.category === 'languages' ? 'languages' : 'it'}`) }}
+            ·
             {{ t(`catalog.category.${row.category}`) }}
             ·
             {{ t(`catalog.level.${row.level}`) }}

@@ -13,23 +13,25 @@ Locked rules for Syntaxia’s learning catalog: how categories, levels, and trac
 ## Hierarchy
 
 ```
-Category (sql | web | code | languages)
-  └── Level (basic | intermediate | advanced)  — label on the track row
-        └── Track (id, titles, descriptions)
-              └── Lessons (en + vi Markdown under docs/curriculum/<track>/)
+Domain (it | languages | …)
+  └── Category (sql | web | code | languages | …)
+        └── Level (basic | intermediate | advanced)
+              └── Track → Lessons
 ```
+
+| Domain | Categories (today) | Notes |
+|--------|-------------------|--------|
+| `it` | `sql`, `web`, `code` | Sandbox pedagogy |
+| `languages` | `languages` | Placeholder HSK; see [`languages-tracks.md`](./languages-tracks.md) |
 
 | Category | Seeded tracks (today) | Notes |
 |----------|----------------------|--------|
 | `sql` | `sql-fundamentals` (basic), `postgresql` (intermediate) | Portable SQL → Postgres dialect |
 | `web` | `html-basics` (basic), `css-basics` (basic) | MDN HTML → CSS; see [`html-css-basics-tracks.md`](./html-css-basics-tracks.md) |
 | `code` | `javascript-basics` (basic) | MDN JS scripting; see `javascript-track.md` |
-| `languages` | `chinese-hsk` (basic, **placeholder**) | HSK 3.0 mapped later; no lesson bodies yet — see [`languages-tracks.md`](./languages-tracks.md) |
+| `languages` | `chinese-hsk` (basic, **placeholder**) | HSK 3.0 mapped later — see [`languages-tracks.md`](./languages-tracks.md) |
 
-Home groups tracks by `category` (i18n `catalog.category.*`). Each card shows `catalog.level.*`.
-
-Canonical browse UI for many tracks: **`/tracks`** with category filters and client pagination (`catalogBrowse.ts`, `TRACKS_PAGE_SIZE`). Home may preview groups but must link to `/tracks` for “view all”. The learn sidebar must **not** list every track — see [`learn-navigation-ia.md`](./learn-navigation-ia.md).
-
+Home: **domain cards** + featured IT tracks. Catalog: `/tracks?domain=it|languages` then category chips. See [`learning-domains.md`](./learning-domains.md).
 ## Steps (add a track)
 
 1. Choose a stable **track id** (kebab-case), `category`, and `level`. Prefer research-backed ids (e.g. MDN / SQLBolt / Mode), not invented brand names.

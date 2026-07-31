@@ -72,8 +72,11 @@ const trackTitle = computed(() => {
 
 const tracksListPath = computed(() => {
   const cat = trackMeta.value?.category
-  if (cat) return localePath({ path: '/tracks', query: { category: cat } })
-  return localePath('/tracks')
+  if (cat) {
+    const domain = cat === 'languages' ? 'languages' : 'it'
+    return localePath({ path: '/tracks', query: { domain, category: cat } })
+  }
+  return localePath({ path: '/tracks', query: { domain: 'it' } })
 })
 
 const lessons = computed(() => {

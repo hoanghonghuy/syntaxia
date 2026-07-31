@@ -12,18 +12,37 @@
     <template v-else>
       <AppBreadcrumb :items="crumbs" />
       <HubHeader
-        :eyebrow="t('nav.tracks')"
+        :eyebrow="t(`domain.${domain === 'all' ? 'it' : domain}`)"
         :title="t('catalog.tracksTitle')"
         :lead="t('catalog.tracksLead')"
       />
 
-      <div class="category-filters" role="tablist" :aria-label="t('catalog.allCategories')">
+      <div class="category-filters" role="tablist" :aria-label="t('catalog.allDomains')">
+        <NuxtLink
+          v-for="d in domainTabs"
+          :key="d"
+          class="category-chip category-chip--domain"
+          :class="{ 'is-active': domain === d }"
+          role="tab"
+          :aria-selected="domain === d"
+          :to="localePath({ path: '/tracks', query: { domain: d, page: '1' } })"
+        >
+          {{ t(`domain.${d}`) }}
+        </NuxtLink>
+      </div>
+
+      <div
+        v-if="domain !== 'all' && categories.length > 1"
+        class="category-filters"
+        role="tablist"
+        :aria-label="t('catalog.allCategories')"
+      >
         <NuxtLink
           class="category-chip"
           :class="{ 'is-active': category === 'all' }"
           role="tab"
           :aria-selected="category === 'all'"
-          :to="localePath({ path: '/tracks', query: { page: '1' } })"
+          :to="localePath({ path: '/tracks', query: { domain: String(domain), page: '1' } })"
         >
           {{ t('catalog.allCategories') }}
         </NuxtLink>
@@ -34,7 +53,7 @@
           :class="{ 'is-active': category === cat }"
           role="tab"
           :aria-selected="category === cat"
-          :to="localePath({ path: '/tracks', query: { category: cat, page: '1' } })"
+          :to="localePath({ path: '/tracks', query: { domain: String(domain), category: cat, page: '1' } })"
         >
           {{ t(`catalog.category.${cat}`) }}
         </NuxtLink>
@@ -115,10 +134,15 @@
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
 import {
   TRACKS_PAGE_SIZE,
-  filterTracksByCategory,
+  filterTracksByDomainAndCategory,
   paginateItems,
   parseTracksQuery,
 } from '~/utils/catalogBrowse'
+import {
+  LEARNING_DOMAIN_IDS,
+  categoriesInDomain,
+  type LearningDomainId,
+} from '~/utils/learningDomains'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
 import { shouldShowSkeleton } from '~/utils/softLoading'
 
@@ -143,24 +167,29 @@ const crumbs = computed(() =>
 )
 
 const parsed = computed(() => parseTracksQuery(route.query as Record<string, unknown>))
+const domain = computed(() => parsed.value.domain)
 const category = computed(() => parsed.value.category)
 
+const domainTabs = LEARNING_DOMAIN_IDS
+
 const categories = computed(() => {
-  const set = new Set<string>()
-  for (const tr of catalog.tracks) {
-    set.add(tr.category || 'sql')
-  }
-  return [...set].sort()
+  if (domain.value === 'all') return []
+  return categoriesInDomain(catalog.tracks, domain.value as LearningDomainId)
 })
 
-const filtered = computed(() => filterTracksByCategory(catalog.tracks, category.value))
+const filtered = computed(() =>
+  filterTracksByDomainAndCategory(catalog.tracks, domain.value, category.value),
+)
 
 const slice = computed(() =>
   paginateItems(filtered.value, parsed.value.page, TRACKS_PAGE_SIZE),
 )
 
 function pageLink(page: number) {
-  const query: Record<string, string> = { page: String(page) }
+  const query: Record<string, string> = {
+    page: String(page),
+    domain: domain.value === 'all' ? 'it' : String(domain.value),
+  }
   if (category.value !== 'all') query.category = category.value
   return localePath({ path: '/tracks', query })
 }

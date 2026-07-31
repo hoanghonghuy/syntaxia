@@ -81,7 +81,12 @@ describe('shell UX foundation', () => {
       'catalog.tracksTitle',
       'catalog.tracksLead',
       'catalog.allCategories',
+      'catalog.allDomains',
       'catalog.pageOf',
+      'domain.it',
+      'domain.languages',
+      'home.domainsHeading',
+      'home.domainsLead',
       'catalog.prevPage',
       'catalog.nextPage',
       'catalog.emptyCategory',
@@ -120,7 +125,8 @@ describe('shell UX foundation', () => {
   it('ships paginated tracks catalog page', () => {
     const src = read('app/pages/tracks/index.vue')
     assert.match(src, /paginateItems|TRACKS_PAGE_SIZE/)
-    assert.match(src, /filterTracksByCategory|parseTracksQuery/)
+    assert.match(src, /filterTracksByDomainAndCategory|parseTracksQuery/)
+    assert.match(src, /LEARNING_DOMAIN|domain/)
     assert.match(src, /catalog\.category/)
     assert.doesNotMatch(src, /--color-border/)
   })
@@ -163,10 +169,14 @@ describe('shell UX foundation', () => {
     assert.equal(existsSync(join(webRoot, 'app/components/FooterNavIcon.vue')), true)
   })
 
-  it('home is path-first with ≤3 featured tracks (not full dump or quick-nav clutter)', () => {
+  it('home is path-first with domain cards and ≤3 featured IT tracks', () => {
     const src = read('app/pages/index.vue')
     assert.match(src, /featuredTracks|HOME_FEATURED/)
     assert.match(src, /overallProgress|hero-progress/)
+    assert.match(src, /filterTracksByDomain/)
+    assert.match(src, /domainsHeading|home\.domainsHeading/)
+    assert.match(src, /domain:\s*'it'/)
+    assert.match(src, /domain:\s*'languages'/)
     assert.doesNotMatch(src, /previewTracksByCategory/)
     assert.doesNotMatch(src, /hero-brand/)
     assert.doesNotMatch(src, /home-quick/)

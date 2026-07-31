@@ -36,7 +36,7 @@
           <NuxtLink
             v-else
             class="btn btn-primary"
-            :to="localePath('/tracks')"
+            :to="localePath({ path: '/tracks', query: { domain: 'it' } })"
           >
             {{ t('catalog.viewAllTracks') }}
           </NuxtLink>
@@ -50,16 +50,51 @@
           <NuxtLink
             v-else-if="continueLink || startTrackPath"
             class="btn btn-ghost"
-            :to="localePath('/tracks')"
+            :to="localePath({ path: '/tracks', query: { domain: 'it' } })"
           >
             {{ t('catalog.viewAllTracks') }}
           </NuxtLink>
         </div>
       </section>
 
+      <section class="catalog-section domains-section" :aria-label="t('home.domainsHeading')">
+        <div class="catalog-heading-row">
+          <h2 class="catalog-heading">{{ t('home.domainsHeading') }}</h2>
+        </div>
+        <p class="domains-lead muted">{{ t('home.domainsLead') }}</p>
+        <div class="domain-grid">
+          <article class="card domain-card">
+            <p class="track-meta">{{ t('domain.it') }}</p>
+            <h3 class="card-title">{{ t('domain.it') }}</h3>
+            <p>{{ t('domain.itLead') }}</p>
+            <div class="card-actions">
+              <NuxtLink
+                class="btn btn-primary"
+                :to="localePath({ path: '/tracks', query: { domain: 'it' } })"
+              >
+                {{ t('domain.browse') }}
+              </NuxtLink>
+            </div>
+          </article>
+          <article class="card domain-card">
+            <p class="track-meta">{{ t('domain.underDevelopment') }}</p>
+            <h3 class="card-title">{{ t('domain.languages') }}</h3>
+            <p>{{ t('domain.languagesLead') }}</p>
+            <div class="card-actions">
+              <NuxtLink
+                class="btn btn-ghost"
+                :to="localePath({ path: '/tracks', query: { domain: 'languages' } })"
+              >
+                {{ t('domain.browse') }}
+              </NuxtLink>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <div v-if="featured.length === 0" class="hub-empty hub-empty--center">
         <p>{{ t('home.emptyCatalog') }}</p>
-        <NuxtLink class="btn btn-ghost" :to="localePath('/tracks')">
+        <NuxtLink class="btn btn-ghost" :to="localePath({ path: '/tracks', query: { domain: 'it' } })">
           {{ t('catalog.viewAllTracks') }}
         </NuxtLink>
       </div>
@@ -67,7 +102,7 @@
       <section v-else class="catalog-section">
         <div class="catalog-heading-row">
           <h2 class="catalog-heading">{{ t('home.featured') }}</h2>
-          <NuxtLink class="catalog-more" :to="localePath('/tracks')">
+          <NuxtLink class="catalog-more" :to="localePath({ path: '/tracks', query: { domain: 'it' } })">
             {{ t('catalog.viewAllTracks') }}
           </NuxtLink>
         </div>
@@ -119,6 +154,7 @@
 
 <script setup lang="ts">
 import { featuredTracks, firstTrackId } from '~/utils/catalogBrowse'
+import { filterTracksByDomain } from '~/utils/learningDomains'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
 import { overallProgress } from '~/utils/learningPath'
 import { shouldShowSkeleton } from '~/utils/softLoading'
@@ -133,6 +169,8 @@ const showSkeleton = computed(() =>
   shouldShowSkeleton(loading.value, catalog.tracks.length > 0),
 )
 
+const itTracks = computed(() => filterTracksByDomain(catalog.tracks, 'it'))
+
 const resume = computed(() => {
   if (!auth.user) return null
   return catalog.resumeTarget(locale.value)
@@ -146,7 +184,7 @@ const continueLink = computed(() => {
 const resumeLessonTitle = computed(() => resume.value?.lesson.title || '')
 
 const startTrackPath = computed(() => {
-  const id = firstTrackId(catalog.tracks)
+  const id = firstTrackId(itTracks.value)
   if (!id) return null
   return localePath(`/tracks/${id}`)
 })
@@ -155,7 +193,7 @@ const overall = computed(() =>
   overallProgress(catalog.lessonsByTrack, catalog.progress, locale.value),
 )
 
-const featured = computed(() => featuredTracks(catalog.tracks))
+const featured = computed(() => featuredTracks(itTracks.value))
 
 async function retryCatalog() {
   loading.value = true
@@ -196,5 +234,22 @@ watch(locale, async (loc) => {
 <style scoped>
 .home-hero {
   text-align: center;
+}
+.domains-lead {
+  margin: 0 0 var(--space-4);
+  max-width: 36rem;
+}
+.domain-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+@media (min-width: 640px) {
+  .domain-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.domain-card .card-title {
+  font-size: 1.25rem;
 }
 </style>

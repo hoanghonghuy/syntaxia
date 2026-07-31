@@ -202,7 +202,10 @@ const crumbs = computed(() =>
     categoryTo: trackMeta.value
       ? localePath({
           path: '/tracks',
-          query: { category: trackMeta.value.category || 'sql' },
+          query: {
+            domain: trackMeta.value.category === 'languages' ? 'languages' : 'it',
+            category: trackMeta.value.category || 'sql',
+          },
         })
       : undefined,
     trackLabel: trackTitle.value,
