@@ -46,6 +46,9 @@ npm run test:i18n
 Lesson `pre` fences and sandbox editors share `--color-code-bg` / `--color-code-fg` / `--color-code-border` / `--color-code-gutter`.
 Dark values follow the GitHub/VS Code elevated-editor pattern (`#0d1117`), not a flat match to page surface. Pastel tokens in dark stay tinted enough for chips/h2 pills.
 
+Syntax highlighting uses `--color-code-keyword|string|comment|number` via `createSandboxHighlight()` (overrides `basicSetup` fallback highlighter).
+CodeMirror chrome is marked `{ dark }` from `useTheme().resolved`; editors remount with `:key` when appearance flips so CM baseTheme `&dark` rules apply.
+
 ## Local refresh
 
 ```powershell

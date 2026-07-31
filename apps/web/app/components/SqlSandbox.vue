@@ -21,6 +21,7 @@
 
     <ClientOnly>
       <Codemirror
+        :key="editorAppearance"
         v-model="sql"
         class="sandbox-cm"
         :extensions="extensions"
@@ -105,7 +106,7 @@ import { keymap } from '@codemirror/view'
 import type { Extension } from '@codemirror/state'
 import type { SandboxResult } from '~/types/api'
 import { createSandboxUiState } from '~/utils/sandboxState'
-import { createSandboxEditorTheme } from '~/utils/sandboxEditorTheme'
+import { createSandboxEditorExtensions } from '~/utils/sandboxEditorTheme'
 
 const SOLUTION_AFTER_ATTEMPTS = 3
 
@@ -243,10 +244,15 @@ async function run() {
   }
 }
 
-const extensions: Extension[] = [
+const { resolved: editorAppearance } = useTheme()
+
+const extensions = computed<Extension[]>(() => [
   basicSetup,
   sqlLang(),
-  createSandboxEditorTheme({ minHeight: '120px' }),
+  ...createSandboxEditorExtensions({
+    minHeight: '120px',
+    dark: editorAppearance.value === 'dark',
+  }),
   keymap.of([
     {
       key: 'Mod-Enter',
@@ -256,7 +262,7 @@ const extensions: Extension[] = [
       },
     },
   ]),
-]
+])
 </script>
 
 <style scoped>

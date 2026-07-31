@@ -19,6 +19,10 @@ describe('dark code theme', () => {
       '--color-code-fg',
       '--color-code-border',
       '--color-code-gutter',
+      '--color-code-keyword',
+      '--color-code-string',
+      '--color-code-comment',
+      '--color-code-number',
     ]) {
       assert.ok(tokens.includes(name), `missing ${name}`)
     }
@@ -36,19 +40,27 @@ describe('dark code theme', () => {
     )
   })
 
-  it('sandboxes share createSandboxEditorTheme', () => {
+  it('sandbox theme helper marks dark and ships syntax highlighting', () => {
     const themeUtil = read('app/utils/sandboxEditorTheme.ts')
     assert.ok(themeUtil.includes('createSandboxEditorTheme'))
-    assert.ok(themeUtil.includes('var(--color-code-bg)'))
-    assert.ok(themeUtil.includes('var(--color-code-gutter)'))
+    assert.ok(themeUtil.includes('createSandboxHighlight'))
+    assert.ok(themeUtil.includes('createSandboxEditorExtensions'))
+    assert.match(themeUtil, /const dark = !!options\?\.dark/)
+    assert.ok(themeUtil.includes('{ dark }') || themeUtil.includes('{ dark:'), 'EditorView.theme must pass dark option')
+    assert.ok(themeUtil.includes('syntaxHighlighting'))
+    assert.ok(themeUtil.includes('var(--color-code-keyword)'))
+  })
 
+  it('sandboxes remount editor when appearance resolves and share theme helper', () => {
     for (const file of [
       'app/components/SqlSandbox.vue',
       'app/components/JsSandbox.vue',
       'app/components/HtmlCssSandbox.vue',
     ]) {
       const src = read(file)
-      assert.ok(src.includes('createSandboxEditorTheme'), `${file} must use shared theme`)
+      assert.ok(src.includes('createSandboxEditorExtensions'), `${file} must use shared extensions`)
+      assert.ok(src.includes('useTheme'), `${file} must read appearance`)
+      assert.ok(/:key="[^"]*editorAppearance/.test(src) || /:key="`[^`]*\$\{editorAppearance\}/.test(src), `${file} must key Codemirror on theme so dark flag applies`)
       assert.ok(!src.includes("backgroundColor: 'var(--color-surface-soft)'"), `${file} must not hardcode surface-soft editor`)
     }
   })

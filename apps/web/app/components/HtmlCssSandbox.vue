@@ -14,6 +14,7 @@
       <p class="sandbox-label">{{ t('lesson.htmlEditor') }}</p>
       <ClientOnly>
         <Codemirror
+          :key="`html-${editorAppearance}`"
           v-model="html"
           class="sandbox-cm"
           :extensions="htmlExtensions"
@@ -31,6 +32,7 @@
       <p class="sandbox-label">{{ t('lesson.cssEditor') }}</p>
       <ClientOnly>
         <Codemirror
+          :key="`css-${editorAppearance}`"
           v-model="css"
           class="sandbox-cm"
           :extensions="cssExtensions"
@@ -106,7 +108,7 @@ import {
   buildHtmlCssPreviewSrcdoc,
   createHtmlCssSandboxUiState,
 } from '~/utils/htmlCssSandbox'
-import { createSandboxEditorTheme } from '~/utils/sandboxEditorTheme'
+import { createSandboxEditorExtensions } from '~/utils/sandboxEditorTheme'
 
 const SOLUTION_AFTER_ATTEMPTS = 3
 
@@ -263,7 +265,14 @@ async function check() {
   }
 }
 
-const editorTheme = createSandboxEditorTheme({ minHeight: '100px' })
+const { resolved: editorAppearance } = useTheme()
+
+const editorExtensions = computed(() =>
+  createSandboxEditorExtensions({
+    minHeight: '100px',
+    dark: editorAppearance.value === 'dark',
+  }),
+)
 
 const runKeymap = keymap.of([
   {
@@ -275,8 +284,18 @@ const runKeymap = keymap.of([
   },
 ])
 
-const htmlExtensions: Extension[] = [basicSetup, htmlLang(), editorTheme, runKeymap]
-const cssExtensions: Extension[] = [basicSetup, cssLang(), editorTheme, runKeymap]
+const htmlExtensions = computed<Extension[]>(() => [
+  basicSetup,
+  htmlLang(),
+  ...editorExtensions.value,
+  runKeymap,
+])
+const cssExtensions = computed<Extension[]>(() => [
+  basicSetup,
+  cssLang(),
+  ...editorExtensions.value,
+  runKeymap,
+])
 </script>
 
 <style scoped>

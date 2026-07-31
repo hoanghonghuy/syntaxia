@@ -27,6 +27,10 @@
   --color-code-fg: #0f1419;
   --color-code-border: #d8dee6;
   --color-code-gutter: #eef1f4;
+  --color-code-keyword: #0550ae;
+  --color-code-string: #0a3069;
+  --color-code-comment: #6e7781;
+  --color-code-number: #0550ae;
 }
 
 html[data-theme='light'] {
@@ -51,6 +55,10 @@ html[data-theme='light'] {
   --color-code-fg: #0f1419;
   --color-code-border: #d8dee6;
   --color-code-gutter: #eef1f4;
+  --color-code-keyword: #0550ae;
+  --color-code-string: #0a3069;
+  --color-code-comment: #6e7781;
+  --color-code-number: #0550ae;
 }
 
 html[data-theme='dark'] {
@@ -77,6 +85,10 @@ html[data-theme='dark'] {
   --color-code-fg: #e6edf3;
   --color-code-border: #30363d;
   --color-code-gutter: #010409;
+  --color-code-keyword: #ff7b72;
+  --color-code-string: #a5d6ff;
+  --color-code-comment: #8b949e;
+  --color-code-number: #79c0ff;
   --notebook-grid-opacity: 0.2;
 }
 
@@ -103,6 +115,10 @@ html[data-theme='dark'] {
     --color-code-fg: #e6edf3;
     --color-code-border: #30363d;
     --color-code-gutter: #010409;
+    --color-code-keyword: #ff7b72;
+    --color-code-string: #a5d6ff;
+    --color-code-comment: #8b949e;
+    --color-code-number: #79c0ff;
     --notebook-grid-opacity: 0.2;
   }
 }

@@ -17,7 +17,7 @@ How the digital bullet journal visual language extends from `.prose-lesson` to t
 3. **Typography**: brand wordmark = Fraunces (`--font-display`); page/section headings = Playpen Sans (`--font-hand`); body = Source Sans 3.
 4. **Chrome**: header/footer/sidebar/TOC use soft pastel surface mixes; primary CTA stays `--color-brand`.
 5. **Cards / chips / ghost buttons**: `--radius-card` / `--radius-pill` + pastel soft fills.
-6. **Sandbox**: panel chrome uses surface tokens; CodeMirror + textarea + lesson `pre` share `--color-code-*` (light soft panel; dark elevated island like GitHub `#0d1117`). Shared helper: `utils/sandboxEditorTheme.ts`.
+6. **Sandbox**: panel chrome uses surface tokens; CodeMirror + textarea + lesson `pre` share `--color-code-*` (light soft panel; dark elevated island like GitHub `#0d1117`). Shared helper: `utils/sandboxEditorTheme.ts` (`createSandboxEditorExtensions` + syntax vars + CM `dark` flag; remount on appearance change).
 7. **Breathing room**: lesson main + editor content keep ≥ `--space-5` horizontal padding so fences/editors are not flush to the viewport edge.
 8. **Dark grid**: `--notebook-grid-opacity` drops to `0.2` in dark so graph paper stays subtle.
 

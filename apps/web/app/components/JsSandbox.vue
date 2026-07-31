@@ -2,6 +2,7 @@
   <div class="sandbox-panel">
     <ClientOnly>
       <Codemirror
+        :key="editorAppearance"
         v-model="code"
         class="sandbox-cm"
         :extensions="extensions"
@@ -82,7 +83,7 @@ import type { Extension } from '@codemirror/state'
 import type { SandboxResult } from '~/types/api'
 import { createJsSandboxUiState } from '~/utils/jsSandboxState'
 import { runJsInWorker } from '~/utils/jsSandboxWorker'
-import { createSandboxEditorTheme } from '~/utils/sandboxEditorTheme'
+import { createSandboxEditorExtensions } from '~/utils/sandboxEditorTheme'
 
 const SOLUTION_AFTER_ATTEMPTS = 3
 
@@ -250,10 +251,15 @@ async function run() {
   }
 }
 
-const extensions: Extension[] = [
+const { resolved: editorAppearance } = useTheme()
+
+const extensions = computed<Extension[]>(() => [
   basicSetup,
   javascript(),
-  createSandboxEditorTheme({ minHeight: '120px' }),
+  ...createSandboxEditorExtensions({
+    minHeight: '120px',
+    dark: editorAppearance.value === 'dark',
+  }),
   keymap.of([
     {
       key: 'Mod-Enter',
@@ -263,7 +269,7 @@ const extensions: Extension[] = [
       },
     },
   ]),
-]
+])
 </script>
 
 <style scoped>
