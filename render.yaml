@@ -1,0 +1,30 @@
+# Render Blueprint — connect this GitHub repo and apply.
+# Fill secret env vars in the Render dashboard after first create.
+# Docs: docs/processes/production-deploy.md
+
+services:
+  - type: web
+    name: syntaxia-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: CURRICULUM_LOCAL_PATH
+        value: /app/curriculum
+      - key: JWT_SECRET
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SANDBOX_DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: WEB_BASE_URL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false

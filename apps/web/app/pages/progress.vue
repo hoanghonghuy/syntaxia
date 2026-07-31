@@ -1,6 +1,6 @@
 <template>
   <div class="hub-page learn-scroll">
-    <SkeletonHub v-if="loading" :cards="3" card-height="6.5rem" />
+    <SkeletonHub v-if="showSkeleton" :cards="3" card-height="6.5rem" />
 
     <template v-else-if="catalog.loadError">
       <AppBreadcrumb :items="crumbs" />
@@ -85,6 +85,7 @@
 <script setup lang="ts">
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
 import { overallProgress, trackProgressRows } from '~/utils/learningPath'
+import { shouldShowSkeleton } from '~/utils/softLoading'
 
 definePageMeta({ layout: 'learn' })
 
@@ -93,6 +94,10 @@ const localePath = useLocalePath()
 const catalog = useCatalogStore()
 const auth = useAuthStore()
 const loading = ref(true)
+
+const showSkeleton = computed(() =>
+  shouldShowSkeleton(loading.value, catalog.tracks.length > 0),
+)
 
 const crumbs = computed(() =>
   buildHubBreadcrumbs({

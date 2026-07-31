@@ -77,11 +77,12 @@
 import { Codemirror } from 'vue-codemirror'
 import { basicSetup } from 'codemirror'
 import { javascript } from '@codemirror/lang-javascript'
-import { keymap, EditorView } from '@codemirror/view'
+import { keymap } from '@codemirror/view'
 import type { Extension } from '@codemirror/state'
 import type { SandboxResult } from '~/types/api'
 import { createJsSandboxUiState } from '~/utils/jsSandboxState'
 import { runJsInWorker } from '~/utils/jsSandboxWorker'
+import { createSandboxEditorTheme } from '~/utils/sandboxEditorTheme'
 
 const SOLUTION_AFTER_ATTEMPTS = 3
 
@@ -252,16 +253,7 @@ async function run() {
 const extensions: Extension[] = [
   basicSetup,
   javascript(),
-  EditorView.theme({
-    '&': { fontSize: '0.9rem', backgroundColor: 'var(--color-surface-soft)' },
-    '.cm-content': { fontFamily: 'var(--font-mono)', minHeight: '120px', padding: '0.75rem' },
-    '.cm-gutters': {
-      backgroundColor: 'var(--color-surface)',
-      borderRight: '1px solid var(--color-hairline)',
-      color: 'var(--color-ink-muted)',
-    },
-    '&.cm-focused': { outline: '2px solid var(--color-brand)' },
-  }),
+  createSandboxEditorTheme({ minHeight: '120px' }),
   keymap.of([
     {
       key: 'Mod-Enter',
@@ -316,14 +308,15 @@ const extensions: Extension[] = [
   padding: 0.75rem 1rem;
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  background: var(--color-surface-soft);
-  border: 1px solid var(--color-hairline);
+  background: var(--color-code-bg);
+  color: var(--color-code-fg);
+  border: 1px solid var(--color-code-border);
   border-radius: 4px;
   overflow-x: auto;
   white-space: pre-wrap;
 }
 .sandbox-cm {
-  border-bottom: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-code-border);
   display: block;
 }
 .sandbox-cm :deep(.cm-editor) {

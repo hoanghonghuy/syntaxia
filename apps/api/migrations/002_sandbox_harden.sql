@@ -7,7 +7,11 @@ BEGIN
 END
 $$;
 
-GRANT CONNECT ON DATABASE syntaxia TO syntaxia_sandbox;
+DO $$
+BEGIN
+  EXECUTE format('GRANT CONNECT ON DATABASE %I TO syntaxia_sandbox', current_database());
+END
+$$;
 REVOKE ALL ON SCHEMA public FROM syntaxia_sandbox;
 GRANT USAGE ON SCHEMA public TO syntaxia_sandbox;
 ALTER ROLE syntaxia_sandbox NOSUPERUSER NOCREATEDB NOCREATEROLE;

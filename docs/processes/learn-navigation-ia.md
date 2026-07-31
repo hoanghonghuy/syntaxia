@@ -15,10 +15,10 @@ Keep the learn sidebar focused on **the current track’s lessons**, and put tra
 | Surface | Contains | Does not contain |
 |---------|----------|------------------|
 | Learn sidebar | Back to catalog (category-aware), current track title → hub, category·level, **lesson list only** | All-tracks switcher, Progress / Notes / Account menu |
-| `/tracks` | Category filters + **paginated** track cards (`TRACKS_PAGE_SIZE = 12`) | Lesson TOC |
-| Learn footer (`< 1100px`) | In track: Tracks · Lessons · Progress · Account/Login. On hubs: Tracks · Search · Progress · Account/Login | Home; Notes; duplicate track lists |
-| Header | Tracks / Progress (desktop) + search + theme; text links hide `< 1100px` (footer covers) | Notes in primary chrome; full lesson list |
-| Default layout (home / `/tracks`) | Mobile footer: Tracks · Search · Progress · Account/Login; brand = home; search in header ≥768px | Home tab; Notes tab; lesson sidebar |
+| `/tracks/:id` hub | Title + continue CTA; lesson list **only on narrow** (sidebar owns list on desktop); `.hub-page` centered | Duplicate full lesson dump beside open sidebar |
+| Learn footer (`< 1100px`) | In track: Tracks · Lessons · Progress · **Profile**. On hubs: Tracks · Search · Progress · **Profile**. Guest Profile → `/login`; signed-in → `/account` | Home; Notes; Login label (login stays in header) |
+| Header | Tracks / Progress (desktop) + theme + locale + auth; text links hide `< 1100px` (footer covers) | Header search pill; Notes; full lesson list |
+| Default layout (home / `/tracks`) | Mobile footer: Tracks · Search · Progress · Profile; brand = home | Home tab; Notes tab; Login as footer label; header search pill; lesson sidebar |
 
 Hierarchy stays **Category → Level → Track → Lessons** (`catalog-architecture.md`).
 

@@ -1,6 +1,6 @@
 <template>
   <div class="hub-page learn-scroll">
-    <SkeletonHub v-if="loading">
+    <SkeletonHub v-if="showSkeleton">
       <UiSkeleton width="100%" height="2.75rem" radius="6px" />
       <UiSkeleton width="70%" height="0.95rem" />
     </SkeletonHub>
@@ -70,6 +70,7 @@
 <script setup lang="ts">
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
 import { filterCatalog, normalizeQuery } from '~/utils/catalogSearch'
+import { shouldShowSkeleton } from '~/utils/softLoading'
 
 definePageMeta({ layout: 'learn' })
 
@@ -79,6 +80,10 @@ const catalog = useCatalogStore()
 const loading = ref(true)
 const query = ref('')
 const inputEl = ref<HTMLInputElement | null>(null)
+
+const showSkeleton = computed(() =>
+  shouldShowSkeleton(loading.value, catalog.tracks.length > 0),
+)
 
 const crumbs = computed(() =>
   buildHubBreadcrumbs({

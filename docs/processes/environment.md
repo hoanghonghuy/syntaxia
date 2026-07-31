@@ -23,6 +23,7 @@ Document required and optional env vars for Docker Compose and host runs.
 5. Production: set `APP_ENV=production` and a strong `JWT_SECRET` (API refuses the dev default).
 6. Leave `GOOGLE_*` / `GOOGLE_DRIVE_*` empty for local curriculum; fill when ready (deferred).
 7. Restart: `powershell -File scripts/docker-up.ps1` (or `docker compose up -d --pull never` after rebuilding the API binary).
+8. Cloud deploy (Vercel + Render + Neon): see [`production-deploy.md`](./production-deploy.md) and [`infra/deploy.env.example`](../../infra/deploy.env.example). API honors PaaS `PORT` (falls back to `API_PORT`).
 
 ## Do
 
@@ -30,11 +31,13 @@ Document required and optional env vars for Docker Compose and host runs.
 - Keep Compose DB URLs pointing at service hostname `postgres` inside the network (compose overrides localhost from `.env`).
 - Keep browser `NUXT_PUBLIC_API_BASE` on the **host** port (`http://localhost:8082`).
 - Use `WEB_BASE_URL=https://…` in production so session cookies get `Secure`.
+- On Neon: pooler for `DATABASE_URL`, **direct** host for `SANDBOX_DATABASE_URL`.
 
 ## Don't
 
 - Point the browser `NUXT_PUBLIC_API_BASE` at `http://api:8080` (browser cannot resolve Docker DNS).
 - Commit filled Google credentials.
+- Point SQL sandbox at a Neon transaction pooler.
 
 ## Related
 

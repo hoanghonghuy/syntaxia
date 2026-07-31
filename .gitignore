@@ -31,3 +31,4 @@ Thumbs.db
 
 # Local agent mirror (duplicate of .cursor/)
 .agent/
+.cursor/

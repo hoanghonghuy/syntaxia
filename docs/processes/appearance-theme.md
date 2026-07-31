@@ -16,10 +16,11 @@ Research chốt:
 
 1. Mode: `system` | `light` | `dark` (default `system`)
 2. Accent: curated swatches + custom hex color input
-3. Derive `--color-brand` / `--brand-deep` / `--brand-soft` / `--on-brand` per resolved appearance
+3. Derive `--color-brand` = **chosen swatch hex** in both light and dark; only soft/deep/onBrand adapt per appearance (JS owns these — theme CSS must not reset brand on light/dark flip)
 4. Persist in `localStorage` (`syntaxia_theme`, `syntaxia_accent`)
 5. Inline head script prevents flash by setting **mode + derived CSS vars** (`--color-brand` …) before paint; client plugin re-applies from storage
-6. Footer/nav active state: use `router-link-exact-active` for Home (Vue treats `/` as a prefix of every route)
+6. Apply accent vars **before** flipping `data-theme` to avoid a one-frame emerald flash
+7. Footer/nav active state: use `router-link-exact-active` for Home (Vue treats `/` as a prefix of every route)
 
 ## Files
 
@@ -36,8 +37,14 @@ Research chốt:
 ```bash
 cd apps/web
 npm run test:theme
+npm run test:dark-code
 npm run test:i18n
 ```
+
+## Dark code islands (locked)
+
+Lesson `pre` fences and sandbox editors share `--color-code-bg` / `--color-code-fg` / `--color-code-border` / `--color-code-gutter`.
+Dark values follow the GitHub/VS Code elevated-editor pattern (`#0d1117`), not a flat match to page surface. Pastel tokens in dark stay tinted enough for chips/h2 pills.
 
 ## Local refresh
 

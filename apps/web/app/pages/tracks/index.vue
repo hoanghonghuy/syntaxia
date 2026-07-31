@@ -1,6 +1,6 @@
 <template>
   <div class="hub-page-wide">
-    <SkeletonHub v-if="loading" :filters="true" :cards="6" card-height="9rem" />
+    <SkeletonHub v-if="showSkeleton" :filters="true" :cards="6" card-height="9rem" />
 
     <template v-else-if="catalog.loadError">
       <AppBreadcrumb :items="crumbs" />
@@ -120,6 +120,7 @@ import {
   parseTracksQuery,
 } from '~/utils/catalogBrowse'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
+import { shouldShowSkeleton } from '~/utils/softLoading'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -128,6 +129,10 @@ const catalog = useCatalogStore()
 const auth = useAuthStore()
 const loading = ref(true)
 const lessonsReady = ref(false)
+
+const showSkeleton = computed(() =>
+  shouldShowSkeleton(loading.value, catalog.tracks.length > 0),
+)
 
 const crumbs = computed(() =>
   buildHubBreadcrumbs({

@@ -35,6 +35,21 @@ describe('shell UX foundation', () => {
     const css = read('app/assets/css/layout.css')
     assert.match(css, /\.ui-skeleton/)
     assert.match(css, /@keyframes\s+skeleton-pulse/)
+    assert.match(css, /--color-skeleton/)
+    assert.doesNotMatch(
+      css,
+      /\.ui-skeleton\s*\{[^}]*color-mix\([^)]*white/s,
+      'skeleton must not mix with white (flashes in dark mode)',
+    )
+    const tokens = read('app/assets/css/tokens.css')
+    assert.match(tokens, /--color-skeleton-shine/)
+  })
+
+  it('lesson example fences follow theme tokens (not hardcoded black)', () => {
+    const css = read('app/assets/css/layout.css')
+    assert.match(css, /\.prose-lesson\s+pre\s*\{[^}]*--color-code-bg/s)
+    assert.doesNotMatch(css, /\.prose-lesson\s+pre\s*\{[^}]*#1c1c1e/s)
+    assert.match(css, /\.prose-lesson\s+pre\s+code\s*\{[^}]*border:\s*none/s)
   })
 
   it('ships live notes and search hubs', () => {
@@ -58,6 +73,7 @@ describe('shell UX foundation', () => {
     const required = [
       'nav.progress',
       'nav.account',
+      'nav.profile',
       'nav.search',
       'nav.notes',
       'nav.allTracks',
@@ -121,21 +137,30 @@ describe('shell UX foundation', () => {
     for (const file of ['app/layouts/default.vue', 'app/layouts/learn.vue']) {
       const src = read(file)
       assert.match(src, /learn-footer/, `${file} should ship footer`)
+      assert.match(src, /FooterNavIcon/, `${file} should use clear SVG footer icons`)
+      assert.match(src, /nav\.profile/, `${file} footer tab is Profile, not Login`)
       assert.match(src, /localePath\('\/tracks'\)/)
       assert.match(src, /localePath\('\/progress'\)/)
       assert.match(src, /auth\.user \? localePath\('\/account'\) : localePath\('\/login'\)/)
+      assert.doesNotMatch(
+        src,
+        /learn-footer[\s\S]*t\('nav\.login'\)/,
+        `${file} footer should not label the profile tab as Login`,
+      )
       assert.doesNotMatch(src, /localePath\('\/notes'\)/, `${file} should not put Notes in footer`)
       assert.doesNotMatch(
         src,
         /learn-footer-item[^]*localePath\('\/'\)/,
         `${file} should not put Home in footer`,
       )
+      assert.doesNotMatch(src, /learn-footer-mark/, `${file} should not use ambiguous CSS marks`)
     }
     const learn = read('app/layouts/learn.vue')
     assert.match(learn, /nav\.lessons/)
     assert.match(learn, /nav\.search/)
     const def = read('app/layouts/default.vue')
     assert.match(def, /localePath\('\/search'\)/)
+    assert.equal(existsSync(join(webRoot, 'app/components/FooterNavIcon.vue')), true)
   })
 
   it('home is path-first with ≤3 featured tracks (not full dump or quick-nav clutter)', () => {
@@ -177,6 +202,27 @@ describe('shell UX foundation', () => {
     const src = read('app/plugins/search-shortcut.client.ts')
     assert.match(src, /keydown/)
     assert.match(src, /\/search/)
+  })
+
+  it('does not put a search pill in the header (footer + /search page own it)', () => {
+    for (const file of ['app/layouts/default.vue', 'app/layouts/learn.vue']) {
+      const src = read(file)
+      assert.doesNotMatch(src, /shell-search/, `${file} should not ship header search`)
+      assert.doesNotMatch(src, /header-tools/, `${file} should not ship header search tools`)
+    }
+  })
+
+  it('theme menu teleports a fixed panel (avoids shell overflow clipping)', () => {
+    const src = read('app/components/ThemeMenu.vue')
+    assert.match(src, /Teleport/)
+    assert.match(src, /theme-menu-backdrop/)
+    assert.match(src, /getBoundingClientRect|placePanel/)
+    const css = read('app/assets/css/tokens.css')
+    assert.match(css, /\.home-page\s*\{[^}]*notebook-grid/s)
+    assert.doesNotMatch(css, /body\s*\{[^}]*notebook-grid/s)
+    // Surface theme blocks must not reset brand to emerald (causes accent flash)
+    const darkBlock = css.match(/html\[data-theme='dark'\]\s*\{[^}]+\}/s)?.[0] || ''
+    assert.doesNotMatch(darkBlock, /--color-brand\s*:/)
   })
 
   it('ships snackbar + breadcrumb shell', () => {

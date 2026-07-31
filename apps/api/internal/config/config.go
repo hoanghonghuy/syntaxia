@@ -26,7 +26,11 @@ type Config struct {
 }
 
 func Load() Config {
-	port := getenv("API_PORT", "8080")
+	// Render (and most PaaS) inject PORT; local Compose keeps using API_PORT.
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = getenv("API_PORT", "8080")
+	}
 	dbURL := getenv("DATABASE_URL", "postgres://syntaxia:syntaxia@localhost:5432/syntaxia?sslmode=disable")
 	sandboxURL := getenv("SANDBOX_DATABASE_URL", "postgres://syntaxia_sandbox:syntaxia_sandbox@localhost:5432/syntaxia?sslmode=disable")
 	cors := strings.Split(getenv("CORS_ORIGINS", "http://localhost:3001"), ",")

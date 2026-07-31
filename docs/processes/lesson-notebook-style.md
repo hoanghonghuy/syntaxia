@@ -28,7 +28,13 @@ Pastel palette and notebook-specific tokens live in `:root` / `html[data-theme='
 --radius-pill: 999px;
 ```
 
-Dark mode uses desaturated variants (e.g. `#1a2a3d` for pastel-blue).
+Dark mode uses richer tinted pastels (e.g. `#243b55` for pastel-blue) so chips/pills still read as color, plus dedicated **code island** tokens:
+
+```css
+--color-code-bg / --color-code-fg / --color-code-border / --color-code-gutter
+```
+
+In dark: `#0d1117` editor surface (GitHub/VS Code pattern) — distinct from page canvas/surface so fences and sandboxes do not look muddy.
 
 ### 2. Font import (`nuxt.config.ts`)
 
@@ -83,11 +89,20 @@ First h2 has no extra top margin via `:first-of-type`.
 }
 ```
 
-### 7. Terminal blocks
+### 7. Example fences (`pre`)
+
+Use code-island tokens (soft gray in light; elevated dark island in dark):
 
 ```css
 .prose-lesson pre {
+  background: var(--color-code-bg);
+  color: var(--color-code-fg);
+  border: 1px solid var(--color-code-border);
   border-radius: var(--radius-card);
+}
+.prose-lesson pre code {
+  border: none;
+  background: transparent;
 }
 ```
 

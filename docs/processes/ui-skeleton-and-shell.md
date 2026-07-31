@@ -23,9 +23,21 @@ How Syntaxia shows loading skeletons and reserves navigation/pages for features 
 ### Steps
 
 1. Set a local `loading` ref `true` before fetch; `false` in `finally`.
-2. While loading, render the matching skeleton (not an empty main).
+2. Show the matching skeleton only when loading **and** there is no cached content yet (`shouldShowSkeleton` in `utils/softLoading.ts`). Soft refresh keeps the previous UI.
 3. Keep `role="status"` + `shell.loading` aria label on composite skeletons.
 4. Respect `prefers-reduced-motion` (already in CSS).
+5. Skeleton colors use `--color-skeleton` / `--color-skeleton-shine` (light + dark tokens) — never hardcode a white shimmer mix.
+
+## Soft loading (anti-flash)
+
+```ts
+import { shouldShowSkeleton } from '~/utils/softLoading'
+const showSkeleton = computed(() =>
+  shouldShowSkeleton(loading.value, catalog.tracks.length > 0),
+)
+```
+
+Use `v-if="showSkeleton"` instead of `v-if="loading"` on hubs that already have Pinia cache.
 
 ## Shell scaffold pages
 

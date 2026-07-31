@@ -36,7 +36,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [appearance-theme.md](./appearance-theme.md) | Light/dark mode + accent presets/hex picker |
 | [home-hub-ui-polish.md](./home-hub-ui-polish.md) | Shared home/tracks/hub layout + card polish |
 | [curriculum-track-completion.md](./curriculum-track-completion.md) | Finish one track before starting the next |
-| [production-deploy.md](./production-deploy.md) | Production env + release gates |
+| [production-deploy.md](./production-deploy.md) | Vercel + Render + Neon (GitHub) + Compose gates |
 | [audit-remediation-checklist.md](./audit-remediation-checklist.md) | Ordered TDD fixes from security/UX audit |
 | [future-guest-static-learning.md](./future-guest-static-learning.md) | **Deferred** guest FE-only vs member full-stack |
 | [environment.md](./environment.md) | Syntaxia `.env` + Compose ports |

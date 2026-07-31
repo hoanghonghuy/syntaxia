@@ -4,12 +4,6 @@
       <NuxtLink :to="localePath('/')" class="brand">
         <span>Syn</span>taxia
       </NuxtLink>
-      <div class="default-header-tools">
-        <NuxtLink class="shell-search" :to="localePath('/search')">
-          <span>{{ t('shell.searchPlaceholder') }}</span>
-          <span class="shell-search-kbd">/</span>
-        </NuxtLink>
-      </div>
       <nav class="app-header-nav" aria-label="Primary">
         <ThemeMenu />
         <NuxtLink class="default-header-link" :to="localePath('/tracks')">{{ t('nav.tracks') }}</NuxtLink>
@@ -34,23 +28,23 @@
     </div>
     <nav class="learn-footer default-footer" :aria-label="t('nav.footerNav')">
       <NuxtLink class="learn-footer-item footer-tracks" :to="localePath('/tracks')">
-        <span class="learn-footer-mark learn-footer-mark-menu" aria-hidden="true" />
+        <FooterNavIcon name="tracks" />
         <span>{{ t('nav.tracks') }}</span>
       </NuxtLink>
       <NuxtLink class="learn-footer-item" :to="localePath('/search')">
-        <span class="learn-footer-mark learn-footer-mark-search" aria-hidden="true" />
+        <FooterNavIcon name="search" />
         <span>{{ t('nav.search') }}</span>
       </NuxtLink>
       <NuxtLink class="learn-footer-item" :to="localePath('/progress')">
-        <span class="learn-footer-mark learn-footer-mark-track" aria-hidden="true" />
+        <FooterNavIcon name="progress" />
         <span>{{ t('nav.progress') }}</span>
       </NuxtLink>
       <NuxtLink
         class="learn-footer-item"
         :to="auth.user ? localePath('/account') : localePath('/login')"
       >
-        <span class="learn-footer-mark learn-footer-mark-user" aria-hidden="true" />
-        <span>{{ auth.user ? t('nav.account') : t('nav.login') }}</span>
+        <FooterNavIcon name="account" />
+        <span>{{ t('nav.profile') }}</span>
       </NuxtLink>
     </nav>
   </div>

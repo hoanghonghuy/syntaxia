@@ -29,3 +29,21 @@ func TestValidateJWTSecret_devAllowsDefault(t *testing.T) {
 		t.Fatalf("expected ok in non-production: %v", err)
 	}
 }
+
+func TestLoad_prefersPORTOverAPIPort(t *testing.T) {
+	t.Setenv("PORT", "10000")
+	t.Setenv("API_PORT", "8080")
+	cfg := Load()
+	if cfg.Port != "10000" {
+		t.Fatalf("expected PORT=10000 to win, got %q", cfg.Port)
+	}
+}
+
+func TestLoad_fallsBackToAPIPort(t *testing.T) {
+	t.Setenv("PORT", "")
+	t.Setenv("API_PORT", "9090")
+	cfg := Load()
+	if cfg.Port != "9090" {
+		t.Fatalf("expected API_PORT fallback, got %q", cfg.Port)
+	}
+}

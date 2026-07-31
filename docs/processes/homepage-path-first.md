@@ -11,11 +11,13 @@ How the Syntaxia home page presents brand, Continue / progress, and a **preview*
 
 ## Locked approach (2026-07-30)
 
-1. **Hero:** one headline + lead + **one** primary CTA (Continue / Start). Optional secondary: Login (guest) or View tracks.
+1. **Hero:** one headline + lead + **one** primary CTA (Continue / Start). Optional secondary: Login (guest) or View tracks. Hero wash uses `--color-hero-from` (follows accent), not fixed pastel green.
 2. **Path-first:** Logged-in users see overall `done/total · %` and a Continue CTA with lesson title (`overallProgress` + `resumeTarget`).
-3. **Featured tracks:** Flat list via `featuredTracks()` / `HOME_FEATURED_TRACKS` (≤3). Full browse + pagination on `/tracks`.
+3. **Featured tracks:** Flat list via `featuredTracks()` / `HOME_FEATURED_TRACKS` (≤3). Cards in `.track-grid` share equal height with actions pinned to the bottom. Full browse + pagination on `/tracks`.
 4. **Guest CTA:** First track by `sortOrder` (`firstTrackId`) — never hardcode `sql-fundamentals`.
-5. **Chrome:** Home uses `default` layout; mobile footer is Tracks · Search · Progress · Account/Login (brand = home). See [layout-shell-simplify.md](./layout-shell-simplify.md).
+5. **Copy:** Home title/subtitle stay topic-agnostic (IT tracks, not SQL-only).
+6. **Chrome:** Home uses `default` layout; mobile footer is Tracks · Search · Progress · Account/Login (brand = home). See [layout-shell-simplify.md](./layout-shell-simplify.md).
+7. **Track hub:** On desktop, lesson list lives in the sidebar only; hub page is centered (`margin: 0 auto`) and shows the list only on narrow viewports.
 
 ## Do
 

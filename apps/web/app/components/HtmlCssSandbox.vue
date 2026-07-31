@@ -99,13 +99,14 @@ import { Codemirror } from 'vue-codemirror'
 import { basicSetup } from 'codemirror'
 import { html as htmlLang } from '@codemirror/lang-html'
 import { css as cssLang } from '@codemirror/lang-css'
-import { keymap, EditorView } from '@codemirror/view'
+import { keymap } from '@codemirror/view'
 import type { Extension } from '@codemirror/state'
 import type { SandboxResult } from '~/types/api'
 import {
   buildHtmlCssPreviewSrcdoc,
   createHtmlCssSandboxUiState,
 } from '~/utils/htmlCssSandbox'
+import { createSandboxEditorTheme } from '~/utils/sandboxEditorTheme'
 
 const SOLUTION_AFTER_ATTEMPTS = 3
 
@@ -262,16 +263,7 @@ async function check() {
   }
 }
 
-const editorTheme = EditorView.theme({
-  '&': { fontSize: '0.9rem', backgroundColor: 'var(--color-surface-soft)' },
-  '.cm-content': { fontFamily: 'var(--font-mono)', minHeight: '100px', padding: '0.75rem' },
-  '.cm-gutters': {
-    backgroundColor: 'var(--color-surface)',
-    borderRight: '1px solid var(--color-hairline)',
-    color: 'var(--color-ink-muted)',
-  },
-  '&.cm-focused': { outline: '2px solid var(--color-brand)' },
-})
+const editorTheme = createSandboxEditorTheme({ minHeight: '100px' })
 
 const runKeymap = keymap.of([
   {
@@ -348,8 +340,9 @@ const cssExtensions: Extension[] = [basicSetup, cssLang(), editorTheme, runKeyma
   padding: 0.75rem 1rem;
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  background: var(--color-surface-soft);
-  border: 1px solid var(--color-hairline);
+  background: var(--color-code-bg);
+  color: var(--color-code-fg);
+  border: 1px solid var(--color-code-border);
   border-radius: 4px;
   overflow-x: auto;
   white-space: pre-wrap;

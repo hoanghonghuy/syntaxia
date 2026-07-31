@@ -1,5 +1,4 @@
-:root,
-html[data-theme='light'] {
+:root {
   color-scheme: light;
   --color-canvas: #fafbfc;
   --color-surface: #ffffff;
@@ -8,6 +7,7 @@ html[data-theme='light'] {
   --color-ink-muted: #4a5568;
   --color-ink-faint: #718096;
   --color-hairline: #e2e8f0;
+  /* Brand fallbacks only — runtime accent (boot script / useTheme) owns these */
   --color-brand: #00b48a;
   --color-brand-deep: #008f6f;
   --color-brand-soft: #d4f5ec;
@@ -20,53 +20,90 @@ html[data-theme='light'] {
   --color-pastel-pink: #ffd1e8;
   --color-pastel-green: #d1ffd7;
   --color-pastel-purple: #e8d1ff;
+  --color-skeleton: #eef1f4;
+  --color-skeleton-shine: #f7f8fa;
+  /* Code islands (lesson fences + sandbox editors) */
+  --color-code-bg: #f6f8fa;
+  --color-code-fg: #0f1419;
+  --color-code-border: #d8dee6;
+  --color-code-gutter: #eef1f4;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+  --color-canvas: #fafbfc;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f4f6f8;
+  --color-ink: #0f1419;
+  --color-ink-muted: #4a5568;
+  --color-ink-faint: #718096;
+  --color-hairline: #e2e8f0;
+  --color-error: #c64545;
+  --color-success: #1aae39;
+  --color-pastel-blue: #d1e8ff;
+  --color-pastel-yellow: #fff4d1;
+  --color-pastel-pink: #ffd1e8;
+  --color-pastel-green: #d1ffd7;
+  --color-pastel-purple: #e8d1ff;
+  --color-skeleton: #eef1f4;
+  --color-skeleton-shine: #f7f8fa;
+  --color-code-bg: #f6f8fa;
+  --color-code-fg: #0f1419;
+  --color-code-border: #d8dee6;
+  --color-code-gutter: #eef1f4;
 }
 
 html[data-theme='dark'] {
   color-scheme: dark;
-  --color-canvas: #0f1419;
-  --color-surface: #171c22;
-  --color-surface-soft: #1e252d;
-  --color-ink: #f3f5f7;
-  --color-ink-muted: #a8b3c0;
-  --color-ink-faint: #7d8a99;
-  --color-hairline: #2a3340;
-  --color-brand: #3dd6ad;
-  --color-brand-deep: #7ae4c4;
-  --color-brand-soft: #16352c;
-  --color-on-brand: #0f1419;
+  --color-canvas: #0b0f14;
+  --color-surface: #151b23;
+  --color-surface-soft: #1c2430;
+  --color-ink: #e8eef5;
+  --color-ink-muted: #9aa8b8;
+  --color-ink-faint: #6e7d8f;
+  --color-hairline: #2c3644;
   --color-error: #f07171;
   --color-success: #4ade80;
-  --color-hero-from: #143029;
-  --color-pastel-blue: #1a2a3d;
-  --color-pastel-yellow: #2d2a1a;
-  --color-pastel-pink: #2d1a2a;
-  --color-pastel-green: #1a2d1a;
-  --color-pastel-purple: #2a1a3d;
+  /* Richer pastels so chips/pills still read as color on dark */
+  --color-pastel-blue: #243b55;
+  --color-pastel-yellow: #3f3420;
+  --color-pastel-pink: #402536;
+  --color-pastel-green: #1f3a2a;
+  --color-pastel-purple: #322645;
+  --color-skeleton: #121820;
+  --color-skeleton-shine: #1e2834;
+  /* Elevated code island — distinct from page chrome (GitHub/VS Code pattern) */
+  --color-code-bg: #0d1117;
+  --color-code-fg: #e6edf3;
+  --color-code-border: #30363d;
+  --color-code-gutter: #010409;
+  --notebook-grid-opacity: 0.2;
 }
 
 @media (prefers-color-scheme: dark) {
   html:not([data-theme='light']):not([data-theme='dark']) {
     color-scheme: dark;
-    --color-canvas: #0f1419;
-    --color-surface: #171c22;
-    --color-surface-soft: #1e252d;
-    --color-ink: #f3f5f7;
-    --color-ink-muted: #a8b3c0;
-    --color-ink-faint: #7d8a99;
-    --color-hairline: #2a3340;
-    --color-brand: #3dd6ad;
-    --color-brand-deep: #7ae4c4;
-    --color-brand-soft: #16352c;
-    --color-on-brand: #0f1419;
+    --color-canvas: #0b0f14;
+    --color-surface: #151b23;
+    --color-surface-soft: #1c2430;
+    --color-ink: #e8eef5;
+    --color-ink-muted: #9aa8b8;
+    --color-ink-faint: #6e7d8f;
+    --color-hairline: #2c3644;
     --color-error: #f07171;
     --color-success: #4ade80;
-    --color-hero-from: #143029;
-    --color-pastel-blue: #1a2a3d;
-    --color-pastel-yellow: #2d2a1a;
-    --color-pastel-pink: #2d1a2a;
-    --color-pastel-green: #1a2d1a;
-    --color-pastel-purple: #2a1a3d;
+    --color-pastel-blue: #243b55;
+    --color-pastel-yellow: #3f3420;
+    --color-pastel-pink: #402536;
+    --color-pastel-green: #1f3a2a;
+    --color-pastel-purple: #322645;
+    --color-skeleton: #121820;
+    --color-skeleton-shine: #1e2834;
+    --color-code-bg: #0d1117;
+    --color-code-fg: #e6edf3;
+    --color-code-border: #30363d;
+    --color-code-gutter: #010409;
+    --notebook-grid-opacity: 0.2;
   }
 }
 
@@ -116,11 +153,22 @@ body {
   font-family: var(--font-body);
   color: var(--color-ink);
   background-color: var(--color-canvas);
+  line-height: 1.55;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}
+
+/* Soft graph paper only on home + lesson prose — not every hub/shell surface */
+.home-page {
   background-image:
     linear-gradient(color-mix(in srgb, var(--color-hairline) calc(var(--notebook-grid-opacity) * 100%), transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in srgb, var(--color-hairline) calc(var(--notebook-grid-opacity) * 100%), transparent) 1px, transparent 1px);
   background-size: var(--notebook-grid-size) var(--notebook-grid-size);
-  line-height: 1.55;
 }
 
 h1, h2, h3 {
@@ -135,8 +183,11 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
+/* Avoid sticky underline after tap on touch devices */
+@media (hover: hover) {
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 button, input, textarea, select {

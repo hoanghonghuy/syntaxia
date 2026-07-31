@@ -23,12 +23,6 @@
           <span>Syn</span>taxia
         </NuxtLink>
       </div>
-      <div class="learn-header-tools">
-        <NuxtLink class="shell-search" :to="localePath('/search')" @click="closeNav">
-          <span>{{ t('shell.searchPlaceholder') }}</span>
-          <span class="shell-search-kbd">/</span>
-        </NuxtLink>
-      </div>
       <nav class="app-header-nav" aria-label="Primary">
         <ThemeMenu />
         <NuxtLink
@@ -78,7 +72,7 @@
 
     <nav class="learn-footer" :aria-label="t('nav.footerNav')">
       <NuxtLink class="learn-footer-item footer-tracks" :to="localePath('/tracks')" @click="closeNav">
-        <span class="learn-footer-mark" aria-hidden="true" />
+        <FooterNavIcon name="tracks" />
         <span>{{ t('nav.tracks') }}</span>
       </NuxtLink>
       <button
@@ -90,7 +84,7 @@
         aria-controls="learn-sidebar"
         @click="toggleNav"
       >
-        <span class="learn-footer-mark learn-footer-mark-menu" aria-hidden="true" />
+        <FooterNavIcon name="lessons" />
         <span>{{ t('nav.lessons') }}</span>
       </button>
       <NuxtLink
@@ -99,11 +93,11 @@
         :to="localePath('/search')"
         @click="closeNav"
       >
-        <span class="learn-footer-mark learn-footer-mark-search" aria-hidden="true" />
+        <FooterNavIcon name="search" />
         <span>{{ t('nav.search') }}</span>
       </NuxtLink>
       <NuxtLink class="learn-footer-item" :to="localePath('/progress')" @click="closeNav">
-        <span class="learn-footer-mark learn-footer-mark-track" aria-hidden="true" />
+        <FooterNavIcon name="progress" />
         <span>{{ t('nav.progress') }}</span>
       </NuxtLink>
       <NuxtLink
@@ -111,8 +105,8 @@
         :to="auth.user ? localePath('/account') : localePath('/login')"
         @click="closeNav"
       >
-        <span class="learn-footer-mark learn-footer-mark-user" aria-hidden="true" />
-        <span>{{ auth.user ? t('nav.account') : t('nav.login') }}</span>
+        <FooterNavIcon name="account" />
+        <span>{{ t('nav.profile') }}</span>
       </NuxtLink>
     </nav>
   </div>

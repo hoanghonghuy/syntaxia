@@ -1,6 +1,6 @@
 <template>
   <div class="hub-page learn-scroll">
-    <SkeletonHub v-if="loading">
+    <SkeletonHub v-if="showSkeleton">
       <div class="hub-skel-list">
         <UiSkeleton v-for="n in 6" :key="n" width="100%" height="2.25rem" radius="6px" />
       </div>
@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { buildLearnBreadcrumbs } from '~/utils/breadcrumbs'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
+import { shouldShowSkeleton } from '~/utils/softLoading'
 
 definePageMeta({ layout: 'learn' })
 
@@ -57,6 +58,13 @@ const catalog = useCatalogStore()
 const auth = useAuthStore()
 const { isNarrow } = useLearnNav()
 const loading = ref(true)
+
+const showSkeleton = computed(() =>
+  shouldShowSkeleton(
+    loading.value,
+    Boolean(catalog.tracks.find((tr) => tr.id === (route.params.track as string))),
+  ),
+)
 
 const trackId = computed(() => route.params.track as string)
 const trackMeta = computed(() => catalog.tracks.find((tr) => tr.id === trackId.value))

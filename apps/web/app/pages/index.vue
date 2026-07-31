@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <SkeletonHome v-if="loading" />
+    <SkeletonHome v-if="showSkeleton" />
     <div v-else-if="catalog.loadError" class="hub-error-panel">
       <p>{{ t('hub.loadError') }}</p>
       <p class="muted">{{ catalog.loadError }}</p>
@@ -121,12 +121,17 @@
 import { featuredTracks, firstTrackId } from '~/utils/catalogBrowse'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
 import { overallProgress } from '~/utils/learningPath'
+import { shouldShowSkeleton } from '~/utils/softLoading'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const catalog = useCatalogStore()
 const auth = useAuthStore()
 const loading = ref(true)
+
+const showSkeleton = computed(() =>
+  shouldShowSkeleton(loading.value, catalog.tracks.length > 0),
+)
 
 const resume = computed(() => {
   if (!auth.user) return null

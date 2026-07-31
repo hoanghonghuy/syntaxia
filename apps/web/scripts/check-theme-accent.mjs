@@ -33,10 +33,12 @@ describe('themeAccent', () => {
     assert.equal(tokens.onBrand, '#ffffff')
   })
 
-  it('dark mode uses a lighter brand tint for contrast', () => {
+  it('dark mode uses same brand hex as light (swatch fidelity)', () => {
     const light = deriveAccentTokens(DEFAULT_ACCENT, 'light')
     const dark = deriveAccentTokens(DEFAULT_ACCENT, 'dark')
-    assert.notEqual(light.brand, dark.brand)
+    assert.equal(light.brand, dark.brand)
+    assert.equal(dark.brand, DEFAULT_ACCENT)
+    assert.notEqual(light.soft, dark.soft)
     assert.match(dark.onBrand, /^#[0-9a-f]{6}$/)
   })
 
@@ -52,6 +54,8 @@ describe('themeAccent', () => {
     assert.equal(pastel.labelKey, 'theme.accents.pastelPink')
     const tokens = deriveAccentTokens(pastel.hex, 'light')
     assert.equal(tokens.onBrand, '#0f1419')
+    const dark = deriveAccentTokens(pastel.hex, 'dark')
+    assert.equal(dark.brand, pastel.hex)
   })
 
   it('boot script sets CSS accent vars before paint', () => {
@@ -75,5 +79,11 @@ describe('themeAccent', () => {
     assert.equal(props['--color-brand'], '#f4a7c3')
     assert.match(props['--color-brand-deep'], /^#[0-9a-f]{6}$/)
     assert.match(props['--color-hero-from'], /^#[0-9a-f]{6}$/)
+  })
+
+  it('boot script keeps dark brand equal to chosen hex', () => {
+    const boot = getThemeBootScript()
+    assert.match(boot, /brand=hex/)
+    assert.doesNotMatch(boot, /lift=/)
   })
 })

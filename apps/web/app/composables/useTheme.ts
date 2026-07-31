@@ -16,18 +16,24 @@ function systemPrefersDark(): boolean {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
-function applyDom(mode: AppearanceMode, accent: string) {
+/**
+ * Apply appearance + accent without flashing default emerald:
+ * write brand CSS vars for the *target* appearance first, then flip data-theme.
+ */
+export function applyDom(mode: AppearanceMode, accent: string) {
   if (!import.meta.client) return
   const resolved = resolveAppearance(mode, systemPrefersDark())
   const root = document.documentElement
+
+  applyAccentCssVars(root.style, accent, resolved)
+  root.style.colorScheme = resolved
+  root.setAttribute('data-accent', accent)
+
   if (mode === 'system') {
     root.removeAttribute('data-theme')
   } else {
     root.setAttribute('data-theme', mode)
   }
-  root.setAttribute('data-accent', accent)
-  applyAccentCssVars(root.style, accent, resolved)
-  root.style.colorScheme = resolved
 }
 
 export function useTheme() {
