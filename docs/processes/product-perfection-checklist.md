@@ -45,8 +45,13 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 
 **Checklist rows 0–27 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
 
+**Next platform arc:** multi-domain learning — see [`multi-domain-roadmap.md`](./multi-domain-roadmap.md) (Phase 0 stabilize → Phase 2 language pedagogy research → Phase 3 Chinese HSK slice).
+
 ## Related
 
+- [`multi-domain-roadmap.md`](./multi-domain-roadmap.md)
+- [`learning-domains.md`](./learning-domains.md)
+- [`languages-tracks.md`](./languages-tracks.md)
 - [`product-quality-lock.md`](./product-quality-lock.md)  
 - [`mvp-completion-checklist.md`](./mvp-completion-checklist.md) (historical MVP — complete)  
 - [`release-hardening.md`](./release-hardening.md)  
