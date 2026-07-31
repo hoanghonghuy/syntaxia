@@ -76,34 +76,32 @@ Syntaxia (one product, one account, shared shell)
 
 ### Phase 2 — Languages pedagogy foundation (research → design)
 
-**Goal:** Lock *how* Chinese is learned in Syntaxia before writing lessons.
+**Status: locked 2026-07-31** — see [`chinese-hsk-pedagogy.md`](./chinese-hsk-pedagogy.md).
 
-| # | Work | Gate |
-|---|------|------|
-| 2.1 | `/opsx-research` (or `/syn-research`): HSK 3.0 map, lesson unit shape, SRS yes/no for v1, writing/stroke scope | Single recommended approach |
-| 2.2 | Compare Talkory blocks (vocab / grammar / reading / writing / IT-specialty) vs Syntaxia MVP language slice | Chốt scope cắt nhỏ |
-| 2.3 | Target × explain languages: learn **zh** with UI **vi/en**; later **en** with vi/zh | Product rule in process doc |
-| 2.4 | `/opsx-propose language-lesson-player` (or similar) | Spec + design + tasks |
-| 2.5 | Content pipeline: MD vs DB-driven (Talkory is DB; Syntaxia IT is MD) — pick one for languages v1 | Research + lock |
+| # | Work | Status |
+|---|------|--------|
+| 2.1 | Research HSK 3.0 / lesson shape / SRS / writing | **done** (chốt in pedagogy doc) |
+| 2.2 | Talkory blocks vs Syntaxia MVP slice | **done** — text + vocab + exercise only |
+| 2.3 | Target `zh` × explain `vi`/`en` | **done** |
+| 2.4 | `/opsx-propose chinese-hsk-mvp` | **next** |
+| 2.5 | Content pipeline MD vs DB | **done** — MD v1, CMS later |
 
-**Do not start Phase 3 until 2.1–2.4 accepted.**
-
+**Do not start Phase 3 coding until OpenSpec `chinese-hsk-mvp` is proposed and accepted.**
 ---
 
 ### Phase 3 — Chinese (HSK) vertical slice
 
 **Goal:** First real language track learners can complete end-to-end (narrow).
 
-Suggested vertical (adjust after Phase 2 research):
+Suggested vertical (per pedagogy lock):
 
-1. HSK 1 unit outline mapped (not invented) — limited lessons.
-2. Language lesson player (blocks: explain + practice) — **not** SQL sandbox.
+1. Map open HSK 3.0 Band 1 vocab → 5–8 thematic lessons (`chinese-hsk-band1-map.md`).
+2. Language lesson player: `text` + `vocab` + `exercise` blocks — **not** SQL sandbox.
 3. Progress/completion reuse existing progress APIs where possible.
-4. Track hub / Continue work inside `domain=languages`.
-5. en+vi UI strings; lesson explain locale = UI locale.
+4. Track hub / Continue inside `domain=languages`.
+5. en+vi explain locale = UI locale.
 
-**Deferred in Phase 3 (unless research says must-have):** full FSRS, stroke-order canvas, AI tutor, monetization, JLPT.
-
+**Deferred:** FSRS, stroke-order canvas, AI tutor, monetization, JLPT, English track.
 ---
 
 ### Phase 4 — Languages expansion
