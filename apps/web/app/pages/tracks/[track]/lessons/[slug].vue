@@ -29,8 +29,18 @@
           </ul>
         </section>
         <article class="prose-lesson" v-html="lesson.bodyHtml" />
+        <LanguageVocabList
+          v-if="isLanguageTrack && languageVocab.length"
+          :items="languageVocab"
+        />
+        <LanguageExercise
+          v-if="isLanguageTrack && languageExercise"
+          :key="lesson.id"
+          :exercise="languageExercise"
+          @passed="onSandboxPassed"
+        />
         <HtmlCssSandbox
-          v-if="lesson.exercise && isHtmlCssTrack"
+          v-else-if="lesson.exercise && !isLanguageTrack && isHtmlCssTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -43,7 +53,7 @@
           @passed="onSandboxPassed"
         />
         <JsSandbox
-          v-else-if="lesson.exercise && trackId === 'javascript-basics'"
+          v-else-if="lesson.exercise && !isLanguageTrack && trackId === 'javascript-basics'"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -54,7 +64,7 @@
           @passed="onSandboxPassed"
         />
         <SqlSandbox
-          v-else-if="lesson.exercise"
+          v-else-if="lesson.exercise && !isLanguageTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -159,6 +169,11 @@
 <script setup lang="ts">
 import type { Lesson } from '~/types/api'
 import { buildLearnBreadcrumbs } from '~/utils/breadcrumbs'
+import {
+  isLanguageTrack as trackIsLanguage,
+  languageExerciseFromLesson,
+  languageVocabFromLesson,
+} from '~/utils/languageLesson'
 import { createLessonLoadGuard } from '~/utils/lessonLoadGuard'
 import { pickPrimaryNote, resolveNoteSaveMode } from '~/utils/noteSave'
 import { extractToc } from '~/utils/toc'
@@ -237,6 +252,16 @@ const jsExerciseStarter = computed(() => {
   const ex = lesson.value?.exercise as Record<string, unknown> | undefined
   return (ex?.starter as string) || '// write JavaScript here\n'
 })
+
+const isLanguageTrack = computed(() => trackIsLanguage(trackId.value))
+
+const languageVocab = computed(() =>
+  lesson.value ? languageVocabFromLesson(lesson.value) : [],
+)
+
+const languageExercise = computed(() =>
+  lesson.value ? languageExerciseFromLesson(lesson.value) : null,
+)
 
 const isHtmlCssTrack = computed(
   () => trackId.value === 'html-basics' || trackId.value === 'css-basics',

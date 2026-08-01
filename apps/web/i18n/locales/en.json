@@ -83,7 +83,7 @@
     "it": "IT",
     "languages": "Languages",
     "itLead": "SQL, web, and programming — interactive sandboxes.",
-    "languagesLead": "Chinese first (HSK) — language pedagogy under development.",
+    "languagesLead": "Chinese first — HSK 3.0 Band 1 starter lessons (greetings through school life).",
     "browse": "Browse tracks",
     "underDevelopment": "Under development"
   },
@@ -100,6 +100,7 @@
       "advanced": "Advanced"
     },
     "comingSoon": "Coming soon — lessons for this track are on the way.",
+    "hskBand1": "HSK 3.0 · Band 1",
     "underDevelopment": "This learning experience is under development.",
     "tracksTitle": "Learning tracks",
     "tracksLead": "Pick a learning domain, then browse tracks. Category filters apply inside the active domain.",
@@ -154,6 +155,11 @@
     "loadErrorGeneric": "Something went wrong while loading this lesson.",
     "retry": "Try again",
     "backToTrack": "Back to track",
+    "vocab": "Vocabulary",
+    "languageExercise": "Practice",
+    "languageAnswerPlaceholder": "Type your answer",
+    "checkAnswer": "Check answer",
+    "languageFailed": "Not quite — try again or use a hint.",
     "error": {
       "syntax": "SQL syntax error. Check keywords, commas, and quotes.",
       "undefinedColumn": "That column name was not found. Check the spelling against the sample table.",

@@ -1,0 +1,7 @@
+{
+  "change_id": "app-notebook-theme",
+  "title": "App-wide notebook theme — extend journal style beyond lesson prose",
+  "flow_name": "sdd",
+  "created_at": "2026-07-30T14:29:49.4142689Z",
+  "description": "Extend the digital bullet journal / notebook visual language from .prose-lesson to the whole Syntaxia UI: canvas grid background, pastel cards/buttons/chips, handwritten display headings (Playpen Sans), larger radii — while keeping Mintlify IA (sidebar/lesson/TOC), Source Sans body text, emerald accent for interactive states, and dark terminal sandbox editors. CSS-token-first, phased across shell → home/catalog → hub pages → sandbox chrome. No doodle stickers/mascots in this change."
+}

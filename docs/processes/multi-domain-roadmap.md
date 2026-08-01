@@ -83,23 +83,25 @@ Syntaxia (one product, one account, shared shell)
 | 2.1 | Research HSK 3.0 / lesson shape / SRS / writing | **done** (chốt in pedagogy doc) |
 | 2.2 | Talkory blocks vs Syntaxia MVP slice | **done** — text + vocab + exercise only |
 | 2.3 | Target `zh` × explain `vi`/`en` | **done** |
-| 2.4 | `/opsx-propose chinese-hsk-mvp` | **next** |
+| 2.4 | `/opsx-propose chinese-hsk-mvp` | **done** — `openspec/changes/chinese-hsk-mvp/` |
 | 2.5 | Content pipeline MD vs DB | **done** — MD v1, CMS later |
 
-**Do not start Phase 3 coding until OpenSpec `chinese-hsk-mvp` is proposed and accepted.**
+**Next:** accept proposal → `/syn-apply` (or `/opsx-apply`) for Phase 3.
 ---
 
 ### Phase 3 — Chinese (HSK) vertical slice
 
-**Goal:** First real language track learners can complete end-to-end (narrow).
+**Goal:** First real language track learners can complete end-to-end (narrow).  
+**OpenSpec:** [`openspec/changes/chinese-hsk-mvp/`](../../openspec/changes/chinese-hsk-mvp/)  
+**Status:** implementing / ready for verify — map + 6 lessons + language player shipped in repo.
 
 Suggested vertical (per pedagogy lock):
 
-1. Map open HSK 3.0 Band 1 vocab → 5–8 thematic lessons (`chinese-hsk-band1-map.md`).
-2. Language lesson player: `text` + `vocab` + `exercise` blocks — **not** SQL sandbox.
-3. Progress/completion reuse existing progress APIs where possible.
-4. Track hub / Continue inside `domain=languages`.
-5. en+vi explain locale = UI locale.
+1. Map open HSK 3.0 Band 1 vocab → 5–8 thematic lessons (`chinese-hsk-band1-map.md`) — **done** (6 lessons).
+2. Language lesson player: `text` + `vocab` + `exercise` blocks — **done**.
+3. Progress/completion reuse existing progress APIs where possible — **done** (mark complete unchanged).
+4. Track hub / Continue inside `domain=languages` — **done** when lessons synced.
+5. en+vi explain locale = UI locale — **done**.
 
 **Deferred:** FSRS, stroke-order canvas, AI tutor, monetization, JLPT, English track.
 ---

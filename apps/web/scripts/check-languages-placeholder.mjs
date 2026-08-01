@@ -1,5 +1,5 @@
 /**
- * Languages category placeholder (Chinese HSK track, no lesson bodies yet).
+ * Languages category + chinese-hsk track seed (curriculum lessons covered in check-chinese-hsk).
  * Run: node --test scripts/check-languages-placeholder.mjs
  */
 import assert from 'node:assert/strict'
@@ -26,11 +26,6 @@ describe('languages category placeholder', () => {
     assert.match(init, /'languages'/)
   })
 
-  it('does not ship curriculum lesson files for chinese-hsk yet', () => {
-    const dir = join(repoRoot, 'docs/curriculum/chinese-hsk')
-    assert.equal(existsSync(dir), false, 'placeholder must not invent lesson bodies')
-  })
-
   it('ships catalog.category.languages in en + vi', () => {
     for (const loc of ['en', 'vi']) {
       const json = JSON.parse(read(join(webRoot, `i18n/locales/${loc}.json`)))
@@ -39,10 +34,12 @@ describe('languages category placeholder', () => {
     }
   })
 
-  it('wires 006 into docker-up and neon migrate lists', () => {
+  it('wires 006 and 007 into docker-up and neon migrate lists', () => {
     const dockerUp = read(join(repoRoot, 'scripts/docker-up.ps1'))
     assert.match(dockerUp, /006_languages_tracks\.sql/)
+    assert.match(dockerUp, /007_chinese_hsk_band1_copy\.sql/)
     const neon = read(join(repoRoot, 'scripts/db/migrate-neon.ps1'))
     assert.match(neon, /006_languages_tracks\.sql/)
+    assert.match(neon, /007_chinese_hsk_band1_copy\.sql/)
   })
 })

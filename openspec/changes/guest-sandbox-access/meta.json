@@ -1,0 +1,7 @@
+{
+  "change_id": "guest-sandbox-access",
+  "title": "Guest sandbox access — allow unauthenticated users to run exercises",
+  "flow_name": "sdd",
+  "created_at": "2026-07-30T13:16:17.4002798Z",
+  "description": "Allow unauthenticated users to run sandbox exercises (SQL, JavaScript, HTML-CSS) without login. Change API sandbox endpoints from Auth middleware to OptionalAuth so guest requests can execute queries against temp schemas with existing rate limits and restricted roles. Frontend: remove auth gate (can-run prop) from sandbox components, always render the interactive editor. Keep the existing 'Log in to save progress' soft prompt below the sandbox. No guest session entity — progress and notes still require authentication."
+}

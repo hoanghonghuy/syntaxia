@@ -1,0 +1,7 @@
+{
+  "change_id": "lesson-notebook-style",
+  "title": "Lesson notebook style — digital bullet journal theme for .prose-lesson",
+  "flow_name": "sdd",
+  "created_at": "2026-07-30T12:48:48.1858715Z",
+  "description": "Apply digital bullet journal / cheat sheet visual style to lesson content area (.prose-lesson) using CSS-only theme. Includes: grid paper background, pastel pill headings (h2/h3), inline code tag highlights, terminal-style code blocks, handwritten font (Playpen Sans) for headings. Keeps Mintlify shell (sidebar + TOC) intact. No backend changes — pure CSS custom properties and Google Fonts import."
+}

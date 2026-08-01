@@ -46,3 +46,53 @@ sandbox_seed:
 		t.Fatal("drive file id missing")
 	}
 }
+
+func TestParseLessonFileLanguageVocabMergedIntoExercise(t *testing.T) {
+	raw := `---
+id: zh-hsk-b1-01-greetings
+track: chinese-hsk
+locale: en
+slug: greetings
+title: Greetings
+order: 1
+published: true
+hsk_band: 1
+hsk_version: "3.0"
+objectives:
+  - Say hello
+vocab:
+  - hanzi: "你好"
+    pinyin: "nǐ hǎo"
+    gloss: "hello"
+exercise:
+  type: mcq
+  prompt: "Which means hello?"
+  choices:
+    - "你好"
+    - "再见"
+  answer: "你好"
+---
+
+Hello.
+`
+	l, err := ParseLessonFile(FileEntry{Path: "chinese-hsk/en/greetings.md", Content: raw, FileID: "zh1"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if l.Exercise == nil {
+		t.Fatal("expected exercise map")
+	}
+	if l.Exercise["type"] != "mcq" {
+		t.Fatalf("type=%v", l.Exercise["type"])
+	}
+	if l.Exercise["hskBand"] != 1 {
+		t.Fatalf("hskBand=%v", l.Exercise["hskBand"])
+	}
+	if l.Exercise["hskVersion"] != "3.0" {
+		t.Fatalf("hskVersion=%v", l.Exercise["hskVersion"])
+	}
+	vocab, ok := l.Exercise["vocab"].([]any)
+	if !ok || len(vocab) != 1 {
+		t.Fatalf("vocab=%v", l.Exercise["vocab"])
+	}
+}

@@ -76,7 +76,11 @@ const trackTitle = computed(() => {
 const trackEyebrow = computed(() => {
   const track = trackMeta.value
   if (!track) return ''
-  return `${t(`catalog.category.${track.category || 'sql'}`)} · ${t(`catalog.level.${track.level || 'basic'}`)}`
+  const base = `${t(`catalog.category.${track.category || 'sql'}`)} · ${t(`catalog.level.${track.level || 'basic'}`)}`
+  if (track.id === 'chinese-hsk') {
+    return `${base} · ${t('catalog.hskBand1')}`
+  }
+  return base
 })
 
 const trackLead = computed(() => {

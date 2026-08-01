@@ -88,6 +88,31 @@ func ParseLessonFile(entry FileEntry) (domain.Lesson, error) {
 	if ex, ok := fm["exercise"].(map[string]any); ok {
 		l.Exercise = ex
 	}
+	// Language lessons: top-level vocab / hsk_band merge into exercise JSONB (no extra columns).
+	if vocab, ok := fm["vocab"]; ok {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["vocab"]; !exists {
+			l.Exercise["vocab"] = vocab
+		}
+	}
+	if band := getInt("hsk_band"); band > 0 {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["hskBand"]; !exists {
+			l.Exercise["hskBand"] = band
+		}
+	}
+	if ver := getStr("hsk_version"); ver != "" {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["hskVersion"]; !exists {
+			l.Exercise["hskVersion"] = ver
+		}
+	}
 	if seed, ok := fm["sandbox_seed"].(map[string]any); ok {
 		l.SandboxSeed = seed
 	}

@@ -1,47 +1,46 @@
-# Languages tracks (placeholder)
+# Languages tracks (Chinese HSK)
 
 ## Purpose
 
-How Syntaxia reserves a **languages** catalog category for future language learning (Chinese first), without inventing lesson bodies or reusing IT sandbox pedagogy.
+How Syntaxia ships the **languages** catalog category and `chinese-hsk` track — shared shell, separate pedagogy from IT sandboxes.
 
 ## When to use
 
 - Adding language tracks or category copy
+- Extending HSK curriculum beyond the Band 1 starter slice
 - Deciding whether a language feature belongs in Syntaxia vs a separate app
-- Before building HSK / SRS / writing flows
 
 ## Locked approach
 
-1. **One app, shared shell/UI** (Mintlify-style Syntaxia chrome) — learners browse languages next to SQL/web/code **for now** (placeholder only).
-2. **Future IA (shipping):** separate **learning domains** in the UI — **IT** vs **Languages** (see [`learning-domains.md`](./learning-domains.md)). Do **not** stuff language tracks into the same flat category chip list as IT forever. More domains may follow.
-3. **Separate pedagogy later** — language lessons will not clone SQL/JS sandboxes; design a language-specific experience when implementing (Talkory specs are a reference: HSK 3.0, explain via UI locale vi/en).
-4. **Placeholder first** — seed track metadata only; empty hub shows under-development + coming soon; **no** `docs/curriculum/chinese-hsk/` until real mapped lessons exist.
-5. **Chinese first** — track id `chinese-hsk`, category `languages`, `sort_order` 100 (after IT tracks so home featured stays SQL/web/code).
+1. **One app, shared shell/UI** — domains **IT** vs **Languages** ([`learning-domains.md`](./learning-domains.md)).
+2. **Separate pedagogy** — language player (`text` + `vocab` + `exercise`); never mount SQL/JS/HTML sandboxes on `chinese-hsk`.
+3. **Map before content** — [`chinese-hsk-band1-map.md`](./chinese-hsk-band1-map.md); do not invent outlines.
+4. **Chinese first** — track id `chinese-hsk`, category `languages`, `sort_order` 100.
+5. **Content** — Markdown under `docs/curriculum/chinese-hsk/{en,vi}/` (HSK 3.0 Band 1 starter: 6 lessons).
 
 ## Steps (extend)
 
-1. Migration `006_languages_tracks.sql` + `init.sql` row (idempotent `ON CONFLICT`).
-2. i18n `catalog.category.languages` (+ optional `catalog.underDevelopment`) in en+vi.
-3. Apply migration (`docker-up.ps1` / `migrate-neon.ps1` include `006`).
-4. Verify: `/tracks?category=languages` shows the card; open track → coming soon, zero lessons.
-5. When implementing for real: research HSK map → `/syn-research` / propose → curriculum process doc — do not invent outlines.
+1. Migrations `006_languages_tracks.sql`, `007_chinese_hsk_band1_copy.sql` + `init.sql` row.
+2. i18n `catalog.category.languages`, `catalog.hskBand1`, lesson vocab/exercise keys (en+vi).
+3. Apply migrations (`docker-up.ps1` / `migrate-neon.ps1`).
+4. Restart API so curriculum sync picks up new MD files.
+5. Verify: `/tracks?domain=languages` → Chinese hub lists lessons → language player (no SQL sandbox).
 
 ## Do
 
 - Keep Category → Level → Track → Lessons
-- Ship en+vi category keys together
-- Keep placeholders out of Continue / featured by high `sort_order` and empty lessons
+- Ship en+vi explain locales together
+- Cite Band 1 map for new vocab clusters
 
 ## Don't
 
-- Publish fake lesson Markdown stubs
+- Publish empty stubs for the full Band 1 list
 - Force language UX into SQL sandbox patterns
-- Treat languages as “just another chip next to SQL forever” once the domain UI ships — split IT vs Languages (and later domains) in navigation/home
-- Merge Talkory SRS/AI/writing into Syntaxia without an OpenSpec change
+- Merge Talkory SRS/AI/writing without OpenSpec
 
 ## Related
 
-- [`catalog-architecture.md`](./catalog-architecture.md)
-- Talkory reference (sibling repo): `docs/spec/content-strategy.md` (HSK 3.0)
-- `apps/api/migrations/006_languages_tracks.sql`
-- `apps/web/scripts/check-languages-placeholder.mjs`
+- [`chinese-hsk-pedagogy.md`](./chinese-hsk-pedagogy.md)
+- [`chinese-hsk-band1-map.md`](./chinese-hsk-band1-map.md)
+- [`chinese-hsk-mvp.md`](./chinese-hsk-mvp.md)
+- OpenSpec: `openspec/changes/chinese-hsk-mvp/`

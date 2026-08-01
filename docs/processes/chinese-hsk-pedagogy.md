@@ -102,15 +102,7 @@ Frontmatter should carry: `track`, `locale`, `order`, `objectives`, `hsk_band`, 
 
 ## Next OpenSpec
 
-Suggested change id: **`chinese-hsk-mvp`**
-
-Scope sketch:
-
-1. Language lesson frontmatter + renderer (blocks)
-2. Grade API or client-side check for MCQ/fill-blank
-3. First 5–8 Band 1 lessons (en+vi) after vocab map doc
-4. Wire `chinese-hsk` hub / Continue in languages domain
-5. Tests + process `chinese-hsk-band1-map.md`
+Change folder: **[`openspec/changes/chinese-hsk-mvp/`](../../openspec/changes/chinese-hsk-mvp/)** — applied in-repo (map + player + 6 lessons). Remaining: manual smoke + `/syn-verify` then archive.
 
 ## Related
 

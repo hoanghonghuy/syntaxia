@@ -1,0 +1,7 @@
+{
+  "change_id": "layout-shell-simplify",
+  "title": "Layout shell simplify — friendlier IA for notebook learning",
+  "flow_name": "sdd",
+  "created_at": "2026-07-30T14:48:59.1296536Z",
+  "description": "Simplify Syntaxia mobile/desktop shell and page IA for a friendlier notebook learning UX. Unify footer to 4 tabs with guest-aware Account/Login; slim home to hero + primary CTA + few featured tracks (full catalog stays on /tracks); reduce chrome competition (one mobile lesson-nav entry); restructure lesson page vertical rhythm (read → practice → pager/complete → notes); make progress/notes summary hubs. Keep Mintlify desktop sidebar+TOC. No backend changes."
+}
