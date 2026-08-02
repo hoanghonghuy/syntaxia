@@ -68,11 +68,11 @@ try {
 if ($health.status -ne "ok") { Fail "/health status=$($health.status)" }
 Write-Host "OK: /health status=ok backend=$($health.backend)" -ForegroundColor Green
 
-Step "SQL Fundamentals E2E"
-& (Join-Path $PSScriptRoot "e2e-sql-fundamentals.ps1") -BaseUrl $BaseUrl
-if ($LASTEXITCODE -ne 0) { Fail "e2e-sql-fundamentals.ps1 exited $LASTEXITCODE" }
+Step "API + E2E suite (catalog + SQL + languages)"
+& (Join-Path $PSScriptRoot "e2e-all.ps1") -BaseUrl $BaseUrl
+if ($LASTEXITCODE -ne 0) { Fail "e2e-all.ps1 exited $LASTEXITCODE" }
 
-Step "Catalog architecture"
+Step "Catalog architecture (legacy IT categories)"
 & (Join-Path $PSScriptRoot "check-catalog.ps1") -BaseUrl $BaseUrl
 if ($LASTEXITCODE -ne 0) { Fail "check-catalog.ps1 exited $LASTEXITCODE" }
 

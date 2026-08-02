@@ -1,0 +1,7 @@
+{
+  "change_id": "chinese-hsk-mvp",
+  "title": "Chinese HSK Band 1 MVP - language lesson player + first mapped lessons",
+  "flow_name": "sdd",
+  "created_at": "2026-07-31T21:35:45Z",
+  "description": "Ship the first Languages-domain vertical slice for track chinese-hsk: Markdown curriculum under docs/curriculum/chinese-hsk/ mapped to HSK 3.0 Band 1 (open vocab lists, not invented outlines); language lesson player with text + vocab + exercise blocks (no SQL/JS sandboxes); explain locale vi/en matching app i18n; reuse existing progress APIs. Scope locked in docs/processes/chinese-hsk-pedagogy.md. Out: FSRS, stroke canvas, AI tutor, JLPT, English track, Talkory DB CMS merge."
+}

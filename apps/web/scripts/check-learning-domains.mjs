@@ -9,6 +9,10 @@ import {
   domainForCategory,
   filterTracksByDomain,
   parseDomainQuery,
+  DOMAIN_STORAGE_KEY,
+  readStoredDomain,
+  resolveTracksDomain,
+  writeStoredDomain,
 } from '../app/utils/learningDomains.ts'
 import {
   filterTracksByDomainAndCategory,
@@ -62,6 +66,28 @@ describe('learningDomains', () => {
     assert.equal(parseDomainQuery(undefined), 'it')
     assert.equal(parseDomainQuery('languages'), 'languages')
     assert.equal(parseDomainQuery('nope'), 'it')
+  })
+
+  it('resolves tracks domain from query then storage', () => {
+    assert.equal(resolveTracksDomain(undefined, null), 'it')
+    assert.equal(resolveTracksDomain(undefined, 'languages'), 'languages')
+    assert.equal(resolveTracksDomain('it', 'languages'), 'it')
+    assert.equal(resolveTracksDomain('languages', 'it'), 'languages')
+    assert.equal(resolveTracksDomain('nope', 'languages'), 'it')
+  })
+
+  it('reads and writes last domain storage key', () => {
+    const mem = new Map()
+    const storage = {
+      getItem: (k) => (mem.has(k) ? mem.get(k) : null),
+      setItem: (k, v) => {
+        mem.set(k, v)
+      },
+    }
+    assert.equal(readStoredDomain(storage), null)
+    writeStoredDomain('languages', storage)
+    assert.equal(readStoredDomain(storage), 'languages')
+    assert.equal(mem.get(DOMAIN_STORAGE_KEY), 'languages')
   })
 
   it('parseTracksQuery includes domain', () => {

@@ -48,10 +48,22 @@ Rebuild API after Go changes: re-run the `go build` line (or `docker-up.ps1`), t
 With API healthy on **8082**:
 
 ```powershell
+powershell -File scripts/e2e-all.ps1
+```
+
+Optional sandboxes:
+
+```powershell
+powershell -File scripts/e2e-all.ps1 -IncludeSandboxes
+```
+
+Legacy SQL-only:
+
+```powershell
 powershell -File scripts/e2e-sql-fundamentals.ps1
 ```
 
-Exit **0** = gate green (register → intro → sandbox pass → progress → next). Details: [`e2e-smoke.md`](./e2e-smoke.md).
+Exit **0** = gates green. Details: [`e2e-smoke.md`](./e2e-smoke.md).
 
 Full release ordered smoke (E2E + catalog + i18n/toc + Go tests + manual UI): [`release-hardening.md`](./release-hardening.md).
 

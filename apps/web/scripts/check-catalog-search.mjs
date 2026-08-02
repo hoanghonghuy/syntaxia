@@ -50,6 +50,62 @@ describe('catalogSearch', () => {
     assert.equal(hits.lessons[0].slug, 'what-is-sql')
   })
 
+  it('filterCatalog scopes hits to a learning domain', () => {
+    const tracks = [
+      {
+        id: 'sql-fundamentals',
+        title: { en: 'SQL Fundamentals', vi: 'SQL cơ bản' },
+        description: { en: 'queries', vi: '' },
+        category: 'sql',
+        level: 'basic',
+        sortOrder: 1,
+      },
+      {
+        id: 'chinese-hsk',
+        title: { en: 'Chinese (HSK)', vi: 'Tiếng Trung' },
+        description: { en: 'Mandarin greetings', vi: '' },
+        category: 'languages',
+        level: 'basic',
+        sortOrder: 100,
+      },
+    ]
+    const lessonsByTrack = {
+      'sql-fundamentals': [
+        {
+          id: 'l1',
+          locale: 'en',
+          trackId: 'sql-fundamentals',
+          slug: 'select',
+          title: 'SELECT queries',
+          sortOrder: 1,
+          published: true,
+        },
+      ],
+      'chinese-hsk': [
+        {
+          id: 'z1',
+          locale: 'en',
+          trackId: 'chinese-hsk',
+          slug: 'greetings',
+          title: 'Greetings',
+          sortOrder: 1,
+          published: true,
+        },
+      ],
+    }
+    const itHits = filterCatalog(tracks, lessonsByTrack, 'en', 'greet', 'it')
+    assert.equal(itHits.tracks.length, 0)
+    assert.equal(itHits.lessons.length, 0)
+    const langHits = filterCatalog(tracks, lessonsByTrack, 'en', 'greet', 'languages')
+    assert.equal(langHits.tracks.length, 1)
+    assert.equal(langHits.tracks[0].id, 'chinese-hsk')
+    assert.equal(langHits.lessons.length, 1)
+    assert.equal(langHits.lessons[0].slug, 'greetings')
+    const sqlInLang = filterCatalog(tracks, lessonsByTrack, 'en', 'select', 'languages')
+    assert.equal(sqlInLang.tracks.length, 0)
+    assert.equal(sqlInLang.lessons.length, 0)
+  })
+
   it('filterNotes matches body and lesson title', () => {
     const notes = [
       {

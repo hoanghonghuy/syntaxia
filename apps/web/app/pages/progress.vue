@@ -43,6 +43,20 @@
         </template>
       </HubHeader>
 
+      <div class="category-filters" role="tablist" :aria-label="t('catalog.allDomains')">
+        <NuxtLink
+          v-for="d in domainTabs"
+          :key="d"
+          class="category-chip category-chip--domain"
+          :class="{ 'is-active': domain === d }"
+          role="tab"
+          :aria-selected="domain === d"
+          :to="localePath({ path: '/progress', query: { domain: d } })"
+        >
+          {{ t(`domain.${d}`) }}
+        </NuxtLink>
+      </div>
+
       <div class="hub-progress-bar" role="img" :aria-label="t('lesson.progressPercent', { percent: overall.percent })">
         <span class="hub-progress-bar-fill" :style="{ width: `${overall.percent}%` }" />
       </div>
@@ -79,20 +93,32 @@
           </div>
         </article>
       </section>
-      <p v-else class="hub-empty">{{ t('progress.emptyCatalog') }}</p>
+      <p v-else class="hub-empty">{{ t('progress.emptyDomain') }}</p>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
-import { overallProgress, trackProgressRows } from '~/utils/learningPath'
+import {
+  LEARNING_DOMAIN_IDS,
+  isLearningDomainId,
+  parseDomainQuery,
+  readStoredDomain,
+  writeStoredDomain,
+} from '~/utils/learningDomains'
+import {
+  overallProgressForDomain,
+  resumeTargetForDomain,
+  trackProgressRowsForDomain,
+} from '~/utils/learningPath'
 import { shouldShowSkeleton } from '~/utils/softLoading'
 
 definePageMeta({ layout: 'learn' })
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 const catalog = useCatalogStore()
 const auth = useAuthStore()
 const loading = ref(true)
@@ -118,15 +144,49 @@ const registerPath = computed(() => ({
   query: { redirect: localePath('/progress') },
 }))
 
+const domainTabs = LEARNING_DOMAIN_IDS
+
+const domain = computed(() => parseDomainQuery(route.query.domain))
+
 const overall = computed(() =>
-  overallProgress(catalog.lessonsByTrack, catalog.progress, locale.value),
+  overallProgressForDomain(
+    catalog.tracks,
+    catalog.lessonsByTrack,
+    catalog.progress,
+    locale.value,
+    domain.value,
+  ),
 )
 
 const rows = computed(() =>
-  trackProgressRows(catalog.tracks, catalog.lessonsByTrack, catalog.progress, locale.value),
+  trackProgressRowsForDomain(
+    catalog.tracks,
+    catalog.lessonsByTrack,
+    catalog.progress,
+    locale.value,
+    domain.value,
+  ),
 )
 
-const resume = computed(() => catalog.resumeTarget(locale.value))
+const resume = computed(() =>
+  resumeTargetForDomain(
+    catalog.tracks,
+    catalog.lessonsByTrack,
+    catalog.progress,
+    locale.value,
+    domain.value,
+  ),
+)
+
+watch(
+  domain,
+  (d) => {
+    if (import.meta.client && isLearningDomainId(d)) {
+      writeStoredDomain(d, localStorage)
+    }
+  },
+  { immediate: true },
+)
 
 async function retryLoad() {
   loading.value = true
@@ -140,6 +200,16 @@ async function retryLoad() {
 }
 
 onMounted(async () => {
+  if (import.meta.client && (route.query.domain === undefined || route.query.domain === '')) {
+    const stored = readStoredDomain(localStorage)
+    if (stored) {
+      await navigateTo(
+        localePath({ path: '/progress', query: { domain: stored } }),
+        { replace: true },
+      )
+    }
+  }
+
   loading.value = true
   try {
     await auth.fetchMe()
@@ -160,4 +230,3 @@ watch(locale, async (loc) => {
   }
 })
 </script>
-

@@ -1,4 +1,8 @@
 import type { LessonSummary, Track } from '~/types/api'
+import {
+  type LearningDomainFilter,
+  filterTracksByDomain,
+} from './learningDomains.ts'
 
 export type NoteListItem = {
   id: string
@@ -21,18 +25,21 @@ export function filterCatalog(
   lessonsByTrack: Record<string, LessonSummary[]>,
   locale: string,
   query: string,
+  domain: LearningDomainFilter = 'all',
 ): { tracks: Track[]; lessons: LessonSummary[] } {
   const q = normalizeQuery(query)
   if (!q) return { tracks: [], lessons: [] }
 
-  const matchedTracks = tracks.filter((tr) => {
+  const scoped = filterTracksByDomain(tracks, domain)
+
+  const matchedTracks = scoped.filter((tr) => {
     const title = (tr.title[locale] || tr.title.en || tr.id).toLowerCase()
     const desc = (tr.description[locale] || tr.description.en || '').toLowerCase()
     return title.includes(q) || desc.includes(q) || tr.id.toLowerCase().includes(q)
   })
 
   const lessons: LessonSummary[] = []
-  for (const tr of tracks) {
+  for (const tr of scoped) {
     const list = lessonsByTrack[tr.id] || []
     for (const lesson of list) {
       if (lesson.title.toLowerCase().includes(q) || lesson.slug.toLowerCase().includes(q)) {

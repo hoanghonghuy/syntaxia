@@ -21,8 +21,12 @@ const read = (abs) => readFileSync(abs, 'utf8')
 describe('languageLesson utils', () => {
   it('treats chinese-hsk as a language track', () => {
     assert.equal(isLanguageTrack('chinese-hsk'), true)
+    assert.equal(isLanguageTrack('english-basics'), true)
+    assert.equal(isLanguageTrack('japanese-jlpt'), true)
     assert.equal(isLanguageTrack('sql-fundamentals'), false)
     assert.equal(isLanguageTrack('javascript-basics'), false)
+    assert.equal(isLanguageTrack('anything', 'languages'), true)
+    assert.equal(isLanguageTrack('sql-fundamentals', 'sql'), false)
   })
 
   it('reads vocab and language exercise from lesson.exercise payload', () => {
@@ -37,9 +41,25 @@ describe('languageLesson utils', () => {
       },
     }
     assert.equal(languageVocabFromLesson(lesson).length, 1)
+    assert.equal(languageVocabFromLesson(lesson)[0].form, '你好')
     assert.equal(languageExerciseFromLesson(lesson)?.type, 'mcq')
     assert.equal(gradeLanguageExercise(lesson.exercise, '你好'), true)
     assert.equal(gradeLanguageExercise(lesson.exercise, '再见'), false)
+  })
+
+  it('normalizes English word/ipa vocab entries', () => {
+    const lesson = {
+      exercise: {
+        type: 'mcq',
+        prompt: 'Which means hello?',
+        answer: 'hello',
+        vocab: [{ word: 'hello', ipa: '/həˈloʊ/', gloss: 'xin chào' }],
+      },
+    }
+    const vocab = languageVocabFromLesson(lesson)
+    assert.equal(vocab[0].form, 'hello')
+    assert.equal(vocab[0].reading, '/həˈloʊ/')
+    assert.equal(vocab[0].lang, 'en')
   })
 
   it('normalizes fill_blank answers (trim)', () => {
@@ -65,6 +85,12 @@ describe('chinese-hsk curriculum slice', () => {
       'family',
       'time-of-day',
       'school-daily',
+      'food-drink',
+      'places',
+      'questions',
+      'adjectives',
+      'transport',
+      'devices',
     ]
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${loc}`)
@@ -81,6 +107,26 @@ describe('chinese-hsk curriculum slice', () => {
         assert.match(raw, /hsk_band:\s*1/)
         assert.match(raw, /type:\s*(mcq|fill_blank)/)
         assert.match(raw, /hanzi:/)
+      }
+    }
+  })
+
+  it('grades each published exercise answer against itself (smoke)', () => {
+    for (const loc of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${loc}`)
+      for (const file of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
+        const raw = read(join(dir, file))
+        const answerMatch = raw.match(/\n\s*answer:\s*"([^"]+)"/)
+        const typeMatch = raw.match(/\n\s*type:\s*(mcq|fill_blank)/)
+        assert.ok(answerMatch, `${loc}/${file} missing answer`)
+        assert.ok(typeMatch, `${loc}/${file} missing type`)
+        const exercise = { type: typeMatch[1], answer: answerMatch[1] }
+        assert.equal(
+          gradeLanguageExercise(exercise, answerMatch[1]),
+          true,
+          `${loc}/${file} self-grade failed`,
+        )
+        assert.equal(gradeLanguageExercise(exercise, 'WRONG'), false)
       }
     }
   })

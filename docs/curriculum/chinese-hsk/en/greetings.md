@@ -8,9 +8,11 @@ order: 1
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+can_do: "Greet someone and say thank you politely"
+pattern: "你好 / 谢谢 / 再见"
 objectives:
-  - Recognize 你好 and 再见
-  - Use 谢谢 / 不客气 and apology phrases
+  - Use 你好 and 再见 in a short exchange
+  - Respond to 谢谢 with 不客气
 vocab:
   - { hanzi: "你好", pinyin: "nǐ hǎo", gloss: "hello" }
   - { hanzi: "再见", pinyin: "zài jiàn", gloss: "goodbye" }
@@ -19,6 +21,42 @@ vocab:
   - { hanzi: "请问", pinyin: "qǐng wèn", gloss: "excuse me (to ask)" }
   - { hanzi: "对不起", pinyin: "duì bu qǐ", gloss: "sorry" }
   - { hanzi: "没关系", pinyin: "méi guān xi", gloss: "it's okay / no problem" }
+steps:
+  - type: dialogue
+    lines:
+      - { speaker: "A", text: "你好！", reading: "nǐ hǎo" }
+      - { speaker: "B", text: "你好！谢谢！", reading: "nǐ hǎo! xiè xie!" }
+      - { speaker: "A", text: "不客气。再见！", reading: "bú kè qi. zài jiàn!" }
+  - type: tip
+    title: "Greetings are set phrases"
+    body: "你好 opens a conversation. 谢谢 / 不客气 are a thank-you pair. 再见 closes. Learn them as whole chunks, not single characters alone."
+  - type: teach
+    items:
+      - { form: "你好", reading: "nǐ hǎo", gloss: "hello", example: "你好！" }
+      - { form: "谢谢", reading: "xiè xie", gloss: "thank you", example: "谢谢！" }
+      - { form: "不客气", reading: "bú kè qi", gloss: "you're welcome", example: "不客气。" }
+      - { form: "再见", reading: "zài jiàn", gloss: "goodbye", example: "再见！" }
+  - type: practice
+    kind: mcq
+    prompt: "In the dialogue, which line means “hello”?"
+    choices: ["你好！", "再见！", "谢谢！"]
+    answer: "你好！"
+    hints:
+      - "The first line is the greeting."
+  - type: practice
+    kind: mcq
+    prompt: "Someone says 谢谢. What do you reply?"
+    choices: ["不客气", "对不起", "请问"]
+    answer: "不客气"
+  - type: checkpoint
+    items:
+      - kind: mcq
+        prompt: "Which means “goodbye”?"
+        choices: ["再见", "请问", "没关系"]
+        answer: "再见"
+      - kind: fill_blank
+        prompt: "Type the characters for “thank you”."
+        answer: "谢谢"
 exercise:
   type: mcq
   prompt: "Which means “hello”?"
@@ -29,20 +67,4 @@ exercise:
     - "再见 is for goodbye."
 ---
 
-Chinese (Mandarin) greetings are short set phrases. You will see them constantly in Band 1 materials.
-
-## Core pattern
-
-- **你好** — hello (literally “you good”).
-- **再见** — goodbye (“see again”).
-- **谢谢** / **不客气** — thank you / you’re welcome.
-- **请问** — polite opener before a question.
-- **对不起** / **没关系** — sorry / it’s fine.
-
-## Try aloud
-
-Say: 你好！谢谢！再见！
-
-## Your turn
-
-Pick the characters that mean hello. When the check says **Correct**, mark the lesson complete if you are signed in.
+Practice the greeting exchange step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.

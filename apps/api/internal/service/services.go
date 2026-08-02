@@ -196,8 +196,8 @@ func (s *ContentService) ListLessons(ctx context.Context, trackID, locale string
 	return s.repo.ListLessons(ctx, trackID, locale, !admin)
 }
 
-func (s *ContentService) GetLesson(ctx context.Context, slug, locale string) (domain.Lesson, error) {
-	l, err := s.repo.GetLesson(ctx, slug, locale)
+func (s *ContentService) GetLesson(ctx context.Context, slug, locale, trackID string) (domain.Lesson, error) {
+	l, err := s.repo.GetLesson(ctx, slug, locale, trackID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return domain.Lesson{}, apperrors.NotFound("lesson not found")
 	}
@@ -213,14 +213,14 @@ func (s *ContentService) GetLessonByID(ctx context.Context, id, locale string) (
 }
 
 // GetPublishedLesson resolves by id or slug and rejects unpublished lessons.
-func (s *ContentService) GetPublishedLesson(ctx context.Context, lessonID, slug, locale string) (domain.Lesson, error) {
+func (s *ContentService) GetPublishedLesson(ctx context.Context, lessonID, slug, locale, trackID string) (domain.Lesson, error) {
 	var l domain.Lesson
 	var err error
 	switch {
 	case lessonID != "":
 		l, err = s.GetLessonByID(ctx, lessonID, locale)
 	case slug != "":
-		l, err = s.GetLesson(ctx, slug, locale)
+		l, err = s.GetLesson(ctx, slug, locale, trackID)
 	default:
 		return domain.Lesson{}, apperrors.Validation("lessonId or slug is required")
 	}
@@ -234,8 +234,8 @@ func (s *ContentService) GetPublishedLesson(ctx context.Context, lessonID, slug,
 }
 
 // GetLessonSolution returns solution SQL for a published lesson exercise.
-func (s *ContentService) GetLessonSolution(ctx context.Context, slug, locale string) (string, error) {
-	l, err := s.GetPublishedLesson(ctx, "", slug, locale)
+func (s *ContentService) GetLessonSolution(ctx context.Context, slug, locale, trackID string) (string, error) {
+	l, err := s.GetPublishedLesson(ctx, "", slug, locale, trackID)
 	if err != nil {
 		return "", err
 	}
@@ -411,7 +411,7 @@ func sandboxExerciseExpected(exercise map[string]any) (map[string]any, error) {
 }
 
 func (s *SandboxService) RunForLesson(ctx context.Context, lessonID, slug, locale, sql string) (domain.SandboxResult, error) {
-	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale)
+	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale, "")
 	if err != nil {
 		return domain.SandboxResult{}, err
 	}
@@ -428,7 +428,7 @@ func (s *SandboxService) GradeJSForLesson(
 	returnValue any,
 	consoleLines []string,
 ) (domain.SandboxResult, error) {
-	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale)
+	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale, "")
 	if err != nil {
 		return domain.SandboxResult{}, err
 	}
@@ -457,7 +457,7 @@ func (s *SandboxService) GradeHtmlCssForLesson(
 	lessonID, slug, locale string,
 	html, css string,
 ) (domain.SandboxResult, error) {
-	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale)
+	lesson, err := s.content.GetPublishedLesson(ctx, lessonID, slug, locale, "")
 	if err != nil {
 		return domain.SandboxResult{}, err
 	}

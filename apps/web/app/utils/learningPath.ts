@@ -1,4 +1,8 @@
 import type { LessonSummary, Progress, Track } from '~/types/api'
+import {
+  type LearningDomainFilter,
+  filterTracksByDomain,
+} from './learningDomains.ts'
 
 export function trackProgress(
   lessons: LessonSummary[],
@@ -106,4 +110,84 @@ export function trackProgressRows(
       }
     })
     .filter((row) => row.total > 0)
+}
+
+export function trackProgressRowsForDomain(
+  tracks: Track[],
+  lessonsByTrack: Record<string, LessonSummary[]>,
+  progress: Progress[],
+  locale: string,
+  domain: LearningDomainFilter,
+): TrackProgressRow[] {
+  return trackProgressRows(
+    filterTracksByDomain(tracks, domain),
+    lessonsByTrack,
+    progress,
+    locale,
+  )
+}
+
+export function overallProgressForDomain(
+  tracks: Track[],
+  lessonsByTrack: Record<string, LessonSummary[]>,
+  progress: Progress[],
+  locale: string,
+  domain: LearningDomainFilter,
+): { done: number; total: number; percent: number } {
+  const scoped: Record<string, LessonSummary[]> = {}
+  for (const tr of filterTracksByDomain(tracks, domain)) {
+    scoped[tr.id] = lessonsByTrack[tr.id] || []
+  }
+  return overallProgress(scoped, progress, locale)
+}
+
+export function resumeTargetForDomain(
+  tracks: Track[],
+  lessonsByTrack: Record<string, LessonSummary[]>,
+  progress: Progress[],
+  locale: string,
+  domain: LearningDomainFilter,
+): { trackId: string; lesson: LessonSummary } | null {
+  for (const tr of filterTracksByDomain(tracks, domain)) {
+    const next = nextIncompleteLesson(lessonsByTrack[tr.id] || [], progress, locale)
+    if (next) return { trackId: tr.id, lesson: next }
+  }
+  return null
+}
+
+export type LanguageUnitPathState = 'done' | 'current' | 'locked'
+
+export type LanguageUnitPathNode = {
+  id: string
+  slug: string
+  title: string
+  sortOrder: number
+  state: LanguageUnitPathState
+  clickable: boolean
+}
+
+/** Linear path nodes for language track hubs (Duolingo-style sequential unlock). */
+export function buildLanguageUnitPath(
+  lessons: LessonSummary[],
+  progress: Progress[],
+  locale: string,
+): LanguageUnitPathNode[] {
+  const sorted = [...lessons].sort((a, b) => a.sortOrder - b.sortOrder)
+  const next = nextIncompleteLesson(sorted, progress, locale)
+  return sorted.map((lesson) => {
+    const completed = progress.some(
+      (p) => p.lessonId === lesson.id && p.locale === locale && p.completed,
+    )
+    let state: LanguageUnitPathState = 'locked'
+    if (completed) state = 'done'
+    else if (next && lesson.id === next.id) state = 'current'
+    return {
+      id: lesson.id,
+      slug: lesson.slug,
+      title: lesson.title,
+      sortOrder: lesson.sortOrder,
+      state,
+      clickable: state === 'done' || state === 'current',
+    }
+  })
 }

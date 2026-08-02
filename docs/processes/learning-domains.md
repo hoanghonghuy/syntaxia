@@ -19,10 +19,11 @@ Domain (it | languages | …)
 ```
 
 1. **Home:** domain entry cards (IT + Languages) + featured list **IT-only**.
-2. **`/tracks`:** domain chips first; category chips only inside the active domain (when >1 category). Default `?domain=it` if omitted.
-3. **Map:** `sql|web|code|*` → `it`; `languages` → `languages` (`learningDomains.ts`) — no DB `domain` column yet.
-4. **Languages** stays placeholder pedagogy; domain UI only.
-5. Shared Mintlify shell; do not merge Talkory SRS into this change.
+2. **`/tracks`:** domain chips first; category chips only inside the active domain (when >1 category). Explicit `?domain=` wins; if omitted, restore `localStorage` key `syntaxia_last_domain`, else default `it`. Choosing a domain chip persists that id.
+3. **Map:** `sql|web|code|*` → `it`; `languages` → `languages` (`learningDomains.ts`) — **no** DB `domain` column (Phase 1.5 deferred).
+4. **URL:** keep `?domain=` on `/tracks`, `/progress`, `/search` (Phase 1.4 locked — path hubs later if needed).
+5. **Languages** has a Band 1 starter path (`chinese-hsk`); domain UI stays separate from IT sandboxes.
+6. Shared Mintlify shell; do not merge Talkory SRS into domain IA.
 
 ## Files
 
@@ -31,8 +32,9 @@ Domain (it | languages | …)
 | Domain helpers | `apps/web/app/utils/learningDomains.ts` |
 | Catalog browse | `apps/web/app/utils/catalogBrowse.ts` |
 | Home / catalog | `apps/web/app/pages/index.vue`, `tracks/index.vue` |
+| Progress / search | `progress.vue`, `search.vue` — domain chips + shared last-domain key |
 | i18n | `domain.*`, `home.domains*` |
-| Tests | `scripts/check-learning-domains.mjs`, shell-ux, catalog-browse |
+| Tests | `scripts/check-learning-domains.mjs`, `check-learning-path.mjs`, `check-catalog-search.mjs`, shell-ux |
 
 ## Tests
 

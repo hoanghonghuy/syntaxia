@@ -1,0 +1,6 @@
+{
+  "change_id": "api-e2e-suite",
+  "title": "API + E2E smoke suite",
+  "status": "active",
+  "flow": "sdd"
+}

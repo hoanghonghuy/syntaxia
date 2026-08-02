@@ -64,11 +64,11 @@ Syntaxia (one product, one account, shared shell)
 
 | # | Work | Notes |
 |---|------|-------|
-| 1.1 | Persist last domain (`localStorage`) | Soft default for `/tracks` |
-| 1.2 | Progress hub filter by domain | IT vs Languages progress lists |
-| 1.3 | Search scoped by domain (or clear domain badge on results) | Avoid SQL results when browsing languages |
-| 1.4 | Decide URL polish: keep `?domain=` vs `/it` + `/languages` hubs | Research already favors query first; routes later |
-| 1.5 | Optional DB column `tracks.domain` | Only if map becomes messy |
+| 1.1 | Persist last domain (`localStorage` `syntaxia_last_domain`) | Soft default for `/tracks` when `?domain=` omitted — **done** 2026-08-02 |
+| 1.2 | Progress hub filter by domain | IT vs Languages progress lists — **done** 2026-08-02 |
+| 1.3 | Search scoped by domain (or clear domain badge on results) | Avoid SQL results when browsing languages — **done** 2026-08-02 |
+| 1.4 | Decide URL polish: keep `?domain=` vs `/it` + `/languages` hubs | **locked:** keep `?domain=` — routes later if needed |
+| 1.5 | Optional DB column `tracks.domain` | **deferred** — TS map still fine with 2 domains |
 
 **OpenSpec:** `learning-domains-ia` (retro-spec if code already landed) or small follow-ups.
 
@@ -93,7 +93,7 @@ Syntaxia (one product, one account, shared shell)
 
 **Goal:** First real language track learners can complete end-to-end (narrow).  
 **OpenSpec:** [`openspec/changes/chinese-hsk-mvp/`](../../openspec/changes/chinese-hsk-mvp/)  
-**Status:** implementing / ready for verify — map + 6 lessons + language player shipped in repo.
+**Status:** archived — `openspec/changes/archive/chinese-hsk-mvp/`; main specs synced (`openspec/specs/language-lessons/`). Neon track copy via `007`. Local stack: curriculum synced (6 en + 6 vi lessons).
 
 Suggested vertical (per pedagogy lock):
 
@@ -110,10 +110,10 @@ Suggested vertical (per pedagogy lock):
 
 | Order | Item |
 |-------|------|
-| 4.1 | More HSK bands / units after HSK 1 slice is solid |
-| 4.2 | Placeholder → real **English** track (learn EN with vi/zh explain) |
-| 4.3 | Optional JP (JLPT) if still desired — Talkory dual-lang heritage |
-| 4.4 | Specialty language tracks (e.g. IT vocab) only after core path exists |
+| 4.1 | More HSK Band 1 units — **paused** glossary expansion; migrate to path v2 (`language-lesson-path-v2`). Current bank: **12** lessons (legacy + greetings pilot steps) |
+| 4.2 | English CEFR A1 starter — map + 6 lessons (`english-basics-mvp`) — **done** 2026-08-02 (archived) |
+| 4.3 | JP (JLPT) N5 starter — map + 6 lessons (`japanese-jlpt-mvp`) — **done** 2026-08-02 (archived) |
+| 4.4 | Specialty Chinese IT vocab — pedagogy + track + **6** mapped lessons (`chinese-it-vocab-mvp`) — **done** 2026-08-02 |
 
 ---
 
@@ -141,7 +141,7 @@ Examples (not committed): Design, Cloud, Career — only when owner prioritizes.
     → later: english-track / hsk-expansion / domain-N
 ```
 
-Active unrelated openspec folders may still exist (`js-code-sandbox`, `guest-sandbox-access`, `lesson-notebook-style`) — finish or archive those separately so they do not block languages.
+Active OpenSpec folders should stay empty under `openspec/changes/` (except `archive/`) — stale IT changes (`js-code-sandbox`, `guest-sandbox-access`, `lesson-notebook-style`) archived 2026-08-02.
 
 ---
 

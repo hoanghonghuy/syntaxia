@@ -99,6 +99,7 @@ const props = withDefaults(
   defineProps<{
     lessonId: string
     lessonSlug: string
+    trackId: string
     locale: string
     starter?: string
     hints?: string[]
@@ -192,7 +193,7 @@ async function revealSolution() {
   solutionLoading.value = true
   solutionError.value = ''
   try {
-    const res = await api.lessonSolution(props.lessonSlug, props.locale)
+    const res = await api.lessonSolution(props.lessonSlug, props.locale, props.trackId)
     fetchedSolution.value = res.solution
     solutionRevealed.value = true
   } catch (e) {

@@ -43,7 +43,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [auth-email-local-phase.md](./auth-email-local-phase.md) | Email + local curriculum phase (Google deferred) |
 | [onboarding.md](./onboarding.md) | Auth redirect, guest soft gates, login/register polish |
 | [i18n.md](./i18n.md) | en/vi locale + lesson pair parity gate |
-| [e2e-smoke.md](./e2e-smoke.md) | SQL Fundamentals API E2E smoke gate |
+| [e2e-smoke.md](./e2e-smoke.md) | API/E2E smoke gates (SQL + languages + catalog orchestrator) |
 | [release-hardening.md](./release-hardening.md) | Ordered release smoke + light a11y/env gate |
 | [postgresql-track.md](./postgresql-track.md) | PostgreSQL track levels + scaffold lessons |
 | [javascript-track.md](./javascript-track.md) | JS Basics (MDN map) + code sandbox (row #24) |
@@ -52,6 +52,18 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [html-css-basics-tracks.md](./html-css-basics-tracks.md) | HTML/CSS tracks (**locked**) — category `web`, Phase 1 no sandbox |
 | [html-css-sandbox.md](./html-css-sandbox.md) | HTML/CSS iframe preview + server grade (**done** #27) |
 | [catalog-architecture.md](./catalog-architecture.md) | Category → Level → Track → Lessons; add a track |
+| [openspec-skills-only.md](./openspec-skills-only.md) | OpenSpec via skill checklists — **no** Synapse runtime/MCP |
+| [multi-domain-roadmap.md](./multi-domain-roadmap.md) | IT + Languages (+ later) phased plan |
+| [learning-domains.md](./learning-domains.md) | Domain IA (home /tracks filters, last-domain storage) |
+| [english-basics-pedagogy.md](./english-basics-pedagogy.md) | CEFR A1 English track pedagogy lock (before lessons) |
+| [japanese-jlpt-pedagogy.md](./japanese-jlpt-pedagogy.md) | JLPT N5 Japanese track pedagogy lock (placeholder before map) |
+| [language-learning-pedagogy-v2.md](./language-learning-pedagogy-v2.md) | **Locked** sentence-step path (supersedes v1 lesson shape) |
+| [language-unit-path-hub.md](./language-unit-path-hub.md) | Linear unit path on language track hubs |
+| [language-step-audio.md](./language-step-audio.md) | Listen button: audioUrl or TTS |
+| [language-review-session.md](./language-review-session.md) | Review practice from completed units |
+| [chinese-it-vocab-map.md](./chinese-it-vocab-map.md) | szdict-mapped specialty lesson themes |
+| [japanese-jlpt-n5-map.md](./japanese-jlpt-n5-map.md) | First 6 N5 lessons mapped from OpenJLPT vocab-n5 |
+| [chinese-hsk-mvp.md](./chinese-hsk-mvp.md) | Language player + Band 1 curriculum wiring |
 
 Add a row here whenever you create a new process file.
 

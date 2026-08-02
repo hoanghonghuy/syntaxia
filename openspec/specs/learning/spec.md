@@ -4,7 +4,8 @@
 
 **Given** a published lesson  
 **When** GET `/api/v1/lessons/:slug`  
-**Then** rendered markdown body and exercise metadata are returned
+**Then** rendered markdown body and exercise metadata are returned  
+**And** for language tracks (`chinese-hsk`), vocab and language exercise fields are included in the exercise payload when present
 
 ## REQ-LEARN-002 Progress
 

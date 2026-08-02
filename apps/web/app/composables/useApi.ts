@@ -50,10 +50,12 @@ export function useApi() {
     tracks: () => request<Track[]>('/api/v1/tracks'),
     lessons: (track: string, locale: string) =>
       request<LessonSummary[]>(`/api/v1/lessons?track=${track}&locale=${locale}`),
-    lesson: (slug: string, locale: string) =>
-      request<Lesson>(`/api/v1/lessons/${slug}?locale=${locale}`),
-    lessonSolution: (slug: string, locale: string) =>
-      request<{ solution: string }>(`/api/v1/lessons/${slug}/solution?locale=${locale}`),
+    lesson: (slug: string, locale: string, track: string) =>
+      request<Lesson>(`/api/v1/lessons/${slug}?locale=${locale}&track=${encodeURIComponent(track)}`),
+    lessonSolution: (slug: string, locale: string, track: string) =>
+      request<{ solution: string }>(
+        `/api/v1/lessons/${slug}/solution?locale=${locale}&track=${encodeURIComponent(track)}`,
+      ),
     runSandbox: (sql: string, lessonId: string, locale: string) =>
       request<SandboxResult>('/api/v1/sandbox/run', {
         method: 'POST',
@@ -80,14 +82,16 @@ export function useApi() {
         method: 'PUT',
         body: JSON.stringify({ locale, completed }),
       }),
-    listNotes: (slug: string, locale: string) =>
-      request<Note[]>(`/api/v1/lessons/${slug}/notes?locale=${locale}`),
+    listNotes: (slug: string, locale: string, track: string) =>
+      request<Note[]>(
+        `/api/v1/lessons/${slug}/notes?locale=${locale}&track=${encodeURIComponent(track)}`,
+      ),
     listAllNotes: (locale: string) =>
       request<NoteListItem[]>(`/api/v1/notes?locale=${locale}`),
-    createNote: (slug: string, locale: string, body: string) =>
-      request<Note>(`/api/v1/lessons/${slug}/notes`, {
+    createNote: (slug: string, locale: string, body: string, track: string) =>
+      request<Note>(`/api/v1/lessons/${slug}/notes?track=${encodeURIComponent(track)}`, {
         method: 'POST',
-        body: JSON.stringify({ locale, body }),
+        body: JSON.stringify({ locale, body, track }),
       }),
     updateNote: (noteId: string, body: string) =>
       request<Note>(`/api/v1/notes/${noteId}`, {

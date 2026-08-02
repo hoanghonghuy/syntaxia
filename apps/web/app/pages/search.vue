@@ -33,6 +33,20 @@
         </template>
       </HubHeader>
 
+      <div class="category-filters" role="tablist" :aria-label="t('catalog.allDomains')">
+        <NuxtLink
+          v-for="d in domainTabs"
+          :key="d"
+          class="category-chip category-chip--domain"
+          :class="{ 'is-active': domain === d }"
+          role="tab"
+          :aria-selected="domain === d"
+          :to="localePath({ path: '/search', query: { domain: d } })"
+        >
+          {{ t(`domain.${d}`) }}
+        </NuxtLink>
+      </div>
+
       <p v-if="!normalized" class="hub-hint">{{ t('search.hint') }}</p>
 
       <template v-else>
@@ -70,12 +84,20 @@
 <script setup lang="ts">
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
 import { filterCatalog, normalizeQuery } from '~/utils/catalogSearch'
+import {
+  LEARNING_DOMAIN_IDS,
+  isLearningDomainId,
+  parseDomainQuery,
+  readStoredDomain,
+  writeStoredDomain,
+} from '~/utils/learningDomains'
 import { shouldShowSkeleton } from '~/utils/softLoading'
 
 definePageMeta({ layout: 'learn' })
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 const catalog = useCatalogStore()
 const loading = ref(true)
 const query = ref('')
@@ -93,13 +115,32 @@ const crumbs = computed(() =>
   }),
 )
 
+const domainTabs = LEARNING_DOMAIN_IDS
+const domain = computed(() => parseDomainQuery(route.query.domain))
+
 const normalized = computed(() => normalizeQuery(query.value))
 
 const hits = computed(() =>
-  filterCatalog(catalog.tracks, catalog.lessonsByTrack, locale.value, query.value),
+  filterCatalog(
+    catalog.tracks,
+    catalog.lessonsByTrack,
+    locale.value,
+    query.value,
+    domain.value,
+  ),
 )
 
 const hasHits = computed(() => hits.value.tracks.length > 0 || hits.value.lessons.length > 0)
+
+watch(
+  domain,
+  (d) => {
+    if (import.meta.client && isLearningDomainId(d)) {
+      writeStoredDomain(d, localStorage)
+    }
+  },
+  { immediate: true },
+)
 
 async function retryLoad() {
   loading.value = true
@@ -111,6 +152,16 @@ async function retryLoad() {
 }
 
 onMounted(async () => {
+  if (import.meta.client && (route.query.domain === undefined || route.query.domain === '')) {
+    const stored = readStoredDomain(localStorage)
+    if (stored) {
+      await navigateTo(
+        localePath({ path: '/search', query: { domain: stored } }),
+        { replace: true },
+      )
+    }
+  }
+
   loading.value = true
   try {
     await catalog.loadCatalogForHome(locale.value)

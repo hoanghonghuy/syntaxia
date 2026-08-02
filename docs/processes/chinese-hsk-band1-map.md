@@ -21,9 +21,9 @@ Map open **HSK 3.0 Band 1** (level 1 / `new-1`) vocabulary into the first Syntax
 
 Glosses and explain prose are original Syntaxia copy (en/vi). Pinyin is standard Mandarin romanization for learner UI.
 
-## First slice (6 lessons)
+## First slice (12 lessons)
 
-Not the full Band 1 (~500 headwords in community level-1 exports). Thematic clusters only:
+Not the full Band 1 (~300–500 headwords in community level-1 exports). Thematic clusters only:
 
 | Order | Slug | Theme | Target words (Band 1 subset) |
 |------:|------|-------|------------------------------|
@@ -33,6 +33,12 @@ Not the full Band 1 (~500 headwords in community level-1 exports). Thematic clus
 | 4 | `family` | Family | 爸爸, 妈妈, 哥哥, 姐姐, 弟弟, 妹妹, 家 |
 | 5 | `time-of-day` | Days & parts of day | 今天, 明天, 昨天, 上午, 下午, 晚上, 现在 |
 | 6 | `school-daily` | School & daily verbs | 学校, 老师, 学生, 同学, 学习, 汉语, 吃饭, 喝 |
+| 7 | `food-drink` | Food & drink | 水, 茶, 米饭, 水果, 买, 钱, 好吃 |
+| 8 | `places` | Places & going | 商店, 医院, 图书馆, 电影院, 去, 回家, 在 |
+| 9 | `questions` | Question words | 什么, 谁, 哪, 哪里, 多少, 吗, 呢 |
+| 10 | `adjectives` | Descriptions | 大, 小, 好, 多, 少, 冷, 热 |
+| 11 | `transport` | Transport | 车, 打车, 汽车, 火车, 飞机, 车站 |
+| 12 | `devices` | Phones & screens | 电话, 手机, 电脑, 电视, 上网 |
 
 Lesson ids: `zh-hsk-b1-{order}-{slug}` (e.g. `zh-hsk-b1-01-greetings`). Locales: `en` + `vi` paired files.
 
@@ -41,15 +47,18 @@ Lesson ids: `zh-hsk-b1-{order}-{slug}` (e.g. `zh-hsk-b1-01-greetings`). Locales:
 - Cite this map in PRs that add Chinese lessons
 - Keep `hsk_band: 1` and `hsk_version: "3.0"` in frontmatter
 - Ship explain locales together
+- New lessons must use **`steps`** (dialogue / tip / teach / practice) per [`language-learning-pedagogy-v2.md`](./language-learning-pedagogy-v2.md)
 
 ## Don't
 
 - Publish empty stubs for the rest of Band 1
 - Copy copyrighted textbook paragraphs
 - Add JLPT / English-target lessons under this track
+- Add new **glossary-only** themes (vocab table + single MCQ) — freeze until migrated to path v2
 
 ## Related
 
 - [`chinese-hsk-pedagogy.md`](./chinese-hsk-pedagogy.md)
 - [`multi-domain-roadmap.md`](./multi-domain-roadmap.md) Phase 3
-- OpenSpec: `openspec/changes/chinese-hsk-mvp/`
+- OpenSpec archive: `openspec/changes/archive/chinese-hsk-mvp/`
+- Main spec: `openspec/specs/language-lessons/`

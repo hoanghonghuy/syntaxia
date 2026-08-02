@@ -294,11 +294,12 @@ func (h *Handler) listLessons(c *gin.Context) {
 func (h *Handler) getLesson(c *gin.Context) {
 	slug := c.Param("slug")
 	locale := c.DefaultQuery("locale", constants.DefaultLocale)
+	trackID := c.Query("track")
 	if err := validate.Locale(locale); err != nil {
 		middleware.JSONError(c, err)
 		return
 	}
-	lesson, err := h.svc.Content.GetLesson(c.Request.Context(), slug, locale)
+	lesson, err := h.svc.Content.GetLesson(c.Request.Context(), slug, locale, trackID)
 	if err != nil {
 		middleware.JSONError(c, err)
 		return
@@ -319,7 +320,8 @@ func (h *Handler) getLesson(c *gin.Context) {
 func (h *Handler) getLessonSolution(c *gin.Context) {
 	slug := c.Param("slug")
 	locale := c.DefaultQuery("locale", constants.DefaultLocale)
-	solution, err := h.svc.Content.GetLessonSolution(c.Request.Context(), slug, locale)
+	trackID := c.Query("track")
+	solution, err := h.svc.Content.GetLessonSolution(c.Request.Context(), slug, locale, trackID)
 	if err != nil {
 		middleware.JSONError(c, err)
 		return
@@ -517,7 +519,8 @@ func (h *Handler) setProgress(c *gin.Context) {
 func (h *Handler) listNotes(c *gin.Context) {
 	claims, _ := middleware.ClaimsFromContext(c)
 	locale := c.DefaultQuery("locale", constants.DefaultLocale)
-	lesson, err := h.svc.Content.GetLesson(c.Request.Context(), c.Param("slug"), locale)
+	trackID := c.Query("track")
+	lesson, err := h.svc.Content.GetLesson(c.Request.Context(), c.Param("slug"), locale, trackID)
 	if err != nil {
 		middleware.JSONError(c, err)
 		return
@@ -553,6 +556,7 @@ func (h *Handler) createNote(c *gin.Context) {
 	var req struct {
 		Locale string `json:"locale"`
 		Body   string `json:"body"`
+		Track  string `json:"track"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		middleware.JSONError(c, apperrors.Validation("invalid body"))
@@ -561,7 +565,11 @@ func (h *Handler) createNote(c *gin.Context) {
 	if req.Locale == "" {
 		req.Locale = constants.DefaultLocale
 	}
-	lesson, err := h.svc.Content.GetLesson(c.Request.Context(), c.Param("slug"), req.Locale)
+	trackID := c.Query("track")
+	if trackID == "" {
+		trackID = req.Track
+	}
+	lesson, err := h.svc.Content.GetLesson(c.Request.Context(), c.Param("slug"), req.Locale, trackID)
 	if err != nil {
 		middleware.JSONError(c, err)
 		return

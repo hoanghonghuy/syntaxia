@@ -191,18 +191,32 @@ func (r *Repository) GetLessonByID(ctx context.Context, id, locale string) (doma
 	return l, nil
 }
 
-func (r *Repository) GetLesson(ctx context.Context, slug, locale string) (domain.Lesson, error) {
+func (r *Repository) GetLesson(ctx context.Context, slug, locale, trackID string) (domain.Lesson, error) {
 	var l domain.Lesson
 	var objectives, exercise, seed []byte
 	var driveID *string
-	err := r.pool.QueryRow(ctx, `
-		SELECT id, locale, track_id, slug, title, sort_order, objectives, drive_file_id,
-		       body_md, body_html, exercise, sandbox_seed, published, version
-		FROM lessons WHERE slug = $1 AND locale = $2
-	`, slug, locale).Scan(
-		&l.ID, &l.Locale, &l.TrackID, &l.Slug, &l.Title, &l.SortOrder,
-		&objectives, &driveID, &l.BodyMD, &l.BodyHTML, &exercise, &seed, &l.Published, &l.Version,
-	)
+	var err error
+	if trackID != "" {
+		err = r.pool.QueryRow(ctx, `
+			SELECT id, locale, track_id, slug, title, sort_order, objectives, drive_file_id,
+			       body_md, body_html, exercise, sandbox_seed, published, version
+			FROM lessons WHERE slug = $1 AND locale = $2 AND track_id = $3
+		`, slug, locale, trackID).Scan(
+			&l.ID, &l.Locale, &l.TrackID, &l.Slug, &l.Title, &l.SortOrder,
+			&objectives, &driveID, &l.BodyMD, &l.BodyHTML, &exercise, &seed, &l.Published, &l.Version,
+		)
+	} else {
+		err = r.pool.QueryRow(ctx, `
+			SELECT id, locale, track_id, slug, title, sort_order, objectives, drive_file_id,
+			       body_md, body_html, exercise, sandbox_seed, published, version
+			FROM lessons WHERE slug = $1 AND locale = $2
+			ORDER BY track_id
+			LIMIT 1
+		`, slug, locale).Scan(
+			&l.ID, &l.Locale, &l.TrackID, &l.Slug, &l.Title, &l.SortOrder,
+			&objectives, &driveID, &l.BodyMD, &l.BodyHTML, &exercise, &seed, &l.Published, &l.Version,
+		)
+	}
 	if err != nil {
 		return l, err
 	}

@@ -6,9 +6,8 @@ How the first Languages vertical slice is wired in code and content.
 
 ## When to use
 
+- Extending Band 1 after the archived MVP
 - Debugging language lessons / sync
-- Adding another Band 1 thematic lesson
-- Before archiving OpenSpec `chinese-hsk-mvp`
 
 ## Steps
 
@@ -28,4 +27,5 @@ How the first Languages vertical slice is wired in code and content.
 
 - [`chinese-hsk-band1-map.md`](./chinese-hsk-band1-map.md)
 - [`chinese-hsk-pedagogy.md`](./chinese-hsk-pedagogy.md)
-- Change: `openspec/changes/chinese-hsk-mvp/`
+- Change: `openspec/changes/archive/chinese-hsk-mvp/`
+- Main spec: [`../openspec/specs/language-lessons/spec.md`](../../openspec/specs/language-lessons/spec.md)

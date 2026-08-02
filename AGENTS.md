@@ -2,35 +2,17 @@
 
 <!-- synapse:init -->
 
-## Synapse (local MCP engine)
+## Synapse workflow skills (no local stack)
 
-This workspace uses **Synapse**. Start stack: `syn up` · check: `syn status` · dashboard: http://127.0.0.1:47280
+**Locked (2026-08-02):** Do **not** start or use the Synapse runtime for this repo (`syn up`, `syn status`, MCP server `user-synapse` / mcp-gateway, `memory_context`, `openspec_*` MCP tools, Surreal/dashboard). Keep the stack **down**.
 
-### Session start
+**Do use** the OpenSpec slash commands and skill markdown under `.cursor/commands/syn-*.md` and `.cursor/skills/syn-*/` (and `opsx-*` aliases) as **procedural checklists** — propose / apply / verify / archive by editing `openspec/` files directly.
 
-1. `syn up` (use `syn up` without `--bundled` for FastEmbed — no Ollama required).
-2. Reload Cursor MCP after `.cursor/mcp.json` changes.
-3. Call MCP **`memory_context`** (memory-bank, handoff, recent bugs).
-4. Read **`docs/processes/`** for how this project expects work to be done (see [Process documentation](#process-documentation-mandatory) below).
-
-### MCP server `synapse` (stdio → `.synapse/.run/mcp-gateway`)
-
-| Tool | Purpose |
-|------|---------|
-| `memory_context` | Load session context |
-| `memory_handoff` | End-of-session handoff |
-| `code_context` / `code_impact` / `code_query` / `code_overview` | Native code graph (tree-sitter) |
-| `diff_impact` | Impact from git diff |
-| `search_docs` | Semantic search over indexed docs/specs |
-| `search_registry` | Skills / registry lookup |
-| `openspec_router` / `openspec_propose` / `openspec_apply` | OpenSpec workflow (when `openspec/` present) |
-
-**Embed:** FastEmbed in-process (`SYNAPSE_ENGINE__EMBED_PROVIDER=fastembed`) — no external Ollama.  
-**Code intel:** native `pkg/codegraph` — not GitNexus unless explicitly configured.
+See [`docs/processes/openspec-skills-only.md`](docs/processes/openspec-skills-only.md).
 
 ### Do not commit
 
-`.synapse/`, `memory-bank/`, `.env` secrets. After provider change: `syn migrate`.
+`.synapse/`, `memory-bank/`, `.env` secrets.
 
 <!-- /synapse:init -->
 
@@ -85,23 +67,23 @@ Filename: `docs/processes/<kebab-case-topic>.md` (English).
 
 ### Session habit
 
-1. Start: read relevant process docs (and Synapse `memory_context`).  
+1. Start: read relevant process docs (see [`openspec-skills-only.md`](docs/processes/openspec-skills-only.md) — no Synapse MCP).  
 2. During work: if the “correct way” is new or changed → update `docs/processes/` in the **same session**, not “later”.  
-3. End: Synapse `memory_handoff` may summarize; **process docs remain the durable source of truth** for procedures.
+3. End: summarize in chat if useful; **process docs remain the durable source of truth** for procedures.
 
-Do **not** rely only on chat memory or `memory-bank/` for procedures. Memory-bank is session context; **`docs/processes/` is the playbook**.
+Do **not** rely only on chat memory or `memory-bank/` for procedures. **`docs/processes/` is the playbook**.
 
 ---
 
-## Research-first gate (`/opsx-research`)
+## Research-first gate (`/opsx-research` / `/syn-research` skill)
 
 For architecture, stack, design-system, curriculum structure, security-sensitive choices (sandbox, OAuth, Drive scopes), or any non-trivial “how should we do X?”:
 
-1. Run **`/opsx-research`** (skill: `.cursor/skills/opsx-research/SKILL.md`).  
+1. Run the research **skill** (`.cursor/skills/opsx-research/SKILL.md` or `syn-research`) — file edits only, no Synapse MCP.  
 2. Use Context7 for libraries/APIs; web for comparisons and platform docs.  
 3. Deliver the skill’s structured output and a **single recommended approach**.  
 4. **Persist the locked decision** into `docs/processes/` (and OpenSpec when implementing).  
-5. Only then `/opsx-propose` → `/opsx-apply` (or explore) as needed.
+5. Only then propose → apply (or explore) via skill checklists as needed.
 
 Do not invent design or curriculum from scratch when research and reference products exist. Design references live under the external `awesome-design-md/design-md` collection; default IA is **Mintlify**.
 
@@ -109,17 +91,17 @@ Do not invent design or curriculum from scratch when research and reference prod
 
 ## OpenSpec workflow
 
-When changing product behavior or architecture:
+When changing product behavior or architecture, use slash commands / skills as **checklists** (edit `openspec/` directly — no `openspec_*` MCP):
 
-| Need | Slash |
+| Need | Slash / skill |
 |------|-------|
-| Evidence / compare options | `/opsx-research` |
-| Explore inside repo | `/opsx-explore` |
-| Create change folder | `/opsx-propose` |
-| Implement tasks | `/opsx-apply` |
-| Spec / change gates | `/opsx-verify-spec`, `/opsx-verify` |
+| Evidence / compare options | `/opsx-research` or `/syn-research` |
+| Explore inside repo | `/opsx-explore` / `/syn-explore` |
+| Create change folder | `/opsx-propose` / `/syn-propose` |
+| Implement tasks | `/opsx-apply` / `/syn-apply` |
+| Spec / change gates | `/opsx-verify-spec`, `/opsx-verify` (or syn-*) |
 
-Follow existing `.cursor/commands/opsx-*.md` and skills. After a change lands a new procedure, update `docs/processes/`.
+Follow `.cursor/commands/*` and `.cursor/skills/*`. After a change lands a new procedure, update `docs/processes/`. See [`openspec-skills-only.md`](docs/processes/openspec-skills-only.md).
 
 ---
 

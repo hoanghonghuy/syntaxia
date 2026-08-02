@@ -204,6 +204,7 @@ describe('shell UX foundation', () => {
   it('progress hub is summary-first without mega per-track lesson dump', () => {
     const src = read('app/pages/progress.vue')
     assert.match(src, /hub-progress-tracks|trackProgressRows/)
+    assert.match(src, /LEARNING_DOMAIN_IDS|domainTabs|trackProgressRowsForDomain/)
     assert.doesNotMatch(src, /hub-progress-lessons/)
     assert.doesNotMatch(src, /lessonStatuses|trackLessonStatusRows/)
   })

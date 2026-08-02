@@ -28,7 +28,13 @@ $OrderedFiles = @(
     "004_code_track.sql",
     "005_web_tracks.sql",
     "006_languages_tracks.sql",
-    "007_chinese_hsk_band1_copy.sql"
+    "007_chinese_hsk_band1_copy.sql",
+    "008_english_basics_track.sql",
+    "009_english_basics_a1_copy.sql",
+    "010_japanese_jlpt_track.sql",
+    "011_japanese_jlpt_n5_copy.sql",
+    "012_chinese_it_vocab_track.sql",
+    "013_chinese_it_vocab_copy.sql"
 )
 
 Write-Host "Syntaxia Neon migrate" -ForegroundColor Cyan

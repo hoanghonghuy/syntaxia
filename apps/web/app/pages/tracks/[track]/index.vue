@@ -17,18 +17,35 @@
       <AppBreadcrumb :items="crumbs" />
       <HubHeader :eyebrow="trackEyebrow" :title="trackTitle" :lead="trackLead">
         <template v-if="stats.total > 0" #actions>
-          <NuxtLink
-            v-if="nextLesson"
-            class="btn btn-primary continue-btn"
-            :to="localePath(`/tracks/${trackId}/lessons/${nextLesson.slug}`)"
-          >
-            {{ t('lesson.continue') }}: {{ nextLesson.title }}
-          </NuxtLink>
-          <p v-else class="muted">{{ t('lesson.trackComplete') }}</p>
+          <div class="hub-actions">
+            <NuxtLink
+              v-if="nextLesson"
+              class="btn btn-primary continue-btn"
+              :to="localePath(`/tracks/${trackId}/lessons/${nextLesson.slug}`)"
+            >
+              {{ t('lesson.continue') }}: {{ nextLesson.title }}
+            </NuxtLink>
+            <p v-else class="muted">{{ t('lesson.trackComplete') }}</p>
+            <NuxtLink
+              v-if="showReviewCta"
+              class="btn btn-ghost"
+              :to="localePath(`/tracks/${trackId}/review`)"
+            >
+              {{ t('lesson.unitReview') }}
+            </NuxtLink>
+          </div>
         </template>
       </HubHeader>
 
-      <ul v-if="stats.total > 0 && isNarrow" class="nav-list hub-list">
+      <LanguageUnitPath
+        v-if="showLanguagePath"
+        :track-id="trackId"
+        :lessons="hubLessons"
+        :progress="catalog.progress"
+        :locale="locale"
+      />
+
+      <ul v-else-if="stats.total > 0 && isNarrow" class="nav-list hub-list">
         <li v-for="item in catalog.lessons" :key="item.id">
           <NuxtLink
             class="nav-link"
@@ -46,6 +63,7 @@
 
 <script setup lang="ts">
 import { buildLearnBreadcrumbs } from '~/utils/breadcrumbs'
+import { isLanguageTrack as trackIsLanguage } from '~/utils/languageLesson'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
 import { shouldShowSkeleton } from '~/utils/softLoading'
 
@@ -79,6 +97,15 @@ const trackEyebrow = computed(() => {
   const base = `${t(`catalog.category.${track.category || 'sql'}`)} · ${t(`catalog.level.${track.level || 'basic'}`)}`
   if (track.id === 'chinese-hsk') {
     return `${base} · ${t('catalog.hskBand1')}`
+  }
+  if (track.id === 'english-basics') {
+    return `${base} · ${t('catalog.cefrA1')}`
+  }
+  if (track.id === 'japanese-jlpt') {
+    return `${base} · ${t('catalog.jlptN5')}`
+  }
+  if (track.id === 'chinese-it-vocab') {
+    return `${base} · ${t('catalog.itVocab')}`
   }
   return base
 })
@@ -118,6 +145,25 @@ const crumbs = computed(() =>
 const stats = computed(() => catalog.progressForTrack(trackId.value, locale.value))
 const nextLesson = computed(() => catalog.nextForTrack(trackId.value, locale.value))
 
+const isLanguageHub = computed(() =>
+  trackIsLanguage(trackId.value, trackMeta.value?.category),
+)
+
+const hubLessons = computed(() => {
+  const list =
+    catalog.lessonsByTrack[trackId.value] ||
+    (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
+  return [...list].sort((a, b) => a.sortOrder - b.sortOrder)
+})
+
+const showLanguagePath = computed(
+  () => isLanguageHub.value && hubLessons.value.length > 0,
+)
+
+const showReviewCta = computed(
+  () => isLanguageHub.value && stats.value.done > 0,
+)
+
 async function loadHub() {
   loading.value = true
   try {
@@ -152,3 +198,12 @@ watch(locale, async (loc) => {
 
 watch(trackId, loadHub)
 </script>
+
+<style scoped>
+.hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+</style>

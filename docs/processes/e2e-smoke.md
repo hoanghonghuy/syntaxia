@@ -1,14 +1,14 @@
-# SQL Fundamentals E2E smoke
+# API / E2E smoke gates
 
 ## Purpose
 
-Automated API-level smoke gate for the SQL Fundamentals learning path: register → intro lesson → sandbox pass → hints/solution present → progress → next lesson. Prefer this over Playwright until the UI E2E suite exists.
+Fail-closed **API-level** smoke for Syntaxia learning paths: IT (SQL) and Languages (Chinese / English / Japanese), plus catalog integrity (tracks, lesson counts, track-scoped slug disambiguation). Prefer these scripts over Playwright until a browser E2E suite exists.
 
 ## When to use
 
-- After curriculum, sandbox, auth, or progress changes that could break the happy path
-- Before marking product-perfection checklist **#8** (or re-verifying it)
-- Local regression before release hardening (#12)
+- After auth, curriculum sync, progress/notes, sandbox, or catalog changes
+- Before release hardening
+- Local regression: run `e2e-all.ps1` after docker-up
 
 ## Steps
 
@@ -16,54 +16,51 @@ Automated API-level smoke gate for the SQL Fundamentals learning path: register 
    ```powershell
    powershell -File scripts/docker-up.ps1
    ```
-   Confirm `GET http://127.0.0.1:8082/health` returns `{"status":"ok",...}`.
+   Confirm `GET http://127.0.0.1:8082/health` → `status=ok`.
 
-2. Run the smoke script from the repo root:
+2. **Full API/E2E orchestrator** (recommended):
    ```powershell
-   powershell -File scripts/e2e-sql-fundamentals.ps1
+   powershell -File scripts/e2e-all.ps1
    ```
-   Optional base URL:
+   Optional sandboxes:
    ```powershell
-   powershell -File scripts/e2e-sql-fundamentals.ps1 -BaseUrl http://127.0.0.1:8082
+   powershell -File scripts/e2e-all.ps1 -IncludeSandboxes
    ```
 
-3. Expect exit code **0** and a final line `PASS: SQL Fundamentals E2E gate`. Any step failure exits **non-zero** with `FAIL: …`.
+3. Or run gates individually:
+   | Script | Covers |
+   |--------|--------|
+   | `scripts/e2e-api-catalog.ps1` | Health, providers, tracks (IT+languages), lesson counts, `?track=` slug disambiguation |
+   | `scripts/e2e-sql-fundamentals.ps1` | Register → SQL intro → sandbox pass → progress → next |
+   | `scripts/e2e-languages.ps1` | Register → ZH/EN/JA lesson+progress+notes with `?track=` |
+   | `scripts/release-smoke.ps1` | `e2e-all` + IT catalog check + sandboxes + unit tests |
 
-### What the script asserts
+4. Expect exit **0** and a final `PASS: …` line. Any assertion failure exits **non-zero**.
 
-| Step | Call | Expect |
-|------|------|--------|
-| Health | `GET /health` | `status=ok` |
-| Register | `POST /api/v1/auth/register` | `201` + cookie `syntaxia_token` (Path `/`) |
-| Me | `GET /api/v1/auth/me` | same email (cookie jar) |
-| List | `GET /api/v1/lessons?track=sql-fundamentals&locale=en` | ≥ 10 lessons, includes `what-is-sql` |
-| Lesson | `GET /api/v1/lessons/what-is-sql?locale=en` | `exercise.hints`, `exercise.solutionAvailable`; **no** `exercise.solution`, `exercise.expected`, or `sandboxSeed`; `bodyHtml` contains `<table>` |
-| Solution | `GET /api/v1/lessons/what-is-sql/solution?locale=en` | non-empty `solution` (auth required) |
-| Sandbox | `POST /api/v1/sandbox/run` with `{ sql, lessonId, locale }` | `passed=true` (auth required; server-side grading) |
-| Progress | `PUT /api/v1/progress/{lessonId}` then `GET /api/v1/progress` | intro completed |
-| Next | first incomplete by `sortOrder` | not intro; `GET` that lesson succeeds |
+### Shared helper
+
+`scripts/lib/Invoke-SyntaxiaApi.ps1` — cookie-jar `Invoke-WebRequest` wrapper. New smoke scripts should dot-source it.
 
 ### Auth cookie
 
-API sets HttpOnly cookie **`syntaxia_token`** via `SetCookie(..., path "/")` (see `apps/api/pkg/constants` + `handler.setCookie`). The script uses `Invoke-WebRequest -SessionVariable` so the cookie jar persists across calls. Middleware also accepts `Authorization: Bearer`, but the smoke path intentionally exercises the cookie.
+API sets HttpOnly **`syntaxia_token`**. Scripts use `-SessionVariable` / `WebSession` so the cookie persists. Middleware also accepts Bearer; smoke prefers the cookie path.
 
 ## Do
 
-- Keep the script fail-closed (non-zero on any assertion).
-- Use a unique email (`e2e+{timestamp}@…`) so re-runs do not collide.
-- Fix product bugs if smoke fails; do not weaken assertions to “make green”.
+- Keep fail-closed; use unique `e2e+…@syntaxia.test` emails
+- Assert `?track=` whenever language slugs may collide
+- Restart API after new curriculum MD so lesson counts match
 
 ## Don't
 
-- Depend on Google OAuth for this gate (email/password only; Google deferred).
-- Treat Playwright as required for #8 — API smoke is the locked approach for now.
-- Commit secrets or real user credentials into the script.
+- Depend on Google OAuth for these gates
+- Weaken assertions to force green
+- Commit secrets
 
 ## Related
 
-- Script: [`scripts/e2e-sql-fundamentals.ps1`](../../scripts/e2e-sql-fundamentals.ps1)
+- Scripts: `e2e-all.ps1`, `e2e-api-catalog.ps1`, `e2e-sql-fundamentals.ps1`, `e2e-languages.ps1`, `release-smoke.ps1`
+- OpenSpec: `openspec/changes/api-e2e-suite/`
 - [`monorepo-dev.md`](./monorepo-dev.md)
-- [`product-perfection-checklist.md`](./product-perfection-checklist.md) (#8)
-- [`sql-sandbox.md`](./sql-sandbox.md)
-- [`learning-path-progress.md`](./learning-path-progress.md)
-- [`auth-email-local-phase.md`](./auth-email-local-phase.md)
+- [`release-hardening.md`](./release-hardening.md)
+- [`languages-tracks.md`](./languages-tracks.md)

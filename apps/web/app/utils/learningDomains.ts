@@ -46,3 +46,46 @@ export function parseDomainQuery(raw: unknown): LearningDomainFilter {
   if (isLearningDomainId(v)) return v
   return 'it'
 }
+
+/** localStorage key for last browsed learning domain on `/tracks`. */
+export const DOMAIN_STORAGE_KEY = 'syntaxia_last_domain'
+
+export function readStoredDomain(
+  storage: Pick<Storage, 'getItem'> | null | undefined,
+): LearningDomainId | null {
+  if (!storage) return null
+  try {
+    const v = storage.getItem(DOMAIN_STORAGE_KEY)
+    if (v && isLearningDomainId(v)) return v
+  } catch {
+    /* private mode / denied */
+  }
+  return null
+}
+
+export function writeStoredDomain(
+  domain: LearningDomainId,
+  storage: Pick<Storage, 'setItem'> | null | undefined,
+): void {
+  if (!storage) return
+  try {
+    storage.setItem(DOMAIN_STORAGE_KEY, domain)
+  } catch {
+    /* private mode / denied */
+  }
+}
+
+/**
+ * Prefer explicit `?domain=` when present; otherwise last stored domain; else `it`.
+ * `rawQuery` is the unparsed query value (may be empty).
+ */
+export function resolveTracksDomain(
+  rawQuery: unknown,
+  stored: LearningDomainId | null,
+): LearningDomainFilter {
+  if (typeof rawQuery === 'string' && rawQuery.trim()) {
+    return parseDomainQuery(rawQuery)
+  }
+  if (stored) return stored
+  return 'it'
+}

@@ -113,6 +113,46 @@ func ParseLessonFile(entry FileEntry) (domain.Lesson, error) {
 			l.Exercise["hskVersion"] = ver
 		}
 	}
+	if cefr := getStr("cefr_level"); cefr != "" {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["cefrLevel"]; !exists {
+			l.Exercise["cefrLevel"] = cefr
+		}
+	}
+	if jlpt := getStr("jlpt_level"); jlpt != "" {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["jlptLevel"]; !exists {
+			l.Exercise["jlptLevel"] = jlpt
+		}
+	}
+	if steps, ok := fm["steps"]; ok {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["steps"]; !exists {
+			l.Exercise["steps"] = steps
+		}
+	}
+	if canDo := getStr("can_do"); canDo != "" {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["canDo"]; !exists {
+			l.Exercise["canDo"] = canDo
+		}
+	}
+	if pattern := getStr("pattern"); pattern != "" {
+		if l.Exercise == nil {
+			l.Exercise = map[string]any{}
+		}
+		if _, exists := l.Exercise["pattern"]; !exists {
+			l.Exercise["pattern"] = pattern
+		}
+	}
 	if seed, ok := fm["sandbox_seed"].(map[string]any); ok {
 		l.SandboxSeed = seed
 	}

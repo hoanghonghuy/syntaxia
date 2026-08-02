@@ -27,7 +27,7 @@ Preview text from `learning.NotePreview` (Go). Join `lesson_notes` → `lessons`
 | Route | Behavior |
 |-------|----------|
 | `/notes` | Guest gate; list cards → lesson deep link; client filter |
-| `/search` | Filter tracks + lessons by title/slug via `filterCatalog` |
+| `/search` | Domain chips + filter tracks/lessons by title/slug via `filterCatalog(..., domain)` |
 
 Shared chrome: `HubHeader.vue` (also used by progress/account).
 
@@ -42,6 +42,7 @@ After API change: rebuild linux binary + recreate API container (`scripts/docker
 
 ## Do
 
+- Keep search scoped to the active domain so SQL hits do not appear while browsing Languages
 - Keep one job per page; deep-link notes back to the lesson
 - Ship `notes.*` / `search.*` en+vi together
 - Prefer skeleton + empty states over ComingSoon when data exists

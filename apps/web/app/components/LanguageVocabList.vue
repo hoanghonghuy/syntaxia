@@ -2,9 +2,9 @@
   <section class="lang-vocab" :aria-label="t('lesson.vocab')">
     <p class="lang-vocab-label">{{ t('lesson.vocab') }}</p>
     <ul class="lang-vocab-list">
-      <li v-for="item in items" :key="item.hanzi" class="lang-vocab-row">
-        <span class="lang-hanzi" lang="zh-Hans">{{ item.hanzi }}</span>
-        <span class="lang-pinyin">{{ item.pinyin }}</span>
+      <li v-for="item in items" :key="item.form" class="lang-vocab-row">
+        <span class="lang-hanzi" :lang="item.lang">{{ item.form }}</span>
+        <span class="lang-pinyin">{{ item.reading }}</span>
         <span class="lang-gloss">{{ item.gloss }}</span>
       </li>
     </ul>

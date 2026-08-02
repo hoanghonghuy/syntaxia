@@ -19,7 +19,7 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 5 | **Auth + onboarding polish** | done | 1 | First-run → home Continue; email flows vi+en; soft guest gates; Google still deferred; see `onboarding.md` |
 | 6 | **Admin + sync reliability** | done | — | Empty states, local/Drive sync labels, success/error banners + count; see `admin-content-crud.md` |
 | 7 | **i18n parity audit** | done | 3–5 | Locale key parity script + lesson pairs; see `i18n.md` |
-| 8 | **SQL Fundamentals E2E gate** | done | 1–7 | API smoke `scripts/e2e-sql-fundamentals.ps1`; see `e2e-smoke.md` |
+| 8 | **API/E2E smoke suite** | done | 1–7 | `e2e-all.ps1` (catalog + SQL + languages); see `e2e-smoke.md` |
 | 9 | **PostgreSQL track (basic→advanced)** | done | 8 | Scaffold: process outline + 3 basic lessons en+vi; see `postgresql-track.md` |
 | 10 | **Category architecture (SQL + Code)** | done | 9 | `javascript-basics` scaffold; see `catalog-architecture.md` |
 | 11 | **First code track (basics)** | done | 10 | `javascript-basics` 3 lessons en+vi; sandbox deferred — see `javascript-track.md` |
@@ -45,7 +45,9 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 
 **Checklist rows 0–27 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
 
-**Next platform arc:** multi-domain learning — see [`multi-domain-roadmap.md`](./multi-domain-roadmap.md) (Phase 0 stabilize → Phase 2 language pedagogy research → Phase 3 Chinese HSK slice).
+**Next platform arc:** multi-domain — Phase 0–3 **done** (domain IA + `chinese-hsk` Band 1 MVP archived). See [`multi-domain-roadmap.md`](./multi-domain-roadmap.md).
+
+**Current focus:** Language path v2 + hub + Listen + **Review** done. Next: FSRS or Phase 5 domain. OpenSpec skills only.
 
 ## Related
 

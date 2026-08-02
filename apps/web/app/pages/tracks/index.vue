@@ -141,6 +141,9 @@ import {
 import {
   LEARNING_DOMAIN_IDS,
   categoriesInDomain,
+  isLearningDomainId,
+  readStoredDomain,
+  writeStoredDomain,
   type LearningDomainId,
 } from '~/utils/learningDomains'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
@@ -195,6 +198,16 @@ function pageLink(page: number) {
 }
 
 watch(
+  domain,
+  (d) => {
+    if (import.meta.client && isLearningDomainId(d)) {
+      writeStoredDomain(d, localStorage)
+    }
+  },
+  { immediate: true },
+)
+
+watch(
   () => slice.value.page,
   (page) => {
     // Only correct out-of-range ?page= on this catalog route — never bounce other navigations.
@@ -217,6 +230,25 @@ async function retryCatalog() {
 }
 
 onMounted(async () => {
+  if (import.meta.client && (route.query.domain === undefined || route.query.domain === '')) {
+    const stored = readStoredDomain(localStorage)
+    if (stored) {
+      await navigateTo(
+        localePath({
+          path: '/tracks',
+          query: {
+            ...Object.fromEntries(
+              Object.entries(route.query).filter(([, v]) => v !== undefined && v !== null),
+            ),
+            domain: stored,
+            page: String(route.query.page || '1'),
+          },
+        }),
+        { replace: true },
+      )
+    }
+  }
+
   loading.value = true
   try {
     if (auth.user === null) await auth.fetchMe()

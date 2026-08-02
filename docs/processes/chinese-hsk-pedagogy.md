@@ -102,7 +102,9 @@ Frontmatter should carry: `track`, `locale`, `order`, `objectives`, `hsk_band`, 
 
 ## Next OpenSpec
 
-Change folder: **[`openspec/changes/chinese-hsk-mvp/`](../../openspec/changes/chinese-hsk-mvp/)** — applied in-repo (map + player + 6 lessons). Remaining: manual smoke + `/syn-verify` then archive.
+Archived: **[`openspec/changes/archive/chinese-hsk-mvp/`](../../openspec/changes/archive/chinese-hsk-mvp/)**. Main specs: [`openspec/specs/language-lessons/spec.md`](../../openspec/specs/language-lessons/spec.md).
+
+Ops leftover: restart API (or `docker-up`) so curriculum sync loads the 6 Band 1 lessons into Postgres.
 
 ## Related
 

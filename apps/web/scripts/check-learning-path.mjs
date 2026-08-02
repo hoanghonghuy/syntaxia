@@ -6,11 +6,15 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  buildLanguageUnitPath,
   nextIncompleteLesson,
   overallProgress,
+  overallProgressForDomain,
+  resumeTargetForDomain,
   trackLessonStatusRows,
   trackProgress,
   trackProgressRows,
+  trackProgressRowsForDomain,
 } from '../app/utils/learningPath.ts'
 
 const lessonsA = [
@@ -87,5 +91,93 @@ describe('learningPath', () => {
     assert.equal(rows[1].completed, false)
     assert.equal(rows[1].isNext, true)
     assert.equal(rows[1].slug, 'two')
+  })
+
+  it('scopes overall / rows / resume by learning domain', () => {
+    const tracks = [
+      {
+        id: 't1',
+        title: { en: 'SQL' },
+        description: { en: '' },
+        category: 'sql',
+        level: 'basic',
+        sortOrder: 1,
+      },
+      {
+        id: 'zh',
+        title: { en: 'Chinese' },
+        description: { en: '' },
+        category: 'languages',
+        level: 'basic',
+        sortOrder: 100,
+      },
+    ]
+    const lessonsZh = [
+      {
+        id: 'z1',
+        locale: 'en',
+        trackId: 'zh',
+        slug: 'hi',
+        title: 'Hi',
+        sortOrder: 1,
+        published: true,
+      },
+    ]
+    const byTrack = { t1: lessonsA, zh: lessonsZh }
+    const progress = [
+      { lessonId: 'a1', locale: 'en', completed: true },
+      { lessonId: 'z1', locale: 'en', completed: false },
+    ]
+    assert.deepEqual(overallProgressForDomain(tracks, byTrack, progress, 'en', 'it'), {
+      done: 1,
+      total: 2,
+      percent: 50,
+    })
+    assert.deepEqual(overallProgressForDomain(tracks, byTrack, progress, 'en', 'languages'), {
+      done: 0,
+      total: 1,
+      percent: 0,
+    })
+    const itRows = trackProgressRowsForDomain(tracks, byTrack, progress, 'en', 'it')
+    assert.deepEqual(
+      itRows.map((r) => r.trackId),
+      ['t1'],
+    )
+    const langRows = trackProgressRowsForDomain(tracks, byTrack, progress, 'en', 'languages')
+    assert.deepEqual(
+      langRows.map((r) => r.trackId),
+      ['zh'],
+    )
+    const resumeLang = resumeTargetForDomain(tracks, byTrack, progress, 'en', 'languages')
+    assert.equal(resumeLang?.trackId, 'zh')
+    assert.equal(resumeLang?.lesson.id, 'z1')
+    const resumeIt = resumeTargetForDomain(tracks, byTrack, progress, 'en', 'it')
+    assert.equal(resumeIt?.trackId, 't1')
+    assert.equal(resumeIt?.lesson.id, 'a2')
+  })
+
+  it('buildLanguageUnitPath marks done / current / locked sequentially', () => {
+    const progress = [{ lessonId: 'a1', locale: 'en', completed: true }]
+    const nodes = buildLanguageUnitPath(lessonsA, progress, 'en')
+    assert.equal(nodes.length, 2)
+    assert.equal(nodes[0].state, 'done')
+    assert.equal(nodes[0].clickable, true)
+    assert.equal(nodes[1].state, 'current')
+    assert.equal(nodes[1].clickable, true)
+    const three = [
+      ...lessonsA,
+      {
+        id: 'a3',
+        locale: 'en',
+        trackId: 't1',
+        slug: 'three',
+        title: 'Three',
+        sortOrder: 3,
+        published: true,
+      },
+    ]
+    const lockedPath = buildLanguageUnitPath(three, progress, 'en')
+    assert.equal(lockedPath[2].state, 'locked')
+    assert.equal(lockedPath[2].clickable, false)
   })
 })

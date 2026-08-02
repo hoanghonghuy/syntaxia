@@ -29,21 +29,35 @@
           </ul>
         </section>
         <article class="prose-lesson" v-html="lesson.bodyHtml" />
-        <LanguageVocabList
-          v-if="isLanguageTrack && languageVocab.length"
-          :items="languageVocab"
-        />
-        <LanguageExercise
-          v-if="isLanguageTrack && languageExercise"
-          :key="lesson.id"
-          :exercise="languageExercise"
+        <LanguageLessonSteps
+          v-if="isLanguageTrack && languageHasStepPath"
+          :key="`${lesson.id}-steps`"
+          :lesson="lesson"
+          :track-id="trackId"
           @passed="onSandboxPassed"
         />
+        <p v-if="isLanguageTrack && languageHasStepPath" class="lang-legacy-note muted">
+          {{ t('lesson.pathModeNote') }}
+        </p>
+        <template v-else-if="isLanguageTrack">
+          <p class="lang-legacy-note muted">{{ t('lesson.legacyFormatNote') }}</p>
+          <LanguageVocabList
+            v-if="languageVocab.length"
+            :items="languageVocab"
+          />
+          <LanguageExercise
+            v-if="languageExercise"
+            :key="lesson.id"
+            :exercise="languageExercise"
+            @passed="onSandboxPassed"
+          />
+        </template>
         <HtmlCssSandbox
           v-else-if="lesson.exercise && !isLanguageTrack && isHtmlCssTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
+          :track-id="trackId"
           :locale="locale"
           :mode="htmlCssExerciseMode"
           :starter-html="htmlCssStarterHtml"
@@ -57,6 +71,7 @@
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
+          :track-id="trackId"
           :locale="locale"
           :starter="jsExerciseStarter"
           :hints="exerciseHints"
@@ -68,6 +83,7 @@
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
+          :track-id="trackId"
           :locale="locale"
           :starter="exerciseStarter"
           :hints="exerciseHints"
@@ -172,6 +188,7 @@ import { buildLearnBreadcrumbs } from '~/utils/breadcrumbs'
 import {
   isLanguageTrack as trackIsLanguage,
   languageExerciseFromLesson,
+  languageHasSteps,
   languageVocabFromLesson,
 } from '~/utils/languageLesson'
 import { createLessonLoadGuard } from '~/utils/lessonLoadGuard'
@@ -253,7 +270,9 @@ const jsExerciseStarter = computed(() => {
   return (ex?.starter as string) || '// write JavaScript here\n'
 })
 
-const isLanguageTrack = computed(() => trackIsLanguage(trackId.value))
+const isLanguageTrack = computed(() =>
+  trackIsLanguage(trackId.value, trackMeta.value?.category),
+)
 
 const languageVocab = computed(() =>
   lesson.value ? languageVocabFromLesson(lesson.value) : [],
@@ -261,6 +280,10 @@ const languageVocab = computed(() =>
 
 const languageExercise = computed(() =>
   lesson.value ? languageExerciseFromLesson(lesson.value) : null,
+)
+
+const languageHasStepPath = computed(() =>
+  lesson.value ? languageHasSteps(lesson.value) : false,
 )
 
 const isHtmlCssTrack = computed(
@@ -358,11 +381,14 @@ async function loadLesson() {
   noteId.value = null
   loadError.value = ''
   try {
-    const data = await api.lesson(expectedSlug, expectedLocale)
+    const data = await api.lesson(expectedSlug, expectedLocale, trackId.value)
     if (!lessonLoadGuard.isCurrent(requestId)) return
+    if (data.trackId && data.trackId !== trackId.value) {
+      throw new Error(t('lesson.loadErrorGeneric'))
+    }
     lesson.value = data
     if (auth.user) {
-      const notes = await api.listNotes(expectedSlug, expectedLocale)
+      const notes = await api.listNotes(expectedSlug, expectedLocale, trackId.value)
       if (!lessonLoadGuard.isCurrent(requestId)) return
       const primary = pickPrimaryNote(notes)
       noteBody.value = primary.body
@@ -386,7 +412,7 @@ async function saveNote() {
     if (mode === 'update' && noteId.value) {
       await api.updateNote(noteId.value, noteBody.value)
     } else {
-      const created = await api.createNote(slug.value, locale.value, noteBody.value)
+      const created = await api.createNote(slug.value, locale.value, noteBody.value, trackId.value)
       noteId.value = created.id
     }
     snackbar.success(t('snackbar.noteSaved'))
