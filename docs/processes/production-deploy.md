@@ -60,8 +60,10 @@ If migrate fails on `ALTER ROLE … NOSUPERUSER` (Neon), pull the latest `init.s
 | `WEB_BASE_URL` | Same as public web URL (`https://…`) for Secure cookies |
 | `BOOTSTRAP_ADMIN_EMAIL` | Optional |
 
-4. Deploy → confirm `GET /health` returns `{ "status": "ok" }` (or equivalent).
-5. Copy the public API URL (e.g. `https://syntaxia-api.onrender.com`).
+4. Deploy → confirm `GET /health` and `HEAD /health` return **200** (UptimeRobot defaults to HEAD).
+5. Copy the public API URL (e.g. `https://api.example.onrender.com`).
+
+**UptimeRobot:** monitor `https://<api>/health`. If status is Down while the browser GET works, the checker is often using **HEAD** — API must accept HEAD (shipped) or set monitor HTTP method to GET (Pro).
 
 Curriculum is baked into the image at `/app/curriculum` and synced on API startup.
 

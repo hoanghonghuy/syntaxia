@@ -30,9 +30,16 @@ func New(svc *service.Services, cfg config.Config) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(r *gin.Engine) {
-	r.GET("/health", func(c *gin.Context) {
+	// UptimeRobot (and similar) default to HEAD; Gin GET-only routes return 404 for HEAD.
+	health := func(c *gin.Context) {
+		if c.Request.Method == http.MethodHead {
+			c.Status(http.StatusOK)
+			return
+		}
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	}
+	r.GET("/health", health)
+	r.HEAD("/health", health)
 
 	v1 := r.Group("/api/v1")
 	{
