@@ -31,6 +31,9 @@ steps:
       - { speaker: "B", text: "Nice to meet you too." }
       - { speaker: "A", text: "See you later." }
       - { speaker: "B", text: "See you!" }
+  - type: listen
+    prompt: "Listen to the first line and notice how the speaker gives a name."
+    text: "Hi, I'm Alex."
   - type: tip
     title: "Use whole chunks"
     body: "I'm + name is a natural short introduction. Nice to meet you is a fixed phrase for a first meeting."
