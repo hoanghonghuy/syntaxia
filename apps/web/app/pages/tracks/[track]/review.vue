@@ -1,5 +1,5 @@
 <template>
-  <div class="hub-page learn-scroll">
+  <div class="hub-page learn-scroll review-page">
     <AppBreadcrumb :items="crumbs" />
     <HubHeader :eyebrow="trackEyebrow" :title="t('lesson.reviewTitle')" :lead="lead">
       <template #actions>
@@ -9,37 +9,49 @@
       </template>
     </HubHeader>
 
-    <p v-if="loadError" class="muted">{{ loadError }}</p>
+    <p v-if="loadError" class="muted" role="alert">{{ loadError }}</p>
     <p v-else-if="loading" class="muted">{{ t('lesson.reviewLoading') }}</p>
-    <p v-else-if="!session.length" class="muted">{{ t('lesson.reviewEmpty') }}</p>
+
+    <aside v-else-if="!auth.user" class="auth-soft-prompt" role="note">
+      <p>{{ t('lesson.reviewLoginForSchedule') }}</p>
+      <NuxtLink class="btn btn-primary" :to="loginPath">{{ t('nav.login') }}</NuxtLink>
+    </aside>
+
+    <p v-else-if="!session.length" class="muted">{{ t('lesson.reviewEmptyDue') }}</p>
 
     <template v-else-if="finished">
       <p class="review-done" role="status">{{ t('lesson.reviewDone') }}</p>
-      <NuxtLink class="btn btn-primary" :to="localePath(`/tracks/${trackId}`)">
-        {{ t('lesson.backToTrack') }}
-      </NuxtLink>
+      <button class="btn btn-primary" type="button" @click="loadReview">
+        {{ t('lesson.reviewAgainDue') }}
+      </button>
     </template>
 
-    <template v-else>
-      <p class="review-progress muted">
-        {{ t('lesson.reviewProgress', { n: index + 1, total: session.length }) }}
-      </p>
+    <section v-else class="review-session" aria-live="polite">
+      <div class="review-meta">
+        <p class="review-progress muted">
+          {{ t('lesson.reviewProgress', { n: index + 1, total: session.length }) }}
+        </p>
+        <p class="review-due muted">{{ t('lesson.reviewScheduled') }}</p>
+      </div>
       <LanguageExercise
-        :key="index"
-        :exercise="session[index]!"
+        :key="currentKey"
+        :exercise="current!.exercise"
+        :track-id="trackId"
+        @attempt="onAttempt"
         @passed="onPassed"
       />
-    </template>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Lesson } from '~/types/api'
+import type { LanguageReviewCard, Lesson } from '~/types/api'
 import { buildLearnBreadcrumbs } from '~/utils/breadcrumbs'
 import { isLanguageTrack as trackIsLanguage } from '~/utils/languageLesson'
 import {
-  buildReviewSession,
   completedLessonSummaries,
+  extractIndexedReviewExercisesFromLesson,
+  type IndexedLanguageReviewExercise,
 } from '~/utils/languageReview'
 
 definePageMeta({ layout: 'learn' })
@@ -52,20 +64,27 @@ const catalog = useCatalogStore()
 const auth = useAuthStore()
 
 const trackId = computed(() => route.params.track as string)
-const trackMeta = computed(() => catalog.tracks.find((tr) => tr.id === trackId.value))
+const trackMeta = computed(() => catalog.tracks.find((track) => track.id === trackId.value))
 const trackTitle = computed(() => {
   const track = trackMeta.value
   return track?.title[locale.value] || track?.title.en || trackId.value
 })
 const trackEyebrow = computed(() => trackTitle.value)
-
 const loading = ref(true)
 const loadError = ref('')
-const session = ref<ReturnType<typeof buildReviewSession>>([])
+const session = ref<(IndexedLanguageReviewExercise & { card: LanguageReviewCard })[]>([])
 const index = ref(0)
 const finished = ref(false)
+const lastAttemptWasCorrect = ref(false)
+const lastResponseMs = ref<number | undefined>()
 
-const lead = computed(() => t('lesson.reviewLead'))
+const lead = computed(() => t('lesson.reviewLeadV3'))
+const current = computed(() => session.value[index.value])
+const currentKey = computed(() => current.value ? `${current.value.lessonId}:${current.value.itemKey}:${index.value}` : 'empty')
+const loginPath = computed(() => ({
+  path: localePath('/login'),
+  query: { redirect: localePath(`/tracks/${trackId.value}/review`) },
+}))
 
 const crumbs = computed(() =>
   buildLearnBreadcrumbs({
@@ -89,38 +108,81 @@ async function loadReview() {
     await catalog.loadTracks()
     await catalog.loadLessons(trackId.value, locale.value)
     await auth.fetchMe()
-    if (auth.user) await catalog.loadProgress()
-
     if (!trackIsLanguage(trackId.value, trackMeta.value?.category)) {
       loadError.value = t('lesson.reviewNotLanguage')
       return
     }
+    if (!auth.user) return
 
-    const list =
-      catalog.lessonsByTrack[trackId.value] ||
-      (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
+    await catalog.loadProgress()
+    const dueCards = await api.dueLanguageReviews(trackId.value, locale.value, 12)
+    if (!dueCards.length) return
+
+    const list = catalog.lessonsByTrack[trackId.value] || catalog.lessons
     const completed = completedLessonSummaries(list, catalog.progress, locale.value)
-    if (!completed.length) {
-      return
-    }
-
+    const dueLessonIds = new Set(dueCards.map((card) => card.lessonId))
     const bodies: Lesson[] = []
-    for (const item of completed) {
+    for (const item of completed.filter((lesson) => dueLessonIds.has(lesson.id))) {
       try {
         bodies.push(await api.lesson(item.slug, locale.value, trackId.value))
       } catch {
-        /* skip failed fetch */
+        // A single stale/missing lesson must not destroy the entire review session.
       }
     }
-    session.value = buildReviewSession(bodies)
-  } catch (e) {
-    loadError.value = e instanceof Error ? e.message : t('lesson.loadErrorGeneric')
+
+    const indexed = new Map<string, IndexedLanguageReviewExercise>()
+    for (const lesson of bodies) {
+      for (const item of extractIndexedReviewExercisesFromLesson(lesson)) {
+        indexed.set(`${item.lessonId}\0${item.itemKey}`, item)
+      }
+    }
+    session.value = dueCards.flatMap((card) => {
+      const item = indexed.get(`${card.lessonId}\0${card.itemKey}`)
+      return item ? [{ ...item, card }] : []
+    })
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
   } finally {
     loading.value = false
   }
 }
 
-function onPassed() {
+async function onAttempt(payload: { correct: boolean; responseMs: number }) {
+  lastAttemptWasCorrect.value = payload.correct
+  lastResponseMs.value = payload.responseMs
+  if (!current.value || payload.correct) return
+  try {
+    const card = await api.recordLanguageReview({
+      lessonId: current.value.lessonId,
+      locale: locale.value,
+      itemKey: current.value.itemKey,
+      rating: 1,
+      responseMs: payload.responseMs,
+    })
+    current.value.card = card
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
+  }
+}
+
+async function onPassed() {
+  const item = current.value
+  if (!item || !lastAttemptWasCorrect.value) return
+  try {
+    const card = await api.recordLanguageReview({
+      lessonId: item.lessonId,
+      locale: locale.value,
+      itemKey: item.itemKey,
+      rating: 3,
+      responseMs: lastResponseMs.value,
+    })
+    item.card = card
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
+    return
+  }
+  lastAttemptWasCorrect.value = false
+  lastResponseMs.value = undefined
   if (index.value >= session.value.length - 1) {
     finished.value = true
     return
@@ -133,13 +195,11 @@ watch([trackId, locale], loadReview)
 </script>
 
 <style scoped>
-.review-progress {
-  margin: 1rem 0 0.25rem;
-  font-size: 0.9rem;
-}
-.review-done {
-  margin: 1.25rem 0 1rem;
-  font-weight: 600;
-  color: var(--color-accent, #0d9488);
-}
+.review-page { max-width: 58rem; }
+.review-session { max-width: 44rem; margin: 1rem auto 0; padding: 1rem; border: 1px solid var(--color-hairline); border-radius: 14px; background: var(--color-surface); }
+.review-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin-bottom: .75rem; }
+.review-progress, .review-due { margin: 0; font-size: .86rem; }
+.review-done { margin: 1.25rem 0 1rem; font-weight: 650; color: var(--color-accent, #0d9488); }
+.auth-soft-prompt { margin-top: 1rem; padding: 1rem 1.2rem; border: 1px solid var(--color-hairline); border-radius: 12px; background: var(--color-surface-soft); }
+.auth-soft-prompt p { margin: 0 0 .8rem; }
 </style>
