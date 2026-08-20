@@ -37,6 +37,7 @@ export type LanguageExerciseType =
 
 export type LanguageChoiceMedia = {
   value: string
+  visualKey?: string
   imageUrl?: string
   alt?: string
 }
@@ -185,6 +186,7 @@ function exerciseFromRecord(
         if (!row || typeof row.value !== 'string') return []
         return [{
           value: row.value,
+          visualKey: typeof row.visualKey === 'string' ? row.visualKey : undefined,
           imageUrl: typeof row.imageUrl === 'string' ? row.imageUrl : undefined,
           alt: typeof row.alt === 'string' ? row.alt : undefined,
         }]
@@ -247,6 +249,7 @@ export type LanguageStepScene = {
   type: 'scene'
   title?: string
   body?: string
+  visualKey?: string
   imageUrl?: string
   imageAlt?: string
 }

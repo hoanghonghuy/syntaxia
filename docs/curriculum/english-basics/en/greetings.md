@@ -23,6 +23,8 @@ steps:
   - type: scene
     title: "First day at a class"
     body: "You sit next to someone you have not met before. Start a short conversation."
+    visualKey: "classmates-meeting"
+    imageAlt: "Two students sit near each other in a classroom and turn toward each other to start talking."
   - type: dialogue
     lines:
       - { speaker: "A", text: "Hi, I'm Alex." }
@@ -42,6 +44,17 @@ steps:
       - { form: "Hi, I'm …", reading: "/haɪ aɪm/", gloss: "introduce yourself", example: "Hi, I'm Mai." }
       - { form: "Nice to meet you.", reading: "/naɪs tə miːt juː/", gloss: "respond at a first meeting", example: "Nice to meet you, Alex." }
       - { form: "See you.", reading: "/siː juː/", gloss: "casual goodbye", example: "See you later." }
+  - type: practice
+    id: greet-scene-1
+    kind: image_choice
+    prompt: "Which picture best fits “Hi, I'm Alex.”?"
+    choices: ["meeting", "leaving", "studying"]
+    choiceMedia:
+      - { value: "meeting", visualKey: "classmates-meeting", alt: "Two students turn toward each other and begin talking in class." }
+      - { value: "leaving", visualKey: "student-leaving", alt: "One student walks toward the classroom door to leave." }
+      - { value: "studying", visualKey: "student-studying", alt: "One student sits alone at a desk and reads a book." }
+    answer: "meeting"
+    explanation: "“Hi, I'm Alex.” starts a meeting, so the two students greeting each other fit the sentence."
   - type: practice
     id: greet-response-1
     kind: dialogue_choice

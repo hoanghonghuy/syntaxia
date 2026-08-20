@@ -49,8 +49,8 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 |---|---|---|---|---|
 | L0 | **FSRS review persistence + concurrency hardening** | done | language review foundation | Durable server-side cards/logs, due scheduling, CAS conflict semantics, reproducible Go CI |
 | L1 | **V3 pedagogy + content-quality source of truth** | done | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked; Vercel smoke green on `8540a76` |
-| L2 | **Dedicated language player correctness + feedback loop** | in progress | L1 | Progressive corrective feedback, retry/remediation behavior, keyboard/mobile/screen-reader pass; targeted regression **5/5 green**, branch smoke pending |
-| L3 | **Semantic visual asset pipeline** | todo | L1 | Stable app-owned assets/provenance, meaningful scenes/image-choice/diagrams, accessible equivalents |
+| L2 | **Dedicated language player correctness + feedback loop** | done | L1 | Progressive hints, delayed non-passing solution reveal, readable structured solutions, keyboard/mobile/screen-reader guards; targeted regression **5/5** + Vercel smoke green on `5775242` |
+| L3 | **Semantic visual asset pipeline** | in progress | L1–L2 | Closed app-owned `visualKey` registry/provenance, semantic SVG renderer, safe static fallback, EN/VI golden scene + image choice; targeted regression **6/6 green**, branch smoke pending |
 | L4 | **True communicative unit model** | todo | L1–L2 | Explicit unit metadata, Can-Do grouping, lessons + checkpoint + review nodes; no slug/title grouping hacks |
 | L5 | **Golden units: English / Mandarin / Japanese** | todo | L2–L4 | One production reference unit per language with naturalness, visual, audio, exercise, review and accessibility review |
 | L6 | **Curriculum migration + full release QA** | todo | L5 | Remaining published language content migrated; parity/content gates, E2E, mobile/a11y, review persistence all verified |
@@ -63,11 +63,10 @@ The active product-quality work is **Language V3**.
 
 Current ordered focus:
 
-1. L2 — verify the feedback/remediation renderer on the feature branch; close after branch build/smoke is green.
-2. L3 — build semantic visual asset strategy and renderer coverage.
-3. L4 — replace the old lesson-as-node path with a real communicative unit model.
-4. L5 — validate complete golden units before scaling curriculum.
-5. L6 — migrate remaining content and run full release QA.
+1. L3 — verify semantic visual registry/renderer/golden lesson on the feature branch and close after branch build/smoke is green.
+2. L4 — replace the old lesson-as-node path with a real communicative unit model.
+3. L5 — validate complete golden units before scaling curriculum.
+4. L6 — migrate remaining content and run full release QA.
 
 Do **not** mass-generate or mass-rewrite language curriculum before L2–L5 stabilize the player, media, unit, and authoring contracts.
 

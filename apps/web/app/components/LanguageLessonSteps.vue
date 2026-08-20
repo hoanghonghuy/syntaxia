@@ -9,7 +9,13 @@
 
     <div v-if="current?.type === 'scene'" class="lang-step lang-scene">
       <p class="lang-step-label">{{ t('lesson.languagePath') }}</p>
-      <img v-if="sceneImageUrl" class="lang-scene-image" :src="sceneImageUrl" :alt="sceneImageAlt">
+      <LanguageSemanticVisual
+        v-if="sceneVisualKey && isLanguageVisualKey(sceneVisualKey)"
+        class="lang-scene-visual"
+        :visual-key="sceneVisualKey"
+        :alt="sceneImageAlt"
+      />
+      <img v-else-if="sceneImageUrl" class="lang-scene-image" :src="sceneImageUrl" :alt="sceneImageAlt">
       <h2 v-if="sceneTitle" class="lang-scene-title">{{ sceneTitle }}</h2>
       <p v-if="sceneBody" class="lang-scene-body">{{ sceneBody }}</p>
     </div>
@@ -121,6 +127,10 @@ import {
   type LanguageStep,
   type LanguageStepPractice,
 } from '~/utils/languageLesson'
+import {
+  isAppOwnedLanguageImageUrl,
+  isLanguageVisualKey,
+} from '~/utils/languageVisual'
 
 const props = defineProps<{
   lesson: { exercise?: Record<string, unknown> | null }
@@ -149,7 +159,11 @@ const progressPercent = computed(() => steps.value.length ? ((stepIndex.value + 
 
 const sceneTitle = computed(() => stringField(current.value, 'title'))
 const sceneBody = computed(() => stringField(current.value, 'body'))
-const sceneImageUrl = computed(() => stringField(current.value, 'imageUrl'))
+const sceneVisualKey = computed(() => stringField(current.value, 'visualKey'))
+const sceneImageUrl = computed(() => {
+  const value = stringField(current.value, 'imageUrl')
+  return isAppOwnedLanguageImageUrl(value) ? value : ''
+})
 const sceneImageAlt = computed(() => stringField(current.value, 'imageAlt'))
 const listenText = computed(() => stringField(current.value, 'text'))
 const listenReading = computed(() => stringField(current.value, 'reading'))
@@ -234,7 +248,8 @@ function next() {
 .lang-progress-value { display: block; height: 100%; border-radius: inherit; background: var(--color-accent, #0d9488); transition: width .2s ease; }
 .lang-step { padding: 1rem 0 .35rem; }
 .lang-step-label { margin: 0 0 .65rem; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: var(--color-muted, #5b6b63); }
-.lang-scene-image { width: 100%; max-height: 22rem; object-fit: cover; border-radius: 14px; margin-bottom: 1rem; }
+.lang-scene-visual, .lang-scene-image { width: 100%; max-height: 22rem; border-radius: 14px; margin-bottom: 1rem; }
+.lang-scene-image { object-fit: cover; }
 .lang-scene-title, .lang-tip-title { margin: 0 0 .45rem; font-size: 1.2rem; }
 .lang-scene-body, .lang-tip-body, .lang-listen-prompt { margin: 0; line-height: 1.6; }
 .lang-dialogue-lines, .lang-teach-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }

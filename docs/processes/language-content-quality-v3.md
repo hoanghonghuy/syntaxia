@@ -69,16 +69,34 @@ Visuals MUST carry learning information. They are not page decoration.
 - character/kana structure cues
 - small diagrams
 
-### Media rules
+### Semantic visual contract
+
+`visualKey` is the preferred v3 authoring path for reusable language visuals.
+
+- Keys live in `apps/web/app/utils/languageVisual.ts` and are a closed registry.
+- Every registered visual carries `provenance: syntaxia-original` plus a short learning-signal description.
+- `LanguageSemanticVisual.vue` renders those keys as app-owned vector/UI visuals that inherit theme tokens.
+- Keys are curriculum contracts: do not rename a published key casually. Add a new key when the learning signal is materially different.
+- `scene.visualKey` MUST pair with useful localized `imageAlt`.
+- `image_choice.choiceMedia[].visualKey` MUST pair with localized `alt` describing exactly what a sighted learner can infer from the picture.
+- `image_choice` values may be internal stable IDs. When a semantic visual exists, the renderer hides those IDs instead of printing them under the picture.
+- The choice button receives the localized media description as its accessible name; the nested vector is decorative to avoid duplicate screen-reader output.
+
+### Static image fallback
+
+Static images remain supported only when a semantic vector/UI representation is not suitable.
 
 - Do not hotlink random stock images or unstable third-party URLs.
-- Prefer app-owned/static assets with stable paths and documented provenance.
+- V3 renderer accepts static `imageUrl` only under the app-owned `/language/` path.
+- Paths containing traversal such as `..` are rejected.
+- External `http://`, `https://`, and protocol-relative URLs are not rendered by the v3 visual path.
+- Keep asset provenance/license notes with the app-owned asset when a future visual is not Syntaxia-original.
 - `scene.imageUrl` must have useful `imageAlt`.
-- `image_choice` choices must have accessible alternatives.
-- Alt text must describe the learning-relevant visual information. If accurate alt text would trivially reveal the assessed answer, provide an equivalent accessible task instead of hiding information from assistive-technology users.
-- Do not force abstract grammar or courtesy functions into misleading pictures.
+- `image_choice` static choices must have accessible alternatives.
 
-A concrete golden-unit scene should normally include a semantic visual. A lesson may intentionally use no image when text/audio/diagram is the better representation; that decision should be reviewable rather than accidental.
+Alt text must describe the learning-relevant visual information. If accurate alt text would trivially reveal an assessed answer beyond what a sighted learner can infer, provide an equivalent accessible task instead of hiding information from assistive-technology users.
+
+Do not force abstract grammar or courtesy functions into misleading pictures. A concrete golden-unit scene should normally include a semantic visual; a lesson may intentionally use no image when text/audio/diagram is the better representation.
 
 ## Audio and listening-first behavior
 
@@ -106,7 +124,7 @@ Within a lesson:
 - do not make every item a choice question
 - include at least one recall/production task where suitable
 - do not reuse the same distractor pattern until answers become guessable
-- do not expose the correct answer in nearby UI or image alt text
+- do not expose the correct answer in nearby UI or accessibility text beyond what the visual itself communicates
 
 ## Feedback and remediation
 
@@ -131,6 +149,7 @@ Wrong answers are learning events. The player owns a consistent remediation floo
 - Interactive language controls keep visible keyboard focus.
 - Primary inputs/choices/tokens use mobile-safe touch heights and long text wraps instead of causing horizontal scrolling.
 - Disabling controls after a resolved answer prevents duplicate pass/review events.
+- Semantic scene visuals expose localized alternative text; image-choice buttons expose an equivalent localized accessible name.
 
 ## Language-specific review
 
@@ -166,6 +185,8 @@ Before publishing or migrating a lesson, verify:
 - Audio target language is correct.
 - Dedicated listen steps preserve audio-first transcript gating.
 - Visuals are semantic, accessible, stable, and not decorative.
+- Published `visualKey` values exist in the registry and keep stable meaning.
+- No language lesson hotlinks an external `imageUrl`.
 - Assessed items have stable IDs.
 - Exercise ladder reaches recall/production.
 - Failed attempts progressively expose authored help.
@@ -181,6 +202,8 @@ Before publishing or migrating a lesson, verify:
 - Do not write language lessons using the SQL article template.
 - Do not call a text-only `scene` “visual learning”.
 - Do not add stock art merely to satisfy an image quota.
+- Do not expose internal `image_choice` IDs as learner-facing labels when the visual is the choice.
+- Do not hotlink language images from external domains.
 - Do not auto-reveal listening transcripts after successful playback.
 - Do not mark an exercise correct because the learner revealed the solution.
 - Do not expose raw canonical grading encodings as learner-facing solutions.

@@ -18,19 +18,30 @@
         :key="choice"
         type="button"
         class="lang-choice"
-        :class="{ 'is-selected': selected === choice }"
+        :class="{
+          'is-selected': selected === choice,
+          'is-image-choice': exercise.type === 'image_choice' && hasChoiceVisual(choice),
+        }"
         :lang="targetLang"
+        :aria-label="choiceAriaLabel(choice)"
         :aria-pressed="selected === choice"
         :disabled="resolved"
         @click="selectChoice(choice)"
       >
+        <LanguageSemanticVisual
+          v-if="visualKeyFor(choice)"
+          class="lang-choice-visual"
+          :visual-key="visualKeyFor(choice)"
+          decorative
+        />
         <img
-          v-if="mediaFor(choice)?.imageUrl"
+          v-else-if="imageUrlFor(choice)"
           class="lang-choice-image"
-          :src="mediaFor(choice)?.imageUrl"
-          :alt="mediaFor(choice)?.alt || ''"
+          :src="imageUrlFor(choice)"
+          alt=""
+          aria-hidden="true"
         >
-        <span>{{ choice }}</span>
+        <span v-if="exercise.type !== 'image_choice' || !hasChoiceVisual(choice)">{{ choice }}</span>
       </button>
     </div>
 
@@ -169,6 +180,10 @@ import {
   languageTargetLang,
   type LanguageExercise,
 } from '~/utils/languageLesson'
+import {
+  isAppOwnedLanguageImageUrl,
+  isLanguageVisualKey,
+} from '~/utils/languageVisual'
 
 const props = defineProps<{
   exercise: LanguageExercise
@@ -208,10 +223,10 @@ const visibleHintCount = computed(() => progressiveLanguageHintCount(
   hintIndex.value,
   hints.value.length,
 ))
+const solutionText = computed(() => languageExerciseSolution(props.exercise))
 const canRevealSolution = computed(() =>
   canRevealLanguageSolution(failedAttempts.value) && Boolean(solutionText.value),
 )
-const solutionText = computed(() => languageExerciseSolution(props.exercise))
 const canCheck = computed(() => {
   if (resolved.value) return false
   if (props.exercise.type === 'order_words') return orderedTokens.value.length > 0
@@ -244,6 +259,25 @@ function reset() {
 
 function mediaFor(choice: string) {
   return props.exercise.choiceMedia?.find((item) => item.value === choice)
+}
+
+function visualKeyFor(choice: string): string {
+  const value = mediaFor(choice)?.visualKey
+  return isLanguageVisualKey(value) ? value : ''
+}
+
+function imageUrlFor(choice: string): string {
+  const value = mediaFor(choice)?.imageUrl
+  return isAppOwnedLanguageImageUrl(value) ? value : ''
+}
+
+function hasChoiceVisual(choice: string): boolean {
+  return Boolean(visualKeyFor(choice) || imageUrlFor(choice))
+}
+
+function choiceAriaLabel(choice: string): string | undefined {
+  if (props.exercise.type !== 'image_choice' || !hasChoiceVisual(choice)) return undefined
+  return mediaFor(choice)?.alt?.trim() || choice
 }
 
 function clearFailedState() {
@@ -339,11 +373,13 @@ function check() {
 .lang-prompt { margin: 0 0 1rem; font-size: 1.08rem; line-height: 1.55; }
 .lang-choices { display: grid; gap: .65rem; margin-bottom: 1rem; }
 .lang-choice { font: inherit; min-height: 3rem; padding: .7rem .9rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+.lang-choice.is-image-choice { padding: .55rem; text-align: center; }
 .lang-choice:disabled, .lang-token:disabled { cursor: default; }
 .lang-choice:focus-visible, .lang-token:focus-visible, .lang-fill:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-accent, #0d9488) 35%, transparent); outline-offset: 2px; }
 .lang-choice.is-selected { border-color: var(--color-accent, #0d9488); box-shadow: inset 0 0 0 1px var(--color-accent, #0d9488); }
 .lang-choice.is-matched { opacity: .65; }
-.lang-choice-image { display: block; width: min(100%, 12rem); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; margin-bottom: .55rem; }
+.lang-choice-visual, .lang-choice-image { display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; }
+.lang-choice-image { object-fit: cover; }
 .lang-fill { display: block; width: 100%; min-height: 3rem; margin-bottom: 1rem; padding: .75rem .85rem; font: inherit; font-size: 1.05rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; }
 .lang-actions { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; }
 .lang-actions .btn { min-height: 2.75rem; }

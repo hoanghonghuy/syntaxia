@@ -23,6 +23,8 @@ steps:
   - type: scene
     title: "Ngày đầu ở lớp"
     body: "Bạn ngồi cạnh một người chưa từng gặp. Hãy bắt đầu một cuộc trò chuyện ngắn."
+    visualKey: "classmates-meeting"
+    imageAlt: "Hai học sinh ngồi gần nhau trong lớp và quay sang nhau để bắt đầu trò chuyện."
   - type: dialogue
     lines:
       - { speaker: "A", text: "Hi, I'm Alex." }
@@ -42,6 +44,17 @@ steps:
       - { form: "Hi, I'm …", reading: "/haɪ aɪm/", gloss: "tự giới thiệu", example: "Hi, I'm Mai." }
       - { form: "Nice to meet you.", reading: "/naɪs tə miːt juː/", gloss: "đáp lại khi gặp lần đầu", example: "Nice to meet you, Alex." }
       - { form: "See you.", reading: "/siː juː/", gloss: "chào tạm biệt thân mật", example: "See you later." }
+  - type: practice
+    id: greet-scene-1
+    kind: image_choice
+    prompt: "Hình nào phù hợp nhất với câu “Hi, I'm Alex.”?"
+    choices: ["meeting", "leaving", "studying"]
+    choiceMedia:
+      - { value: "meeting", visualKey: "classmates-meeting", alt: "Hai học sinh quay sang nhau và bắt đầu trò chuyện trong lớp." }
+      - { value: "leaving", visualKey: "student-leaving", alt: "Một học sinh đi về phía cửa lớp để rời đi." }
+      - { value: "studying", visualKey: "student-studying", alt: "Một học sinh ngồi một mình ở bàn và đọc sách." }
+    answer: "meeting"
+    explanation: "“Hi, I'm Alex.” mở đầu một cuộc gặp, nên hình hai học sinh chào nhau phù hợp với câu này."
   - type: practice
     id: greet-response-1
     kind: dialogue_choice
