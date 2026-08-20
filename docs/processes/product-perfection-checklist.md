@@ -26,7 +26,7 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 12 | **Hardening + release checklist** | done | 8+ | Release smoke process, html `lang`, env docs; see `release-hardening.md` |
 | 13 | **UI skeleton + shell foundation** | done | 12 | Skeletons on load; scaffold `/notes` `/search`; live `/progress` `/account` shells; see `ui-skeleton-and-shell.md` |
 | 14 | **Progress hub (real)** | done | 13 | Cross-track %, Continue, guest gate; see `progress-hub.md` |
-| 15 | **Notes hub + catalog search** | done | 14 | `GET /notes`, `/notes` list, `/search` title filter, HubHeader polish; see `notes-hub-and-search.md` |
+| 15 | **Notes hub + catalog search** | done | 14 | `GET /notes`, `/notes` list API + catalog title search; see `notes-hub-and-search.md` |
 | 16 | **Account profile + password** | done | 15 | `PATCH /auth/me`, `POST /auth/password`, account forms; see `account-profile-password.md` |
 | 17 | **Appearance theme system** | done | 16 | system/light/dark + accent presets/hex; see `appearance-theme.md` |
 | 18 | **Home + hub UI polish** | done | 17 | Shared hub CSS, SkeletonHub, card/empty/error unify; see `home-hub-ui-polish.md` |
@@ -48,8 +48,8 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 | ID | Item | Status | Depends on | Done means |
 |---|---|---|---|---|
 | L0 | **FSRS review persistence + concurrency hardening** | done | language review foundation | Durable server-side cards/logs, due scheduling, CAS conflict semantics, reproducible Go CI |
-| L1 | **V3 pedagogy + content-quality source of truth** | in progress | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked |
-| L2 | **Dedicated language player correctness + feedback loop** | todo | L1 | Progressive corrective feedback, retry/remediation behavior, keyboard/mobile/screen-reader pass |
+| L1 | **V3 pedagogy + content-quality source of truth** | done | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked; Vercel smoke green on `8540a76` |
+| L2 | **Dedicated language player correctness + feedback loop** | in progress | L1 | Progressive corrective feedback, retry/remediation behavior, keyboard/mobile/screen-reader pass; targeted regression **5/5 green**, branch smoke pending |
 | L3 | **Semantic visual asset pipeline** | todo | L1 | Stable app-owned assets/provenance, meaningful scenes/image-choice/diagrams, accessible equivalents |
 | L4 | **True communicative unit model** | todo | L1–L2 | Explicit unit metadata, Can-Do grouping, lessons + checkpoint + review nodes; no slug/title grouping hacks |
 | L5 | **Golden units: English / Mandarin / Japanese** | todo | L2–L4 | One production reference unit per language with naturalness, visual, audio, exercise, review and accessibility review |
@@ -59,16 +59,15 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 
 **Checklist rows 0–27 remain complete** for the original IT/product foundation. Guest static FE and Google/Drive remain deferred.
 
-The active product-quality work is **Language V3**, not the historical “v2 done → next FSRS” state. FSRS foundation is already implemented; the remaining quality gap is the language learning experience itself.
+The active product-quality work is **Language V3**.
 
 Current ordered focus:
 
-1. L1 — finish content-quality/listen-first source-of-truth and verification.
-2. L2 — harden player feedback/remediation behavior.
-3. L3 — build semantic visual asset strategy and renderer coverage.
-4. L4 — replace the old lesson-as-node path with a real communicative unit model.
-5. L5 — validate complete golden units before scaling curriculum.
-6. L6 — migrate remaining content and run full release QA.
+1. L2 — verify the feedback/remediation renderer on the feature branch; close after branch build/smoke is green.
+2. L3 — build semantic visual asset strategy and renderer coverage.
+3. L4 — replace the old lesson-as-node path with a real communicative unit model.
+4. L5 — validate complete golden units before scaling curriculum.
+5. L6 — migrate remaining content and run full release QA.
 
 Do **not** mass-generate or mass-rewrite language curriculum before L2–L5 stabilize the player, media, unit, and authoring contracts.
 

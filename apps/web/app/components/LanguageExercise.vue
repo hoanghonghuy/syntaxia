@@ -12,7 +12,7 @@
 
     <p class="lang-prompt">{{ exercise.prompt }}</p>
 
-    <div v-if="isChoiceExercise" class="lang-choices">
+    <div v-if="isChoiceExercise" class="lang-choices" role="group" :aria-label="exercise.prompt">
       <button
         v-for="choice in exercise.choices || []"
         :key="choice"
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <div v-else-if="exercise.type === 'match_pairs'" class="lang-match">
+    <div v-else-if="exercise.type === 'match_pairs'" class="lang-match" role="group" :aria-label="exercise.prompt">
       <p class="muted lang-match-help">{{ exercise.prompt }}</p>
       <div class="lang-match-columns">
         <div class="lang-match-column">
@@ -110,6 +110,7 @@
       :lang="targetLang"
       autocomplete="off"
       autocapitalize="sentences"
+      :aria-invalid="status === 'fail' ? 'true' : undefined"
       :disabled="resolved"
       :placeholder="t('lesson.languageAnswerPlaceholder')"
       @input="onTextInput"
@@ -121,22 +122,36 @@
         {{ t('lesson.checkAnswer') }}
       </button>
       <button
-        v-if="!resolved && hints.length && hintIndex < hints.length"
+        v-if="!resolved && hints.length && visibleHintCount < hints.length"
         class="btn btn-ghost"
         type="button"
-        @click="hintIndex += 1"
+        @click="showNextHint"
       >
         {{ t('lesson.showHint') }}
       </button>
+      <button
+        v-if="!resolved && canRevealSolution && !solutionRevealed"
+        class="btn btn-ghost"
+        type="button"
+        @click="solutionRevealed = true"
+      >
+        {{ t('lesson.showSolution') }}
+      </button>
     </div>
 
-    <ul v-if="hintIndex > 0" class="lang-hints">
-      <li v-for="(hint, i) in hints.slice(0, hintIndex)" :key="i">{{ hint }}</li>
+    <ul v-if="visibleHintCount > 0" class="lang-hints">
+      <li v-for="(hint, i) in hints.slice(0, visibleHintCount)" :key="i">{{ hint }}</li>
     </ul>
+
+    <div v-if="solutionRevealed" class="lang-solution" role="status" aria-live="polite">
+      <strong>{{ t('lesson.solutionLabel') }}</strong>
+      <p :lang="targetLang">{{ solutionText }}</p>
+      <p class="muted">{{ t('lesson.retry') }}</p>
+    </div>
 
     <div v-if="status !== 'idle'" class="lang-feedback" :class="`is-${status}`" role="status" aria-live="polite">
       <p>{{ status === 'pass' ? t('lesson.passed') : t('lesson.languageFailed') }}</p>
-      <p v-if="status === 'fail' && exercise.explanation" class="lang-explanation">
+      <p v-if="exercise.explanation && (status === 'fail' || attempts > 1)" class="lang-explanation">
         {{ exercise.explanation }}
       </p>
     </div>
@@ -144,6 +159,11 @@
 </template>
 
 <script setup lang="ts">
+import {
+  canRevealLanguageSolution,
+  languageExerciseSolution,
+  progressiveLanguageHintCount,
+} from '~/utils/languageFeedback'
 import {
   gradeLanguageExercise,
   languageTargetLang,
@@ -165,11 +185,13 @@ const selected = ref('')
 const status = ref<'idle' | 'pass' | 'fail'>('idle')
 const hintIndex = ref(0)
 const attempts = ref(0)
+const failedAttempts = ref(0)
 const startedAt = ref(Date.now())
 const orderedTokens = ref<string[]>([])
 const availableTokens = ref<string[]>([])
 const selectedLeft = ref('')
 const matches = ref<Record<string, string>>({})
+const solutionRevealed = ref(false)
 
 const resolvedTrackId = computed(() => props.trackId || 'chinese-hsk')
 const targetLang = computed(() => languageTargetLang(resolvedTrackId.value))
@@ -181,6 +203,15 @@ const isChoiceExercise = computed(() =>
 const exerciseLabel = computed(() => t('lesson.languageExercise'))
 const matchedRights = computed(() => new Set(Object.values(matches.value)))
 const shuffledRights = computed(() => (props.exercise.pairs || []).map((pair) => pair.right).reverse())
+const visibleHintCount = computed(() => progressiveLanguageHintCount(
+  failedAttempts.value,
+  hintIndex.value,
+  hints.value.length,
+))
+const canRevealSolution = computed(() =>
+  canRevealLanguageSolution(failedAttempts.value) && Boolean(solutionText.value),
+)
+const solutionText = computed(() => languageExerciseSolution(props.exercise))
 const canCheck = computed(() => {
   if (resolved.value) return false
   if (props.exercise.type === 'order_words') return orderedTokens.value.length > 0
@@ -202,11 +233,13 @@ function reset() {
   status.value = 'idle'
   hintIndex.value = 0
   attempts.value = 0
+  failedAttempts.value = 0
   startedAt.value = Date.now()
   orderedTokens.value = []
   availableTokens.value = [...(props.exercise.tokens || [])]
   selectedLeft.value = ''
   matches.value = {}
+  solutionRevealed.value = false
 }
 
 function mediaFor(choice: string) {
@@ -267,6 +300,10 @@ function resetMatches() {
   clearFailedState()
 }
 
+function showNextHint() {
+  hintIndex.value = Math.min(hints.value.length, visibleHintCount.value + 1)
+}
+
 function submission(): string {
   if (props.exercise.type === 'order_words') return orderedTokens.value.join(' ')
   if (props.exercise.type === 'match_pairs') {
@@ -284,6 +321,7 @@ function check() {
   attempts.value += 1
   const ok = gradeLanguageExercise(props.exercise, submission(), targetLang.value)
   status.value = ok ? 'pass' : 'fail'
+  if (!ok) failedAttempts.value += 1
   emit('attempt', {
     correct: ok,
     attempts: attempts.value,
@@ -300,15 +338,18 @@ function check() {
 .lang-exercise-audio { margin-bottom: .75rem; }
 .lang-prompt { margin: 0 0 1rem; font-size: 1.08rem; line-height: 1.55; }
 .lang-choices { display: grid; gap: .65rem; margin-bottom: 1rem; }
-.lang-choice { font: inherit; min-height: 3rem; padding: .7rem .9rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; cursor: pointer; text-align: left; }
+.lang-choice { font: inherit; min-height: 3rem; padding: .7rem .9rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
 .lang-choice:disabled, .lang-token:disabled { cursor: default; }
-.lang-choice:focus-visible, .lang-token:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-accent, #0d9488) 35%, transparent); outline-offset: 2px; }
+.lang-choice:focus-visible, .lang-token:focus-visible, .lang-fill:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-accent, #0d9488) 35%, transparent); outline-offset: 2px; }
 .lang-choice.is-selected { border-color: var(--color-accent, #0d9488); box-shadow: inset 0 0 0 1px var(--color-accent, #0d9488); }
 .lang-choice.is-matched { opacity: .65; }
 .lang-choice-image { display: block; width: min(100%, 12rem); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; margin-bottom: .55rem; }
-.lang-fill { display: block; width: 100%; margin-bottom: 1rem; padding: .75rem .85rem; font: inherit; font-size: 1.05rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; }
+.lang-fill { display: block; width: 100%; min-height: 3rem; margin-bottom: 1rem; padding: .75rem .85rem; font: inherit; font-size: 1.05rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; }
 .lang-actions { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; }
+.lang-actions .btn { min-height: 2.75rem; }
 .lang-hints { margin: .85rem 0 0; padding-left: 1.2rem; color: var(--color-muted, #5b6b63); }
+.lang-solution { margin: .85rem 0 0; padding: .75rem .85rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: color-mix(in srgb, var(--color-surface, #fff) 90%, var(--color-accent, #0d9488) 10%); }
+.lang-solution p { margin: .3rem 0 0; overflow-wrap: anywhere; }
 .lang-feedback { margin: .85rem 0 0; padding: .75rem .85rem; border-radius: 10px; font-weight: 600; }
 .lang-feedback p { margin: 0; }
 .lang-feedback.is-pass { background: color-mix(in srgb, var(--color-accent, #0d9488) 10%, transparent); color: var(--color-accent, #0d9488); }
@@ -317,11 +358,11 @@ function check() {
 .lang-order-answer, .lang-token-bank { min-height: 3.25rem; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .65rem; border-radius: 10px; }
 .lang-order-answer { border: 1px dashed var(--color-border, rgba(20,40,30,.25)); margin-bottom: .75rem; }
 .lang-token-bank { background: color-mix(in srgb, var(--color-surface, #fff) 90%, var(--color-muted, #5b6b63) 10%); margin-bottom: 1rem; }
-.lang-token { font: inherit; padding: .55rem .7rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 8px; background: var(--color-surface, #fff); color: inherit; cursor: pointer; }
+.lang-token { font: inherit; min-height: 2.75rem; padding: .55rem .7rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 8px; background: var(--color-surface, #fff); color: inherit; cursor: pointer; overflow-wrap: anywhere; }
 .lang-token.is-answer { border-color: var(--color-accent, #0d9488); }
 .lang-match-help { margin: 0 0 .65rem; }
 .lang-match-columns { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: .7rem; margin-bottom: .75rem; }
-.lang-match-column { display: grid; gap: .55rem; align-content: start; }
+.lang-match-column { display: grid; gap: .55rem; align-content: start; min-width: 0; }
 .lang-reset { margin-bottom: 1rem; }
 @media (min-width: 640px) { .lang-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>

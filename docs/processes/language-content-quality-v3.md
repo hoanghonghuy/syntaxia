@@ -108,15 +108,29 @@ Within a lesson:
 - do not reuse the same distractor pattern until answers become guessable
 - do not expose the correct answer in nearby UI or image alt text
 
-## Feedback
+## Feedback and remediation
 
-Wrong answers are learning events.
+Wrong answers are learning events. The player owns a consistent remediation floor even when an individual lesson has sparse authoring.
 
 - Keep the learner on the item until resolved or intentionally skipped.
-- Reveal hints progressively.
-- Prefer corrective feedback that names the contrast: word order, meaning, register, particle, tone, spelling, or context.
-- An explanation should tell the learner why the expected answer fits, not merely repeat it.
-- Failed review material should remain eligible for same-session and scheduled retrieval.
+- Each failed checked attempt unlocks one additional authored hint, up to the available hint count.
+- The learner may request the next authored hint earlier; manually revealed hints never hide again during the same item.
+- Show authored `explanation` on failure when available, and keep it available after a corrected answer if the learner needed remediation.
+- Do not reveal the solution immediately. The solution control becomes available only after **3 failed checked attempts**.
+- Revealing the solution MUST NOT emit `passed`, advance the lesson, or schedule the item as correct. The learner still answers the item again.
+- Render learner-facing solutions rather than internal/canonical grading encodings. Pair matching should show readable `left → right` pairs.
+- Failed review material remains useful evidence for same-session and scheduled retrieval.
+- Changing an answer after a failure may clear the red fail banner, but already unlocked hints/solution remain available for that item.
+
+## Interaction and accessibility floor
+
+- Choice and matching regions expose a group label derived from the learner prompt.
+- Text production supports Enter to check without removing the visible Check button.
+- Failed text input exposes `aria-invalid`.
+- Feedback and revealed solution use polite live regions.
+- Interactive language controls keep visible keyboard focus.
+- Primary inputs/choices/tokens use mobile-safe touch heights and long text wraps instead of causing horizontal scrolling.
+- Disabling controls after a resolved answer prevents duplicate pass/review events.
 
 ## Language-specific review
 
@@ -154,6 +168,8 @@ Before publishing or migrating a lesson, verify:
 - Visuals are semantic, accessible, stable, and not decorative.
 - Assessed items have stable IDs.
 - Exercise ladder reaches recall/production.
+- Failed attempts progressively expose authored help.
+- Solution reveal is delayed and does not count as a pass.
 - Hints and explanations teach the error contrast.
 - vi/en learning intent matches.
 - Mobile layout has no required horizontal scrolling.
@@ -166,6 +182,8 @@ Before publishing or migrating a lesson, verify:
 - Do not call a text-only `scene` “visual learning”.
 - Do not add stock art merely to satisfy an image quota.
 - Do not auto-reveal listening transcripts after successful playback.
+- Do not mark an exercise correct because the learner revealed the solution.
+- Do not expose raw canonical grading encodings as learner-facing solutions.
 - Do not hide essential information from accessibility users to make an exercise harder.
 - Do not mass-generate more curriculum while the player/content contract has known quality gaps.
 
