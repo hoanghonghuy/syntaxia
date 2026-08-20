@@ -24,7 +24,7 @@
     "test:japanese-jlpt": "node --experimental-strip-types --test scripts/check-japanese-jlpt.mjs",
     "test:chinese-it-vocab": "node --experimental-strip-types --test scripts/check-chinese-it-vocab.mjs",
     "test:language-path-v2": "node --experimental-strip-types --test scripts/check-language-path-v2.mjs",
-    "test:language-v3": "node --experimental-strip-types --test scripts/check-language-v3.mjs",
+    "test:language-v3": "node --experimental-strip-types --test scripts/check-language-v3.mjs scripts/check-japanese-v3.mjs",
     "test:language-unit-path": "node --test scripts/check-language-unit-path-hub.mjs",
     "test:language-audio": "node --experimental-strip-types --test scripts/check-language-audio.mjs",
     "test:language-review": "node --experimental-strip-types --test scripts/check-language-review.mjs",
