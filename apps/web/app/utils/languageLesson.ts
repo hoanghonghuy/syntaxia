@@ -1,6 +1,8 @@
+import { languageTargetLangForTrack } from './languageTrackProfile.ts'
+
 /** Language-track lesson helpers for the production language player. */
 
-export type LanguageTargetLang = 'en' | 'zh-Hans' | 'ja'
+export type LanguageTargetLang = 'en' | 'zh-Hans' | 'ja' | 'und'
 
 export type LanguageVocabItem = {
   form: string
@@ -65,9 +67,7 @@ export type LanguageExercise = {
 }
 
 export function languageTargetLang(trackId: string): LanguageTargetLang {
-  if (trackId === 'english-basics') return 'en'
-  if (trackId === 'japanese-jlpt') return 'ja'
-  return 'zh-Hans'
+  return languageTargetLangForTrack(trackId) as LanguageTargetLang
 }
 
 export function isLanguageTrack(
