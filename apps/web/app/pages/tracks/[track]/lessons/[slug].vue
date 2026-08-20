@@ -1,7 +1,8 @@
 <template>
-  <div class="lesson-reader">
+  <div class="lesson-reader" :class="{ 'is-language-lesson': isLanguageTrack }">
     <div class="lesson-center">
       <SkeletonLesson v-if="loading" />
+
       <main v-else-if="loadError" class="lesson-main lesson-error">
         <AppBreadcrumb :items="crumbs" />
         <h1>{{ t('lesson.loadErrorTitle') }}</h1>
@@ -15,45 +16,47 @@
           </NuxtLink>
         </div>
       </main>
+
       <main v-else-if="lesson" class="lesson-main">
         <AppBreadcrumb :items="crumbs" />
         <h1>{{ lesson.title }}</h1>
-        <section
-          v-if="lesson.objectives?.length"
-          class="lesson-objectives-mobile"
-          :aria-label="t('lesson.objectives')"
-        >
-          <p class="lesson-objectives-label">{{ t('lesson.objectives') }}</p>
-          <ul class="lesson-objectives-list">
-            <li v-for="obj in lesson.objectives" :key="obj">{{ obj }}</li>
-          </ul>
-        </section>
-        <article class="prose-lesson" v-html="lesson.bodyHtml" />
-        <LanguageLessonSteps
+
+        <template v-if="!isLanguageTrack">
+          <section
+            v-if="lesson.objectives?.length"
+            class="lesson-objectives-mobile"
+            :aria-label="t('lesson.objectives')"
+          >
+            <p class="lesson-objectives-label">{{ t('lesson.objectives') }}</p>
+            <ul class="lesson-objectives-list">
+              <li v-for="objective in lesson.objectives" :key="objective">{{ objective }}</li>
+            </ul>
+          </section>
+          <article class="prose-lesson" v-html="lesson.bodyHtml" />
+        </template>
+
+        <LanguageLessonPlayer
           v-if="isLanguageTrack && languageHasStepPath"
-          :key="`${lesson.id}-steps`"
+          :key="`${lesson.id}-language-player`"
           :lesson="lesson"
           :track-id="trackId"
           @passed="onSandboxPassed"
         />
-        <p v-if="isLanguageTrack && languageHasStepPath" class="lang-legacy-note muted">
-          {{ t('lesson.pathModeNote') }}
-        </p>
+
         <template v-else-if="isLanguageTrack">
           <p class="lang-legacy-note muted">{{ t('lesson.legacyFormatNote') }}</p>
-          <LanguageVocabList
-            v-if="languageVocab.length"
-            :items="languageVocab"
-          />
+          <LanguageVocabList v-if="languageVocab.length" :items="languageVocab" />
           <LanguageExercise
             v-if="languageExercise"
             :key="lesson.id"
             :exercise="languageExercise"
+            :track-id="trackId"
             @passed="onSandboxPassed"
           />
         </template>
+
         <HtmlCssSandbox
-          v-else-if="lesson.exercise && !isLanguageTrack && isHtmlCssTrack"
+          v-else-if="lesson.exercise && isHtmlCssTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -66,8 +69,9 @@
           :solution-available="exerciseSolutionAvailable"
           @passed="onSandboxPassed"
         />
+
         <JsSandbox
-          v-else-if="lesson.exercise && !isLanguageTrack && trackId === 'javascript-basics'"
+          v-else-if="lesson.exercise && trackId === 'javascript-basics'"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -78,8 +82,9 @@
           :solution-available="exerciseSolutionAvailable"
           @passed="onSandboxPassed"
         />
+
         <SqlSandbox
-          v-else-if="lesson.exercise && !isLanguageTrack"
+          v-else-if="lesson.exercise"
           :key="lesson.id"
           :lesson-id="lesson.id"
           :lesson-slug="slug"
@@ -91,6 +96,7 @@
           :preview="exercisePreview"
           @passed="onSandboxPassed"
         />
+
         <div v-if="auth.user" class="lesson-complete-bar">
           <button
             v-if="!lessonCompleted"
@@ -113,6 +119,7 @@
             </button>
           </template>
         </div>
+
         <nav class="lesson-pager" :aria-label="t('lesson.pagerNav')">
           <NuxtLink
             v-if="prevLesson"
@@ -130,6 +137,7 @@
             {{ nextLesson.title }} →
           </NuxtLink>
         </nav>
+
         <section v-if="auth.user" class="card notes-card">
           <h2>{{ t('lesson.notes') }}</h2>
           <textarea v-model="noteBody" rows="4" class="notes-input" />
@@ -139,6 +147,7 @@
             </button>
           </div>
         </section>
+
         <aside v-else class="auth-soft-prompt" role="note">
           <p>{{ t('auth.loginToSave') }}</p>
           <div class="auth-soft-actions">
@@ -149,7 +158,7 @@
       </main>
     </div>
 
-    <aside class="lesson-toc">
+    <aside v-if="!isLanguageTrack" class="lesson-toc">
       <template v-if="loading">
         <UiSkeleton width="50%" height="0.75rem" />
         <UiSkeleton width="90%" height="0.85rem" />
@@ -174,7 +183,7 @@
         <template v-if="lesson.objectives?.length">
           <p class="toc-label">{{ t('lesson.objectives') }}</p>
           <ul class="nav-list toc-objectives">
-            <li v-for="obj in lesson.objectives" :key="obj">{{ obj }}</li>
+            <li v-for="objective in lesson.objectives" :key="objective">{{ objective }}</li>
           </ul>
         </template>
       </template>
@@ -216,11 +225,12 @@ const savingNote = ref(false)
 const markingComplete = ref(false)
 const lessonLoadGuard = createLessonLoadGuard()
 
-const trackMeta = computed(() => catalog.tracks.find((tr) => tr.id === trackId.value))
+const trackMeta = computed(() => catalog.tracks.find((track) => track.id === trackId.value))
 const trackTitle = computed(() => {
   const track = trackMeta.value
   return track?.title[locale.value] || track?.title.en || trackId.value
 })
+const isLanguageTrack = computed(() => trackIsLanguage(trackId.value, trackMeta.value?.category))
 
 const crumbs = computed(() =>
   buildLearnBreadcrumbs({
@@ -246,9 +256,7 @@ const crumbs = computed(() =>
   }),
 )
 
-const lessonReturnPath = computed(
-  () => `/tracks/${trackId.value}/lessons/${slug.value}`,
-)
+const lessonReturnPath = computed(() => `/tracks/${trackId.value}/lessons/${slug.value}`)
 const authLoginPath = computed(() => ({
   path: localePath('/login'),
   query: { redirect: localePath(lessonReturnPath.value) },
@@ -258,115 +266,82 @@ const authRegisterPath = computed(() => ({
   query: { redirect: localePath(lessonReturnPath.value) },
 }))
 
-const tocItems = computed(() => extractToc(lesson.value?.bodyHtml))
+const tocItems = computed(() => isLanguageTrack.value ? [] : extractToc(lesson.value?.bodyHtml))
+const languageVocab = computed(() => lesson.value ? languageVocabFromLesson(lesson.value) : [])
+const languageExercise = computed(() => lesson.value ? languageExerciseFromLesson(lesson.value) : null)
+const languageHasStepPath = computed(() => lesson.value ? languageHasSteps(lesson.value) : false)
 
 const exerciseStarter = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  return (ex?.starter as string) || 'SELECT * FROM movies;'
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  return (exercise?.starter as string) || 'SELECT * FROM movies;'
 })
-
 const jsExerciseStarter = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  return (ex?.starter as string) || '// write JavaScript here\n'
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  return (exercise?.starter as string) || '// write JavaScript here\n'
 })
-
-const isLanguageTrack = computed(() =>
-  trackIsLanguage(trackId.value, trackMeta.value?.category),
-)
-
-const languageVocab = computed(() =>
-  lesson.value ? languageVocabFromLesson(lesson.value) : [],
-)
-
-const languageExercise = computed(() =>
-  lesson.value ? languageExerciseFromLesson(lesson.value) : null,
-)
-
-const languageHasStepPath = computed(() =>
-  lesson.value ? languageHasSteps(lesson.value) : false,
-)
-
-const isHtmlCssTrack = computed(
-  () => trackId.value === 'html-basics' || trackId.value === 'css-basics',
-)
-
+const isHtmlCssTrack = computed(() => trackId.value === 'html-basics' || trackId.value === 'css-basics')
 const htmlCssExerciseMode = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  const mode = ex?.mode
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  const mode = exercise?.mode
   if (mode === 'css' || mode === 'both' || mode === 'html') return mode
   return trackId.value === 'css-basics' ? 'css' : 'html'
 })
-
 const htmlCssStarterHtml = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  if (typeof ex?.starterHtml === 'string') return ex.starterHtml
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  if (typeof exercise?.starterHtml === 'string') return exercise.starterHtml
   if (htmlCssExerciseMode.value === 'html' || htmlCssExerciseMode.value === 'both') {
-    return (ex?.starter as string) || '<!-- write HTML here -->\n'
+    return (exercise?.starter as string) || '<!-- write HTML here -->\n'
   }
   return '<p class="note">Preview</p>\n'
 })
-
 const htmlCssStarterCss = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  if (typeof ex?.starterCss === 'string') return ex.starterCss
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  if (typeof exercise?.starterCss === 'string') return exercise.starterCss
   if (htmlCssExerciseMode.value === 'css' || htmlCssExerciseMode.value === 'both') {
-    return (ex?.starter as string) || '/* write CSS here */\n'
+    return (exercise?.starter as string) || '/* write CSS here */\n'
   }
   return ''
 })
-
 const exerciseHints = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  const raw = ex?.hints
-  return Array.isArray(raw) ? (raw as string[]) : []
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  return Array.isArray(exercise?.hints) ? (exercise.hints as string[]) : []
 })
-
 const exerciseSolutionAvailable = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  return ex?.solutionAvailable === true
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  return exercise?.solutionAvailable === true
 })
-
 const exercisePreview = computed(() => {
-  const ex = lesson.value?.exercise as Record<string, unknown> | undefined
-  const preview = ex?.preview as { columns?: string[]; rows?: unknown[][] } | undefined
+  const exercise = lesson.value?.exercise as Record<string, unknown> | undefined
+  const preview = exercise?.preview as { columns?: string[]; rows?: unknown[][] } | undefined
   if (!preview?.columns?.length) return undefined
   return { columns: preview.columns, rows: preview.rows || [] }
 })
 
 const sortedLessons = computed(() => {
-  const list =
-    catalog.lessonsByTrack[trackId.value] ||
-    (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
+  const list = catalog.lessonsByTrack[trackId.value]
+    || (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
   return [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
-
-const currentIndex = computed(() =>
-  sortedLessons.value.findIndex((l) => l.slug === slug.value),
-)
-
-const prevLesson = computed(() =>
-  currentIndex.value > 0 ? sortedLessons.value[currentIndex.value - 1] : null,
-)
-
+const currentIndex = computed(() => sortedLessons.value.findIndex((item) => item.slug === slug.value))
+const prevLesson = computed(() => currentIndex.value > 0 ? sortedLessons.value[currentIndex.value - 1] : null)
 const nextLesson = computed(() =>
   currentIndex.value >= 0 && currentIndex.value < sortedLessons.value.length - 1
     ? sortedLessons.value[currentIndex.value + 1]
     : null,
 )
-
 const lessonCompleted = computed(() =>
   lesson.value ? catalog.isCompleted(lesson.value.id, locale.value) : false,
 )
 
 function scrollToHeading(id: string) {
   const root = document.querySelector('.lesson-center')
-  const el = document.getElementById(id)
-  if (!el) return
+  const element = document.getElementById(id)
+  if (!element) return
   if (root instanceof HTMLElement) {
-    const top = el.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop
+    const top = element.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop
     root.scrollTo({ top: Math.max(0, top - 12), behavior: 'smooth' })
   } else {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   history.replaceState(null, '', `#${id}`)
 }
@@ -394,13 +369,11 @@ async function loadLesson() {
       noteBody.value = primary.body
       noteId.value = primary.noteId || null
     }
-  } catch (e) {
+  } catch (error) {
     if (!lessonLoadGuard.isCurrent(requestId)) return
-    loadError.value = e instanceof Error ? e.message : t('lesson.loadErrorGeneric')
+    loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
   } finally {
-    if (lessonLoadGuard.isCurrent(requestId)) {
-      loading.value = false
-    }
+    if (lessonLoadGuard.isCurrent(requestId)) loading.value = false
   }
 }
 
@@ -416,9 +389,8 @@ async function saveNote() {
       noteId.value = created.id
     }
     snackbar.success(t('snackbar.noteSaved'))
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : t('snackbar.genericError')
-    snackbar.error(msg || t('snackbar.genericError'))
+  } catch (error) {
+    snackbar.error(error instanceof Error ? error.message : t('snackbar.genericError'))
   } finally {
     savingNote.value = false
   }
@@ -431,13 +403,10 @@ async function setLessonCompleted(completed: boolean, notify: boolean) {
     await api.setProgress(lesson.value.id, locale.value, completed)
     await catalog.loadProgress()
     if (notify) {
-      snackbar.success(
-        completed ? t('snackbar.lessonComplete') : t('snackbar.lessonIncomplete'),
-      )
+      snackbar.success(completed ? t('snackbar.lessonComplete') : t('snackbar.lessonIncomplete'))
     }
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : t('snackbar.genericError')
-    snackbar.error(msg || t('snackbar.genericError'))
+  } catch (error) {
+    snackbar.error(error instanceof Error ? error.message : t('snackbar.genericError'))
   } finally {
     markingComplete.value = false
   }
@@ -447,12 +416,10 @@ async function markComplete() {
   if (!lesson.value || lessonCompleted.value) return
   await setLessonCompleted(true, true)
 }
-
 async function markIncomplete() {
   if (!lesson.value || !lessonCompleted.value) return
   await setLessonCompleted(false, true)
 }
-
 async function onSandboxPassed() {
   if (!lesson.value || !auth.user || lessonCompleted.value) return
   await setLessonCompleted(true, false)
@@ -473,86 +440,22 @@ watch([slug, locale, trackId], async ([, , track]) => {
 </script>
 
 <style scoped>
-.lesson-error-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-.lesson-objectives-mobile {
-  margin: 0.75rem 0 1.25rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--color-surface) 90%, var(--color-pastel-blue) 10%);
-}
-.lesson-objectives-label {
-  margin: 0 0 0.4rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--color-brand-deep);
-}
-.lesson-objectives-list {
-  margin: 0;
-  padding-left: 1.1rem;
-  color: var(--color-ink-muted);
-  font-size: 0.92rem;
-  line-height: 1.45;
-}
-@media (min-width: 1100px) {
-  .lesson-objectives-mobile {
-    display: none;
-  }
-}
-.lesson-complete-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-.notes-card {
-  margin-top: 1.5rem;
-}
-.notes-input {
-  width: 100%;
-  font-family: inherit;
-}
-.notes-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-.lesson-completed-badge {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-brand);
-}
-.lesson-pager {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1.25rem;
-  flex-wrap: wrap;
-}
-.auth-soft-prompt {
-  margin-top: 2rem;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--color-hairline);
-  border-radius: 6px;
-  background: var(--color-surface-soft);
-}
-.auth-soft-prompt p {
-  margin: 0 0 0.75rem;
-  color: var(--color-ink-muted);
-  font-size: 0.95rem;
-  line-height: 1.45;
-}
-.auth-soft-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
+.lesson-error-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+.lesson-objectives-mobile { margin: .75rem 0 1.25rem; padding: .75rem 1rem; border: 1px solid var(--color-hairline); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-surface) 90%, var(--color-pastel-blue) 10%); }
+.lesson-objectives-label { margin: 0 0 .4rem; font-size: .8rem; font-weight: 700; color: var(--color-brand-deep); }
+.lesson-objectives-list { margin: 0; padding-left: 1.1rem; color: var(--color-ink-muted); font-size: .92rem; line-height: 1.45; }
+.lesson-reader.is-language-lesson { grid-template-columns: minmax(0, 1fr); }
+.lesson-reader.is-language-lesson .lesson-center { width: 100%; }
+.lesson-reader.is-language-lesson .lesson-main > h1 { width: min(100%, 48rem); margin-left: auto; margin-right: auto; }
+.lang-legacy-note { margin: 1rem 0; }
+.lesson-complete-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 1.5rem; }
+.lesson-completed-badge { font-size: .9rem; font-weight: 600; color: var(--color-brand); }
+.lesson-pager { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.25rem; flex-wrap: wrap; }
+.notes-card { margin-top: 1.5rem; }
+.notes-input { width: 100%; font-family: inherit; }
+.notes-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 1rem; }
+.auth-soft-prompt { margin-top: 2rem; padding: 1rem 1.25rem; border: 1px solid var(--color-hairline); border-radius: 6px; background: var(--color-surface-soft); }
+.auth-soft-prompt p { margin: 0 0 .75rem; color: var(--color-ink-muted); font-size: .95rem; line-height: 1.45; }
+.auth-soft-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+@media (min-width: 1100px) { .lesson-objectives-mobile { display: none; } }
 </style>
