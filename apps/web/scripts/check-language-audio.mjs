@@ -18,14 +18,15 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
 describe('language-step-audio', () => {
-  it('maps tracks to speech language tags', () => {
+  it('maps tracks to speech language tags without guessing an unknown language', () => {
     assert.equal(speechLangForTrack('chinese-hsk'), 'zh-CN')
     assert.equal(speechLangForTrack('chinese-it-vocab'), 'zh-CN')
     assert.equal(speechLangForTrack('english-basics'), 'en-US')
     assert.equal(speechLangForTrack('japanese-jlpt'), 'ja-JP')
+    assert.equal(speechLangForTrack('future-language-track'), '')
   })
 
-  it('speakLanguageText uses synthesis when available', () => {
+  it('speakLanguageText uses synthesis only with text and a known language', () => {
     const spoken = []
     const speech = {
       cancel() {},
@@ -46,6 +47,7 @@ describe('language-step-audio', () => {
     assert.equal(spoken[0].text, '你好')
     assert.equal(spoken[0].lang, 'zh-CN')
     assert.equal(speakLanguageText('  ', 'zh-CN', speech, FakeUtterance), false)
+    assert.equal(speakLanguageText('hello', '', speech, FakeUtterance), false)
     assert.equal(speakLanguageText('hi', 'en-US', null, FakeUtterance), false)
   })
 
@@ -78,6 +80,12 @@ describe('language-step-audio', () => {
     })
     assert.equal(modeTts, 'tts')
     assert.deepEqual(spoken, ['hello'])
+
+    const modeUnknown = await playLanguageAudio(undefined, 'hello', '', {
+      speech,
+      Utterance: FakeUtterance,
+    })
+    assert.equal(modeUnknown, 'none')
   })
 
   it('wires Listen into LanguageLessonSteps and ships button', () => {
