@@ -21,6 +21,7 @@
         :class="{ 'is-selected': selected === choice }"
         :lang="targetLang"
         :aria-pressed="selected === choice"
+        :disabled="resolved"
         @click="selectChoice(choice)"
       >
         <img
@@ -41,6 +42,7 @@
           type="button"
           class="lang-token is-answer"
           :lang="targetLang"
+          :disabled="resolved"
           @click="removeOrderedToken(i)"
         >
           {{ token }}
@@ -53,6 +55,7 @@
           type="button"
           class="lang-token"
           :lang="targetLang"
+          :disabled="resolved"
           @click="addOrderedToken(i)"
         >
           {{ token }}
@@ -70,8 +73,8 @@
             type="button"
             class="lang-choice"
             :class="{ 'is-selected': selectedLeft === pair.left, 'is-matched': Boolean(matches[pair.left]) }"
-            :disabled="Boolean(matches[pair.left])"
-            @click="selectedLeft = pair.left"
+            :disabled="resolved"
+            @click="selectMatchLeft(pair.left)"
           >
             {{ pair.left }}
           </button>
@@ -82,7 +85,7 @@
             :key="right"
             type="button"
             class="lang-choice"
-            :disabled="matchedRights.has(right) || !selectedLeft"
+            :disabled="resolved || matchedRights.has(right) || !selectedLeft"
             @click="matchRight(right)"
           >
             {{ right }}
@@ -90,7 +93,7 @@
         </div>
       </div>
       <button
-        v-if="Object.keys(matches).length"
+        v-if="Object.keys(matches).length && !resolved"
         type="button"
         class="btn btn-ghost lang-reset"
         @click="resetMatches"
@@ -107,7 +110,9 @@
       :lang="targetLang"
       autocomplete="off"
       autocapitalize="sentences"
+      :disabled="resolved"
       :placeholder="t('lesson.languageAnswerPlaceholder')"
+      @input="onTextInput"
       @keydown.enter.prevent="check"
     >
 
@@ -116,7 +121,7 @@
         {{ t('lesson.checkAnswer') }}
       </button>
       <button
-        v-if="hints.length && hintIndex < hints.length"
+        v-if="!resolved && hints.length && hintIndex < hints.length"
         class="btn btn-ghost"
         type="button"
         @click="hintIndex += 1"
@@ -169,6 +174,7 @@ const matches = ref<Record<string, string>>({})
 const resolvedTrackId = computed(() => props.trackId || 'chinese-hsk')
 const targetLang = computed(() => languageTargetLang(resolvedTrackId.value))
 const hints = computed(() => props.exercise.hints || [])
+const resolved = computed(() => status.value === 'pass')
 const isChoiceExercise = computed(() =>
   ['mcq', 'meaning_choice', 'image_choice', 'audio_choice', 'dialogue_choice'].includes(props.exercise.type),
 )
@@ -176,9 +182,11 @@ const exerciseLabel = computed(() => t('lesson.languageExercise'))
 const matchedRights = computed(() => new Set(Object.values(matches.value)))
 const shuffledRights = computed(() => (props.exercise.pairs || []).map((pair) => pair.right).reverse())
 const canCheck = computed(() => {
+  if (resolved.value) return false
   if (props.exercise.type === 'order_words') return orderedTokens.value.length > 0
   if (props.exercise.type === 'match_pairs') {
-    return Object.keys(matches.value).length === (props.exercise.pairs || []).length && Object.keys(matches.value).length > 0
+    const count = Object.keys(matches.value).length
+    return count === (props.exercise.pairs || []).length && count > 0
   }
   return Boolean(selected.value.trim())
 })
@@ -205,34 +213,58 @@ function mediaFor(choice: string) {
   return props.exercise.choiceMedia?.find((item) => item.value === choice)
 }
 
+function clearFailedState() {
+  if (status.value === 'fail') status.value = 'idle'
+}
+
 function selectChoice(choice: string) {
+  if (resolved.value) return
   selected.value = choice
-  status.value = 'idle'
+  clearFailedState()
+}
+
+function onTextInput() {
+  if (resolved.value) return
+  clearFailedState()
 }
 
 function addOrderedToken(index: number) {
+  if (resolved.value) return
   const [token] = availableTokens.value.splice(index, 1)
   if (token) orderedTokens.value.push(token)
-  status.value = 'idle'
+  clearFailedState()
 }
 
 function removeOrderedToken(index: number) {
+  if (resolved.value) return
   const [token] = orderedTokens.value.splice(index, 1)
   if (token) availableTokens.value.push(token)
-  status.value = 'idle'
+  clearFailedState()
+}
+
+function selectMatchLeft(left: string) {
+  if (resolved.value) return
+  if (matches.value[left]) {
+    const next = { ...matches.value }
+    delete next[left]
+    matches.value = next
+  }
+  selectedLeft.value = left
+  clearFailedState()
 }
 
 function matchRight(right: string) {
-  if (!selectedLeft.value || matchedRights.value.has(right)) return
+  if (resolved.value || !selectedLeft.value || matchedRights.value.has(right)) return
   matches.value = { ...matches.value, [selectedLeft.value]: right }
   selectedLeft.value = ''
-  status.value = 'idle'
+  clearFailedState()
 }
 
 function resetMatches() {
+  if (resolved.value) return
   matches.value = {}
   selectedLeft.value = ''
-  status.value = 'idle'
+  clearFailedState()
 }
 
 function submission(): string {
@@ -248,14 +280,16 @@ function submission(): string {
 
 function check() {
   if (!canCheck.value) return
+  const checkedAt = Date.now()
   attempts.value += 1
   const ok = gradeLanguageExercise(props.exercise, submission(), targetLang.value)
   status.value = ok ? 'pass' : 'fail'
   emit('attempt', {
     correct: ok,
     attempts: attempts.value,
-    responseMs: Math.max(0, Date.now() - startedAt.value),
+    responseMs: Math.max(0, checkedAt - startedAt.value),
   })
+  startedAt.value = checkedAt
   if (ok) emit('passed')
 }
 </script>
@@ -267,6 +301,7 @@ function check() {
 .lang-prompt { margin: 0 0 1rem; font-size: 1.08rem; line-height: 1.55; }
 .lang-choices { display: grid; gap: .65rem; margin-bottom: 1rem; }
 .lang-choice { font: inherit; min-height: 3rem; padding: .7rem .9rem; border: 1px solid var(--color-border, rgba(20,40,30,.18)); border-radius: 10px; background: var(--color-surface, #fff); color: inherit; cursor: pointer; text-align: left; }
+.lang-choice:disabled, .lang-token:disabled { cursor: default; }
 .lang-choice:focus-visible, .lang-token:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-accent, #0d9488) 35%, transparent); outline-offset: 2px; }
 .lang-choice.is-selected { border-color: var(--color-accent, #0d9488); box-shadow: inset 0 0 0 1px var(--color-accent, #0d9488); }
 .lang-choice.is-matched { opacity: .65; }
@@ -289,5 +324,4 @@ function check() {
 .lang-match-column { display: grid; gap: .55rem; align-content: start; }
 .lang-reset { margin-bottom: 1rem; }
 @media (min-width: 640px) { .lang-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (prefers-reduced-motion: reduce) { .lang-choice, .lang-token { scroll-behavior: auto; } }
 </style>
