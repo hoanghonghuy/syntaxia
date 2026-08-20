@@ -13,16 +13,16 @@
     <p v-else-if="loading" class="muted">{{ t('lesson.reviewLoading') }}</p>
 
     <aside v-else-if="!auth.user" class="auth-soft-prompt" role="note">
-      <p>{{ t('lesson.reviewLoginForSchedule') }}</p>
+      <p>{{ t('auth.loginToSave') }}</p>
       <NuxtLink class="btn btn-primary" :to="loginPath">{{ t('nav.login') }}</NuxtLink>
     </aside>
 
-    <p v-else-if="!session.length" class="muted">{{ t('lesson.reviewEmptyDue') }}</p>
+    <p v-else-if="!session.length" class="muted">{{ t('lesson.reviewEmpty') }}</p>
 
     <template v-else-if="finished">
       <p class="review-done" role="status">{{ t('lesson.reviewDone') }}</p>
       <button class="btn btn-primary" type="button" @click="loadReview">
-        {{ t('lesson.reviewAgainDue') }}
+        {{ t('lesson.unitReview') }}
       </button>
     </template>
 
@@ -31,7 +31,7 @@
         <p class="review-progress muted">
           {{ t('lesson.reviewProgress', { n: index + 1, total: session.length }) }}
         </p>
-        <p class="review-due muted">{{ t('lesson.reviewScheduled') }}</p>
+        <p class="review-due muted">{{ t('lesson.reviewLead') }}</p>
       </div>
       <LanguageExercise
         :key="currentKey"
@@ -77,8 +77,9 @@ const index = ref(0)
 const finished = ref(false)
 const lastAttemptWasCorrect = ref(false)
 const lastResponseMs = ref<number | undefined>()
+let pendingReviewWrite: Promise<void> = Promise.resolve()
 
-const lead = computed(() => t('lesson.reviewLeadV3'))
+const lead = computed(() => t('lesson.reviewLead'))
 const current = computed(() => session.value[index.value])
 const currentKey = computed(() => current.value ? `${current.value.lessonId}:${current.value.itemKey}:${index.value}` : 'empty')
 const loginPath = computed(() => ({
@@ -99,6 +100,8 @@ const crumbs = computed(() =>
 )
 
 async function loadReview() {
+  await pendingReviewWrite.catch(() => undefined)
+  pendingReviewWrite = Promise.resolve()
   loading.value = true
   loadError.value = ''
   finished.value = false
@@ -126,7 +129,7 @@ async function loadReview() {
       try {
         bodies.push(await api.lesson(item.slug, locale.value, trackId.value))
       } catch {
-        // A single stale/missing lesson must not destroy the entire review session.
+        // A stale/missing lesson is skipped; other due items remain reviewable.
       }
     }
 
@@ -147,28 +150,33 @@ async function loadReview() {
   }
 }
 
-async function onAttempt(payload: { correct: boolean; responseMs: number }) {
+function onAttempt(payload: { correct: boolean; responseMs: number }) {
   lastAttemptWasCorrect.value = payload.correct
   lastResponseMs.value = payload.responseMs
-  if (!current.value || payload.correct) return
-  try {
-    const card = await api.recordLanguageReview({
-      lessonId: current.value.lessonId,
-      locale: locale.value,
-      itemKey: current.value.itemKey,
-      rating: 1,
-      responseMs: payload.responseMs,
-    })
-    current.value.card = card
-  } catch (error) {
-    loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
-  }
+  const item = current.value
+  if (!item || payload.correct) return
+  pendingReviewWrite = pendingReviewWrite.then(async () => {
+    try {
+      const card = await api.recordLanguageReview({
+        lessonId: item.lessonId,
+        locale: locale.value,
+        itemKey: item.itemKey,
+        rating: 1,
+        responseMs: payload.responseMs,
+      })
+      item.card = card
+    } catch (error) {
+      loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
+      throw error
+    }
+  })
 }
 
 async function onPassed() {
   const item = current.value
   if (!item || !lastAttemptWasCorrect.value) return
   try {
+    await pendingReviewWrite
     const card = await api.recordLanguageReview({
       lessonId: item.lessonId,
       locale: locale.value,
@@ -179,8 +187,10 @@ async function onPassed() {
     item.card = card
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
+    pendingReviewWrite = Promise.resolve()
     return
   }
+  pendingReviewWrite = Promise.resolve()
   lastAttemptWasCorrect.value = false
   lastResponseMs.value = undefined
   if (index.value >= session.value.length - 1) {
