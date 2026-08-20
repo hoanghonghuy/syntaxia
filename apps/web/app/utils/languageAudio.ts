@@ -1,10 +1,9 @@
+import { languageSpeechLangForTrack } from './languageTrackProfile.ts'
+
 /** Client-side listen helpers for language lesson steps. */
 
 export function speechLangForTrack(trackId: string): string {
-  if (trackId === 'chinese-hsk' || trackId === 'chinese-it-vocab') return 'zh-CN'
-  if (trackId === 'japanese-jlpt') return 'ja-JP'
-  if (trackId === 'english-basics') return 'en-US'
-  return 'en-US'
+  return languageSpeechLangForTrack(trackId)
 }
 
 export function canUseSpeechSynthesis(
@@ -26,13 +25,14 @@ export function speakLanguageText(
     : undefined,
 ): boolean {
   const trimmed = text.trim()
-  if (!trimmed) return false
+  const normalizedLang = lang.trim()
+  if (!trimmed || !normalizedLang) return false
   if (!canUseSpeechSynthesis(speech) || !Utterance || !speech) return false
   try {
     speech.cancel()
-    const u = new Utterance(trimmed)
-    u.lang = lang
-    speech.speak(u)
+    const utterance = new Utterance(trimmed)
+    utterance.lang = normalizedLang
+    speech.speak(utterance)
     return true
   } catch {
     return false
@@ -54,8 +54,8 @@ export async function playLanguageAudio(
     try {
       if (deps.playUrl) await deps.playUrl(url)
       else if (typeof Audio !== 'undefined') {
-        const a = new Audio(url)
-        await a.play()
+        const audio = new Audio(url)
+        await audio.play()
       } else return 'none'
       return 'audio'
     } catch {
