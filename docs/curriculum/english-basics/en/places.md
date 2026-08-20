@@ -3,69 +3,84 @@ id: en-a1-06-places
 track: english-basics
 locale: en
 slug: places
-title: Places and going
+title: Ask where a place is
 order: 6
 published: true
 cefr_level: a1
-can_do: "Say where you go (school/home/park)"
-pattern: "I go to… / here / there"
+can_do: "Ask where a common place is and understand a very simple location answer"
+pattern: "Where's the …? / It's here. / It's over there."
 objectives:
-  - Name common places
-  - Use go / here / there
+  - Ask where a common place is
+  - Understand here and over there in context
+  - Give a very short location answer
 vocab:
-  - { word: "school", ipa: "/skuːl/", gloss: "place to learn" }
-  - { word: "home", ipa: "/hoʊm/", gloss: "where you live" }
-  - { word: "park", ipa: "/pɑːrk/", gloss: "outdoor green place" }
-  - { word: "shop", ipa: "/ʃɑːp/", gloss: "store" }
-  - { word: "go", ipa: "/ɡoʊ/", gloss: "to move to a place" }
-  - { word: "here", ipa: "/hɪr/", gloss: "this place" }
-  - { word: "there", ipa: "/ðer/", gloss: "that place" }
+  - { word: "school", ipa: "/skuːl/", gloss: "a place for learning" }
+  - { word: "café", ipa: "/kæˈfeɪ/", gloss: "a place for drinks or simple food" }
+  - { word: "shop", ipa: "/ʃɑːp/", gloss: "a place to buy things" }
+  - { word: "park", ipa: "/pɑːrk/", gloss: "an outdoor public space" }
+  - { word: "where", ipa: "/wer/", gloss: "asks about a place" }
+  - { word: "here", ipa: "/hɪr/", gloss: "at this place" }
+  - { word: "over there", ipa: "/ˌoʊvər ˈðer/", gloss: "at that place away from here" }
 steps:
+  - type: scene
+    title: "Find a place near your class"
+    body: "After class, you want a coffee but do not know where the café is. Ask another student for the location."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "I go to school." }
-      - { speaker: "B", text: "I go home. The park is there." }
-      - { speaker: "A", text: "The shop is here. See you!" }
+      - { speaker: "You", text: "Excuse me. Where's the café?" }
+      - { speaker: "Student", text: "It's over there, next to the shop." }
+      - { speaker: "You", text: "Over there?" }
+      - { speaker: "Student", text: "Yes." }
+      - { speaker: "You", text: "Thank you." }
+  - type: listen
+    prompt: "Listen for the location phrase."
+    text: "The café is over there."
   - type: tip
-    title: "go to + place"
-    body: "Use I go to with school, home, park, shop. here means this place (near you); there means that place (away from you)."
+    title: "Use Where's + place"
+    body: "Where's is the common spoken form of Where is. For this starter lesson, here means this place and over there points to a place farther away."
   - type: teach
     items:
-      - { form: "school", reading: "/skuːl/", gloss: "place to learn", example: "I go to school." }
-      - { form: "home", reading: "/hoʊm/", gloss: "where you live", example: "I go home." }
-      - { form: "park", reading: "/pɑːrk/", gloss: "outdoor green place", example: "The park is there." }
-      - { form: "go", reading: "/ɡoʊ/", gloss: "to move to a place", example: "I go to school." }
-      - { form: "here", reading: "/hɪr/", gloss: "this place", example: "The shop is here." }
+      - { form: "Where's the café?", reading: "/werz ðə kæˈfeɪ/", gloss: "ask for the café location", example: "Where's the café?" }
+      - { form: "It's here.", reading: "/ɪts hɪr/", gloss: "the place is at this location", example: "The shop? It's here." }
+      - { form: "It's over there.", reading: "/ɪts ˌoʊvər ˈðer/", gloss: "the place is farther away", example: "The café is over there." }
   - type: practice
-    kind: mcq
-    prompt: "Which means “place to learn”?"
-    choices: ["school", "park", "shop"]
-    answer: "school"
+    id: places-dialogue-1
+    kind: dialogue_choice
+    prompt: "You need the café. Which question asks for its location?"
+    choices: ["Where's the café?", "Who's the café?", "I'd like the café."]
+    answer: "Where's the café?"
+  - type: practice
+    id: places-listen-1
+    kind: audio_choice
+    prompt: "Listen. Where is the shop?"
+    audioText: "The shop is here."
+    choices: ["here", "over there", "eight"]
+    answer: "here"
+  - type: practice
+    id: places-produce-1
+    kind: type_answer
+    prompt: "The park is farther away and you are pointing to it. Write the short answer using “over there”."
+    answer: "It's over there"
+    acceptedAnswers: ["It's over there.", "It is over there", "It is over there."]
     hints:
-      - "park is outdoors for play."
-  - type: practice
-    kind: mcq
-    prompt: "In the dialogue, where is the park?"
-    choices: ["there", "here", "home"]
-    answer: "there"
+      - "Start with It's."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “where you live”?"
-        choices: ["home", "school", "shop"]
-        answer: "home"
-      - kind: mcq
-        prompt: "Review: which word is a greeting?"
-        choices: ["hello", "go", "there"]
-        answer: "hello"
+      - id: places-check-1
+        kind: dialogue_choice
+        prompt: "Someone asks “Where's the shop?” The shop is beside you. What is the shortest useful answer?"
+        choices: ["It's here.", "She's my friend.", "Room five?"]
+        answer: "It's here."
+      - id: places-check-2
+        kind: dialogue_choice
+        prompt: "Review: at a café, what is a polite way to ask for tea?"
+        choices: ["I'd like a tea, please.", "Where's tea?", "This is my tea friend."]
+        answer: "I'd like a tea, please."
 exercise:
-  type: mcq
-  prompt: "Which means “place to learn”?"
-  choices: ["school", "park", "shop"]
-  answer: "school"
-  hints:
-    - "park is outdoors for play."
-    - "school is for lessons."
+  type: dialogue_choice
+  prompt: "Choose the question that asks for a place."
+  choices: ["Where's the park?", "Who's the park?", "What number park?"]
+  answer: "Where's the park?"
 ---
 
-Practice places step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+This lesson ends the starter sequence with a small information-gap task: the learner needs a place, asks for it, and understands a minimal answer.
