@@ -2,6 +2,8 @@ import { languageSpeechLangForTrack } from './languageTrackProfile.ts'
 
 /** Client-side listen helpers for language lesson steps. */
 
+export type LanguageAudioMode = 'audio' | 'tts' | 'none'
+
 export function speechLangForTrack(trackId: string): string {
   return languageSpeechLangForTrack(trackId)
 }
@@ -10,6 +12,15 @@ export function canUseSpeechSynthesis(
   speech: Pick<SpeechSynthesis, 'speak'> | null | undefined,
 ): boolean {
   return Boolean(speech && typeof speech.speak === 'function')
+}
+
+/**
+ * Audio-first listen steps keep the transcript hidden after successful
+ * playback. If playback is unavailable, reveal text immediately so the step
+ * never becomes an accessibility dead end.
+ */
+export function shouldRevealTranscriptAfterListen(mode: LanguageAudioMode): boolean {
+  return mode === 'none'
 }
 
 /** Stop any ongoing utterance, then speak `text` (or no-op). */
@@ -48,7 +59,7 @@ export async function playLanguageAudio(
     Utterance?: typeof SpeechSynthesisUtterance
     playUrl?: (url: string) => Promise<void>
   } = {},
-): Promise<'audio' | 'tts' | 'none'> {
+): Promise<LanguageAudioMode> {
   const url = typeof audioUrl === 'string' ? audioUrl.trim() : ''
   if (url) {
     try {

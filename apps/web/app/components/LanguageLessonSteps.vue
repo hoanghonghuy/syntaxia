@@ -31,12 +31,22 @@
     <div v-else-if="current?.type === 'listen'" class="lang-step lang-listen">
       <p class="lang-step-label">{{ t('lesson.listen') }}</p>
       <p v-if="listenPrompt" class="lang-listen-prompt">{{ listenPrompt }}</p>
-      <LanguageListenButton
-        :text="listenText"
-        :track-id="trackId"
-        :audio-url="listenAudioUrl"
-        @activated="listenRevealed = true"
-      />
+      <div class="lang-listen-actions">
+        <LanguageListenButton
+          :text="listenText"
+          :track-id="trackId"
+          :audio-url="listenAudioUrl"
+          @activated="onListenActivated"
+        />
+        <button
+          v-if="listenAttempted && !listenRevealed && listenMode !== 'none'"
+          class="btn btn-ghost lang-transcript-toggle"
+          type="button"
+          @click="revealTranscript"
+        >
+          {{ showTranscriptLabel }}
+        </button>
+      </div>
       <div v-if="listenRevealed" class="lang-listen-transcript" aria-live="polite">
         <p class="lang-listen-text" :lang="targetLang">{{ listenText }}</p>
         <p v-if="listenReading" class="lang-line-reading">{{ listenReading }}</p>
@@ -100,6 +110,10 @@
 
 <script setup lang="ts">
 import {
+  shouldRevealTranscriptAfterListen,
+  type LanguageAudioMode,
+} from '~/utils/languageAudio'
+import {
   languageStepsFromLesson,
   languageTargetLang,
   practiceFromStep,
@@ -113,13 +127,21 @@ const props = defineProps<{
   trackId: string
 }>()
 const emit = defineEmits<{ passed: [] }>()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
+const showTranscriptLabel = computed(() =>
+  t(
+    'lesson.showTranscript',
+    locale.value === 'vi' ? 'Hiện lời thoại' : 'Show transcript',
+  ),
+)
 const targetLang = computed(() => languageTargetLang(props.trackId))
 const steps = computed(() => languageStepsFromLesson(props.lesson))
 const stepIndex = ref(0)
 const practicePassed = ref(false)
 const checkpointCursor = ref(0)
+const listenAttempted = ref(false)
+const listenMode = ref<LanguageAudioMode | null>(null)
 const listenRevealed = ref(false)
 const current = computed(() => steps.value[stepIndex.value] as LanguageStep | undefined)
 const isLast = computed(() => stepIndex.value >= steps.value.length - 1)
@@ -158,6 +180,8 @@ const waitingPractice = computed(() => Boolean(practiceExercise.value) || checkp
 watch(() => [stepIndex.value, current.value?.type] as const, () => {
   practicePassed.value = false
   checkpointCursor.value = 0
+  listenAttempted.value = false
+  listenMode.value = null
   listenRevealed.value = false
 })
 
@@ -165,6 +189,18 @@ function stringField(value: unknown, key: string): string {
   if (!value || typeof value !== 'object') return ''
   const raw = (value as Record<string, unknown>)[key]
   return typeof raw === 'string' ? raw : ''
+}
+
+function onListenActivated(mode: LanguageAudioMode) {
+  listenAttempted.value = true
+  listenMode.value = mode
+  if (shouldRevealTranscriptAfterListen(mode)) {
+    listenRevealed.value = true
+  }
+}
+
+function revealTranscript() {
+  listenRevealed.value = true
 }
 
 function onPracticePassed() {
@@ -208,6 +244,8 @@ function next() {
 .lang-line-text { font-size: 1.18rem; }
 .lang-line-reading { display: block; margin-top: .25rem; font-size: .9rem; color: var(--color-muted, #5b6b63); }
 .lang-listen { display: grid; gap: .7rem; }
+.lang-listen-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; }
+.lang-transcript-toggle { min-height: 2.25rem; }
 .lang-listen-transcript { padding: .75rem .85rem; border-radius: 10px; background: color-mix(in srgb, var(--color-surface, #fff) 88%, var(--color-accent, #0d9488) 12%); }
 .lang-listen-text { margin: 0; font-size: 1.35rem; font-weight: 600; }
 .lang-teach-row { padding: .8rem 0; }

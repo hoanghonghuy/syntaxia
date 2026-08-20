@@ -41,16 +41,43 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 | 27 | **HTML / CSS sandbox** | done | 26 | iframe `srcdoc` + `POST /sandbox/htmlcss/grade`; **26/26** exercises — see `html-css-sandbox.md` |
 | — | **Audit remediation (26 items)** | done | 12+ | Security/UX TDD batch; see `audit-remediation-checklist.md` |
 
+## Language V3 production-quality arc
+
+The earlier language MVP/v2 work is a foundation, not the completion bar for the language product.
+
+| ID | Item | Status | Depends on | Done means |
+|---|---|---|---|---|
+| L0 | **FSRS review persistence + concurrency hardening** | done | language review foundation | Durable server-side cards/logs, due scheduling, CAS conflict semantics, reproducible Go CI |
+| L1 | **V3 pedagogy + content-quality source of truth** | in progress | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked |
+| L2 | **Dedicated language player correctness + feedback loop** | todo | L1 | Progressive corrective feedback, retry/remediation behavior, keyboard/mobile/screen-reader pass |
+| L3 | **Semantic visual asset pipeline** | todo | L1 | Stable app-owned assets/provenance, meaningful scenes/image-choice/diagrams, accessible equivalents |
+| L4 | **True communicative unit model** | todo | L1–L2 | Explicit unit metadata, Can-Do grouping, lessons + checkpoint + review nodes; no slug/title grouping hacks |
+| L5 | **Golden units: English / Mandarin / Japanese** | todo | L2–L4 | One production reference unit per language with naturalness, visual, audio, exercise, review and accessibility review |
+| L6 | **Curriculum migration + full release QA** | todo | L5 | Remaining published language content migrated; parity/content gates, E2E, mobile/a11y, review persistence all verified |
+
 ## Current focus
 
-**Checklist rows 0–27 complete** (2026-07-16). Guest static FE and Google/Drive remain deferred.
+**Checklist rows 0–27 remain complete** for the original IT/product foundation. Guest static FE and Google/Drive remain deferred.
 
-**Next platform arc:** multi-domain — Phase 0–3 **done** (domain IA + `chinese-hsk` Band 1 MVP archived). See [`multi-domain-roadmap.md`](./multi-domain-roadmap.md).
+The active product-quality work is **Language V3**, not the historical “v2 done → next FSRS” state. FSRS foundation is already implemented; the remaining quality gap is the language learning experience itself.
 
-**Current focus:** Language path v2 + hub + Listen + **Review** done. Next: FSRS or Phase 5 domain. OpenSpec skills only.
+Current ordered focus:
+
+1. L1 — finish content-quality/listen-first source-of-truth and verification.
+2. L2 — harden player feedback/remediation behavior.
+3. L3 — build semantic visual asset strategy and renderer coverage.
+4. L4 — replace the old lesson-as-node path with a real communicative unit model.
+5. L5 — validate complete golden units before scaling curriculum.
+6. L6 — migrate remaining content and run full release QA.
+
+Do **not** mass-generate or mass-rewrite language curriculum before L2–L5 stabilize the player, media, unit, and authoring contracts.
 
 ## Related
 
+- [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
+- [`language-content-quality-v3.md`](./language-content-quality-v3.md)
+- [`language-review-session.md`](./language-review-session.md)
+- [`language-step-audio.md`](./language-step-audio.md)
 - [`multi-domain-roadmap.md`](./multi-domain-roadmap.md)
 - [`learning-domains.md`](./learning-domains.md)
 - [`languages-tracks.md`](./languages-tracks.md)
@@ -67,5 +94,4 @@ Ordered work to reach the quality bar in [`product-quality-lock.md`](./product-q
 - [`ui-skeleton-and-shell.md`](./ui-skeleton-and-shell.md)  
 - [`progress-hub.md`](./progress-hub.md)  
 - [`onboarding.md`](./onboarding.md)  
-- [`i18n.md`](./i18n.md)
 - [`future-guest-static-learning.md`](./future-guest-static-learning.md) (deferred)
