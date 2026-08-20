@@ -63,3 +63,19 @@ export type Progress = {
   completed: boolean
   completedAt?: string
 }
+
+export type LanguageReviewCard = {
+  trackId: string
+  lessonId: string
+  locale: string
+  itemKey: string
+  dueAt: string
+  stability: number
+  difficulty: number
+  scheduledDays: number
+  reps: number
+  lapses: number
+  state: number
+  lastReviewAt?: string
+  remainingSteps: number
+}
