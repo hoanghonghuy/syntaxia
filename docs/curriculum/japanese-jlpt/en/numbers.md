@@ -3,70 +3,89 @@ id: ja-n5-03-numbers
 track: japanese-jlpt
 locale: en
 slug: numbers
-title: Numbers 1 to 10
+title: Hear and give a simple number
 order: 3
 published: true
 jlpt_level: n5
-can_do: "Count 1–10 in Japanese"
-pattern: "一 … 十"
+can_do: "Understand numbers one to ten and answer a simple number question"
+pattern: "何番ですか。 / 八番です。"
 objectives:
-  - Count ichi to juu
-  - Read basic number kanji
+  - Recognize common readings for one to ten
+  - Ask 何番ですか
+  - Give a number with 番です
 vocab:
-  - { surface: "一", reading: "いち", gloss: "one" }
-  - { surface: "二", reading: "に", gloss: "two" }
-  - { surface: "三", reading: "さん", gloss: "three" }
-  - { surface: "四", reading: "よん", gloss: "four" }
-  - { surface: "五", reading: "ご", gloss: "five" }
-  - { surface: "六", reading: "ろく", gloss: "six" }
-  - { surface: "七", reading: "なな", gloss: "seven" }
-  - { surface: "八", reading: "はち", gloss: "eight" }
-  - { surface: "九", reading: "きゅう", gloss: "nine" }
-  - { surface: "十", reading: "じゅう", gloss: "ten" }
+  - { surface: "一", reading: "いち", gloss: "1" }
+  - { surface: "二", reading: "に", gloss: "2" }
+  - { surface: "三", reading: "さん", gloss: "3" }
+  - { surface: "四", reading: "よん", gloss: "4" }
+  - { surface: "五", reading: "ご", gloss: "5" }
+  - { surface: "六", reading: "ろく", gloss: "6" }
+  - { surface: "七", reading: "なな", gloss: "7" }
+  - { surface: "八", reading: "はち", gloss: "8" }
+  - { surface: "九", reading: "きゅう", gloss: "9" }
+  - { surface: "十", reading: "じゅう", gloss: "10" }
+  - { surface: "番", reading: "ばん", gloss: "number marker" }
 steps:
+  - type: scene
+    title: "Check a class number"
+    body: "At orientation, learners receive a number from one to ten. Ask for the number and give yours."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "一、二、三、四、五。", reading: "いち、に、さん、よん、ご。" }
-      - { speaker: "B", text: "六、七、八、九、十！", reading: "ろく、なな、はち、きゅう、じゅう！" }
+      - { speaker: "A", text: "何番ですか。", reading: "なんばんですか。" }
+      - { speaker: "B", text: "八番です。", reading: "はちばんです。" }
+      - { speaker: "A", text: "八番ですね。", reading: "はちばんですね。" }
+      - { speaker: "B", text: "はい。", reading: "はい。" }
+  - type: listen
+    prompt: "Listen for the number reading."
+    text: "六番です。"
+    reading: "ろくばんです。"
   - type: tip
-    title: "Number kanji with readings"
-    body: "一 (いち) through 十 (じゅう) are the first ten numbers. Some kanji have alternate readings (e.g. 四 yon/shi). Learn each kanji with its common reading."
+    title: "Start with one common reading"
+    body: "Some numbers have alternate readings in other contexts. This lesson uses よん, なな, and きゅう first, then later lessons can add context-specific variants."
   - type: teach
     items:
-      - { form: "一", reading: "いち", gloss: "one", example: "一、二、三。" }
-      - { form: "三", reading: "さん", gloss: "three", example: "三です。" }
-      - { form: "五", reading: "ご", gloss: "five", example: "五、六、七。" }
-      - { form: "八", reading: "はち", gloss: "eight", example: "八、九、十。" }
-      - { form: "十", reading: "じゅう", gloss: "ten", example: "十！" }
+      - { form: "一・二・三", reading: "いち・に・さん", gloss: "1, 2, 3", example: "三番です。" }
+      - { form: "四・五・六", reading: "よん・ご・ろく", gloss: "4, 5, 6", example: "六番です。" }
+      - { form: "七・八", reading: "なな・はち", gloss: "7, 8", example: "八番です。" }
+      - { form: "九・十", reading: "きゅう・じゅう", gloss: "9, 10", example: "十番です。" }
+      - { form: "何番ですか。", reading: "なんばんですか。", gloss: "What number?", example: "何番ですか。" }
   - type: practice
-    kind: mcq
-    prompt: "Which kanji is five?"
-    choices: ["五", "三", "八"]
-    answer: "五"
+    id: ja-numbers-listen-1
+    kind: listen_type
+    prompt: "Listen and type the number reading in hiragana."
+    audioText: "はち"
+    answer: "はち"
+  - type: practice
+    id: ja-numbers-meaning-1
+    kind: meaning_choice
+    prompt: "Which kanji is 8?"
+    choices: ["八", "六", "十"]
+    answer: "八"
+  - type: practice
+    id: ja-numbers-produce-1
+    kind: type_answer
+    prompt: "Your number is 8. Type the answer using the lesson pattern."
+    answer: "八番です"
+    acceptedAnswers: ["八番です。", "はちばんです", "はちばんです。"]
     hints:
-      - "ご is the reading for five."
-  - type: practice
-    kind: mcq
-    prompt: "Which kanji is read に?"
-    choices: ["二", "六", "九"]
-    answer: "二"
+      - "Use 八 + 番 + です."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which kanji is three?"
-        choices: ["三", "七", "一"]
-        answer: "三"
-      - kind: fill_blank
-        prompt: "Type the kanji for ten."
-        answer: "十"
+      - id: ja-numbers-check-1
+        kind: dialogue_choice
+        prompt: "Which question asks for a number?"
+        choices: ["何番ですか。", "お名前は何ですか。", "これをください。"]
+        answer: "何番ですか。"
+      - id: ja-numbers-check-2
+        kind: dialogue_choice
+        prompt: "Review: which sentence asks a person's name?"
+        choices: ["お名前は何ですか。", "八番です。", "はい。"]
+        answer: "お名前は何ですか。"
 exercise:
-  type: mcq
-  prompt: "Which kanji is five?"
-  choices: ["五", "三", "八"]
-  answer: "五"
-  hints:
-    - "三 is three."
-    - "五 is five."
+  type: listen_type
+  prompt: "Listen and type the reading."
+  audioText: "ご"
+  answer: "ご"
 ---
 
-Practice counting step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+Numbers are used as information to hear and give, not only as a sequence to recite.
