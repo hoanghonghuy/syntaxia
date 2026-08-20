@@ -3,69 +3,86 @@ id: ja-n5-06-places
 track: japanese-jlpt
 locale: vi
 slug: places
-title: Nơi chốn và đi lại
+title: Hỏi một địa điểm ở đâu
 order: 6
 published: true
 jlpt_level: n5
-can_do: "Nói nơi bạn đi"
-pattern: "学校 / 家 / 駅 / 行く"
+can_do: "Hỏi một địa điểm quen thuộc ở đâu và hiểu ここ・そこ・あそこ trong câu trả lời ngắn"
+pattern: "トイレはどこですか。 / ここです。 / あそこです。"
 objectives:
-  - Gọi trường, nhà, ga, cửa hàng
-  - Dùng đi và ở đây
+  - Hỏi N はどこですか
+  - Hiểu ここ, そこ và あそこ theo vị trí của người nói/người nghe
+  - Trả lời vị trí tối thiểu bằng です
 vocab:
-  - { surface: "学校", reading: "がっこう", gloss: "trường học" }
-  - { surface: "家", reading: "いえ", gloss: "nhà" }
-  - { surface: "駅", reading: "えき", gloss: "ga" }
+  - { surface: "どこ", reading: "どこ", gloss: "ở đâu" }
+  - { surface: "ここ", reading: "ここ", gloss: "ở đây, gần người nói" }
+  - { surface: "そこ", reading: "そこ", gloss: "ở đó, gần người nghe" }
+  - { surface: "あそこ", reading: "あそこ", gloss: "ở đằng kia, xa cả hai người" }
+  - { surface: "トイレ", reading: "トイレ", gloss: "nhà vệ sinh" }
+  - { surface: "駅", reading: "えき", gloss: "nhà ga" }
   - { surface: "店", reading: "みせ", gloss: "cửa hàng" }
-  - { surface: "行く", reading: "いく", gloss: "đi" }
-  - { surface: "ここ", reading: "ここ", gloss: "ở đây" }
 steps:
+  - type: scene
+    title: "Tìm nhà vệ sinh"
+    body: "Bạn đang ở nhà ga và cần tìm nhà vệ sinh. Hãy hỏi nhân viên rồi hiểu câu trả lời kèm chỉ hướng."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "学校に行きます。", reading: "がっこうにいきます。" }
-      - { speaker: "B", text: "ここは駅です。", reading: "ここはえきです。" }
-      - { speaker: "A", text: "家に行きますか？", reading: "いえにいきますか？" }
-      - { speaker: "B", text: "はい、店にも行きます。", reading: "はい、みせにもいきます。" }
+      - { speaker: "A", text: "すみません。トイレはどこですか。", reading: "すみません。トイレはどこですか。" }
+      - { speaker: "B", text: "あそこです。", reading: "あそこです。" }
+      - { speaker: "A", text: "あそこですか。", reading: "あそこですか。" }
+      - { speaker: "B", text: "はい。", reading: "はい。" }
+      - { speaker: "A", text: "ありがとうございます。", reading: "ありがとうございます。" }
+  - type: listen
+    prompt: "Nghe và xác định từ chỉ vị trí trong câu trả lời."
+    text: "あそこです。"
+    reading: "あそこです。"
   - type: tip
-    title: "Nơi chốn và chuyển động"
-    body: "学校 (trường), 家 (nhà), 駅 (ga), 店 (cửa hàng) là nơi quen. 行く là đi. ここ là ở đây — chỉ vị trí hiện tại."
+    title: "Ba từ chỉ nơi phụ thuộc vào góc nhìn"
+    body: "ここ ở gần người nói, そこ ở gần người nghe, còn あそこ ở xa cả hai. Nên học chúng cùng cảnh không gian hoặc động tác chỉ tay, không phải ba bản dịch rời rạc."
   - type: teach
     items:
-      - { form: "学校", reading: "がっこう", gloss: "trường học", example: "学校に行きます。" }
-      - { form: "家", reading: "いえ", gloss: "nhà", example: "家に行きます。" }
-      - { form: "駅", reading: "えき", gloss: "ga", example: "ここは駅です。" }
-      - { form: "店", reading: "みせ", gloss: "cửa hàng", example: "店に行きます。" }
-      - { form: "行く", reading: "いく", gloss: "đi", example: "行きます。" }
+      - { form: "トイレはどこですか。", reading: "トイレはどこですか。", gloss: "Nhà vệ sinh ở đâu?", example: "トイレはどこですか。" }
+      - { form: "ここです。", reading: "ここです。", gloss: "Ở đây.", example: "ここです。" }
+      - { form: "そこです。", reading: "そこです。", gloss: "Ở đó, gần phía người nghe.", example: "そこです。" }
+      - { form: "あそこです。", reading: "あそこです。", gloss: "Ở đằng kia.", example: "あそこです。" }
   - type: practice
-    kind: mcq
-    prompt: "Từ nào nghĩa là ga?"
-    choices: ["駅", "店", "家"]
-    answer: "駅"
+    id: ja-places-dialogue-1
+    kind: dialogue_choice
+    prompt: "Bạn cần tìm nhà vệ sinh. Câu nào hỏi đúng vị trí?"
+    choices: ["トイレはどこですか。", "トイレをください。", "トイレはだれですか。"]
+    answer: "トイレはどこですか。"
+  - type: practice
+    id: ja-places-listen-1
+    kind: audio_choice
+    prompt: "Nghe. Bạn nghe thấy từ chỉ vị trí nào?"
+    audioText: "ここです"
+    choices: ["ここ", "そこ", "あそこ"]
+    answer: "ここ"
+  - type: practice
+    id: ja-places-produce-1
+    kind: type_answer
+    prompt: "Nhập câu tiếng Nhật “Nhà vệ sinh ở đâu?”"
+    answer: "トイレはどこですか"
+    acceptedAnswers: ["トイレはどこですか。"]
     hints:
-      - "B nói ここは駅です."
-  - type: practice
-    kind: mcq
-    prompt: "Động từ nào nghĩa là đi?"
-    choices: ["行く", "ここ", "学校"]
-    answer: "行く"
+      - "Dùng トイレ + は + どこ + ですか."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào nghĩa là trường học?"
-        choices: ["学校", "家", "店"]
-        answer: "学校"
-      - kind: mcq
-        prompt: "Từ nào nghĩa là ở đây?"
-        choices: ["ここ", "駅", "行く"]
-        answer: "ここ"
+      - id: ja-places-check-1
+        kind: meaning_choice
+        prompt: "Địa điểm ở xa cả người nói và người nghe. Khi chỉ tay, câu nào phù hợp?"
+        choices: ["あそこです。", "ここです。", "母です。"]
+        answer: "あそこです。"
+      - id: ja-places-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: ở quầy, bạn muốn trà. Có thể nói gì?"
+        choices: ["お茶をください。", "お茶はどこですか。", "お茶はだれですか。"]
+        answer: "お茶をください。"
 exercise:
-  type: mcq
-  prompt: "Từ nào nghĩa là ga?"
-  choices: ["駅", "店", "家"]
-  answer: "駅"
-  hints:
-    - "店 là cửa hàng."
-    - "駅 là ga."
+  type: dialogue_choice
+  prompt: "Chọn câu hỏi vị trí."
+  choices: ["駅はどこですか。", "駅をください。", "駅はだれですか。"]
+  answer: "駅はどこですか。"
 ---
 
-Luyện đoạn nơi chốn theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Bài mở đầu này gắn các từ chỉ nơi với góc nhìn và hành động chỉ hướng, vì đó là phần thiết yếu trong ý nghĩa của chúng trong tiếng Nhật.
