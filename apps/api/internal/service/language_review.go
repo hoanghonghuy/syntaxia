@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"slices"
 	"strings"
 	"time"
 
@@ -13,10 +14,13 @@ import (
 	"syntaxia/apps/api/internal/domain"
 	"syntaxia/apps/api/internal/learning"
 	"syntaxia/apps/api/pkg/apperrors"
+	"syntaxia/apps/api/pkg/validate"
 )
 
 const defaultLanguageReviewLimit = 12
 const maxLanguageReviewLimit = 50
+const maxLanguageReviewResponseMS = 24 * 60 * 60 * 1000
+const languageReviewWriteRetries = 4
 
 func (s *LearningService) DueLanguageReviews(
 	ctx context.Context,
@@ -29,12 +33,16 @@ func (s *LearningService) DueLanguageReviews(
 	if trackID == "" || locale == "" {
 		return nil, apperrors.Validation("track and locale are required")
 	}
+	if err := validate.Locale(locale); err != nil {
+		return nil, err
+	}
 	if limit <= 0 {
 		limit = defaultLanguageReviewLimit
 	}
 	if limit > maxLanguageReviewLimit {
 		limit = maxLanguageReviewLimit
 	}
+
 	now := time.Now().UTC()
 	lessons, err := s.repo.ListCompletedLanguageLessons(ctx, userID, trackID, locale)
 	if err != nil {
@@ -42,12 +50,13 @@ func (s *LearningService) DueLanguageReviews(
 	}
 	for _, lesson := range lessons {
 		keys := learning.LanguageReviewItemKeys(lesson.Exercise)
-		if err := s.repo.EnsureLanguageReviewCards(
+		if err := s.repo.SyncLanguageReviewCards(
 			ctx, userID, lesson.TrackID, lesson.ID, lesson.Locale, keys, now,
 		); err != nil {
 			return nil, apperrors.Internal(err)
 		}
 	}
+
 	cards, err := s.repo.ListDueLanguageReviewCards(ctx, userID, trackID, locale, now, limit)
 	if err != nil {
 		return nil, apperrors.Internal(err)
@@ -68,32 +77,70 @@ func (s *LearningService) RecordLanguageReview(
 	if lessonID == "" || locale == "" || itemKey == "" {
 		return domain.LanguageReviewCard{}, apperrors.Validation("lessonId, locale and itemKey are required")
 	}
+	if err := validate.Locale(locale); err != nil {
+		return domain.LanguageReviewCard{}, err
+	}
 	if rating < int(fsrs.Again) || rating > int(fsrs.Easy) {
 		return domain.LanguageReviewCard{}, apperrors.Validation("rating must be between 1 and 4")
 	}
-	if responseMS != nil && *responseMS < 0 {
-		return domain.LanguageReviewCard{}, apperrors.Validation("responseMs must be non-negative")
+	if responseMS != nil && (*responseMS < 0 || *responseMS > maxLanguageReviewResponseMS) {
+		return domain.LanguageReviewCard{}, apperrors.Validation("responseMs must be between 0 and 86400000")
 	}
-	before, err := s.repo.GetLanguageReviewCard(ctx, userID, lessonID, locale, itemKey)
+
+	lesson, err := s.repo.GetCompletedLanguageLesson(ctx, userID, lessonID, locale)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return domain.LanguageReviewCard{}, apperrors.NotFound("review item not found")
 	}
 	if err != nil {
 		return domain.LanguageReviewCard{}, apperrors.Internal(err)
 	}
+	if !slices.Contains(learning.LanguageReviewItemKeys(lesson.Exercise), itemKey) {
+		return domain.LanguageReviewCard{}, apperrors.NotFound("review item not found")
+	}
+
+	for attempt := 0; attempt < languageReviewWriteRetries; attempt++ {
+		before, err := s.repo.GetLanguageReviewCard(ctx, userID, lessonID, locale, itemKey)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return domain.LanguageReviewCard{}, apperrors.NotFound("review item not found")
+		}
+		if err != nil {
+			return domain.LanguageReviewCard{}, apperrors.Internal(err)
+		}
+
+		after, log, err := scheduleLanguageReview(before, fsrs.Rating(rating), responseMS, time.Now().UTC())
+		if err != nil {
+			return domain.LanguageReviewCard{}, apperrors.Internal(err)
+		}
+		applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log)
+		if err != nil {
+			return domain.LanguageReviewCard{}, apperrors.Internal(err)
+		}
+		if applied {
+			return after, nil
+		}
+	}
+
+	return domain.LanguageReviewCard{}, apperrors.Conflict("review state changed; retry the answer")
+}
+
+func scheduleLanguageReview(
+	before domain.LanguageReviewCard,
+	rating fsrs.Rating,
+	responseMS *int,
+	now time.Time,
+) (domain.LanguageReviewCard, domain.LanguageReviewLog, error) {
 	card, err := toFSRSCard(before)
 	if err != nil {
-		return domain.LanguageReviewCard{}, apperrors.Internal(err)
+		return domain.LanguageReviewCard{}, domain.LanguageReviewLog{}, err
 	}
-	now := time.Now().UTC()
 	scheduler := fsrs.NewFSRS(fsrs.DefaultParam())
-	result, err := scheduler.Next(card, now, fsrs.Rating(rating))
+	result, err := scheduler.Next(card, now, rating)
 	if err != nil {
-		return domain.LanguageReviewCard{}, apperrors.Internal(err)
+		return domain.LanguageReviewCard{}, domain.LanguageReviewLog{}, err
 	}
 	after := fromFSRSCard(before, result.Card)
 	log := domain.LanguageReviewLog{
-		UserID:           userID,
+		UserID:           before.UserID,
 		TrackID:          before.TrackID,
 		LessonID:         before.LessonID,
 		Locale:           before.Locale,
@@ -110,10 +157,7 @@ func (s *LearningService) RecordLanguageReview(
 		DifficultyBefore: before.Difficulty,
 		DifficultyAfter:  after.Difficulty,
 	}
-	if err := s.repo.SaveLanguageReview(ctx, after, log); err != nil {
-		return domain.LanguageReviewCard{}, apperrors.Internal(err)
-	}
-	return after, nil
+	return after, log, nil
 }
 
 func toFSRSCard(card domain.LanguageReviewCard) (fsrs.Card, error) {
@@ -146,7 +190,9 @@ func fromFSRSCard(base domain.LanguageReviewCard, card fsrs.Card) domain.Languag
 	base.Lapses = int64(card.Lapses)
 	base.State = int16(card.State)
 	base.RemainingSteps = card.RemainingSteps
-	if !card.LastReview.IsZero() {
+	if card.LastReview.IsZero() {
+		base.LastReviewAt = nil
+	} else {
 		lastReview := card.LastReview
 		base.LastReviewAt = &lastReview
 	}
