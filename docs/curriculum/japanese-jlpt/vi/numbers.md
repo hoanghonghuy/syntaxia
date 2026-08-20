@@ -3,70 +3,89 @@ id: ja-n5-03-numbers
 track: japanese-jlpt
 locale: vi
 slug: numbers
-title: Số từ 1 đến 10
+title: Nghe và nói một con số đơn giản
 order: 3
 published: true
 jlpt_level: n5
-can_do: "Đếm 1–10 bằng tiếng Nhật"
-pattern: "一 … 十"
+can_do: "Hiểu các số từ một đến mười và trả lời một câu hỏi số đơn giản"
+pattern: "何番ですか。 / 八番です。"
 objectives:
-  - Đếm ichi đến juu
-  - Đọc kanji số cơ bản
+  - Nhận ra cách đọc thông dụng của các số từ một đến mười
+  - Hỏi 何番ですか
+  - Nói một con số với 番です
 vocab:
-  - { surface: "一", reading: "いち", gloss: "một" }
-  - { surface: "二", reading: "に", gloss: "hai" }
-  - { surface: "三", reading: "さん", gloss: "ba" }
-  - { surface: "四", reading: "よん", gloss: "bốn" }
-  - { surface: "五", reading: "ご", gloss: "năm" }
-  - { surface: "六", reading: "ろく", gloss: "sáu" }
-  - { surface: "七", reading: "なな", gloss: "bảy" }
-  - { surface: "八", reading: "はち", gloss: "tám" }
-  - { surface: "九", reading: "きゅう", gloss: "chín" }
-  - { surface: "十", reading: "じゅう", gloss: "mười" }
+  - { surface: "一", reading: "いち", gloss: "1" }
+  - { surface: "二", reading: "に", gloss: "2" }
+  - { surface: "三", reading: "さん", gloss: "3" }
+  - { surface: "四", reading: "よん", gloss: "4" }
+  - { surface: "五", reading: "ご", gloss: "5" }
+  - { surface: "六", reading: "ろく", gloss: "6" }
+  - { surface: "七", reading: "なな", gloss: "7" }
+  - { surface: "八", reading: "はち", gloss: "8" }
+  - { surface: "九", reading: "きゅう", gloss: "9" }
+  - { surface: "十", reading: "じゅう", gloss: "10" }
+  - { surface: "番", reading: "ばん", gloss: "từ đánh dấu số/thứ tự" }
 steps:
+  - type: scene
+    title: "Xác nhận số ở lớp"
+    body: "Trong buổi hướng dẫn, mỗi học viên nhận một số từ một đến mười. Hãy hỏi số rồi nói số của mình."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "一、二、三、四、五。", reading: "いち、に、さん、よん、ご。" }
-      - { speaker: "B", text: "六、七、八、九、十！", reading: "ろく、なな、はち、きゅう、じゅう！" }
+      - { speaker: "A", text: "何番ですか。", reading: "なんばんですか。" }
+      - { speaker: "B", text: "八番です。", reading: "はちばんです。" }
+      - { speaker: "A", text: "八番ですね。", reading: "はちばんですね。" }
+      - { speaker: "B", text: "はい。", reading: "はい。" }
+  - type: listen
+    prompt: "Nghe và tập trung vào cách đọc con số."
+    text: "六番です。"
+    reading: "ろくばんです。"
   - type: tip
-    title: "Kanji số kèm cách đọc"
-    body: "一 (いち) đến 十 (じゅう) là mười số đầu. Một số kanji có cách đọc khác (ví dụ 四 yon/shi). Học mỗi kanji với cách đọc thường gặp."
+    title: "Bắt đầu bằng một cách đọc thông dụng"
+    body: "Một số số tiếng Nhật có cách đọc khác trong những ngữ cảnh khác. Bài này dùng よん, なな và きゅう trước; các biến thể theo ngữ cảnh sẽ học sau."
   - type: teach
     items:
-      - { form: "一", reading: "いち", gloss: "một", example: "一、二、三。" }
-      - { form: "三", reading: "さん", gloss: "ba", example: "三です。" }
-      - { form: "五", reading: "ご", gloss: "năm", example: "五、六、七。" }
-      - { form: "八", reading: "はち", gloss: "tám", example: "八、九、十。" }
-      - { form: "十", reading: "じゅう", gloss: "mười", example: "十！" }
+      - { form: "一・二・三", reading: "いち・に・さん", gloss: "1, 2, 3", example: "三番です。" }
+      - { form: "四・五・六", reading: "よん・ご・ろく", gloss: "4, 5, 6", example: "六番です。" }
+      - { form: "七・八", reading: "なな・はち", gloss: "7, 8", example: "八番です。" }
+      - { form: "九・十", reading: "きゅう・じゅう", gloss: "9, 10", example: "十番です。" }
+      - { form: "何番ですか。", reading: "なんばんですか。", gloss: "Số mấy?", example: "何番ですか。" }
   - type: practice
-    kind: mcq
-    prompt: "Kanji nào là năm?"
-    choices: ["五", "三", "八"]
-    answer: "五"
+    id: ja-numbers-listen-1
+    kind: listen_type
+    prompt: "Nghe rồi nhập cách đọc con số bằng hiragana."
+    audioText: "はち"
+    answer: "はち"
+  - type: practice
+    id: ja-numbers-meaning-1
+    kind: meaning_choice
+    prompt: "Kanji nào là số 8?"
+    choices: ["八", "六", "十"]
+    answer: "八"
+  - type: practice
+    id: ja-numbers-produce-1
+    kind: type_answer
+    prompt: "Số của bạn là 8. Hãy nhập câu trả lời theo mẫu của bài."
+    answer: "八番です"
+    acceptedAnswers: ["八番です。", "はちばんです", "はちばんです。"]
     hints:
-      - "ご là cách đọc của năm."
-  - type: practice
-    kind: mcq
-    prompt: "Kanji nào đọc là に?"
-    choices: ["二", "六", "九"]
-    answer: "二"
+      - "Dùng 八 + 番 + です."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Kanji nào là ba?"
-        choices: ["三", "七", "一"]
-        answer: "三"
-      - kind: fill_blank
-        prompt: "Gõ kanji nghĩa mười."
-        answer: "十"
+      - id: ja-numbers-check-1
+        kind: dialogue_choice
+        prompt: "Câu nào dùng để hỏi số?"
+        choices: ["何番ですか。", "お名前は何ですか。", "これをください。"]
+        answer: "何番ですか。"
+      - id: ja-numbers-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: câu nào dùng để hỏi tên một người?"
+        choices: ["お名前は何ですか。", "八番です。", "はい。"]
+        answer: "お名前は何ですか。"
 exercise:
-  type: mcq
-  prompt: "Kanji nào là năm?"
-  choices: ["五", "三", "八"]
-  answer: "五"
-  hints:
-    - "三 là ba."
-    - "五 là năm."
+  type: listen_type
+  prompt: "Nghe rồi nhập cách đọc."
+  audioText: "ご"
+  answer: "ご"
 ---
 
-Luyện đếm theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Các con số được dùng như thông tin cần nghe và nói lại, không chỉ là một dãy để đọc thuộc lòng.
