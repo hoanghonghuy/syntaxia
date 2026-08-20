@@ -31,9 +31,16 @@
     <div v-else-if="current?.type === 'listen'" class="lang-step lang-listen">
       <p class="lang-step-label">{{ t('lesson.listen') }}</p>
       <p v-if="listenPrompt" class="lang-listen-prompt">{{ listenPrompt }}</p>
-      <LanguageListenButton :text="listenText" :track-id="trackId" :audio-url="listenAudioUrl" />
-      <p class="lang-listen-text" :lang="targetLang">{{ listenText }}</p>
-      <p v-if="listenReading" class="lang-line-reading">{{ listenReading }}</p>
+      <LanguageListenButton
+        :text="listenText"
+        :track-id="trackId"
+        :audio-url="listenAudioUrl"
+        @activated="listenRevealed = true"
+      />
+      <div v-if="listenRevealed" class="lang-listen-transcript" aria-live="polite">
+        <p class="lang-listen-text" :lang="targetLang">{{ listenText }}</p>
+        <p v-if="listenReading" class="lang-line-reading">{{ listenReading }}</p>
+      </div>
     </div>
 
     <div v-else-if="current?.type === 'tip'" class="lang-step lang-tip">
@@ -113,6 +120,7 @@ const steps = computed(() => languageStepsFromLesson(props.lesson))
 const stepIndex = ref(0)
 const practicePassed = ref(false)
 const checkpointCursor = ref(0)
+const listenRevealed = ref(false)
 const current = computed(() => steps.value[stepIndex.value] as LanguageStep | undefined)
 const isLast = computed(() => stepIndex.value >= steps.value.length - 1)
 const progressPercent = computed(() => steps.value.length ? ((stepIndex.value + 1) / steps.value.length) * 100 : 0)
@@ -150,6 +158,7 @@ const waitingPractice = computed(() => Boolean(practiceExercise.value) || checkp
 watch(() => [stepIndex.value, current.value?.type] as const, () => {
   practicePassed.value = false
   checkpointCursor.value = 0
+  listenRevealed.value = false
 })
 
 function stringField(value: unknown, key: string): string {
@@ -199,7 +208,8 @@ function next() {
 .lang-line-text { font-size: 1.18rem; }
 .lang-line-reading { display: block; margin-top: .25rem; font-size: .9rem; color: var(--color-muted, #5b6b63); }
 .lang-listen { display: grid; gap: .7rem; }
-.lang-listen-text { margin: .2rem 0 0; font-size: 1.35rem; font-weight: 600; }
+.lang-listen-transcript { padding: .75rem .85rem; border-radius: 10px; background: color-mix(in srgb, var(--color-surface, #fff) 88%, var(--color-accent, #0d9488) 12%); }
+.lang-listen-text { margin: 0; font-size: 1.35rem; font-weight: 600; }
 .lang-teach-row { padding: .8rem 0; }
 .lang-teach-form { font-size: 1.22rem; margin-right: .45rem; }
 .lang-teach-reading { margin-right: .45rem; color: var(--color-muted, #5b6b63); }
