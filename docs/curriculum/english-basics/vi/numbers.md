@@ -3,71 +3,87 @@ id: en-a1-03-numbers
 track: english-basics
 locale: vi
 slug: numbers
-title: Số từ one đến ten
+title: Nói và xác nhận một con số
 order: 3
 published: true
 cefr_level: a1
-can_do: "Đếm từ one đến ten"
-pattern: "one … ten"
+can_do: "Nghe hiểu và nói một số đơn giản từ một đến mười trong một đoạn trao đổi ngắn"
+pattern: "What number? / Number eight. / Eight? — Yes."
 objectives:
-  - Đếm từ one đến ten bằng tiếng Anh
+  - Nhận ra các số từ một đến mười khi nghe
+  - Nói một con số đơn giản rõ ràng
+  - Xác nhận lại con số vừa nghe
 vocab:
-  - { word: "one", ipa: "/wʌn/", gloss: "một" }
-  - { word: "two", ipa: "/tuː/", gloss: "hai" }
-  - { word: "three", ipa: "/θriː/", gloss: "ba" }
-  - { word: "four", ipa: "/fɔːr/", gloss: "bốn" }
-  - { word: "five", ipa: "/faɪv/", gloss: "năm" }
-  - { word: "six", ipa: "/sɪks/", gloss: "sáu" }
-  - { word: "seven", ipa: "/ˈsevən/", gloss: "bảy" }
-  - { word: "eight", ipa: "/eɪt/", gloss: "tám" }
-  - { word: "nine", ipa: "/naɪn/", gloss: "chín" }
-  - { word: "ten", ipa: "/ten/", gloss: "mười" }
+  - { word: "one", ipa: "/wʌn/", gloss: "1" }
+  - { word: "two", ipa: "/tuː/", gloss: "2" }
+  - { word: "three", ipa: "/θriː/", gloss: "3" }
+  - { word: "four", ipa: "/fɔːr/", gloss: "4" }
+  - { word: "five", ipa: "/faɪv/", gloss: "5" }
+  - { word: "six", ipa: "/sɪks/", gloss: "6" }
+  - { word: "seven", ipa: "/ˈsevən/", gloss: "7" }
+  - { word: "eight", ipa: "/eɪt/", gloss: "8" }
+  - { word: "nine", ipa: "/naɪn/", gloss: "9" }
+  - { word: "ten", ipa: "/ten/", gloss: "10" }
 steps:
+  - type: scene
+    title: "Tìm phòng học"
+    body: "Ở một trung tâm ngoại ngữ, nhân viên nói cho bạn số phòng. Bạn cần nghe đúng và xác nhận lại."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "One, two, three!" }
-      - { speaker: "B", text: "Four, five, six!" }
-      - { speaker: "A", text: "Seven, eight, nine, ten!" }
+      - { speaker: "Staff", text: "Your class is in room eight." }
+      - { speaker: "You", text: "Room eight?" }
+      - { speaker: "Staff", text: "Yes, eight." }
+      - { speaker: "You", text: "Thank you." }
+  - type: listen
+    prompt: "Chỉ tập trung nghe con số."
+    text: "Your class is in room six."
   - type: tip
-    title: "Đếm theo thứ tự"
-    body: "Số tiếng Anh one đến ten theo thứ tự cố định. Luyện đếm liên tiếp — bạn sẽ cần cho tuổi, giá và số lượng."
+    title: "Lặp lại con số để xác nhận"
+    body: "Khi con số quan trọng, hãy lặp lại dưới dạng câu hỏi ngắn: Room eight? Kỹ năng này hữu ích hơn việc chỉ đọc thuộc lòng từ one đến ten."
   - type: teach
     items:
-      - { form: "one", reading: "/wʌn/", gloss: "một", example: "One apple." }
-      - { form: "two", reading: "/tuː/", gloss: "hai", example: "Two friends." }
-      - { form: "three", reading: "/θriː/", gloss: "ba", example: "Three, four, five." }
-      - { form: "five", reading: "/faɪv/", gloss: "năm", example: "Five books." }
-      - { form: "ten", reading: "/ten/", gloss: "mười", example: "One to ten." }
+      - { form: "one, two, three", reading: "/wʌn tuː θriː/", gloss: "1, 2, 3", example: "Room three." }
+      - { form: "four, five, six", reading: "/fɔːr faɪv sɪks/", gloss: "4, 5, 6", example: "Number six." }
+      - { form: "seven, eight", reading: "/ˈsevən eɪt/", gloss: "7, 8", example: "Room eight." }
+      - { form: "nine, ten", reading: "/naɪn ten/", gloss: "9, 10", example: "Number ten." }
   - type: practice
-    kind: mcq
-    prompt: "Số nào đứng sau two?"
-    choices: ["three", "one", "five"]
-    answer: "three"
+    id: numbers-listen-1
+    kind: listen_type
+    prompt: "Nghe rồi nhập từ chỉ số bạn vừa nghe."
+    audioText: "six"
+    answer: "six"
     hints:
-      - "Đếm: one, two, …"
+      - "Từ này bắt đầu bằng s-."
   - type: practice
-    kind: fill_blank
-    prompt: "Gõ từ tiếng Anh cho số 3."
-    answer: "three"
-    hints:
-      - "Bắt đầu bằng th-."
+    id: numbers-meaning-1
+    kind: meaning_choice
+    prompt: "Từ nào là số 8?"
+    choices: ["eight", "three", "ten"]
+    answer: "eight"
+  - type: practice
+    id: numbers-dialogue-1
+    kind: dialogue_choice
+    prompt: "Nhân viên nói “Room five.” Bạn muốn xác nhận lại. Nói gì phù hợp?"
+    choices: ["Room five?", "Who is five?", "Five is my friend."]
+    answer: "Room five?"
+    explanation: "Lặp lại thông tin chính dưới dạng câu hỏi ngắn là cách tự nhiên để xác nhận điều vừa nghe."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào là số 10?"
-        choices: ["ten", "nine", "six"]
-        answer: "ten"
-      - kind: mcq
-        prompt: "Ôn: đại từ nào nghĩa “tôi”?"
-        choices: ["I", "ten", "five"]
-        answer: "I"
+      - id: numbers-check-1
+        kind: listen_type
+        prompt: "Nghe rồi nhập từ chỉ số."
+        audioText: "nine"
+        answer: "nine"
+      - id: numbers-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: bạn giới thiệu người bạn tên Linh. Câu nào đúng tình huống?"
+        choices: ["This is Linh.", "Room Linh?", "Who's eight?"]
+        answer: "This is Linh."
 exercise:
-  type: fill_blank
-  prompt: "Gõ từ tiếng Anh cho số 3."
-  answer: "three"
-  hints:
-    - "Bắt đầu bằng th-."
-    - "Chính tả: t-h-r-e-e."
+  type: listen_type
+  prompt: "Nghe rồi nhập từ chỉ số."
+  audioText: "four"
+  answer: "four"
 ---
 
-Luyện đếm theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Mục tiêu là dùng số nhỏ như một thông tin trong hội thoại. Đọc được dãy one đến ten chỉ là bước hỗ trợ, không phải kỹ năng cuối cùng.
