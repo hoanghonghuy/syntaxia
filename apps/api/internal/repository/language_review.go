@@ -11,33 +11,60 @@ import (
 	"syntaxia/apps/api/internal/domain"
 )
 
-func (r *Repository) EnsureLanguageReviewCards(
+// SyncLanguageReviewCards keeps active review cards aligned with the currently
+// published exercise definition. Review logs are intentionally left untouched.
+func (r *Repository) SyncLanguageReviewCards(
 	ctx context.Context,
 	userID uuid.UUID,
 	trackID, lessonID, locale string,
 	itemKeys []string,
 	due time.Time,
 ) error {
-	if len(itemKeys) == 0 {
-		return nil
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return err
 	}
-	batch := &pgx.Batch{}
+	defer tx.Rollback(ctx)
+
+	seen := make(map[string]struct{}, len(itemKeys))
+	keys := make([]string, 0, len(itemKeys))
 	for _, itemKey := range itemKeys {
-		batch.Queue(`
+		if itemKey == "" {
+			continue
+		}
+		if _, exists := seen[itemKey]; exists {
+			continue
+		}
+		seen[itemKey] = struct{}{}
+		keys = append(keys, itemKey)
+		if _, err := tx.Exec(ctx, `
 			INSERT INTO language_review_cards (
 				user_id, track_id, lesson_id, locale, item_key, due_at
 			) VALUES ($1, $2, $3, $4, $5, $6)
 			ON CONFLICT (user_id, lesson_id, locale, item_key) DO NOTHING
-		`, userID, trackID, lessonID, locale, itemKey, due)
-	}
-	results := r.pool.SendBatch(ctx, batch)
-	defer results.Close()
-	for range itemKeys {
-		if _, err := results.Exec(); err != nil {
+		`, userID, trackID, lessonID, locale, itemKey, due); err != nil {
 			return err
 		}
 	}
-	return nil
+
+	if len(keys) == 0 {
+		if _, err := tx.Exec(ctx, `
+			DELETE FROM language_review_cards
+			WHERE user_id = $1 AND lesson_id = $2 AND locale = $3
+		`, userID, lessonID, locale); err != nil {
+			return err
+		}
+	} else {
+		if _, err := tx.Exec(ctx, `
+			DELETE FROM language_review_cards
+			WHERE user_id = $1 AND lesson_id = $2 AND locale = $3
+				AND NOT (item_key = ANY($4::text[]))
+		`, userID, lessonID, locale, keys); err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit(ctx)
 }
 
 func (r *Repository) GetLanguageReviewCard(
@@ -47,11 +74,16 @@ func (r *Repository) GetLanguageReviewCard(
 ) (domain.LanguageReviewCard, error) {
 	var card domain.LanguageReviewCard
 	err := r.pool.QueryRow(ctx, `
-		SELECT user_id, track_id, lesson_id, locale, item_key, due_at,
-			stability, difficulty, scheduled_days, reps, lapses, state,
-			last_review_at, remaining_steps
-		FROM language_review_cards
-		WHERE user_id = $1 AND lesson_id = $2 AND locale = $3 AND item_key = $4
+		SELECT c.user_id, c.track_id, c.lesson_id, c.locale, c.item_key, c.due_at,
+			c.stability, c.difficulty, c.scheduled_days, c.reps, c.lapses, c.state,
+			c.last_review_at, c.remaining_steps
+		FROM language_review_cards c
+		JOIN lesson_progress p
+			ON p.user_id = c.user_id AND p.lesson_id = c.lesson_id AND p.locale = c.locale
+		JOIN lessons l ON l.id = c.lesson_id AND l.locale = c.locale
+		JOIN tracks t ON t.id = l.track_id
+		WHERE c.user_id = $1 AND c.lesson_id = $2 AND c.locale = $3 AND c.item_key = $4
+			AND p.completed = true AND l.published = true AND t.category = 'languages'
 	`, userID, lessonID, locale, itemKey).Scan(
 		&card.UserID, &card.TrackID, &card.LessonID, &card.Locale, &card.ItemKey,
 		&card.DueAt, &card.Stability, &card.Difficulty, &card.ScheduledDays,
@@ -68,12 +100,17 @@ func (r *Repository) ListDueLanguageReviewCards(
 	limit int,
 ) ([]domain.LanguageReviewCard, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT user_id, track_id, lesson_id, locale, item_key, due_at,
-			stability, difficulty, scheduled_days, reps, lapses, state,
-			last_review_at, remaining_steps
-		FROM language_review_cards
-		WHERE user_id = $1 AND track_id = $2 AND locale = $3 AND due_at <= $4
-		ORDER BY due_at ASC, lesson_id ASC, item_key ASC
+		SELECT c.user_id, c.track_id, c.lesson_id, c.locale, c.item_key, c.due_at,
+			c.stability, c.difficulty, c.scheduled_days, c.reps, c.lapses, c.state,
+			c.last_review_at, c.remaining_steps
+		FROM language_review_cards c
+		JOIN lesson_progress p
+			ON p.user_id = c.user_id AND p.lesson_id = c.lesson_id AND p.locale = c.locale
+		JOIN lessons l ON l.id = c.lesson_id AND l.locale = c.locale
+		JOIN tracks t ON t.id = l.track_id
+		WHERE c.user_id = $1 AND c.track_id = $2 AND c.locale = $3 AND c.due_at <= $4
+			AND p.completed = true AND l.published = true AND t.category = 'languages'
+		ORDER BY c.due_at ASC, c.lesson_id ASC, c.item_key ASC
 		LIMIT $5
 	`, userID, trackID, locale, now, limit)
 	if err != nil {
@@ -95,41 +132,59 @@ func (r *Repository) ListDueLanguageReviewCards(
 	return cards, rows.Err()
 }
 
-func (r *Repository) SaveLanguageReview(
+// SaveLanguageReviewCAS atomically updates a card only when it still matches
+// the state that the scheduler read, then appends the review log. A false
+// return means another request/device updated the card first and the caller
+// should re-read and retry the scheduling operation.
+func (r *Repository) SaveLanguageReviewCAS(
 	ctx context.Context,
-	card domain.LanguageReviewCard,
+	before domain.LanguageReviewCard,
+	after domain.LanguageReviewCard,
 	log domain.LanguageReviewLog,
-) error {
+) (bool, error) {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
-		return err
+		return false, err
 	}
 	defer tx.Rollback(ctx)
-	_, err = tx.Exec(ctx, `
-		INSERT INTO language_review_cards (
-			user_id, track_id, lesson_id, locale, item_key, due_at,
-			stability, difficulty, scheduled_days, reps, lapses, state,
-			last_review_at, remaining_steps, updated_at
-		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,now())
-		ON CONFLICT (user_id, lesson_id, locale, item_key) DO UPDATE SET
-			track_id = EXCLUDED.track_id,
-			due_at = EXCLUDED.due_at,
-			stability = EXCLUDED.stability,
-			difficulty = EXCLUDED.difficulty,
-			scheduled_days = EXCLUDED.scheduled_days,
-			reps = EXCLUDED.reps,
-			lapses = EXCLUDED.lapses,
-			state = EXCLUDED.state,
-			last_review_at = EXCLUDED.last_review_at,
-			remaining_steps = EXCLUDED.remaining_steps,
+
+	tag, err := tx.Exec(ctx, `
+		UPDATE language_review_cards SET
+			track_id = $6,
+			due_at = $7,
+			stability = $8,
+			difficulty = $9,
+			scheduled_days = $10,
+			reps = $11,
+			lapses = $12,
+			state = $13,
+			last_review_at = $14,
+			remaining_steps = $15,
 			updated_at = now()
-	`, card.UserID, card.TrackID, card.LessonID, card.Locale, card.ItemKey,
-		card.DueAt, card.Stability, card.Difficulty, card.ScheduledDays, card.Reps,
-		card.Lapses, card.State, card.LastReviewAt, card.RemainingSteps)
+		WHERE user_id = $1 AND lesson_id = $2 AND locale = $3 AND item_key = $4
+			AND track_id = $5
+			AND due_at = $16
+			AND stability = $17
+			AND difficulty = $18
+			AND scheduled_days = $19
+			AND reps = $20
+			AND lapses = $21
+			AND state = $22
+			AND last_review_at IS NOT DISTINCT FROM $23
+			AND remaining_steps = $24
+	`, after.UserID, after.LessonID, after.Locale, after.ItemKey, before.TrackID,
+		after.TrackID, after.DueAt, after.Stability, after.Difficulty, after.ScheduledDays,
+		after.Reps, after.Lapses, after.State, after.LastReviewAt, after.RemainingSteps,
+		before.DueAt, before.Stability, before.Difficulty, before.ScheduledDays,
+		before.Reps, before.Lapses, before.State, before.LastReviewAt, before.RemainingSteps)
 	if err != nil {
-		return err
+		return false, err
 	}
-	_, err = tx.Exec(ctx, `
+	if tag.RowsAffected() != 1 {
+		return false, nil
+	}
+
+	if _, err = tx.Exec(ctx, `
 		INSERT INTO language_review_logs (
 			user_id, track_id, lesson_id, locale, item_key, rating, response_ms,
 			reviewed_at, due_before, due_after, state_before, state_after,
@@ -138,11 +193,39 @@ func (r *Repository) SaveLanguageReview(
 	`, log.UserID, log.TrackID, log.LessonID, log.Locale, log.ItemKey,
 		log.Rating, log.ResponseMS, log.ReviewedAt, log.DueBefore, log.DueAfter,
 		log.StateBefore, log.StateAfter, log.StabilityBefore, log.StabilityAfter,
-		log.DifficultyBefore, log.DifficultyAfter)
-	if err != nil {
-		return err
+		log.DifficultyBefore, log.DifficultyAfter); err != nil {
+		return false, err
 	}
-	return tx.Commit(ctx)
+	if err := tx.Commit(ctx); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (r *Repository) GetCompletedLanguageLesson(
+	ctx context.Context,
+	userID uuid.UUID,
+	lessonID, locale string,
+) (domain.Lesson, error) {
+	var lesson domain.Lesson
+	var raw []byte
+	err := r.pool.QueryRow(ctx, `
+		SELECT l.id, l.locale, l.track_id, l.exercise
+		FROM lesson_progress p
+		JOIN lessons l ON l.id = p.lesson_id AND l.locale = p.locale
+		JOIN tracks t ON t.id = l.track_id
+		WHERE p.user_id = $1 AND p.lesson_id = $2 AND p.locale = $3
+			AND p.completed = true AND l.published = true AND t.category = 'languages'
+	`, userID, lessonID, locale).Scan(&lesson.ID, &lesson.Locale, &lesson.TrackID, &raw)
+	if err != nil {
+		return lesson, err
+	}
+	if len(raw) > 0 {
+		if err := json.Unmarshal(raw, &lesson.Exercise); err != nil {
+			return domain.Lesson{}, err
+		}
+	}
+	return lesson, nil
 }
 
 func (r *Repository) ListCompletedLanguageLessons(
