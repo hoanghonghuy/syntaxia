@@ -3,73 +3,85 @@ id: zh-hsk-b1-07-food-drink
 track: chinese-hsk
 locale: en
 slug: food-drink
-title: Food and drink
+title: "Order a simple drink or food item"
 order: 7
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Talk about water/tea/rice and buying"
-pattern: "买 / 茶 / 好吃"
+can_do: "Ask for a basic drink or food item and respond politely at a counter"
+pattern: "我要… / 喝水 / 吃米饭"
 objectives:
-  - Name common drinks and foods
-  - Use 买 / 钱 and say something is 好吃
+  - "Recognize common food and drink words"
+  - "Use 我要 + item as a simple request"
 vocab:
   - { hanzi: "水", pinyin: "shuǐ", gloss: "water" }
   - { hanzi: "茶", pinyin: "chá", gloss: "tea" }
-  - { hanzi: "米饭", pinyin: "mǐ fàn", gloss: "cooked rice" }
-  - { hanzi: "水果", pinyin: "shuǐ guǒ", gloss: "fruit" }
-  - { hanzi: "买", pinyin: "mǎi", gloss: "to buy" }
-  - { hanzi: "钱", pinyin: "qián", gloss: "money" }
-  - { hanzi: "好吃", pinyin: "hǎo chī", gloss: "delicious / tasty" }
+  - { hanzi: "米饭", pinyin: "mǐ fàn", gloss: "cooked rice / meal" }
+  - { hanzi: "苹果", pinyin: "píng guǒ", gloss: "apple" }
+  - { hanzi: "吃", pinyin: "chī", gloss: "to eat" }
+  - { hanzi: "喝", pinyin: "hē", gloss: "to drink" }
+  - { hanzi: "要", pinyin: "yào", gloss: "to want / would like" }
 steps:
+  - type: scene
+    title: "Situation"
+    body: "You are at a simple food counter and need a drink and something to eat."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "我想买水果。多少钱？", reading: "wǒ xiǎng mǎi shuǐ guǒ. duō shǎo qián?" }
-      - { speaker: "B", text: "十块钱。你要茶吗？", reading: "shí kuài qián. nǐ yào chá ma?" }
-      - { speaker: "A", text: "要！米饭很好吃。", reading: "yào! mǐ fàn hěn hǎo chī." }
+      - { speaker: "A", text: "你好。你要什么？", reading: "nǐ hǎo. nǐ yào shén me" }
+      - { speaker: "B", text: "我要茶。", reading: "wǒ yào chá" }
+      - { speaker: "A", text: "还要米饭吗？", reading: "hái yào mǐ fàn ma" }
+      - { speaker: "B", text: "要，谢谢。", reading: "yào, xiè xie" }
+  - type: listen
+    prompt: "Listen for the item being requested."
+    text: "我要茶。"
+    reading: "wǒ yào chá"
   - type: tip
-    title: "买 + 钱, praise with 好吃"
-    body: "买 is “to buy”; 钱 is money. 好吃 praises food — literally “good to eat”. 米饭 is cooked rice; 水 is water, 茶 is tea."
+    title: "Use a usable request, not a word list"
+    body: "我要 + item is a direct beginner-friendly request in a counter context. Learn 喝 with liquids and 吃 with food so the nouns immediately enter sentences."
   - type: teach
     items:
-      - { form: "水", reading: "shuǐ", gloss: "water", example: "喝水" }
-      - { form: "茶", reading: "chá", gloss: "tea", example: "喝茶" }
-      - { form: "米饭", reading: "mǐ fàn", gloss: "cooked rice", example: "吃米饭" }
-      - { form: "买", reading: "mǎi", gloss: "to buy", example: "买水果" }
-      - { form: "好吃", reading: "hǎo chī", gloss: "delicious", example: "很好吃！" }
+      - { form: "我要茶。", reading: "wǒ yào chá", gloss: "I would like tea.", example: "我要茶。" }
+      - { form: "我喝水。", reading: "wǒ hē shuǐ", gloss: "I drink water.", example: "我喝水。" }
+      - { form: "我吃米饭。", reading: "wǒ chī mǐ fàn", gloss: "I eat rice.", example: "我吃米饭。" }
+      - { form: "苹果", reading: "píng guǒ", gloss: "apple", example: "我要苹果。" }
   - type: practice
-    kind: mcq
-    prompt: "Which means “tea”?"
-    choices: ["茶", "水", "钱"]
+    id: zh-food-reply-1
+    kind: dialogue_choice
+    prompt: "At the counter, you want tea. What can you say?"
+    choices: ["我要茶。", "我是茶。", "茶在哪里？"]
+    answer: "我要茶。"
+  - type: practice
+    id: zh-food-listen-1
+    kind: audio_choice
+    prompt: "Listen and choose the drink."
+    audioText: "茶"
+    choices: ["茶", "水", "米饭"]
     answer: "茶"
-    hints:
-      - "水 is water."
   - type: practice
-    kind: mcq
-    prompt: "Which means “to buy”?"
-    choices: ["买", "好吃", "水果"]
-    answer: "买"
+    id: zh-food-produce-1
+    kind: type_answer
+    prompt: "Type: “I want water.”"
+    answer: "我要水"
+    acceptedAnswers: ["我要水。"]
+    hints:
+      - "Use 我要 + 水."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “delicious / tasty”?"
-        choices: ["好吃", "买", "钱"]
-        answer: "好吃"
-      - kind: mcq
-        prompt: "Which means “teacher”?"
-        choices: ["老师", "茶", "米饭"]
-        answer: "老师"
-      - kind: fill_blank
-        prompt: "Type the character for “water”."
-        answer: "水"
+      - id: zh-food-check-1
+        kind: meaning_choice
+        prompt: "Which verb goes with a liquid such as water?"
+        choices: ["喝", "吃", "学习"]
+        answer: "喝"
+      - id: zh-food-check-2
+        kind: dialogue_choice
+        prompt: "Review: someone asks 你是学生吗？ Choose a positive reply."
+        choices: ["是，我是学生。", "我要茶。", "不客气。"]
+        answer: "是，我是学生。"
 exercise:
-  type: mcq
-  prompt: "Which means “tea”?"
-  choices: ["茶", "水", "钱"]
-  answer: "茶"
-  hints:
-    - "水 is water."
-    - "茶 is the everyday drink word."
+  type: dialogue_choice
+  prompt: "Which sentence asks for tea?"
+  choices: ["我要茶。", "我喝学校。", "我是米饭。"]
+  answer: "我要茶。"
 ---
 
-Practice food and shopping words step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Pinyin supports early reading, while listening, characters, interaction, production, and later review remain the learning loop.

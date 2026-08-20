@@ -3,74 +3,86 @@ id: zh-hsk-b1-09-questions
 track: chinese-hsk
 locale: en
 slug: questions
-title: Question words
+title: "Ask what, who, and where"
 order: 9
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Ask what/who/where/how many"
-pattern: "什么 / 谁 / 哪里"
+can_do: "Use basic question words and a yes/no question in a short exchange"
+pattern: "什么 / 谁 / 哪里 / …吗？ / …呢？"
 objectives:
-  - Ask what / who / where
-  - Use 吗 and 呢 in short questions
+  - "Ask what / who / where"
+  - "Use 吗 for a yes/no question and 呢 for a follow-up"
 vocab:
   - { hanzi: "什么", pinyin: "shén me", gloss: "what" }
   - { hanzi: "谁", pinyin: "shéi", gloss: "who" }
-  - { hanzi: "哪", pinyin: "nǎ", gloss: "which" }
   - { hanzi: "哪里", pinyin: "nǎ lǐ", gloss: "where" }
-  - { hanzi: "多少", pinyin: "duō shǎo", gloss: "how many / how much" }
-  - { hanzi: "吗", pinyin: "ma", gloss: "yes-no question particle" }
-  - { hanzi: "呢", pinyin: "ne", gloss: "and you? / soft question particle" }
+  - { hanzi: "几", pinyin: "jǐ", gloss: "how many / what number" }
+  - { hanzi: "吗", pinyin: "ma", gloss: "yes/no question particle" }
+  - { hanzi: "呢", pinyin: "ne", gloss: "follow-up particle" }
 steps:
+  - type: scene
+    title: "Situation"
+    body: "You are looking at a class photo and asking about people and places."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "你是谁？", reading: "nǐ shì shéi?" }
-      - { speaker: "B", text: "我是小明。你去哪里？", reading: "wǒ shì xiǎo míng. nǐ qù nǎ lǐ?" }
-      - { speaker: "A", text: "去商店。这个多少钱？好吗？", reading: "qù shāng diàn. zhè ge duō shǎo qián? hǎo ma?" }
+      - { speaker: "A", text: "这是谁？", reading: "zhè shì shéi" }
+      - { speaker: "B", text: "这是我姐姐。", reading: "zhè shì wǒ jiě jie" }
+      - { speaker: "A", text: "她在哪里？", reading: "tā zài nǎ lǐ" }
+      - { speaker: "B", text: "她在学校。", reading: "tā zài xué xiào" }
+      - { speaker: "A", text: "她是老师吗？", reading: "tā shì lǎo shī ma" }
+      - { speaker: "B", text: "是。", reading: "shì" }
+  - type: listen
+    prompt: "Listen for the question word."
+    text: "她在哪里？"
+    reading: "tā zài nǎ lǐ"
   - type: tip
-    title: "Question words stay in place"
-    body: "什么 = what, 谁 = who, 哪里 = where. 吗 turns a statement into yes/no (好吗？). 呢 softens follow-ups (你呢？). 多少 asks how many/much."
+    title: "Question words stay in the answer position"
+    body: "Compare 她在学校 and 她在哪里？ The question word 哪里 replaces the unknown place. 吗 turns a statement into a yes/no question."
   - type: teach
     items:
       - { form: "什么", reading: "shén me", gloss: "what", example: "这是什么？" }
-      - { form: "谁", reading: "shéi", gloss: "who", example: "你是谁？" }
-      - { form: "哪里", reading: "nǎ lǐ", gloss: "where", example: "你去哪里？" }
-      - { form: "多少", reading: "duō shǎo", gloss: "how many/much", example: "多少钱？" }
-      - { form: "吗", reading: "ma", gloss: "yes-no particle", example: "你好吗？" }
+      - { form: "谁", reading: "shéi", gloss: "who", example: "这是谁？" }
+      - { form: "哪里", reading: "nǎ lǐ", gloss: "where", example: "她在哪里？" }
+      - { form: "吗", reading: "ma", gloss: "yes/no question particle", example: "她是老师吗？" }
   - type: practice
-    kind: mcq
-    prompt: "Which means “what”?"
-    choices: ["什么", "谁", "哪里"]
-    answer: "什么"
+    id: zh-question-where-1
+    kind: dialogue_choice
+    prompt: "You want to ask where she is. Which question is correct?"
+    choices: ["她在哪里？", "她是谁？", "她是什么？"]
+    answer: "她在哪里？"
+  - type: practice
+    id: zh-question-listen-1
+    kind: audio_choice
+    prompt: "Listen. Which question word do you hear?"
+    audioText: "这是谁？"
+    choices: ["谁", "什么", "哪里"]
+    answer: "谁"
+  - type: practice
+    id: zh-question-produce-1
+    kind: type_answer
+    prompt: "Type: “Who is this?”"
+    answer: "这是谁"
+    acceptedAnswers: ["这是谁？"]
     hints:
-      - "谁 is who."
-  - type: practice
-    kind: mcq
-    prompt: "Which particle turns a statement into a yes-no question?"
-    choices: ["吗", "呢", "什么"]
-    answer: "吗"
+      - "Use 这 + 是 + 谁."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “where”?"
-        choices: ["哪里", "什么", "谁"]
-        answer: "哪里"
-      - kind: mcq
-        prompt: "Which means “how many / how much”?"
-        choices: ["多少", "哪", "吗"]
-        answer: "多少"
-      - kind: mcq
-        prompt: "Which means “library”?"
-        choices: ["图书馆", "什么", "谁"]
-        answer: "图书馆"
+      - id: zh-question-check-1
+        kind: meaning_choice
+        prompt: "Which particle makes a yes/no question?"
+        choices: ["吗", "呢", "谁"]
+        answer: "吗"
+      - id: zh-question-check-2
+        kind: dialogue_choice
+        prompt: "Review: someone asks 你去哪里？ You go home. What do you say?"
+        choices: ["我回家。", "我是谁？", "我要茶。"]
+        answer: "我回家。"
 exercise:
-  type: mcq
-  prompt: "Which means “what”?"
-  choices: ["什么", "谁", "哪里"]
-  answer: "什么"
-  hints:
-    - "谁 is who."
-    - "什么 is what."
+  type: dialogue_choice
+  prompt: "Which word asks “who”?"
+  choices: ["谁", "什么", "哪里"]
+  answer: "谁"
 ---
 
-Practice question words step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Pinyin supports early reading, while listening, characters, interaction, production, and later review remain the learning loop.

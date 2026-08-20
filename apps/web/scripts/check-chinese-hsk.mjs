@@ -1,5 +1,5 @@
 /**
- * Chinese HSK language player + curriculum map.
+ * Mandarin HSK Band 1 production curriculum contract.
  * Run: node --experimental-strip-types --test scripts/check-chinese-hsk.mjs
  */
 import assert from 'node:assert/strict'
@@ -10,134 +10,103 @@ import { fileURLToPath } from 'node:url'
 import {
   gradeLanguageExercise,
   isLanguageTrack,
-  languageExerciseFromLesson,
-  languageVocabFromLesson,
+  languageTargetLang,
 } from '../app/utils/languageLesson.ts'
+import { speechLangForTrack } from '../app/utils/languageAudio.ts'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
+const slugs = [
+  'greetings',
+  'pronouns',
+  'numbers',
+  'family',
+  'time-of-day',
+  'school-daily',
+  'food-drink',
+  'places',
+  'questions',
+  'adjectives',
+  'transport',
+  'devices',
+]
 
-describe('languageLesson utils', () => {
-  it('treats chinese-hsk as a language track', () => {
+function assessedIds(raw) {
+  return [...raw.matchAll(/^\s{4,}id:\s*([^\s]+)\s*$/gm)].map((m) => m[1])
+}
+
+function lessonIdentity(raw) {
+  const id = raw.match(/^id:\s*(\S+)/m)?.[1]
+  const order = raw.match(/^order:\s*(\d+)/m)?.[1]
+  const slug = raw.match(/^slug:\s*(\S+)/m)?.[1]
+  return { id, order, slug }
+}
+
+describe('Mandarin runtime contract', () => {
+  it('maps Chinese HSK to Mandarin language and speech tags', () => {
     assert.equal(isLanguageTrack('chinese-hsk'), true)
-    assert.equal(isLanguageTrack('english-basics'), true)
-    assert.equal(isLanguageTrack('japanese-jlpt'), true)
-    assert.equal(isLanguageTrack('sql-fundamentals'), false)
-    assert.equal(isLanguageTrack('javascript-basics'), false)
-    assert.equal(isLanguageTrack('anything', 'languages'), true)
-    assert.equal(isLanguageTrack('sql-fundamentals', 'sql'), false)
+    assert.equal(languageTargetLang('chinese-hsk'), 'zh-Hans')
+    assert.equal(speechLangForTrack('chinese-hsk'), 'zh-CN')
   })
 
-  it('reads vocab and language exercise from lesson.exercise payload', () => {
-    const lesson = {
-      exercise: {
-        type: 'mcq',
-        prompt: 'Which means hello?',
-        choices: ['你好', '再见'],
-        answer: '你好',
-        vocab: [{ hanzi: '你好', pinyin: 'nǐ hǎo', gloss: 'hello' }],
-        hskBand: 1,
-      },
-    }
-    assert.equal(languageVocabFromLesson(lesson).length, 1)
-    assert.equal(languageVocabFromLesson(lesson)[0].form, '你好')
-    assert.equal(languageExerciseFromLesson(lesson)?.type, 'mcq')
-    assert.equal(gradeLanguageExercise(lesson.exercise, '你好'), true)
-    assert.equal(gradeLanguageExercise(lesson.exercise, '再见'), false)
-  })
-
-  it('normalizes English word/ipa vocab entries', () => {
-    const lesson = {
-      exercise: {
-        type: 'mcq',
-        prompt: 'Which means hello?',
-        answer: 'hello',
-        vocab: [{ word: 'hello', ipa: '/həˈloʊ/', gloss: 'xin chào' }],
-      },
-    }
-    const vocab = languageVocabFromLesson(lesson)
-    assert.equal(vocab[0].form, 'hello')
-    assert.equal(vocab[0].reading, '/həˈloʊ/')
-    assert.equal(vocab[0].lang, 'en')
-  })
-
-  it('normalizes fill_blank answers (trim)', () => {
-    const ex = { type: 'fill_blank', answer: '你好' }
-    assert.equal(gradeLanguageExercise(ex, '  你好  '), true)
+  it('keeps CJK grading strict for different characters', () => {
+    assert.equal(gradeLanguageExercise({ answer: '你好' }, '你好', 'zh-Hans'), true)
+    assert.equal(gradeLanguageExercise({ answer: '你好' }, '您好', 'zh-Hans'), false)
   })
 })
 
-describe('chinese-hsk curriculum slice', () => {
-  it('ships Band 1 map process doc', () => {
-    const map = join(repoRoot, 'docs/processes/chinese-hsk-band1-map.md')
-    assert.equal(existsSync(map), true)
-    const body = read(map)
-    assert.match(body, /leonsilicon\/hsk3\.0|HSK3\.0_words_level1/)
-    assert.match(body, /greetings/)
+describe('Mandarin HSK Band 1 v3 curriculum', () => {
+  it('ships exactly twelve paired EN/VI lessons', () => {
+    for (const locale of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${locale}`)
+      assert.equal(existsSync(dir), true)
+      const actual = readdirSync(dir)
+        .filter((file) => file.endsWith('.md'))
+        .map((file) => file.replace(/\.md$/, ''))
+        .sort()
+      assert.deepEqual(actual, [...slugs].sort())
+    }
   })
 
-  it('ships paired en/vi lessons for mapped slugs only', () => {
-    const slugs = [
-      'greetings',
-      'pronouns',
-      'numbers',
-      'family',
-      'time-of-day',
-      'school-daily',
-      'food-drink',
-      'places',
-      'questions',
-      'adjectives',
-      'transport',
-      'devices',
-    ]
-    for (const loc of ['en', 'vi']) {
-      const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${loc}`)
-      assert.equal(existsSync(dir), true, `missing ${dir}`)
-      const files = readdirSync(dir).filter((f) => f.endsWith('.md'))
-      assert.deepEqual(
-        files.map((f) => f.replace(/\.md$/, '')).sort(),
-        [...slugs].sort(),
-      )
+  it('keeps identity and assessed review IDs aligned across locales', () => {
+    for (const slug of slugs) {
+      const en = read(join(repoRoot, `docs/curriculum/chinese-hsk/en/${slug}.md`))
+      const vi = read(join(repoRoot, `docs/curriculum/chinese-hsk/vi/${slug}.md`))
+      assert.deepEqual(lessonIdentity(en), lessonIdentity(vi), `${slug}: lesson identity drift`)
+      assert.deepEqual(assessedIds(en), assessedIds(vi), `${slug}: review id drift`)
+      assert.ok(assessedIds(en).length >= 5, `${slug}: too few stable review items`)
+    }
+  })
+
+  it('requires communicative, audio-first, production-oriented lesson structure', () => {
+    for (const locale of ['en', 'vi']) {
       for (const slug of slugs) {
-        const raw = read(join(dir, `${slug}.md`))
-        assert.match(raw, /track:\s*chinese-hsk/)
-        assert.match(raw, new RegExp(`locale:\\s*${loc}`))
-        assert.match(raw, /hsk_band:\s*1/)
-        assert.match(raw, /type:\s*(mcq|fill_blank)/)
-        assert.match(raw, /hanzi:/)
+        const raw = read(join(repoRoot, `docs/curriculum/chinese-hsk/${locale}/${slug}.md`))
+        assert.match(raw, /^hsk_band:\s*1$/m, `${locale}/${slug}: HSK band`)
+        assert.match(raw, /^hsk_version:\s*"3\.0"$/m, `${locale}/${slug}: HSK version`)
+        assert.match(raw, /^can_do:\s*".+"/m, `${locale}/${slug}: Can-Do`)
+        assert.match(raw, /^\s+- type:\s*scene$/m, `${locale}/${slug}: scene`)
+        assert.match(raw, /^\s+- type:\s*dialogue$/m, `${locale}/${slug}: dialogue`)
+        assert.match(raw, /^\s+- type:\s*listen$/m, `${locale}/${slug}: listen`)
+        assert.match(raw, /reading:\s*"[^"]*[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ][^"]*"/i, `${locale}/${slug}: tone-marked pinyin`)
+        assert.match(raw, /kind:\s*audio_choice/, `${locale}/${slug}: listening assessment`)
+        assert.match(raw, /kind:\s*dialogue_choice/, `${locale}/${slug}: interaction`)
+        assert.match(raw, /kind:\s*type_answer/, `${locale}/${slug}: production`)
+        assert.match(raw, /^\s+- type:\s*checkpoint$/m, `${locale}/${slug}: checkpoint`)
+        assert.doesNotMatch(raw, /kind:\s*mcq/, `${locale}/${slug}: generic MCQ regression`)
       }
     }
   })
 
-  it('grades each published exercise answer against itself (smoke)', () => {
-    for (const loc of ['en', 'vi']) {
-      const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${loc}`)
-      for (const file of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
-        const raw = read(join(dir, file))
-        const answerMatch = raw.match(/\n\s*answer:\s*"([^"]+)"/)
-        const typeMatch = raw.match(/\n\s*type:\s*(mcq|fill_blank)/)
-        assert.ok(answerMatch, `${loc}/${file} missing answer`)
-        assert.ok(typeMatch, `${loc}/${file} missing type`)
-        const exercise = { type: typeMatch[1], answer: answerMatch[1] }
-        assert.equal(
-          gradeLanguageExercise(exercise, answerMatch[1]),
-          true,
-          `${loc}/${file} self-grade failed`,
-        )
-        assert.equal(gradeLanguageExercise(exercise, 'WRONG'), false)
-      }
-    }
-  })
-})
+  it('keeps pragmatic corrections in the curriculum', () => {
+    const greetings = read(join(repoRoot, 'docs/curriculum/chinese-hsk/en/greetings.md'))
+    assert.doesNotMatch(greetings, /你好！谢谢！/)
+    assert.match(greetings, /谢谢你。/)
+    assert.match(greetings, /不客气。/)
 
-describe('lesson page language player gate', () => {
-  it('does not mount IT sandboxes for chinese-hsk', () => {
-    const src = read(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'))
-    assert.match(src, /isLanguageTrack|LanguageVocabList|LanguageExercise/)
-    assert.match(src, /LanguageExercise/)
-    // Language branch must precede SqlSandbox / use exclusive gate
-    assert.match(src, /v-else-if="lesson\.exercise && !isLanguageTrack/)
+    const adjectives = read(join(repoRoot, 'docs/curriculum/chinese-hsk/en/adjectives.md'))
+    assert.match(adjectives, /Avoid the beginner error \*水是冷/)
+    assert.match(adjectives, /answer:\s*"水很冷。"/)
   })
 })

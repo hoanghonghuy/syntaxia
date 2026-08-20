@@ -3,74 +3,87 @@ id: zh-hsk-b1-10-adjectives
 track: chinese-hsk
 locale: en
 slug: adjectives
-title: Simple descriptions
+title: "Describe size and temperature simply"
 order: 10
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Describe big/small/hot/cold"
-pattern: "大 / 小 / 冷 / 热"
+can_do: "Describe something as big/small or hot/cold with a natural beginner sentence"
+pattern: "很大 / 很小 / 很热 / 很冷"
 objectives:
-  - Describe size and quality
-  - Talk about amount and temperature
+  - "Use 很 + adjective in a neutral description"
+  - "Contrast 大 / 小 and 热 / 冷"
 vocab:
   - { hanzi: "大", pinyin: "dà", gloss: "big" }
   - { hanzi: "小", pinyin: "xiǎo", gloss: "small" }
+  - { hanzi: "热", pinyin: "rè", gloss: "hot" }
+  - { hanzi: "冷", pinyin: "lěng", gloss: "cold" }
   - { hanzi: "好", pinyin: "hǎo", gloss: "good" }
   - { hanzi: "多", pinyin: "duō", gloss: "many / much" }
   - { hanzi: "少", pinyin: "shǎo", gloss: "few / little" }
-  - { hanzi: "冷", pinyin: "lěng", gloss: "cold" }
-  - { hanzi: "热", pinyin: "rè", gloss: "hot" }
+  - { hanzi: "很", pinyin: "hěn", gloss: "very / linking adverb" }
 steps:
+  - type: scene
+    title: "Situation"
+    body: "You compare two objects and check whether the water is hot or cold."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "这个商店很大。", reading: "zhè ge shāng diàn hěn dà." }
-      - { speaker: "B", text: "今天很冷。茶很热。", reading: "jīn tiān hěn lěng. chá hěn rè." }
-      - { speaker: "A", text: "水果多，钱少。很好！", reading: "shuǐ guǒ duō, qián shǎo. hěn hǎo!" }
+      - { speaker: "A", text: "这个大吗？", reading: "zhè ge dà ma" }
+      - { speaker: "B", text: "不大，很小。", reading: "bú dà, hěn xiǎo" }
+      - { speaker: "A", text: "水热吗？", reading: "shuǐ rè ma" }
+      - { speaker: "B", text: "不热，很冷。", reading: "bú rè, hěn lěng" }
+  - type: listen
+    prompt: "Listen for the temperature description."
+    text: "水很冷。"
+    reading: "shuǐ hěn lěng"
   - type: tip
-    title: "很 + adjective"
-    body: "In short sentences, adjectives often follow 很 (very): 很大, 很冷. 大/小 = size; 冷/热 = temperature; 多/少 = amount; 好 = good."
+    title: "Do not insert 是 before a simple adjective"
+    body: "In a neutral description, 很 commonly links the subject and adjective: 水很冷, 这个很大. Avoid the beginner error *水是冷."
   - type: teach
     items:
-      - { form: "大", reading: "dà", gloss: "big", example: "很大" }
-      - { form: "小", reading: "xiǎo", gloss: "small", example: "很小" }
-      - { form: "冷", reading: "lěng", gloss: "cold", example: "今天很冷。" }
-      - { form: "热", reading: "rè", gloss: "hot", example: "茶很热。" }
-      - { form: "好", reading: "hǎo", gloss: "good", example: "很好！" }
+      - { form: "很大", reading: "hěn dà", gloss: "big / quite big", example: "这个很大。" }
+      - { form: "很小", reading: "hěn xiǎo", gloss: "small", example: "这个很小。" }
+      - { form: "很热", reading: "hěn rè", gloss: "hot", example: "水很热。" }
+      - { form: "很冷", reading: "hěn lěng", gloss: "cold", example: "水很冷。" }
   - type: practice
-    kind: mcq
-    prompt: "Which means “small”?"
+    id: zh-adj-natural-1
+    kind: dialogue_choice
+    prompt: "Which is the natural beginner sentence for “The water is cold”?"
+    choices: ["水很冷。", "水是冷。", "水冷是。"]
+    answer: "水很冷。"
+    explanation: "Use 很 + adjective in this neutral description, not 是 + adjective."
+  - type: practice
+    id: zh-adj-listen-1
+    kind: audio_choice
+    prompt: "Listen. Is the object big or small?"
+    audioText: "这个很小。"
     choices: ["小", "大", "热"]
     answer: "小"
-    hints:
-      - "大 is big."
   - type: practice
-    kind: mcq
-    prompt: "Which means “cold”?"
-    choices: ["冷", "热", "好"]
-    answer: "冷"
+    id: zh-adj-produce-1
+    kind: type_answer
+    prompt: "Type: “The water is hot.”"
+    answer: "水很热"
+    acceptedAnswers: ["水很热。"]
+    hints:
+      - "Use 水 + 很热."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “hot”?"
-        choices: ["热", "冷", "小"]
-        answer: "热"
-      - kind: mcq
-        prompt: "Which means “many / much”?"
-        choices: ["多", "少", "好"]
-        answer: "多"
-      - kind: mcq
-        prompt: "Which means “what”?"
-        choices: ["什么", "大", "冷"]
-        answer: "什么"
+      - id: zh-adj-check-1
+        kind: meaning_choice
+        prompt: "Which word means “small”?"
+        choices: ["小", "大", "多"]
+        answer: "小"
+      - id: zh-adj-check-2
+        kind: dialogue_choice
+        prompt: "Review: which question asks “Where is she?”"
+        choices: ["她在哪里？", "她是谁？", "她是老师吗？"]
+        answer: "她在哪里？"
 exercise:
-  type: mcq
-  prompt: "Which means “small”?"
-  choices: ["小", "大", "热"]
-  answer: "小"
-  hints:
-    - "大 is big."
-    - "小 is small."
+  type: dialogue_choice
+  prompt: "Which sentence naturally says “This is big”?"
+  choices: ["这个很大。", "这个是大。", "很这个大。"]
+  answer: "这个很大。"
 ---
 
-Practice simple descriptions step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Pinyin supports early reading, while listening, characters, interaction, production, and later review remain the learning loop.

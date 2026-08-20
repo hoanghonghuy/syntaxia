@@ -3,74 +3,85 @@ id: zh-hsk-b1-05-time-of-day
 track: chinese-hsk
 locale: en
 slug: time-of-day
-title: Days and parts of the day
+title: "Make a simple plan by day and time"
 order: 5
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Talk about today/tomorrow/morning/evening"
-pattern: "今天 / 明天 / 上午"
+can_do: "Say whether something happens today or tomorrow and place it in a part of the day"
+pattern: "我今天… / 我明天上午…"
 objectives:
-  - Contrast 今天 / 明天 / 昨天
-  - Place events in 上午 / 下午 / 晚上 / 现在
+  - "Contrast today, tomorrow, and yesterday"
+  - "Use morning / afternoon / evening in a short plan"
 vocab:
   - { hanzi: "今天", pinyin: "jīn tiān", gloss: "today" }
   - { hanzi: "明天", pinyin: "míng tiān", gloss: "tomorrow" }
   - { hanzi: "昨天", pinyin: "zuó tiān", gloss: "yesterday" }
-  - { hanzi: "上午", pinyin: "shàng wǔ", gloss: "morning (a.m.)" }
+  - { hanzi: "上午", pinyin: "shàng wǔ", gloss: "morning" }
   - { hanzi: "下午", pinyin: "xià wǔ", gloss: "afternoon" }
-  - { hanzi: "晚上", pinyin: "wǎn shang", gloss: "evening / night" }
+  - { hanzi: "晚上", pinyin: "wǎn shang", gloss: "evening" }
   - { hanzi: "现在", pinyin: "xiàn zài", gloss: "now" }
 steps:
+  - type: scene
+    title: "Situation"
+    body: "You and a classmate are deciding when to study together."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "今天上午我去学校。", reading: "jīn tiān shàng wǔ wǒ qù xué xiào." }
-      - { speaker: "B", text: "明天下午呢？", reading: "míng tiān xià wǔ ne?" }
-      - { speaker: "A", text: "现在回家。晚上见！", reading: "xiàn zài huí jiā. wǎn shang jiàn!" }
+      - { speaker: "A", text: "你明天上午学习汉语吗？", reading: "nǐ míng tiān shàng wǔ xué xí hàn yǔ ma" }
+      - { speaker: "B", text: "学习。你呢？", reading: "xué xí. nǐ ne" }
+      - { speaker: "A", text: "我明天下午学习。", reading: "wǒ míng tiān xià wǔ xué xí" }
+      - { speaker: "B", text: "好，明天见。", reading: "hǎo, míng tiān jiàn" }
+  - type: listen
+    prompt: "Listen for the day and part of the day."
+    text: "我明天下午学习。"
+    reading: "wǒ míng tiān xià wǔ xué xí"
   - type: tip
-    title: "Day trio + time parts"
-    body: "昨天 → 今天 → 明天 is the day sequence. 上午 / 下午 / 晚上 split the day. 现在 anchors “right now”."
+    title: "Time words anchor the event"
+    body: "A beginner-friendly pattern is 我 + time + action, for example 我明天下午学习. Learn 今天 / 明天 / 昨天 as a contrast set, then add 上午 / 下午 / 晚上."
   - type: teach
     items:
-      - { form: "今天", reading: "jīn tiān", gloss: "today", example: "今天很好。" }
-      - { form: "明天", reading: "míng tiān", gloss: "tomorrow", example: "明天见！" }
-      - { form: "上午", reading: "shàng wǔ", gloss: "morning", example: "今天上午" }
-      - { form: "晚上", reading: "wǎn shang", gloss: "evening", example: "晚上好。" }
-      - { form: "现在", reading: "xiàn zài", gloss: "now", example: "现在几点？" }
+      - { form: "今天", reading: "jīn tiān", gloss: "today", example: "我今天学习。" }
+      - { form: "明天", reading: "míng tiān", gloss: "tomorrow", example: "我明天学习。" }
+      - { form: "上午", reading: "shàng wǔ", gloss: "morning", example: "我明天上午学习。" }
+      - { form: "下午", reading: "xià wǔ", gloss: "afternoon", example: "我明天下午学习。" }
   - type: practice
-    kind: mcq
-    prompt: "Which means “tomorrow”?"
-    choices: ["明天", "昨天", "现在"]
-    answer: "明天"
+    id: zh-time-listen-1
+    kind: audio_choice
+    prompt: "Listen. When does the person study?"
+    audioText: "我明天下午学习。"
+    choices: ["明天下午", "今天上午", "明天晚上"]
+    answer: "明天下午"
+  - type: practice
+    id: zh-time-meaning-1
+    kind: meaning_choice
+    prompt: "Which word means “today”?"
+    choices: ["今天", "明天", "昨天"]
+    answer: "今天"
+  - type: practice
+    id: zh-time-produce-1
+    kind: type_answer
+    prompt: "Type: “I study tomorrow morning.”"
+    answer: "我明天上午学习"
+    acceptedAnswers: ["我明天上午学习。"]
     hints:
-      - "明 in 明天 points to the next day."
-  - type: practice
-    kind: mcq
-    prompt: "Which means “morning (a.m.)”?"
-    choices: ["上午", "晚上", "下午"]
-    answer: "上午"
+      - "Start with 我, then 明天上午."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “yesterday”?"
-        choices: ["昨天", "明天", "今天"]
-        answer: "昨天"
-      - kind: mcq
-        prompt: "Which means “now”?"
-        choices: ["现在", "上午", "晚上"]
-        answer: "现在"
-      - kind: mcq
-        prompt: "Which means “mom”?"
-        choices: ["妈妈", "今天", "明天"]
-        answer: "妈妈"
+      - id: zh-time-check-1
+        kind: meaning_choice
+        prompt: "Which means “evening”?"
+        choices: ["晚上", "上午", "现在"]
+        answer: "晚上"
+      - id: zh-time-check-2
+        kind: dialogue_choice
+        prompt: "Review: someone asks 这是谁？ What can introduce your mother?"
+        choices: ["这是我妈妈。", "我明天学习。", "三号。"]
+        answer: "这是我妈妈。"
 exercise:
-  type: mcq
-  prompt: "Which means “tomorrow”?"
-  choices: ["明天", "昨天", "现在"]
+  type: dialogue_choice
+  prompt: "Which word means “tomorrow”?"
+  choices: ["明天", "今天", "昨天"]
   answer: "明天"
-  hints:
-    - "明 points “bright / next” in 明天."
-    - "昨天 is yesterday."
 ---
 
-Practice scheduling simple plans step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Pinyin supports early reading, while listening, characters, interaction, production, and later review remain the learning loop.

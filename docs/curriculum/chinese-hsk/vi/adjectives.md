@@ -3,74 +3,87 @@ id: zh-hsk-b1-10-adjectives
 track: chinese-hsk
 locale: vi
 slug: adjectives
-title: Mô tả đơn giản
+title: "Mô tả kích thước và nhiệt độ đơn giản"
 order: 10
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Mô tả to/nhỏ/nóng/lạnh"
-pattern: "大 / 小 / 冷 / 热"
+can_do: "Mô tả một vật lớn/nhỏ hoặc nóng/lạnh bằng câu tự nhiên ở mức cơ bản"
+pattern: "很大 / 很小 / 很热 / 很冷"
 objectives:
-  - Mô tả kích thước và chất lượng
-  - Nói về số lượng và nhiệt độ
+  - "Dùng 很 + tính từ trong câu mô tả trung tính"
+  - "Phân biệt 大 / 小 và 热 / 冷"
 vocab:
-  - { hanzi: "大", pinyin: "dà", gloss: "to" }
+  - { hanzi: "大", pinyin: "dà", gloss: "lớn" }
   - { hanzi: "小", pinyin: "xiǎo", gloss: "nhỏ" }
+  - { hanzi: "热", pinyin: "rè", gloss: "nóng" }
+  - { hanzi: "冷", pinyin: "lěng", gloss: "lạnh" }
   - { hanzi: "好", pinyin: "hǎo", gloss: "tốt" }
   - { hanzi: "多", pinyin: "duō", gloss: "nhiều" }
   - { hanzi: "少", pinyin: "shǎo", gloss: "ít" }
-  - { hanzi: "冷", pinyin: "lěng", gloss: "lạnh" }
-  - { hanzi: "热", pinyin: "rè", gloss: "nóng" }
+  - { hanzi: "很", pinyin: "hěn", gloss: "rất / thường dùng trước tính từ" }
 steps:
+  - type: scene
+    title: "Tình huống"
+    body: "Bạn so sánh hai đồ vật rồi kiểm tra nước nóng hay lạnh."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "这个商店很大。", reading: "zhè ge shāng diàn hěn dà." }
-      - { speaker: "B", text: "今天很冷。茶很热。", reading: "jīn tiān hěn lěng. chá hěn rè." }
-      - { speaker: "A", text: "水果多，钱少。很好！", reading: "shuǐ guǒ duō, qián shǎo. hěn hǎo!" }
+      - { speaker: "A", text: "这个大吗？", reading: "zhè ge dà ma" }
+      - { speaker: "B", text: "不大，很小。", reading: "bú dà, hěn xiǎo" }
+      - { speaker: "A", text: "水热吗？", reading: "shuǐ rè ma" }
+      - { speaker: "B", text: "不热，很冷。", reading: "bú rè, hěn lěng" }
+  - type: listen
+    prompt: "Nghe câu mô tả nhiệt độ."
+    text: "水很冷。"
+    reading: "shuǐ hěn lěng"
   - type: tip
-    title: "很 + tính từ"
-    body: "Trong câu ngắn, tính từ thường theo 很 (rất): 很大, 很冷. 大/小 = kích thước; 冷/热 = nhiệt độ; 多/少 = số lượng; 好 = tốt."
+    title: "Không chèn 是 trước tính từ đơn giản"
+    body: "Trong câu mô tả trung tính, 很 thường nối chủ ngữ với tính từ: 水很冷, 这个很大. Tránh lỗi cơ bản *水是冷."
   - type: teach
     items:
-      - { form: "大", reading: "dà", gloss: "to", example: "很大" }
-      - { form: "小", reading: "xiǎo", gloss: "nhỏ", example: "很小" }
-      - { form: "冷", reading: "lěng", gloss: "lạnh", example: "今天很冷。" }
-      - { form: "热", reading: "rè", gloss: "nóng", example: "茶很热。" }
-      - { form: "好", reading: "hǎo", gloss: "tốt", example: "很好！" }
+      - { form: "很大", reading: "hěn dà", gloss: "lớn", example: "这个很大。" }
+      - { form: "很小", reading: "hěn xiǎo", gloss: "nhỏ", example: "这个很小。" }
+      - { form: "很热", reading: "hěn rè", gloss: "nóng", example: "水很热。" }
+      - { form: "很冷", reading: "hěn lěng", gloss: "lạnh", example: "水很冷。" }
   - type: practice
-    kind: mcq
-    prompt: "Từ nào nghĩa là “nhỏ”?"
+    id: zh-adj-natural-1
+    kind: dialogue_choice
+    prompt: "Câu nào tự nhiên ở mức cơ bản cho “Nước lạnh”?"
+    choices: ["水很冷。", "水是冷。", "水冷是。"]
+    answer: "水很冷。"
+    explanation: "Trong mô tả trung tính này dùng 很 + tính từ, không dùng 是 + tính từ."
+  - type: practice
+    id: zh-adj-listen-1
+    kind: audio_choice
+    prompt: "Nghe. Vật được mô tả là lớn hay nhỏ?"
+    audioText: "这个很小。"
     choices: ["小", "大", "热"]
     answer: "小"
-    hints:
-      - "大 là to."
   - type: practice
-    kind: mcq
-    prompt: "Từ nào nghĩa “lạnh”?"
-    choices: ["冷", "热", "好"]
-    answer: "冷"
+    id: zh-adj-produce-1
+    kind: type_answer
+    prompt: "Gõ câu: “Nước nóng.”"
+    answer: "水很热"
+    acceptedAnswers: ["水很热。"]
+    hints:
+      - "Dùng 水 + 很热."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào nghĩa “nóng”?"
-        choices: ["热", "冷", "小"]
-        answer: "热"
-      - kind: mcq
-        prompt: "Từ nào nghĩa “nhiều”?"
-        choices: ["多", "少", "好"]
-        answer: "多"
-      - kind: mcq
-        prompt: "Từ nào nghĩa “cái gì”?"
-        choices: ["什么", "大", "冷"]
-        answer: "什么"
+      - id: zh-adj-check-1
+        kind: meaning_choice
+        prompt: "Từ nào có nghĩa “nhỏ”?"
+        choices: ["小", "大", "多"]
+        answer: "小"
+      - id: zh-adj-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: câu nào hỏi “Cô ấy ở đâu?”"
+        choices: ["她在哪里？", "她是谁？", "她是老师吗？"]
+        answer: "她在哪里？"
 exercise:
-  type: mcq
-  prompt: "Từ nào nghĩa là “nhỏ”?"
-  choices: ["小", "大", "热"]
-  answer: "小"
-  hints:
-    - "大 là to."
-    - "小 là nhỏ."
+  type: dialogue_choice
+  prompt: "Câu nào tự nhiên để nói “Cái này lớn”?"
+  choices: ["这个很大。", "这个是大。", "很这个大。"]
+  answer: "这个很大。"
 ---
 
-Luyện mô tả đơn giản theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Phần học có hướng dẫn ở trên là nội dung chính. Pinyin hỗ trợ đọc ở giai đoạn đầu; nghe, chữ Hán, tương tác, tự tạo câu và ôn lại mới là vòng học cốt lõi.
