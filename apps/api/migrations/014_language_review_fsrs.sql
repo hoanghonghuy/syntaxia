@@ -13,10 +13,11 @@ CREATE TABLE IF NOT EXISTS language_review_cards (
     lapses BIGINT NOT NULL DEFAULT 0 CHECK (lapses >= 0),
     state SMALLINT NOT NULL DEFAULT 0 CHECK (state BETWEEN 0 AND 3),
     last_review_at TIMESTAMPTZ,
-    remaining_steps INT NOT NULL DEFAULT 0,
+    remaining_steps INT NOT NULL DEFAULT 0 CHECK (remaining_steps >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    PRIMARY KEY (user_id, lesson_id, locale, item_key)
+    PRIMARY KEY (user_id, lesson_id, locale, item_key),
+    FOREIGN KEY (lesson_id, locale) REFERENCES lessons(id, locale) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_language_review_cards_due
@@ -30,12 +31,12 @@ CREATE TABLE IF NOT EXISTS language_review_logs (
     locale TEXT NOT NULL,
     item_key TEXT NOT NULL,
     rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 4),
-    response_ms INT CHECK (response_ms IS NULL OR response_ms >= 0),
+    response_ms INT CHECK (response_ms IS NULL OR response_ms BETWEEN 0 AND 86400000),
     reviewed_at TIMESTAMPTZ NOT NULL,
     due_before TIMESTAMPTZ NOT NULL,
     due_after TIMESTAMPTZ NOT NULL,
-    state_before SMALLINT NOT NULL,
-    state_after SMALLINT NOT NULL,
+    state_before SMALLINT NOT NULL CHECK (state_before BETWEEN 0 AND 3),
+    state_after SMALLINT NOT NULL CHECK (state_after BETWEEN 0 AND 3),
     stability_before DOUBLE PRECISION NOT NULL,
     stability_after DOUBLE PRECISION NOT NULL,
     difficulty_before DOUBLE PRECISION NOT NULL,
@@ -44,3 +45,6 @@ CREATE TABLE IF NOT EXISTS language_review_logs (
 
 CREATE INDEX IF NOT EXISTS idx_language_review_logs_user_reviewed
     ON language_review_logs (user_id, reviewed_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_language_review_logs_item_history
+    ON language_review_logs (user_id, lesson_id, locale, item_key, reviewed_at DESC);
