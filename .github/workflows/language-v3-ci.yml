@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   api:
-    name: API · Go test and vet
+    name: API · Go verify, test and vet
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,29 +33,19 @@ jobs:
           cache: true
           cache-dependency-path: apps/api/go.sum
 
-      - name: Resolve module graph
-        run: go mod tidy
+      - name: Verify committed module graph
+        run: |
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
+
+      - name: Verify module checksums
+        run: go mod verify
 
       - name: Unit tests
-        run: go test ./...
+        run: go test -mod=readonly ./...
 
       - name: Vet
-        run: go vet ./...
-
-      - name: Show module-file changes
-        if: always()
-        run: git diff -- go.mod go.sum || true
-
-      - name: Upload resolved module files
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: api-module-files
-          path: |
-            apps/api/go.mod
-            apps/api/go.sum
-          if-no-files-found: error
-          retention-days: 3
+        run: go vet -mod=readonly ./...
 
   web:
     name: Web · build and language regression

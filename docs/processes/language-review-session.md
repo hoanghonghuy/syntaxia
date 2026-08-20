@@ -37,7 +37,7 @@ A completed language lesson becomes eligible for review. Review cards are lazily
 Authenticated routes:
 
 - `GET /api/v1/language/review/due?track=<track>&locale=<locale>&limit=<n>`
-  - validates the language track request
+  - validates the requested track exists and has category `languages`
   - ensures cards exist for completed lessons
   - returns only cards whose `due_at <= now`
   - ordered by due time
@@ -57,6 +57,16 @@ Current product interaction:
 - writes for one screen are serialized so a rapid wrong -> correct retry cannot reorder `Again` and `Good`
 
 Hard/Easy self-assessment can be exposed later without changing persistence or the scheduler contract.
+
+## Concurrency contract
+
+Each submitted rating is one user review event and MUST be applied at most once to the scheduler state that produced it.
+
+- The API reads the current card, schedules exactly once, then persists with compare-and-swap against the complete prior FSRS state.
+- Card update and log insert remain one database transaction.
+- If another request/device changes that state first, compare-and-swap returns no row and the API responds `409 Conflict`.
+- The server MUST NOT automatically re-read newer state and replay the same submitted rating. Doing that would turn one concurrent request into an additional review event.
+- A client receiving `409` should refresh/reload review state and let the learner retry explicitly if the interaction still needs to be recorded.
 
 ## Session flow
 
@@ -85,11 +95,21 @@ Keep it wired into:
 
 The API runtime uses `github.com/open-spaced-repetition/go-fsrs/v4` (FSRS v6 aligned) and Go 1.26.
 
+CI must keep the module graph reproducible:
+
+1. `go mod tidy`
+2. fail if `go.mod` or `go.sum` changes
+3. `go mod verify`
+4. run tests/vet with `-mod=readonly`
+
+A dependency added to `go.mod` without its committed checksums is therefore a CI failure rather than a runtime/build surprise.
+
 ## Do
 
 - Keep authored item IDs stable after publishing.
 - Store scheduler state and logs server-side.
 - Keep card update + log insert transactional.
+- Return conflict instead of replaying a stale concurrent rating.
 - Preserve review history when changing UI.
 - Treat failed attempts as useful scheduling evidence.
 
@@ -98,6 +118,7 @@ The API runtime uses `github.com/open-spaced-repetition/go-fsrs/v4` (FSRS v6 ali
 - Do not randomly sample completed questions and call it spaced repetition.
 - Do not delete review logs when a lesson is merely marked incomplete.
 - Do not derive due dates in the frontend.
+- Do not automatically replay a rating after a compare-and-swap conflict.
 - Do not mass-reorder legacy id-less assessed steps before adding stable IDs.
 - Do not mix lesson-completion semantics with memory-state semantics.
 

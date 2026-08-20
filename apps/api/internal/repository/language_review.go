@@ -11,6 +11,16 @@ import (
 	"syntaxia/apps/api/internal/domain"
 )
 
+func (r *Repository) IsLanguageTrack(ctx context.Context, trackID string) (bool, error) {
+	var isLanguage bool
+	err := r.pool.QueryRow(ctx, `
+		SELECT COALESCE(category, 'sql') = 'languages'
+		FROM tracks
+		WHERE id = $1
+	`, trackID).Scan(&isLanguage)
+	return isLanguage, err
+}
+
 // SyncLanguageReviewCards keeps active review cards aligned with the currently
 // published exercise definition. Review logs are intentionally left untouched.
 func (r *Repository) SyncLanguageReviewCards(
@@ -41,7 +51,9 @@ func (r *Repository) SyncLanguageReviewCards(
 			INSERT INTO language_review_cards (
 				user_id, track_id, lesson_id, locale, item_key, due_at
 			) VALUES ($1, $2, $3, $4, $5, $6)
-			ON CONFLICT (user_id, lesson_id, locale, item_key) DO NOTHING
+			ON CONFLICT (user_id, lesson_id, locale, item_key) DO UPDATE SET
+				track_id = EXCLUDED.track_id,
+				updated_at = now()
 		`, userID, trackID, lessonID, locale, itemKey, due); err != nil {
 			return err
 		}
@@ -135,7 +147,7 @@ func (r *Repository) ListDueLanguageReviewCards(
 // SaveLanguageReviewCAS atomically updates a card only when it still matches
 // the state that the scheduler read, then appends the review log. A false
 // return means another request/device updated the card first and the caller
-// should re-read and retry the scheduling operation.
+// must report a conflict instead of re-applying the same rating to newer state.
 func (r *Repository) SaveLanguageReviewCAS(
 	ctx context.Context,
 	before domain.LanguageReviewCard,

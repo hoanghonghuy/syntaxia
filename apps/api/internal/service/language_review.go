@@ -20,7 +20,6 @@ import (
 const defaultLanguageReviewLimit = 12
 const maxLanguageReviewLimit = 50
 const maxLanguageReviewResponseMS = 24 * 60 * 60 * 1000
-const languageReviewWriteRetries = 4
 
 func (s *LearningService) DueLanguageReviews(
 	ctx context.Context,
@@ -41,6 +40,17 @@ func (s *LearningService) DueLanguageReviews(
 	}
 	if limit > maxLanguageReviewLimit {
 		limit = maxLanguageReviewLimit
+	}
+
+	isLanguageTrack, err := s.repo.IsLanguageTrack(ctx, trackID)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, apperrors.NotFound("track not found")
+	}
+	if err != nil {
+		return nil, apperrors.Internal(err)
+	}
+	if !isLanguageTrack {
+		return nil, apperrors.Validation("track must be a language track")
 	}
 
 	now := time.Now().UTC()
@@ -98,29 +108,26 @@ func (s *LearningService) RecordLanguageReview(
 		return domain.LanguageReviewCard{}, apperrors.NotFound("review item not found")
 	}
 
-	for attempt := 0; attempt < languageReviewWriteRetries; attempt++ {
-		before, err := s.repo.GetLanguageReviewCard(ctx, userID, lessonID, locale, itemKey)
-		if errors.Is(err, pgx.ErrNoRows) {
-			return domain.LanguageReviewCard{}, apperrors.NotFound("review item not found")
-		}
-		if err != nil {
-			return domain.LanguageReviewCard{}, apperrors.Internal(err)
-		}
-
-		after, log, err := scheduleLanguageReview(before, fsrs.Rating(rating), responseMS, time.Now().UTC())
-		if err != nil {
-			return domain.LanguageReviewCard{}, apperrors.Internal(err)
-		}
-		applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log)
-		if err != nil {
-			return domain.LanguageReviewCard{}, apperrors.Internal(err)
-		}
-		if applied {
-			return after, nil
-		}
+	before, err := s.repo.GetLanguageReviewCard(ctx, userID, lessonID, locale, itemKey)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.LanguageReviewCard{}, apperrors.NotFound("review item not found")
+	}
+	if err != nil {
+		return domain.LanguageReviewCard{}, apperrors.Internal(err)
 	}
 
-	return domain.LanguageReviewCard{}, apperrors.Conflict("review state changed; retry the answer")
+	after, log, err := scheduleLanguageReview(before, fsrs.Rating(rating), responseMS, time.Now().UTC())
+	if err != nil {
+		return domain.LanguageReviewCard{}, apperrors.Internal(err)
+	}
+	applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log)
+	if err != nil {
+		return domain.LanguageReviewCard{}, apperrors.Internal(err)
+	}
+	if !applied {
+		return domain.LanguageReviewCard{}, apperrors.Conflict("review state changed; retry the answer")
+	}
+	return after, nil
 }
 
 func scheduleLanguageReview(
