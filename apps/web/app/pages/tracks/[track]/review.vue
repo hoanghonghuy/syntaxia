@@ -17,6 +17,13 @@
       <NuxtLink class="btn btn-primary" :to="loginPath">{{ t('nav.login') }}</NuxtLink>
     </aside>
 
+    <template v-else-if="caughtUp">
+      <p class="review-done" role="status">{{ t('lesson.reviewDone') }}</p>
+      <NuxtLink class="btn btn-ghost" :to="localePath(`/tracks/${trackId}`)">
+        {{ t('lesson.backToTrack') }}
+      </NuxtLink>
+    </template>
+
     <p v-else-if="!session.length" class="muted">{{ t('lesson.reviewEmpty') }}</p>
 
     <template v-else-if="finished">
@@ -33,6 +40,7 @@
         </p>
         <p class="review-due muted">{{ t('lesson.reviewLead') }}</p>
       </div>
+      <p v-if="writeError" class="review-write-error" role="alert">{{ writeError }}</p>
       <LanguageExercise
         :key="currentKey"
         :exercise="current!.exercise"
@@ -72,16 +80,21 @@ const trackTitle = computed(() => {
 const trackEyebrow = computed(() => trackTitle.value)
 const loading = ref(true)
 const loadError = ref('')
+const writeError = ref('')
 const session = ref<(IndexedLanguageReviewExercise & { card: LanguageReviewCard })[]>([])
 const index = ref(0)
 const finished = ref(false)
+const caughtUp = ref(false)
+const exerciseRevision = ref(0)
 const lastAttemptWasCorrect = ref(false)
 const lastResponseMs = ref<number | undefined>()
 let pendingReviewWrite: Promise<void> = Promise.resolve()
 
 const lead = computed(() => t('lesson.reviewLead'))
 const current = computed(() => session.value[index.value])
-const currentKey = computed(() => current.value ? `${current.value.lessonId}:${current.value.itemKey}:${index.value}` : 'empty')
+const currentKey = computed(() => current.value
+  ? `${current.value.lessonId}:${current.value.itemKey}:${index.value}:${exerciseRevision.value}`
+  : 'empty')
 const loginPath = computed(() => ({
   path: localePath('/login'),
   query: { redirect: localePath(`/tracks/${trackId.value}/review`) },
@@ -104,9 +117,14 @@ async function loadReview() {
   pendingReviewWrite = Promise.resolve()
   loading.value = true
   loadError.value = ''
+  writeError.value = ''
   finished.value = false
+  caughtUp.value = false
   index.value = 0
+  exerciseRevision.value = 0
   session.value = []
+  lastAttemptWasCorrect.value = false
+  lastResponseMs.value = undefined
   try {
     await catalog.loadTracks()
     await catalog.loadLessons(trackId.value, locale.value)
@@ -118,11 +136,14 @@ async function loadReview() {
     if (!auth.user) return
 
     await catalog.loadProgress()
-    const dueCards = await api.dueLanguageReviews(trackId.value, locale.value, 12)
-    if (!dueCards.length) return
-
     const list = catalog.lessonsByTrack[trackId.value] || catalog.lessons
     const completed = completedLessonSummaries(list, catalog.progress, locale.value)
+    const dueCards = await api.dueLanguageReviews(trackId.value, locale.value, 12)
+    if (!dueCards.length) {
+      caughtUp.value = completed.length > 0
+      return
+    }
+
     const dueLessonIds = new Set(dueCards.map((card) => card.lessonId))
     const bodies: Lesson[] = []
     for (const item of completed.filter((lesson) => dueLessonIds.has(lesson.id))) {
@@ -143,6 +164,9 @@ async function loadReview() {
       const item = indexed.get(`${card.lessonId}\0${card.itemKey}`)
       return item ? [{ ...item, card }] : []
     })
+    if (!session.value.length) {
+      loadError.value = t('lesson.loadErrorGeneric')
+    }
   } catch (error) {
     loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
   } finally {
@@ -150,31 +174,43 @@ async function loadReview() {
   }
 }
 
+function resetCurrentExerciseAfterWriteFailure() {
+  pendingReviewWrite = Promise.resolve()
+  lastAttemptWasCorrect.value = false
+  lastResponseMs.value = undefined
+  exerciseRevision.value += 1
+}
+
 function onAttempt(payload: { correct: boolean; responseMs: number }) {
   lastAttemptWasCorrect.value = payload.correct
   lastResponseMs.value = payload.responseMs
   const item = current.value
   if (!item || payload.correct) return
-  pendingReviewWrite = pendingReviewWrite.then(async () => {
-    try {
-      const card = await api.recordLanguageReview({
-        lessonId: item.lessonId,
-        locale: locale.value,
-        itemKey: item.itemKey,
-        rating: 1,
-        responseMs: payload.responseMs,
-      })
-      item.card = card
-    } catch (error) {
-      loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
-      throw error
-    }
-  })
+
+  writeError.value = ''
+  pendingReviewWrite = pendingReviewWrite
+    .catch(() => undefined)
+    .then(async () => {
+      try {
+        const card = await api.recordLanguageReview({
+          lessonId: item.lessonId,
+          locale: locale.value,
+          itemKey: item.itemKey,
+          rating: 1,
+          responseMs: payload.responseMs,
+        })
+        item.card = card
+      } catch (error) {
+        writeError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
+        throw error
+      }
+    })
 }
 
 async function onPassed() {
   const item = current.value
   if (!item || !lastAttemptWasCorrect.value) return
+  writeError.value = ''
   try {
     await pendingReviewWrite
     const card = await api.recordLanguageReview({
@@ -186,13 +222,15 @@ async function onPassed() {
     })
     item.card = card
   } catch (error) {
-    loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
-    pendingReviewWrite = Promise.resolve()
+    writeError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
+    resetCurrentExerciseAfterWriteFailure()
     return
   }
+
   pendingReviewWrite = Promise.resolve()
   lastAttemptWasCorrect.value = false
   lastResponseMs.value = undefined
+  exerciseRevision.value = 0
   if (index.value >= session.value.length - 1) {
     finished.value = true
     return
@@ -210,6 +248,7 @@ watch([trackId, locale], loadReview)
 .review-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin-bottom: .75rem; }
 .review-progress, .review-due { margin: 0; font-size: .86rem; }
 .review-done { margin: 1.25rem 0 1rem; font-weight: 650; color: var(--color-accent, #0d9488); }
+.review-write-error { margin: 0 0 .8rem; padding: .7rem .8rem; border-radius: 10px; background: color-mix(in srgb, var(--color-danger, #b45309) 10%, transparent); color: var(--color-danger, #b45309); }
 .auth-soft-prompt { margin-top: 1rem; padding: 1rem 1.2rem; border: 1px solid var(--color-hairline); border-radius: 12px; background: var(--color-surface-soft); }
 .auth-soft-prompt p { margin: 0 0 .8rem; }
 </style>
