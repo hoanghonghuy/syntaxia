@@ -1,0 +1,99 @@
+name: Language v3 CI
+
+on:
+  push:
+    branches:
+      - feature/language-learning-v3
+  pull_request:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+
+concurrency:
+  group: language-v3-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API · Go test and vet
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+
+      - name: Resolve module graph
+        run: go mod tidy
+
+      - name: Unit tests
+        run: go test ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Show module-file changes
+        if: always()
+        run: git diff -- go.mod go.sum || true
+
+      - name: Upload resolved module files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-module-files
+          path: |
+            apps/api/go.mod
+            apps/api/go.sum
+          if-no-files-found: error
+          retention-days: 3
+
+  web:
+    name: Web · build and language regression
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Language v3 contract
+        run: npm run test:language-v3
+
+      - name: Language path regression
+        run: npm run test:language-path-v2
+
+      - name: Language audio regression
+        run: npm run test:language-audio
+
+      - name: Language review regression
+        run: npm run test:language-review
+
+      - name: i18n parity
+        run: npm run test:i18n
+
+      - name: Existing audit regression
+        run: npm run test:audit-remediation
