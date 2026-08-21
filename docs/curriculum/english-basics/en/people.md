@@ -7,6 +7,11 @@ title: Introduce another person
 order: 2
 published: true
 cefr_level: a1
+unit_id: en-a1-people-02
+unit_title: "Introduce people close to you"
+unit_order: 2
+unit_can_do: "Ask who someone is and introduce a friend or family member"
+unit_role: lesson
 can_do: "Ask who someone is and introduce a friend in one or two sentences"
 pattern: "Who's that? / This is … / He's … / She's …"
 objectives:
