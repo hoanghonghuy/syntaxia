@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Languages domain E2E: register -> lesson(?track=) -> progress -> notes for ZH/EN/JA.
+  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review for ZH/EN/JA.
 
 .PARAMETER BaseUrl
   API base URL. Default http://127.0.0.1:8082
@@ -53,12 +53,13 @@ if ($me.Json.email -ne $email) {
 Ok "auth/me"
 
 $flows = @(
-  @{ Track = "chinese-hsk"; Slug = "greetings"; MinLessons = 12 },
-  @{ Track = "english-basics"; Slug = "greetings"; MinLessons = 6 },
-  @{ Track = "japanese-jlpt"; Slug = "politeness"; MinLessons = 6 },
+  @{ Track = "chinese-hsk"; Slug = "greetings"; MinLessons = 30 },
+  @{ Track = "english-basics"; Slug = "greetings"; MinLessons = 13 },
+  @{ Track = "japanese-jlpt"; Slug = "politeness"; MinLessons = 16 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; MinLessons = 6 }
 )
 
+$reviewLessonId = $null
 foreach ($flow in $flows) {
   $track = $flow.Track
   $slug = $flow.Slug
@@ -68,6 +69,18 @@ foreach ($flow in $flows) {
   $lessons = @($list.Json)
   if ($lessons.Count -lt $flow.MinLessons) {
     Fail "$track lesson count $($lessons.Count) < $($flow.MinLessons)"
+  }
+
+  if ($track -ne "chinese-it-vocab") {
+    $unitRows = @($lessons | Where-Object { $_.unitId })
+    if ($unitRows.Count -ne $lessons.Count) {
+      Fail "$track has $($lessons.Count - $unitRows.Count) lesson summaries without unitId"
+    }
+    $roles = @($lessons | ForEach-Object { $_.unitRole } | Where-Object { $_ })
+    if (-not ($roles -contains "checkpoint") -or -not ($roles -contains "review")) {
+      Fail "$track summary is missing checkpoint/review unit roles"
+    }
+    Ok "$track communicative-unit summary metadata"
   }
 
   $lesson = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/lessons/${slug}?locale=en&track=$track" -Session $session
@@ -86,6 +99,10 @@ foreach ($flow in $flows) {
     Fail "$track progress not completed"
   }
   Ok "$track progress completed"
+
+  if ($track -eq "chinese-hsk") {
+    $reviewLessonId = $lessonId
+  }
 
   $noteBody = (@{
     locale = "en"
@@ -116,6 +133,54 @@ if ($progRows.Count -lt 3) {
   Fail "expected >= 3 progress rows, got $($progRows.Count)"
 }
 Ok "progress rows=$($progRows.Count)"
+
+if (-not $reviewLessonId) {
+  Fail "missing completed Mandarin lesson for review smoke"
+}
+
+# GET /due creates missing cards from the completed lesson's authored stable item IDs.
+$due = Invoke-SyntaxiaApi -Method GET `
+  -Path "/api/v1/language/review/due?track=chinese-hsk&locale=en&limit=50" `
+  -Session $session
+$dueCards = @($due.Json)
+$reviewItemKey = "zh-greet-reply-1"
+$seedCard = @($dueCards | Where-Object {
+  $_.lessonId -eq $reviewLessonId -and $_.itemKey -eq $reviewItemKey
+}) | Select-Object -First 1
+if (-not $seedCard) {
+  Fail "review due sync did not create $reviewItemKey for $reviewLessonId"
+}
+Ok "review card synced from authored item id"
+
+$reviewBody = (@{
+  lessonId   = $reviewLessonId
+  locale     = "en"
+  itemKey    = $reviewItemKey
+  rating     = 3
+  responseMs = 1200
+} | ConvertTo-Json -Compress)
+$firstReview = Invoke-SyntaxiaApi -Method POST `
+  -Path "/api/v1/language/review" -JsonBody $reviewBody -Session $session
+if ($firstReview.Json.itemKey -ne $reviewItemKey -or [int64]$firstReview.Json.reps -lt 1) {
+  Fail "first persisted review response invalid"
+}
+$firstReps = [int64]$firstReview.Json.reps
+Ok "review persisted reps=$firstReps"
+
+$reviewBody2 = (@{
+  lessonId   = $reviewLessonId
+  locale     = "en"
+  itemKey    = $reviewItemKey
+  rating     = 4
+  responseMs = 900
+} | ConvertTo-Json -Compress)
+$secondReview = Invoke-SyntaxiaApi -Method POST `
+  -Path "/api/v1/language/review" -JsonBody $reviewBody2 -Session $session
+$secondReps = [int64]$secondReview.Json.reps
+if ($secondReps -le $firstReps) {
+  Fail "review state was not loaded/persisted across requests: $firstReps -> $secondReps"
+}
+Ok "review state persisted across requests reps=$secondReps"
 
 Invoke-SyntaxiaApi -Method POST -Path "/api/v1/auth/logout" -Session $session -ExpectStatus @(200, 204) | Out-Null
 Ok "logout"
