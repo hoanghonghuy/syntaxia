@@ -1,51 +1,69 @@
 <template>
   <nav class="unit-path" :aria-label="t('lesson.unitPath')">
-    <ol class="unit-path-list">
-      <li
-        v-for="node in nodes"
-        :key="node.id"
-        class="unit-path-item"
-        :class="{
-          'is-done': node.state === 'done',
-          'is-current': node.state === 'current',
-          'is-locked': node.state === 'locked',
-        }"
-      >
-        <NuxtLink
-          v-if="node.clickable"
-          class="unit-path-node"
-          :to="localePath(`/tracks/${trackId}/lessons/${node.slug}`)"
+    <section v-for="unit in units" :key="unit.id" class="unit-path-group">
+      <header class="unit-path-head">
+        <h2 class="unit-path-heading">{{ unit.title }}</h2>
+        <p v-if="unit.canDo" class="unit-path-can-do">{{ unit.canDo }}</p>
+      </header>
+
+      <ol class="unit-path-list">
+        <li
+          v-for="node in unit.nodes"
+          :key="node.id"
+          class="unit-path-item"
+          :class="{
+            'is-done': node.state === 'done',
+            'is-current': node.state === 'current',
+            'is-locked': node.state === 'locked',
+            'is-checkpoint': node.role === 'checkpoint',
+            'is-review': node.role === 'review',
+          }"
         >
-          <span class="unit-path-dot" aria-hidden="true">
-            <span v-if="node.state === 'done'">✓</span>
-            <span v-else>{{ node.sortOrder }}</span>
-          </span>
-          <span class="unit-path-copy">
-            <span class="unit-path-title">{{ node.title }}</span>
-            <span v-if="node.state === 'current'" class="unit-path-meta">{{
-              t('lesson.unitUpNext')
-            }}</span>
-          </span>
-        </NuxtLink>
-        <div v-else class="unit-path-node is-static" :aria-disabled="true">
-          <span class="unit-path-dot" aria-hidden="true">{{ node.sortOrder }}</span>
-          <span class="unit-path-copy">
-            <span class="unit-path-title">{{ node.title }}</span>
-            <span class="unit-path-meta">{{ t('lesson.unitLocked') }}</span>
-          </span>
-        </div>
-      </li>
-    </ol>
+          <NuxtLink
+            v-if="node.clickable"
+            class="unit-path-node"
+            :to="localePath(`/tracks/${trackId}/lessons/${node.slug}`)"
+          >
+            <span class="unit-path-dot" aria-hidden="true">
+              <span v-if="node.state === 'done'">✓</span>
+              <span v-else-if="node.role === 'checkpoint'">◆</span>
+              <span v-else-if="node.role === 'review'">↻</span>
+              <span v-else>{{ node.sortOrder }}</span>
+            </span>
+            <span class="unit-path-copy">
+              <span class="unit-path-title">{{ node.title }}</span>
+              <span v-if="node.state === 'current'" class="unit-path-meta">{{
+                t('lesson.unitUpNext')
+              }}</span>
+            </span>
+          </NuxtLink>
+          <div v-else class="unit-path-node is-static" :aria-disabled="true">
+            <span class="unit-path-dot" aria-hidden="true">
+              <span v-if="node.role === 'checkpoint'">◆</span>
+              <span v-else-if="node.role === 'review'">↻</span>
+              <span v-else>{{ node.sortOrder }}</span>
+            </span>
+            <span class="unit-path-copy">
+              <span class="unit-path-title">{{ node.title }}</span>
+              <span class="unit-path-meta">{{ t('lesson.unitLocked') }}</span>
+            </span>
+          </div>
+        </li>
+      </ol>
+    </section>
   </nav>
 </template>
 
 <script setup lang="ts">
-import type { LessonSummary, Progress } from '~/types/api'
-import { buildLanguageUnitPath } from '~/utils/learningPath'
+import type { Progress } from '~/types/api'
+import {
+  buildLanguageUnits,
+  type LanguageUnitLesson,
+} from '~/utils/languageUnits'
 
 const props = defineProps<{
   trackId: string
-  lessons: LessonSummary[]
+  lessons: LanguageUnitLesson[]
   progress: Progress[]
   locale: string
 }>()
@@ -53,15 +71,37 @@ const props = defineProps<{
 const { t } = useI18n()
 const localePath = useLocalePath()
 
-const nodes = computed(() =>
-  buildLanguageUnitPath(props.lessons, props.progress, props.locale),
+const units = computed(() =>
+  buildLanguageUnits(props.lessons, props.progress, props.locale),
 )
 </script>
 
 <style scoped>
 .unit-path {
+  display: grid;
+  gap: 1.5rem;
   margin: 1.25rem 0 0.5rem;
-  max-width: 28rem;
+  max-width: 32rem;
+}
+.unit-path-group {
+  min-width: 0;
+}
+.unit-path-head {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.55rem;
+  padding-left: 0.15rem;
+}
+.unit-path-heading {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+.unit-path-can-do {
+  margin: 0;
+  color: var(--color-muted, #5b6b63);
+  font-size: 0.85rem;
+  line-height: 1.45;
 }
 .unit-path-list {
   list-style: none;
@@ -73,7 +113,7 @@ const nodes = computed(() =>
 }
 .unit-path-item {
   position: relative;
-  padding: 0.35rem 0 0.35rem 0;
+  padding: 0.35rem 0;
 }
 .unit-path-item:not(:last-child)::before {
   content: '';
@@ -116,6 +156,12 @@ const nodes = computed(() =>
   border: 2px solid var(--color-border, #c5d0c9);
   background: var(--color-surface, #fff);
   z-index: 1;
+}
+.is-checkpoint .unit-path-dot {
+  border-radius: 0.7rem;
+}
+.is-review .unit-path-dot {
+  border-style: dashed;
 }
 .is-done .unit-path-dot {
   border-color: var(--color-accent, #0d9488);
