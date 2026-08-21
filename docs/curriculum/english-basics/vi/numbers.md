@@ -7,6 +7,11 @@ title: Nói và xác nhận một con số
 order: 3
 published: true
 cefr_level: a1
+unit_id: en-a1-find-way-03
+unit_title: "Tìm đường và địa điểm"
+unit_order: 3
+unit_can_do: "Xác nhận số phòng và hỏi vị trí một địa điểm quen thuộc"
+unit_role: lesson
 can_do: "Nghe hiểu và nói một số đơn giản từ một đến mười trong một đoạn trao đổi ngắn"
 pattern: "What number? / Number eight. / Eight? — Yes."
 objectives:
