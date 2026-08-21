@@ -8,6 +8,11 @@ order: 8
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-info-06
+unit_title: "Hỏi về người và nơi chốn"
+unit_order: 6
+unit_can_do: "Hỏi ai hoặc ở đâu và trả lời bằng một người, địa điểm hoặc nơi đến trong hội thoại ngắn"
+unit_role: lesson
 can_do: "Hỏi ai đó đi đâu và trả lời bằng một địa điểm thông dụng"
 pattern: "你去哪里？ / 我去… / 我回家。"
 objectives:
