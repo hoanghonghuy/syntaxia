@@ -127,6 +127,16 @@ const migratedUnits = [
       ['info-review', 'review'],
     ],
   },
+  {
+    track: 'chinese-hsk',
+    unitId: 'zh-hsk-b1-describe-07',
+    unitOrder: '7',
+    nodes: [
+      ['adjectives', 'lesson'],
+      ['describe-checkpoint', 'checkpoint'],
+      ['describe-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
