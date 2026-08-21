@@ -41,6 +41,20 @@ const goldenUnits = [
   },
 ]
 
+const migratedUnits = [
+  {
+    track: 'english-basics',
+    unitId: 'en-a1-people-02',
+    unitOrder: '2',
+    nodes: [
+      ['people', 'lesson'],
+      ['family', 'lesson'],
+      ['people-checkpoint', 'checkpoint'],
+      ['people-review', 'review'],
+    ],
+  },
+]
+
 function assessedIds(body) {
   return [...body.matchAll(/^\s+(?:-\s+)?id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
 }
@@ -50,6 +64,24 @@ function scalar(body, key) {
   return (match?.[1] || match?.[2] || '').trim()
 }
 
+function assertV3Node(body, label) {
+  assert.ok(scalar(body, 'unit_title'), `${label}: unit title`)
+  assert.ok(scalar(body, 'unit_can_do'), `${label}: unit Can-Do`)
+  assert.ok(scalar(body, 'can_do'), `${label}: node Can-Do`)
+  assert.match(body, /^\s+- type:\s*scene\s*$/m, `${label}: scene`)
+  assert.match(body, /^\s+- type:\s*dialogue\s*$/m, `${label}: dialogue`)
+  assert.match(body, /^\s+- type:\s*listen\s*$/m, `${label}: listen`)
+  assert.match(body, /^\s+- type:\s*practice\s*$/m, `${label}: practice`)
+  assert.match(body, /^\s+- type:\s*checkpoint\s*$/m, `${label}: checkpoint`)
+  assert.match(
+    body,
+    /^\s+kind:\s*(?:type_answer|listen_type|order_words)\s*$/m,
+    `${label}: controlled recall/production`,
+  )
+  assert.doesNotMatch(body, /^\s+kind:\s*mcq\s*$/m, `${label}: generic MCQ`)
+  assert.ok(assessedIds(body).length >= 5, `${label}: stable assessed IDs`)
+}
+
 describe('Language V3 golden communicative units', () => {
   it('ships one complete lesson -> checkpoint -> review unit for each core language', () => {
     for (const unit of goldenUnits) {
@@ -57,24 +89,11 @@ describe('Language V3 golden communicative units', () => {
         const roles = []
         for (const [slug, role] of unit.nodes) {
           const body = read(join(repoRoot, `docs/curriculum/${unit.track}/${locale}/${slug}.md`))
-          assert.equal(scalar(body, 'unit_id'), unit.unitId, `${unit.track}/${locale}/${slug}: unit id`)
-          assert.equal(scalar(body, 'unit_order'), '1', `${unit.track}/${locale}/${slug}: unit order`)
-          assert.equal(scalar(body, 'unit_role'), role, `${unit.track}/${locale}/${slug}: role`)
-          assert.ok(scalar(body, 'unit_title'), `${unit.track}/${locale}/${slug}: unit title`)
-          assert.ok(scalar(body, 'unit_can_do'), `${unit.track}/${locale}/${slug}: unit Can-Do`)
-          assert.ok(scalar(body, 'can_do'), `${unit.track}/${locale}/${slug}: node Can-Do`)
-          assert.match(body, /^\s+- type:\s*scene\s*$/m, `${unit.track}/${locale}/${slug}: scene`)
-          assert.match(body, /^\s+- type:\s*dialogue\s*$/m, `${unit.track}/${locale}/${slug}: dialogue`)
-          assert.match(body, /^\s+- type:\s*listen\s*$/m, `${unit.track}/${locale}/${slug}: listen`)
-          assert.match(body, /^\s+- type:\s*practice\s*$/m, `${unit.track}/${locale}/${slug}: practice`)
-          assert.match(body, /^\s+- type:\s*checkpoint\s*$/m, `${unit.track}/${locale}/${slug}: checkpoint`)
-          assert.match(
-            body,
-            /^\s+kind:\s*(?:type_answer|listen_type|order_words)\s*$/m,
-            `${unit.track}/${locale}/${slug}: controlled recall/production`,
-          )
-          assert.doesNotMatch(body, /^\s+kind:\s*mcq\s*$/m, `${unit.track}/${locale}/${slug}: generic MCQ`)
-          assert.ok(assessedIds(body).length >= 5, `${unit.track}/${locale}/${slug}: stable assessed IDs`)
+          const label = `${unit.track}/${locale}/${slug}`
+          assert.equal(scalar(body, 'unit_id'), unit.unitId, `${label}: unit id`)
+          assert.equal(scalar(body, 'unit_order'), '1', `${label}: unit order`)
+          assert.equal(scalar(body, 'unit_role'), role, `${label}: role`)
+          assertV3Node(body, label)
           roles.push(role)
         }
         assert.deepEqual(roles, ['lesson', 'checkpoint', 'review'])
@@ -84,6 +103,38 @@ describe('Language V3 golden communicative units', () => {
 
   it('keeps stable assessed identities aligned between EN and VI for every golden node', () => {
     for (const unit of goldenUnits) {
+      for (const [slug] of unit.nodes) {
+        const en = read(join(repoRoot, `docs/curriculum/${unit.track}/en/${slug}.md`))
+        const vi = read(join(repoRoot, `docs/curriculum/${unit.track}/vi/${slug}.md`))
+        assert.deepEqual(
+          assessedIds(vi),
+          assessedIds(en),
+          `${unit.track}/${slug}: assessed IDs drifted between locales`,
+        )
+      }
+    }
+  })
+
+  it('keeps migrated communicative units explicit and complete', () => {
+    for (const unit of migratedUnits) {
+      for (const locale of ['en', 'vi']) {
+        const roles = []
+        for (const [slug, role] of unit.nodes) {
+          const body = read(join(repoRoot, `docs/curriculum/${unit.track}/${locale}/${slug}.md`))
+          const label = `${unit.track}/${locale}/${slug}`
+          assert.equal(scalar(body, 'unit_id'), unit.unitId, `${label}: unit id`)
+          assert.equal(scalar(body, 'unit_order'), unit.unitOrder, `${label}: unit order`)
+          assert.equal(scalar(body, 'unit_role'), role, `${label}: role`)
+          assertV3Node(body, label)
+          roles.push(role)
+        }
+        assert.deepEqual(roles, ['lesson', 'lesson', 'checkpoint', 'review'])
+      }
+    }
+  })
+
+  it('keeps migrated assessed identities aligned between EN and VI', () => {
+    for (const unit of migratedUnits) {
       for (const [slug] of unit.nodes) {
         const en = read(join(repoRoot, `docs/curriculum/${unit.track}/en/${slug}.md`))
         const vi = read(join(repoRoot, `docs/curriculum/${unit.track}/vi/${slug}.md`))
