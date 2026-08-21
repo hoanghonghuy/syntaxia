@@ -3,7 +3,7 @@ id: ja-n5-u01-checkpoint
 track: japanese-jlpt
 locale: vi
 slug: politeness-checkpoint
-title: Checkpoint: yêu cầu ở cửa hàng
+title: "Checkpoint: yêu cầu ở cửa hàng"
 order: 2
 published: true
 jlpt_level: n5
