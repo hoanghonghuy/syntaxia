@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { buildLanguageUnits } from '../app/utils/languageUnits.ts'
+import { buildLanguageUnits, orderLanguageLessons } from '../app/utils/languageUnits.ts'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '..', '..')
@@ -27,6 +27,29 @@ function lesson(id, slug, title, sortOrder, unit = {}) {
 }
 
 describe('language communicative unit path', () => {
+  it('orders a complete unit as lesson -> checkpoint -> review before the next unit', () => {
+    const lessons = [
+      lesson('next', 'people', 'Talk about people', 2),
+      lesson('review', 'meeting-review', 'Review', 3, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start and close a short first meeting', unitRole: 'review',
+      }),
+      lesson('lesson', 'greetings', 'Say hello', 1, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start and close a short first meeting', unitRole: 'lesson',
+      }),
+      lesson('checkpoint', 'meeting-checkpoint', 'Checkpoint', 2, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start and close a short first meeting', unitRole: 'checkpoint',
+      }),
+    ]
+
+    assert.deepEqual(
+      orderLanguageLessons(lessons).map((item) => item.id),
+      ['lesson', 'checkpoint', 'review', 'next'],
+    )
+  })
+
   it('groups explicit summary metadata and preserves lesson/checkpoint/review roles', () => {
     const lessons = [
       lesson('l1', 'hello', 'Say hello', 1, {
@@ -36,6 +59,10 @@ describe('language communicative unit path', () => {
       lesson('l2', 'meeting-check', 'Meeting checkpoint', 2, {
         unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
         unitCanDo: 'Start and close a short first meeting', unitRole: 'checkpoint',
+      }),
+      lesson('l5', 'meeting-review', 'Meeting review', 3, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start and close a short first meeting', unitRole: 'review',
       }),
       lesson('l3', 'food', 'Order food', 3, {
         unitId: 'u2', unitTitle: 'At a café', unitOrder: 2,
@@ -54,8 +81,8 @@ describe('language communicative unit path', () => {
     assert.equal(units[0].id, 'u1')
     assert.equal(units[0].title, 'Meet someone')
     assert.equal(units[0].canDo, 'Start and close a short first meeting')
-    assert.deepEqual(units[0].nodes.map((node) => node.role), ['lesson', 'checkpoint'])
-    assert.deepEqual(units[0].nodes.map((node) => node.state), ['done', 'current'])
+    assert.deepEqual(units[0].nodes.map((node) => node.role), ['lesson', 'checkpoint', 'review'])
+    assert.deepEqual(units[0].nodes.map((node) => node.state), ['done', 'current', 'locked'])
     assert.deepEqual(units[1].nodes.map((node) => node.role), ['lesson', 'review'])
     assert.deepEqual(units[1].nodes.map((node) => node.state), ['locked', 'locked'])
   })
