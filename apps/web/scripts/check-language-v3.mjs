@@ -18,7 +18,7 @@ const read = (path) => readFileSync(path, 'utf8')
 const englishSlugs = ['greetings', 'people', 'numbers', 'family', 'food-drink', 'places']
 
 function assessedIds(body) {
-  return [...body.matchAll(/^\s+- id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
+  return [...body.matchAll(/^\s+(?:-\s+)?id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
 }
 
 describe('language learning v3', () => {
