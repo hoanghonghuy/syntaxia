@@ -7,6 +7,11 @@ title: Identify family in a photo
 order: 4
 published: true
 jlpt_level: n5
+unit_id: ja-n5-people-02
+unit_title: "Introduce yourself and people close to you"
+unit_order: 2
+unit_can_do: "Introduce yourself, ask a name, and identify a close family member in a short polite exchange"
+unit_role: lesson
 can_do: "Identify one or two members of your own family in a simple photo conversation"
 pattern: "この人はだれですか。 / 母です。 / 兄です。"
 objectives:
