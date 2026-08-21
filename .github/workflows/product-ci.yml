@@ -91,6 +91,7 @@ jobs:
           npm run test:shell-ux
           npm run test:ui-refresh
           npm run test:ui-system
+          npm run test:e2e-suite
       - name: Language V3 contracts
         run: |
           npm run test:language-v3
@@ -103,7 +104,7 @@ jobs:
         run: npm run test:audit-remediation
 
   e2e:
-    name: Release · DB-backed E2E and review persistence
+    name: Release · DB-backed E2E and learning persistence
     needs: [curriculum, api, web]
     runs-on: ubuntu-latest
     services:
@@ -155,9 +156,9 @@ jobs:
           done
           cat "$RUNNER_TEMP/syntaxia-api.log"
           exit 1
-      - name: Run cross-domain E2E smoke
+      - name: Run full cross-domain E2E and sandboxes
         shell: pwsh
-        run: ./scripts/e2e-all.ps1 -BaseUrl http://127.0.0.1:8082
+        run: ./scripts/e2e-all.ps1 -BaseUrl http://127.0.0.1:8082 -IncludeSandboxes
       - name: Verify persisted FSRS rows
         run: |
           cards=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_cards")

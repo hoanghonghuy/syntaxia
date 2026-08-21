@@ -4,7 +4,7 @@
   Orchestrate all API/E2E smoke gates (fail-closed).
 
 .DESCRIPTION
-  Runs catalog API smoke, SQL Fundamentals E2E, Languages E2E.
+  Runs runtime curriculum integrity, catalog API smoke, SQL Fundamentals E2E, and Languages E2E.
   Optional -IncludeSandboxes also runs JS/HTMLCSS sandbox scripts.
 
 .PARAMETER BaseUrl
@@ -36,6 +36,10 @@ function Step([string]$Title) {
 
 Write-Host "=== Syntaxia E2E all ===" -ForegroundColor Cyan
 Write-Host "BaseUrl: $BaseUrl"
+
+Step "Curriculum runtime integrity"
+& (Join-Path $PSScriptRoot "e2e-curriculum-integrity.ps1") -BaseUrl $BaseUrl
+if ($LASTEXITCODE -ne 0) { Fail "e2e-curriculum-integrity.ps1 exited $LASTEXITCODE" }
 
 Step "API catalog smoke"
 & (Join-Path $PSScriptRoot "e2e-api-catalog.ps1") -BaseUrl $BaseUrl
