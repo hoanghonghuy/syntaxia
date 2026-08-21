@@ -36,6 +36,7 @@ describe('language v3 semantic visuals', () => {
       'classmates-meeting',
       'student-leaving',
       'student-studying',
+      'shop-counter-request',
     ])
     for (const key of LANGUAGE_VISUAL_KEYS) {
       assert.equal(isLanguageVisualKey(key), true)
@@ -85,11 +86,24 @@ describe('language v3 semantic visuals', () => {
     assert.match(exercise, /isAppOwnedLanguageImageUrl/)
   })
 
-  it('ships one complete EN/VI golden visual lesson with the same stable item id', () => {
+  it('ships semantic scenes for the English, Mandarin, and Japanese golden seeds', () => {
+    const expected = [
+      ['english-basics', 'greetings', 'classmates-meeting'],
+      ['chinese-hsk', 'greetings', 'classmates-meeting'],
+      ['japanese-jlpt', 'politeness', 'shop-counter-request'],
+    ]
+    for (const locale of ['en', 'vi']) {
+      for (const [track, slug, visualKey] of expected) {
+        const body = read(join(repoRoot, `docs/curriculum/${track}/${locale}/${slug}.md`))
+        assert.match(body, new RegExp(`visualKey: "${visualKey}"`))
+        assert.match(body, /imageAlt: ".+"/)
+      }
+    }
+  })
+
+  it('keeps the English image-choice exercise on stable semantic ids', () => {
     for (const locale of ['en', 'vi']) {
       const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/greetings.md`))
-      assert.match(body, /visualKey: "classmates-meeting"/)
-      assert.match(body, /imageAlt: ".+"/)
       assert.match(body, /id: greet-scene-1/)
       assert.match(body, /kind: image_choice/)
       assert.match(body, /value: "meeting", visualKey: "classmates-meeting"/)
