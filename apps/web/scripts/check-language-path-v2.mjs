@@ -128,10 +128,16 @@ describe('language-lesson-path-v2', () => {
     }
   })
 
-  it('lesson page prefers LanguageLessonSteps when steps exist', () => {
-    const src = read(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'))
-    assert.match(src, /LanguageLessonSteps/)
-    assert.match(src, /languageHasStepPath|languageHasSteps/)
-    assert.match(src, /legacyFormatNote/)
+  it('routes step-based language lessons through the dedicated player', () => {
+    const page = read(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'))
+    assert.match(page, /LanguageLessonPlayer/)
+    assert.match(page, /languageHasStepPath|languageHasSteps/)
+    assert.match(page, /legacyFormatNote/)
+
+    const player = read(join(webRoot, 'app/components/LanguageLessonPlayer.vue'))
+    assert.match(player, /LanguageLessonSteps/)
+    assert.match(player, /:lesson="lesson"/)
+    assert.match(player, /:track-id="trackId"/)
+    assert.match(player, /@passed="\$emit\('passed'\)"/)
   })
 })
