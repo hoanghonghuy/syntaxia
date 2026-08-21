@@ -50,12 +50,37 @@ describe('UI refresh contract', () => {
     }
   })
 
-  it('uses canonical theme tokens for the communicative unit path', () => {
+  it('uses canonical theme tokens and accessible states for the communicative unit path', () => {
     const path = read('app/components/LanguageUnitPath.vue')
+    assert.match(path, /<nav class="unit-path" :aria-label=/)
+    assert.match(path, /:aria-disabled="true"/)
+    assert.match(path, /aria-hidden="true"/)
+    assert.match(path, /@media \(max-width:\s*520px\)/)
+    assert.match(path, /prefers-reduced-motion:\s*reduce/)
     assert.match(path, /--color-brand/)
     assert.match(path, /--color-ink-muted/)
     assert.match(path, /--color-hairline/)
-    assert.match(path, /prefers-reduced-motion:\s*reduce/)
     assert.doesNotMatch(path, /--color-accent|--color-muted|--color-border/)
+  })
+
+  it('keeps the guided language player mobile-safe and screen-reader aware', () => {
+    const player = read('app/components/LanguageLessonPlayer.vue')
+    const steps = read('app/components/LanguageLessonSteps.vue')
+
+    assert.match(player, /width:\s*min\(100%,\s*48rem\)/)
+    assert.match(player, /:lang="targetLang"/)
+
+    assert.match(steps, /role="progressbar"/)
+    assert.match(steps, /:aria-valuenow=/)
+    assert.match(steps, /:aria-valuemax=/)
+    assert.match(steps, /:aria-valuetext=/)
+    assert.match(steps, /aria-live="polite"/)
+    assert.match(steps, /:lang="targetLang"/)
+    assert.match(steps, /@media \(max-width:\s*560px\)/)
+    assert.match(steps, /flex-direction:\s*column/)
+    assert.match(steps, /width:\s*100%/)
+    assert.match(steps, /min-height:\s*2\.75rem/)
+    assert.match(steps, /prefers-reduced-motion:\s*reduce/)
+    assert.doesNotMatch(steps, /--color-accent|--color-muted|--color-border/)
   })
 })
