@@ -38,6 +38,8 @@ const slugs = [
   'info-checkpoint',
   'info-review',
   'adjectives',
+  'describe-checkpoint',
+  'describe-review',
   'transport',
   'devices',
   'introductions-checkpoint',
@@ -69,7 +71,7 @@ describe('Mandarin runtime contract', () => {
 })
 
 describe('Mandarin HSK Band 1 v3 curriculum', () => {
-  it('ships twenty-four paired EN/VI language nodes', () => {
+  it('ships twenty-six paired EN/VI language nodes', () => {
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${locale}`)
       assert.equal(existsSync(dir), true)
@@ -120,5 +122,9 @@ describe('Mandarin HSK Band 1 v3 curriculum', () => {
     const adjectives = read(join(repoRoot, 'docs/curriculum/chinese-hsk/en/adjectives.md'))
     assert.match(adjectives, /Avoid the beginner error \*水是冷/)
     assert.match(adjectives, /answer:\s*"水很冷。"/)
+
+    const describeCheckpoint = read(join(repoRoot, 'docs/curriculum/chinese-hsk/en/describe-checkpoint.md'))
+    assert.match(describeCheckpoint, /choices:\s*\["水很冷。", "水是冷。", "很水冷。"\]/)
+    assert.match(describeCheckpoint, /answer:\s*"水很冷。"/)
   })
 })
