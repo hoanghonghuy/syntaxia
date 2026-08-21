@@ -8,6 +8,11 @@ order: 12
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-device-09
+unit_title: "Dùng thiết bị hằng ngày"
+unit_order: 9
+unit_can_do: "Nhận biết một thiết bị phổ biến và nói bạn dùng thiết bị nào để lên mạng"
+unit_role: lesson
 can_do: "Nhận biết điện thoại/máy tính và nói bạn dùng thiết bị nào để lên mạng"
 pattern: "这是我的手机。/ 我用手机上网。"
 objectives:
