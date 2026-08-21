@@ -7,6 +7,11 @@ title: Gặp một người và chào hỏi
 order: 1
 published: true
 cefr_level: a1
+unit_id: en-a1-meeting-01
+unit_title: "Gặp một người"
+unit_order: 1
+unit_can_do: "Mở đầu, duy trì và kết thúc một cuộc gặp ngắn"
+unit_role: lesson
 can_do: "Chào hỏi, trao đổi tên và kết thúc một cuộc gặp ngắn một cách lịch sự"
 pattern: "Hi, I'm … / Nice to meet you. / See you."
 objectives:
