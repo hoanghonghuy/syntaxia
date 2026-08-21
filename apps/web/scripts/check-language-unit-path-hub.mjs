@@ -10,9 +10,10 @@ import { fileURLToPath } from 'node:url'
 import { buildLanguageUnits } from '../app/utils/languageUnits.ts'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
+const repoRoot = join(webRoot, '..', '..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
-function lesson(id, slug, title, sortOrder, exercise = undefined) {
+function lesson(id, slug, title, sortOrder, unit = {}) {
   return {
     id,
     locale: 'en',
@@ -21,12 +22,12 @@ function lesson(id, slug, title, sortOrder, exercise = undefined) {
     title,
     sortOrder,
     published: true,
-    exercise,
+    ...unit,
   }
 }
 
 describe('language communicative unit path', () => {
-  it('groups explicit unit metadata and preserves lesson/checkpoint/review roles', () => {
+  it('groups explicit summary metadata and preserves lesson/checkpoint/review roles', () => {
     const lessons = [
       lesson('l1', 'hello', 'Say hello', 1, {
         unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
@@ -70,7 +71,7 @@ describe('language communicative unit path', () => {
     assert.deepEqual(units.flatMap((unit) => unit.nodes.map((node) => node.state)), ['current', 'locked'])
   })
 
-  it('ships grouped unit UI and hydrates full metadata only on language hubs', () => {
+  it('ships grouped unit UI backed by lean lesson-summary metadata', () => {
     const path = join(webRoot, 'app/components/LanguageUnitPath.vue')
     assert.equal(existsSync(path), true)
     const src = read(path)
@@ -80,9 +81,17 @@ describe('language communicative unit path', () => {
     assert.match(src, /is-review/)
 
     const hub = read(join(webRoot, 'app/pages/tracks/[track]/index.vue'))
-    assert.match(hub, /languagePathLessons/)
-    assert.match(hub, /fullLanguageLessons/)
-    assert.match(hub, /loadLanguagePathLessons/)
+    assert.match(hub, /:lessons="hubLessons"/)
+    assert.doesNotMatch(hub, /Promise\.all\([^)]*api\.lesson/)
+
+    const types = read(join(webRoot, 'app/types/api.ts'))
+    for (const field of ['unitId', 'unitTitle', 'unitOrder', 'unitCanDo', 'unitRole']) {
+      assert.match(types, new RegExp(`${field}\\?`))
+    }
+
+    const repo = read(join(repoRoot, 'apps/api/internal/repository/repository.go'))
+    assert.match(repo, /exercise->>'unitId'/)
+    assert.match(repo, /exercise->>'unitRole'/)
   })
 
   it('ships path i18n keys in en + vi', () => {
