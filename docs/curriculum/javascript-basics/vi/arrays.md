@@ -3,21 +3,22 @@ id: js-05-arrays
 track: javascript-basics
 locale: vi
 slug: arrays
-title: Danh sách bằng mảng
+title: Array, index và mutation
 order: 5
 published: true
+can_do: "Trace array trước/sau mutation đồng thời phân biệt const binding với array mutable mà binding đang tham chiếu"
 objectives:
-  - Tạo mảng bằng dấu ngoặc vuông
-  - Đọc một phần tử theo chỉ số bắt đầu từ 0
-  - Thêm phần tử bằng push và đọc length
+  - Đọc array index bắt đầu từ 0
+  - Mutate array bằng push và quan sát state mới
+  - Giải thích vì sao const array binding vẫn có thể tham chiếu array đã mutate
 exercise:
   starter: |
     const fruits = ["apple", "pear", "orange"];
-    // Thêm "mango" vào cuối, rồi return fruits.length
+    // TODO: add "mango" to the end, then return fruits.length
   hints:
-    - "push thêm một phần tử vào cuối mảng."
-    - "length đếm số phần tử trong danh sách."
-    - "Có 3 quả, thêm 1 — tổng bao nhiêu?"
+    - "push mutate array hiện tại bằng cách thêm một phần tử cuối."
+    - "const binding fruits không bị reassign; array mà nó tham chiếu thay đổi."
+    - "Dùng: fruits.push('mango'); rồi return fruits.length;"
   solution: |
     const fruits = ["apple", "pear", "orange"];
     fruits.push("mango");
@@ -27,37 +28,74 @@ exercise:
     value: 4
 ---
 
-Danh sách mua sắm giữ nhiều tên theo thứ tự. **Mảng** (array) là danh sách có thứ tự trong JavaScript — nhiều giá trị dưới một tên biến.
+Array lưu một dãy value có thứ tự. Học array cần trace cả **vị trí** lẫn **state change**.
 
-| Ý | Nghĩa đơn giản | Ví dụ |
-| --- | --- | --- |
-| Tạo | Ngoặc vuông, phẩy | `["táo", "lê"]` |
-| Chỉ số | Vị trí, bắt đầu 0 | phần tử đầu là `[0]` |
-| `.length` | Bao nhiêu phần tử | `list.length` |
-| `.push(item)` | Thêm vào cuối | `list.push("chuối")` |
+## Mô hình thực thi
+
+```javascript
+const fruits = ["apple", "pear", "orange"];
+```
+
+| index | 0 | 1 | 2 |
+| ---: | --- | --- | --- |
+| value | apple | pear | orange |
+
+`fruits.length` là `3`; index hợp lệ cuối là `length - 1`, tức `2`.
+
+Declaration dùng `const`, nhưng const bảo vệ **binding** khỏi reassign. Nó không làm array được tham chiếu trở thành immutable.
+
+## Trace từng bước
+
+```javascript
+const fruits = ["apple", "pear", "orange"];
+fruits.push("mango");
+```
+
+| thời điểm | state array | length |
+| --- | --- | ---: |
+| trước `push` | apple, pear, orange | 3 |
+| sau `push` | apple, pear, orange, mango | 4 |
+
+`push` mutate array và trả new length.
+
+## Dự đoán trước khi chạy
+
+Trước khi execute, dự đoán `fruits[3]` thành `"mango"` và `fruits.length` thành `4`.
 
 ## Ví dụ mẫu
 
 ```javascript
-const fruits = ["apple", "pear", "orange"];
+const queue = ["A", "B"];
+const newLength = queue.push("C");
 
-console.log(fruits[0]);
-console.log(fruits.length);
-
-fruits.push("mango");
-console.log(fruits[fruits.length - 1]);
+console.log(queue);     // ["A", "B", "C"]
+console.log(newLength); // 3
 ```
 
-- `fruits[0]` là phần tử đầu → `"apple"`.
-- `.length` là `3` trước khi push.
-- `.push("mango")` thêm phần tử thứ tư; `fruits.length - 1` là chỉ số phần tử cuối.
+Returned number và mutated array là hai value khác nhau.
+
+## Tìm lỗi
+
+```javascript
+const fruits = ["apple", "pear"];
+const result = fruits.push("mango");
+return result[0];
+```
+
+`result` là number chứ không phải array. Method đã đổi `fruits` rồi trả new length. Khi debug method call, hãy tách hai câu hỏi: **state nào đổi? method return gì?**
 
 ## Lỗi thường gặp
 
-- Dùng chỉ số 1 cho phần tử đầu — mảng bắt đầu từ **0**.
-- Nhầm cú pháp mảng và object — mảng dùng `[ ]`, không phải `{ }`.
-- Tưởng `push` trả về cả danh sách — nó trả về độ dài mới; đọc biến mảng để xem các phần tử.
+- Coi index `1` là phần tử đầu thay vì index `0`.
+- Nghĩ `const` làm contents của array immutable.
+- Nghĩ `push()` trả cả array thay vì new length.
 
 ## Thử ngay
 
-`push("mango")` vào `fruits` rồi **return** `.length` mới trong sandbox. Đánh dấu hoàn thành khi checker báo đúng.
+Append `"mango"` vào array hiện có và return length mới.
+
+## Tự kiểm tra
+
+Vì sao `fruits.push(...)` vẫn chạy khi `fruits` khai báo bằng `const`?
+
+**Đáp án:** binding không bị reassign; chính array object được tham chiếu đang mutate.
