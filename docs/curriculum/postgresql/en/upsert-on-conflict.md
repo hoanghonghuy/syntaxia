@@ -3,18 +3,20 @@ id: pg-11-upsert
 track: postgresql
 locale: en
 slug: upsert-on-conflict
-title: Upsert with ON CONFLICT
+title: Atomic upserts with ON CONFLICT
 order: 11
 published: true
+can_do: "Use INSERT ... ON CONFLICT to define an atomic alternative when a unique key conflicts"
 objectives:
-  - Insert or update in one statement with ON CONFLICT
-  - Update an existing row when a unique key already exists
+  - Identify the unique key acting as conflict arbiter
+  - Distinguish proposed EXCLUDED values from the existing row
+  - Verify the final state after DO UPDATE
 exercise:
   starter: "SELECT code, title FROM movies ORDER BY code;"
   hints:
-    - "ON CONFLICT names the unique column that might already exist."
-    - "DO UPDATE SET … changes the existing row instead of failing."
-    - "Try: INSERT INTO movies (code, title) VALUES ('INC', 'Inception Remastered') ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;"
+    - "code is the primary key, so inserting INC again hits that conflict target."
+    - "EXCLUDED.title refers to the title from the proposed insert row."
+    - "Use: INSERT INTO movies (code, title) VALUES ('INC', 'Inception Remastered') ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;"
   solution: "INSERT INTO movies (code, title) VALUES ('INC', 'Inception Remastered') ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;"
   preview:
     columns: ["code", "title"]
@@ -34,35 +36,65 @@ sandbox_seed:
     - "INSERT INTO movies VALUES ('INC', 'Inception'), ('MTX', 'The Matrix');"
 ---
 
-Sometimes you want “insert if new, otherwise update” — like editing a cell if the key already exists in a sheet. PostgreSQL calls this an **upsert**: `INSERT … ON CONFLICT … DO UPDATE`.
+An upsert means “try to insert; if a declared uniqueness conflict happens, take an alternative action”. PostgreSQL's `ON CONFLICT` makes that decision inside one write statement.
 
-| code | title |
+## Mental model
+
+Proposed row:
+
+```text
+(code='INC', title='Inception Remastered')
+```
+
+Existing state already contains `code='INC'`. The primary key is the conflict arbiter, so PostgreSQL takes the `DO UPDATE` path.
+
+Inside that path:
+
+| reference | means |
 | --- | --- |
-| INC | Inception |
-| MTX | The Matrix |
+| `movies.title` | value on the existing conflicting row |
+| `EXCLUDED.title` | value from the row we attempted to insert |
 
-`code` is unique (primary key). Inserting `'INC'` again would normally fail; `ON CONFLICT` handles that.
+## Predict before you run
+
+Predict the complete after-state: INC changes to `Inception Remastered`; MTX remains untouched. No duplicate INC row is created.
 
 ## Worked example
 
 ```sql
 INSERT INTO movies (code, title)
 VALUES ('INC', 'Inception Remastered')
-ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;
+ON CONFLICT (code)
+DO UPDATE SET title = EXCLUDED.title;
 ```
 
-- `ON CONFLICT (code)` watches the unique `code` column.
-- `DO UPDATE` changes the existing row instead of erroring.
-- `EXCLUDED.title` is the title from the row you tried to insert.
+| code | title |
+| --- | --- |
+| INC | Inception Remastered |
+| MTX | The Matrix |
 
-After the statement, `INC` shows the new title; `MTX` is unchanged.
+The conflict handling is part of the INSERT operation, which is important when concurrent writes make “check first, then insert/update” application logic unsafe.
+
+## Debug this
+
+```text
+SELECT whether INC exists -> application decides UPDATE or INSERT
+```
+
+Between the read and the later write, another transaction can change the state. A uniqueness constraint plus `ON CONFLICT` lets PostgreSQL arbitrate the conflict at write time.
 
 ## Common mistakes
 
-- Omitting `ON CONFLICT` so a duplicate key raises an error.
-- Forgetting `EXCLUDED.` when referring to the proposed insert values.
-- Running only `UPDATE` when the lesson asks for the upsert form.
+- Choosing a conflict target that is not backed by a suitable uniqueness rule.
+- Confusing `EXCLUDED` proposed values with values already stored in the target row.
+- Implementing a fragile read-then-write upsert in application code when database conflict handling fits the requirement.
 
 ## Your turn
 
-Upsert code `'INC'` with title `'Inception Remastered'` using `ON CONFLICT (code) DO UPDATE`.
+Upsert `INC` so its title becomes `Inception Remastered`, then verify MTX stayed unchanged.
+
+## Quick check
+
+What does `EXCLUDED.title` mean inside `DO UPDATE`?
+
+**Answer:** the title value from the row that was proposed for insertion but conflicted.

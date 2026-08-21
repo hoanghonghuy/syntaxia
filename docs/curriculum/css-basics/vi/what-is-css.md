@@ -3,68 +3,89 @@ id: css-00-intro
 track: css-basics
 locale: vi
 slug: what-is-css
-title: CSS là gì?
+title: CSS là các rule áp dụng lên HTML
 order: 0
 published: true
+can_do: "Theo dõi một CSS rule từ selector match tới declaration và dự đoán element HTML hiện có nào thay đổi presentation"
 objectives:
-  - Giải thích CSS bằng lời đơn giản (trang trí giao diện, không phải cấu trúc)
-  - Phân biệt HTML (cấu trúc) với CSS (kiểu hiển thị)
-  - Nhận biết cách gắn style vào trang ở mức khái niệm
+  - Tách HTML semantics khỏi CSS presentation
+  - Đọc selector, property và value như một styling rule hoàn chỉnh
+  - Dự đoán visual effect chỉ trên các element match selector
 exercise:
   mode: both
   starterHtml: |
     <h1>Welcome</h1>
+    <p>Start here.</p>
   starter: |
-    /* Style the h1 heading */
-    
+    /* TODO: chỉ làm text của h1 thành màu teal */
   hints:
-    - Chọn h1 bằng selector kiểu thẻ.
-    - Thêm thuộc tính color trong ngoặc nhọn.
-    - Kết thúc khai báo bằng dấu chấm phẩy.
+    - Target là h1 nên dùng type selector h1.
+    - Property đổi màu chữ là color.
+    - Dùng: h1 { color: teal; }
   solution: |
     h1 { color: teal; }
   expected:
-    type: cssIncludes
-    needles:
-      - color
+    type: cssRules
+    rules:
+      - selector: h1
+        declarations:
+          color: teal
 ---
 
-HTML nói *cái gì* nằm trên trang: tiêu đề, đoạn văn, liên kết. **CSS** (Cascading Style Sheets) nói trang *trông như thế nào*: màu chữ, khoảng cách, khung viền.
+CSS không tạo cấu trúc trang; nó gắn các rule trình bày lên HTML đã tồn tại.
 
-Hãy nghĩ HTML như khung xương và nhãn nội dung; CSS như lớp sơn, font và khoảng trống. Cùng một HTML có thể nhìn khác nhau khi đổi CSS — đó là ý của “stylesheet” (bảng kiểu).
+## Mô hình tư duy
 
-Ba ý sẽ lặp lại suốt lộ trình:
+```text
+HTML element -> selector match? -> declarations -> style khi render
+```
 
-| Ý | Nghĩa đơn giản | Ví dụ |
-| --- | --- | --- |
-| Selector | Chọn phần tử nào sẽ được style | `p`, `.note`, `#logo` |
-| Property | Tên thuộc tính kiểu | `color`, `margin` |
-| Value | Giá trị gán cho thuộc tính | `teal`, `16px` |
+Với `h1 { color: teal; }`, trình duyệt trước tiên tìm các phần tử `h1` match selector, rồi áp dụng declaration `color`. Paragraph đứng cạnh không tự đổi màu.
 
-## Ví dụ mẫu
+## Dự đoán kết quả hiển thị
 
 ```html
-<p class="note">Xin chào Syntaxia.</p>
+<h1>Welcome</h1>
+<p>Start here.</p>
 ```
 
 ```css
-.note {
+h1 { color: teal; }
+```
+
+Trước khi preview, hãy dự đoán: text của heading thành teal; paragraph giữ màu hiện tại.
+
+## Ví dụ mẫu
+
+```css
+h1 {
   color: teal;
+  font-size: 2rem;
 }
 ```
 
-- HTML dựng đoạn văn và gắn class `note`.
-- CSS chọn `.note` rồi đặt `color` thành `teal`.
-- Trình duyệt áp dụng màu chữ xanh ngọc cho đoạn đó.
+Một rule gồm **selector + declarations**. Mỗi declaration có dạng **property: value**. HTML vẫn giữ heading semantics dù design thay đổi hoàn toàn.
 
-CSS không thay thế HTML: bạn vẫn cần cấu trúc đúng; CSS chỉ điều khiển cách hiển thị.
+## Tìm lỗi
+
+```css
+p { color: teal; }
+```
+
+Syntax hợp lệ nhưng target sai element so với yêu cầu đổi màu heading. Khi debug CSS cần hỏi cả “declaration có đúng không?” và “selector có match đúng element không?”.
 
 ## Lỗi thường gặp
 
-- Nghĩ CSS tạo nội dung mới — CSS style những gì HTML đã có; không thay thẻ `<p>` bằng màu.
-- Trộn vai trò với JavaScript — CSS trang trí; JavaScript thêm hành vi (bấm, tính toán).
-- Mong trang “đẹp” chỉ bằng HTML — không có stylesheet, trình duyệt dùng kiểu mặc định rất thô.
+- Mong CSS tự tạo nội dung HTML chưa tồn tại.
+- Chỉ kiểm tra property mà bỏ qua selector nhận property đó.
+- Nhầm thay đổi appearance với thay đổi semantics.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để tô màu tiêu đề. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Chỉ làm `h1` hiện có thành teal. Grader giờ yêu cầu `color: teal` nằm trên rule `h1` thật.
+
+## Tự kiểm tra
+
+Nếu HTML không có `h1`, rule `h1 { color: teal; }` làm thay đổi gì nhìn thấy được?
+
+**Đáp án:** không có gì; selector không match element nào.

@@ -6,16 +6,17 @@ slug: what-is-sql
 title: Dữ liệu và SQL là gì?
 order: 0
 published: true
+can_do: "Đọc một bảng dữ liệu và chạy truy vấn trả về toàn bộ cột và hàng của bảng"
 objectives:
-  - Nhìn bảng như một sheet Excel (hàng và cột)
-  - Hiểu SQL dùng để hỏi dữ liệu bằng ngôn ngữ đơn giản
-  - Chạy SELECT đầu tiên để xem mọi dòng
+  - Nhìn bảng dữ liệu như tập hợp hàng và cột thay vì một khái niệm cơ sở dữ liệu trừu tượng
+  - Phân biệt bảng nguồn, câu truy vấn SQL và kết quả truy vấn
+  - Chạy truy vấn SELECT đầu tiên trong sandbox
 exercise:
   starter: "SELECT * FROM movies;"
   hints:
-    - "Dấu * nghĩa là mọi cột."
-    - "Giữ tên bảng movies sau FROM."
-    - "Gõ: SELECT * FROM movies; rồi bấm Chạy truy vấn."
+    - "Đề yêu cầu mọi cột, vì vậy hãy giữ dấu *."
+    - "Sau FROM phải là tên bảng nguồn: movies."
+    - "Dùng: SELECT * FROM movies;"
   solution: "SELECT * FROM movies;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -37,11 +38,21 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Hãy tưởng tượng danh sách phim trong Excel hoặc Google Sheets. Mỗi **hàng** là một bộ phim. Mỗi **cột** là một thông tin — tên, năm, hoặc đạo diễn.
+Cơ sở dữ liệu sẽ bớt trừu tượng nếu bắt đầu từ một bảng cụ thể. Hãy coi `movies` như một spreadsheet mà ứng dụng có thể hỏi bằng câu lệnh, thay vì một sheet phải tự kéo và lọc bằng tay.
 
-Trong cơ sở dữ liệu, danh sách đó gọi là **bảng** (table). SQL (Structured Query Language — ngôn ngữ truy vấn có cấu trúc) là cách đặt câu hỏi về bảng. Bạn không cần biết lập trình để bắt đầu.
+## Mô hình tư duy
 
-**movies** — bảng luyện tập đầy đủ (bốn phim):
+Tách ba thứ sau ra khỏi nhau:
+
+| Thành phần | Nó là gì |
+| --- | --- |
+| **Bảng** | Dữ liệu được lưu theo cột và hàng |
+| **Truy vấn** | Yêu cầu mô tả dữ liệu bạn muốn lấy |
+| **Kết quả** | Câu trả lời dạng bảng được tạo ra từ truy vấn |
+
+Đây là bảng nguồn của bài:
+
+**movies**
 
 | id | title | year | director |
 | --- | --- | --- | --- |
@@ -50,21 +61,37 @@ Trong cơ sở dữ liệu, danh sách đó gọi là **bảng** (table). SQL (S
 | 3 | Dune | 2021 | Villeneuve |
 | 4 | Interstellar | 2014 | Nolan |
 
-Đọc như spreadsheet: hàng 1 là Inception; cột `year` giữ năm phát hành; Nolan đạo diễn hai trong bốn phim.
+Mỗi hàng biểu diễn một bộ phim. Mỗi cột biểu diễn cùng một loại thông tin cho các phim.
 
-## Ví dụ mẫu
+## Dự đoán trước khi chạy
 
-Muốn xem mọi cột và mọi dòng, viết:
+Nhìn truy vấn này nhưng chưa bấm Chạy:
 
 ```sql
 SELECT * FROM movies;
 ```
 
-- `SELECT` nghĩa là “hãy cho tôi xem…”
-- `*` nghĩa là mọi cột (`id`, `title`, `year`, `director`)
-- `FROM movies` nghĩa là “từ bảng tên movies”
+Hãy dự đoán hai điều:
 
-Kết quả (cùng bốn hàng như bảng mẫu):
+- Kết quả có bao nhiêu cột?
+- Kết quả có bao nhiêu hàng?
+
+Dấu `*` nghĩa là mọi cột hiện có, và truy vấn chưa lọc hàng nào. Vì vậy dự đoán đúng là **4 cột và 4 hàng**.
+
+## Ví dụ mẫu
+
+```sql
+SELECT *
+FROM movies;
+```
+
+Đọc truy vấn theo từng vai trò:
+
+- `SELECT` bắt đầu yêu cầu dữ liệu đầu ra.
+- `*` yêu cầu mọi cột.
+- `FROM movies` chỉ ra bảng nguồn.
+
+Kết quả:
 
 | id | title | year | director |
 | --- | --- | --- | --- |
@@ -73,14 +100,30 @@ Kết quả (cùng bốn hàng như bảng mẫu):
 | 3 | Dune | 2021 | Villeneuve |
 | 4 | Interstellar | 2014 | Nolan |
 
-Các bài sau sẽ hỏi **một số** cột hoặc **một số** hàng. Hôm nay bạn chỉ cần “tất cả”.
+Kết quả giống bảng nguồn vì truy vấn này lấy mọi cột và chưa loại hàng nào. Những bài sau sẽ thay đổi hình dạng hoặc số hàng của kết quả.
+
+## Tìm lỗi
+
+Vì sao câu này không tương đương?
+
+```sql
+SELECT movies;
+```
+
+`movies` là **tên bảng**, không phải một biểu thức cột để trả về. Truy vấn cũng không dùng `FROM` để chỉ nguồn dữ liệu. Với bài này, hình dạng đúng là `SELECT ... FROM movies`.
 
 ## Lỗi thường gặp
 
-- Quên dấu chấm phẩy `;` ở cuối câu lệnh (nhiều công cụ vẫn chạy được, nhưng nên tạo thói quen).
-- Viết `SELECT movies` thay vì `SELECT * FROM movies` — phải dùng `FROM` để chỉ rõ bảng.
-- Gõ sai tên bảng (`movie` thay vì `movies`) — tên phải khớp chính xác.
+- Nhầm tên bảng với tên cột.
+- Gõ `movie` thay vì `movies`; identifier phải khớp với schema.
+- Nghĩ rằng SQL luôn trả hàng theo một thứ tự có ý nghĩa. Bài `ORDER BY` sẽ làm thứ tự trở thành yêu cầu rõ ràng.
 
 ## Thử ngay
 
-Chạy truy vấn trả về **mọi cột và mọi dòng** của `movies`. Nếu bí, bấm nút gợi ý.
+Dùng sandbox để trả về **mọi cột và mọi hàng** của `movies`. Trước khi bấm Chạy, tự nói xem bạn kỳ vọng kết quả có hình dạng thế nào.
+
+## Tự kiểm tra
+
+Phần nào trong `SELECT * FROM movies` cho SQL biết dữ liệu đến từ đâu?
+
+**Đáp án:** `FROM movies` chỉ ra bảng nguồn.

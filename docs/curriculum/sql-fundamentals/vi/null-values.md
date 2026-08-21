@@ -6,15 +6,17 @@ slug: null-values
 title: Dữ liệu thiếu với NULL
 order: 8
 published: true
+can_do: "Tìm dữ liệu thiếu bằng IS NULL và giải thích vì sao phép bằng thông thường không khớp NULL"
 objectives:
-  - Coi NULL là dữ liệu thiếu, không phải số 0 hay chữ rỗng
-  - Tìm hàng bằng IS NULL
+  - Phân biệt NULL với số 0, chuỗi rỗng và chuỗi 'NULL'
+  - Suy luận NULL như một giá trị chưa biết hoặc bị thiếu trong điều kiện
+  - Tìm dữ liệu thiếu bằng IS NULL
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "Rating thiếu được lưu là NULL — không phải chữ 'NULL' và không phải 0."
-    - "Dùng IS NULL trong WHERE; = NULL không hoạt động như người mới nghĩ."
-    - "Thử: SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
+    - "Đề hỏi rating bị thiếu, không phải số 0 hay chữ 'NULL'."
+    - "NULL được kiểm tra bằng IS NULL thay vì phép bằng thông thường."
+    - "Dùng: SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
   solution: "SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "rating"]
@@ -34,18 +36,43 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 8.8), (2, 'The Matrix', 1999, NULL), (3, 'Dune', 2021, 8.0), (4, 'Old Cut', 1985, NULL);"
 ---
 
-Một số ô chưa có giá trị — như ô trống trong spreadsheet. Trong SQL giá trị thiếu đó gọi là `NULL`. Không phải số 0, cũng không phải chữ “NULL”.
+Dữ liệu thực tế thường không đầy đủ. Một bộ phim có thể chưa được nhập rating. SQL biểu diễn sự thiếu vắng đó bằng `NULL`; nếu coi nó như số hoặc chuỗi thông thường, truy vấn rất dễ sai mà khó nhận ra.
 
-**movies** (bảng đầy đủ — ô rating trống là `NULL`)
+## Mô hình tư duy
+
+`NULL` nghĩa là giá trị ở hàng này **đang thiếu hoặc chưa biết**. Nó khác với một giá trị thật chỉ vì giá trị đó bằng 0 hoặc trống.
+
+| Trạng thái lưu | Ý nghĩa |
+| --- | --- |
+| `8.8` | rating số đã biết |
+| `0` | giá trị số đã biết và bằng 0 |
+| `''` | chuỗi rỗng đã biết, nếu cột là text |
+| `NULL` | chưa có giá trị được biết |
+
+**movies**
 
 | id | title | year | rating |
 | --- | --- | --- | --- |
 | 1 | Inception | 2010 | 8.8 |
-| 2 | The Matrix | 1999 | *(thiếu)* |
+| 2 | The Matrix | 1999 | *(NULL)* |
 | 3 | Dune | 2021 | 8.0 |
-| 4 | Old Cut | 1985 | *(thiếu)* |
+| 4 | Old Cut | 1985 | *(NULL)* |
 
-Hai phim có rating; hai phim không có.
+Điều kiện SQL thường cho kết quả true hoặc false, nhưng phép so sánh có `NULL` có thể cho trạng thái logic thứ ba: **unknown**. `WHERE` chỉ giữ các hàng mà điều kiện thực sự là true.
+
+## Dự đoán trước khi chạy
+
+Câu sau sẽ làm gì?
+
+```sql
+SELECT title
+FROM movies
+WHERE rating = NULL;
+```
+
+Nó **không** có nghĩa “rating bị thiếu”. Với rating thiếu, `rating = NULL` cho kết quả unknown chứ không phải true, nên các hàng đó không được chọn.
+
+Bây giờ dự đoán `rating IS NULL`: The Matrix và Old Cut phải được giữ.
 
 ## Ví dụ mẫu
 
@@ -56,10 +83,6 @@ WHERE rating IS NULL
 ORDER BY title;
 ```
 
-- Inception (`8.8`) và Dune (`8.0`) có rating thật — không khớp.
-- The Matrix và Old Cut có rating `NULL` — khớp `IS NULL`.
-- Dùng `IS NULL` (hoặc `IS NOT NULL`) — so sánh `= NULL` không tìm được giá trị thiếu.
-
 Kết quả:
 
 | title |
@@ -67,12 +90,30 @@ Kết quả:
 | Old Cut |
 | The Matrix |
 
+`IS NULL` đặt câu hỏi đặc biệt “giá trị này có đang thiếu không?”. `IS NOT NULL` hỏi chiều ngược lại: “đã có giá trị chưa?”.
+
+## Tìm lỗi
+
+Muốn tìm phim chưa có rating nhưng lại viết:
+
+```sql
+WHERE rating = 0
+```
+
+Câu đó tìm các hàng có rating thật sự bằng số 0. Nó không nói gì về dữ liệu thiếu. Yêu cầu đúng phải dịch thành `rating IS NULL`.
+
 ## Lỗi thường gặp
 
-- Viết `WHERE rating = NULL` — so sánh đó không tìm được giá trị thiếu; dùng `IS NULL`.
-- Tìm chữ `'NULL'` — đó là chuỗi, không phải giá trị thiếu.
-- Coi `NULL` như `0` — số không là số thật; `NULL` nghĩa là “chưa biết / chưa điền”.
+- Viết `rating = NULL` thay vì `rating IS NULL`.
+- Tìm chuỗi `'NULL'`; đó là text chứ không phải dữ liệu thiếu.
+- Coi `NULL` như số 0 hoặc chuỗi rỗng, từ đó trộn “chưa biết” với một giá trị đã biết.
 
 ## Thử ngay
 
-Liệt kê `title` mọi phim có `rating` thiếu (`IS NULL`), sắp theo `title`.
+Trả về các `title` có `rating` bị thiếu, sắp theo `title`. Trước khi chạy, hãy xác định hai hàng chưa biết rating.
+
+## Tự kiểm tra
+
+Điều kiện nào tìm các hàng **đã có** rating?
+
+**Đáp án:** `rating IS NOT NULL`.

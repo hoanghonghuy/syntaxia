@@ -6,20 +6,20 @@ slug: document-structure
 title: Document structure and the head
 order: 1
 published: true
+can_do: "Build a complete HTML document skeleton and place metadata in head while keeping visible page content in body"
 objectives:
-  - Sketch the skeleton of an HTML document
-  - Explain what the head and body are for
-  - Set lang, charset, and title correctly
+  - Trace the parent-child shape of a minimal HTML document
+  - Place language, charset, and title metadata correctly
+  - Distinguish document metadata from visible body content
 exercise:
   mode: html
   starter: |
     <!DOCTYPE html>
-    <!-- Complete html, head with title, and body -->
-    
+    <!-- TODO: add html lang, head metadata, title, and body -->
   hints:
-    - Add html, head, body, and title elements.
-    - Put charset meta and title inside head.
-    - Put visible content inside body.
+    - The root is <html lang="en"> with head and body as its main children.
+    - Put <meta charset="utf-8"> and <title> inside head; visible content belongs in body.
+    - Complete the skeleton with doctype, html, head, meta charset, title, body, and closing html tag.
   solution: |
     <!DOCTYPE html>
     <html lang="en">
@@ -31,30 +31,54 @@ exercise:
       <p>Hello</p>
     </body>
     </html>
-    
   expected:
     type: htmlTags
+    sourceIncludes:
+      - "<!DOCTYPE html>"
     tags:
       - tag: html
         minCount: 1
+        requiredAttrs: [lang]
       - tag: head
+        minCount: 1
+      - tag: meta
+        minCount: 1
+        requiredAttrs: [charset]
+        attrEquals:
+          charset: utf-8
+      - tag: title
         minCount: 1
       - tag: body
         minCount: 1
-      - tag: title
-        minCount: 1
 ---
 
-Every HTML page follows a shared **document skeleton**. The browser expects a doctype, an `html` root, a `head` for metadata, and a `body` for what the visitor sees. Without this shape, tools and browsers cannot treat the file as a complete page.
+A browser document has two different concerns: **metadata about the document** and **content rendered in the page**. A predictable skeleton keeps those concerns in the right place.
 
-Compare it to a book: the cover and copyright page are not the story, but they identify the book. The `head` is like that front matter; the `body` holds the chapters you read on screen.
+## Mental model
 
-| Part | Role | Visible on the page? |
-| --- | --- | --- |
-| `<!DOCTYPE html>` | Declares HTML5 | No |
-| `<html lang="...">` | Root of the document; language hint | No (wraps everything) |
-| `<head>` | Title, character set, links to styles | Mostly no (title shows in the tab) |
-| `<body>` | Visible content | Yes |
+```text
+Document
+├─ <!DOCTYPE html>
+└─ html[lang]
+   ├─ head
+   │  ├─ meta charset
+   │  └─ title
+   └─ body
+      └─ visible content
+```
+
+`head` and `body` are siblings under the root `html` element. The tab title is metadata; an `h1` in the body is visible page content.
+
+## Predict the rendered structure
+
+For this skeleton, predict which text appears **inside the page** and which appears in the **browser tab**:
+
+```html
+<head><title>Garden notes</title></head>
+<body><h1>Tomatoes</h1></body>
+```
+
+`Tomatoes` is page content; `Garden notes` is document metadata used for the tab/bookmark.
 
 ## Worked example
 
@@ -62,27 +86,41 @@ Compare it to a book: the cover and copyright page are not the story, but they i
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>My first page</title>
+    <meta charset="utf-8">
+    <title>Garden notes</title>
   </head>
   <body>
-    <p>Hello, web.</p>
+    <h1>Tomatoes</h1>
   </body>
 </html>
 ```
 
-- `<!DOCTYPE html>` tells the browser to use modern HTML rules.
-- `lang="en"` on `<html>` helps browsers and assistive tools know the page language.
-- `<meta charset="utf-8" />` sets the character encoding so letters and symbols display correctly.
-- `<title>` sets the text in the browser tab and bookmarks — it belongs in the `head`, not as a heading in the body.
-- Everything the visitor should see goes inside `<body>`.
+`lang` helps language-aware tools; UTF-8 safely represents modern text; `title` identifies the document outside the page body.
+
+## Debug this
+
+```html
+<body>
+  <meta charset="utf-8">
+  <title>Garden notes</title>
+  <h1>Tomatoes</h1>
+</body>
+```
+
+The metadata is in the visible-content region. Move document metadata into `head`; keep body for content users interact with or read on the page.
 
 ## Common mistakes
 
-- Putting the page title only as an `<h1>` and leaving `<title>` empty or missing — tabs and search results need `<title>`.
-- Forgetting `charset` early in the `head` — unusual characters may show as garbage.
-- Nesting content outside `<body>` or closing tags in the wrong order — keep `head` and `body` as siblings inside `html`.
+- Treating `<title>` and `<h1>` as interchangeable.
+- Omitting the page language even when it is known.
+- Placing metadata inside body because it does not visibly break the preview.
 
 ## Your turn
 
-Use the sandbox below to complete the minimal document skeleton. When the checker shows **Correct**, mark this lesson complete.
+Build the complete minimal document skeleton. The checker now verifies doctype, language, UTF-8 metadata, title, head, and body instead of only counting container tags.
+
+## Quick check
+
+Where should the character encoding declaration live?
+
+**Answer:** in `head`, using a charset meta element such as `<meta charset="utf-8">`.

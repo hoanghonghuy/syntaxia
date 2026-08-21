@@ -6,16 +6,17 @@ slug: union-queries
 title: Combining result sets with UNION
 order: 24
 published: true
+can_do: "Stack compatible SELECT results vertically with UNION and predict duplicate elimination"
 objectives:
-  - Stack rows from two SELECT queries with UNION
-  - Understand that UNION removes duplicate values
-  - Place ORDER BY after the full UNION
+  - Contrast UNION with JOIN
+  - Check column-count/type compatibility between UNION inputs
+  - Explain why UNION removes duplicate result rows
 exercise:
   starter: "SELECT name FROM a;"
   hints:
-    - "UNION stacks the rows of two SELECT results into one list."
-    - "Duplicate names that appear in both tables are kept only once."
-    - "Try: SELECT name FROM a UNION SELECT name FROM b ORDER BY name;"
+    - "You need rows from both result sets stacked into one column."
+    - "Use UNION between two compatible SELECT name queries; UNION removes duplicate names."
+    - "Use: SELECT name FROM a UNION SELECT name FROM b ORDER BY name;"
   solution: "SELECT name FROM a UNION SELECT name FROM b ORDER BY name;"
   preview:
     columns: ["name"]
@@ -39,30 +40,35 @@ sandbox_seed:
     - "INSERT INTO b VALUES ('Bob'), ('Cara'), ('Dee');"
 ---
 
-Sometimes you have two similar lists and want one combined list — like stacking two spreadsheet columns into one. `UNION` runs two `SELECT` queries and merges their rows. Duplicate values appear only once.
+JOIN and UNION both combine data, but along different axes. JOIN builds **wider rows from related inputs**; UNION stacks **more rows from compatible results**.
 
-**a** (full table)
+## Mental model
+
+Think vertical stacking:
+
+**Result A**: Ann, Bob, Cara  
+**Result B**: Bob, Cara, Dee
+
+`UNION` stacks them and then removes duplicate result rows:
 
 | name |
 | --- |
 | Ann |
 | Bob |
 | Cara |
-
-**b** (full table)
-
-| name |
-| --- |
-| Bob |
-| Cara |
 | Dee |
 
-| name | In `a`? | In `b`? | After `UNION`? |
-| --- | --- | --- | --- |
-| Ann | yes | no | once |
-| Bob | yes | yes | once (duplicate dropped) |
-| Cara | yes | yes | once |
-| Dee | no | yes | once |
+The two SELECTs must produce the same number of columns, with corresponding types that can be combined.
+
+## Predict before you run
+
+```sql
+SELECT name FROM a
+UNION
+SELECT name FROM b;
+```
+
+There are 3 + 3 input rows, but predict **4 output rows**, because Bob and Cara appear in both inputs and UNION eliminates those duplicates.
 
 ## Worked example
 
@@ -73,13 +79,6 @@ SELECT name FROM b
 ORDER BY name;
 ```
 
-- Each `SELECT` must return the same number of columns with compatible types.
-- `UNION` drops duplicate `Bob` and `Cara`.
-- `ORDER BY name` sorts the combined list — place it **after** the full `UNION`.
-- To keep every row including duplicates, use `UNION ALL` (lesson `union-all`).
-
-Result:
-
 | name |
 | --- |
 | Ann |
@@ -87,12 +86,32 @@ Result:
 | Cara |
 | Dee |
 
+`ORDER BY` applies to the combined result. A later lesson uses `UNION ALL` when duplicates must be preserved.
+
+## Debug this
+
+Why can this not form one rectangular result?
+
+```sql
+SELECT name FROM a
+UNION
+SELECT name, age FROM b;
+```
+
+The first SELECT produces one column and the second produces two. UNION needs compatible result shapes so every stacked row has the same number of fields.
+
 ## Common mistakes
 
-- Using `UNION ALL` when the task expects unique values — `UNION ALL` keeps duplicates (see `union-all`).
-- Selecting different column counts in the two queries — that causes an error.
-- Putting `ORDER BY` only on the first `SELECT` — place it after the full `UNION`.
+- Confusing UNION (vertical stacking) with JOIN (horizontal relationship matching).
+- Assuming UNION preserves duplicates.
+- Returning different column counts from the two SELECT branches.
 
 ## Your turn
 
-Return one sorted list of unique `name` values from tables `a` and `b`.
+Return one alphabetically sorted unique list of names from `a` and `b`. Predict which duplicate input rows disappear.
+
+## Quick check
+
+If duplicate rows must be preserved, which operator will the later lesson use?
+
+**Answer:** `UNION ALL`.

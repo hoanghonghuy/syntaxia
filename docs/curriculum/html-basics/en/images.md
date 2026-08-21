@@ -3,40 +3,51 @@ id: html-06-images
 track: html-basics
 locale: en
 slug: images
-title: Images with alt text
+title: Images with text alternatives
 order: 6
 published: true
+can_do: "Embed an image with a valid source and choose an appropriate text alternative based on whether the image is informative or decorative"
 objectives:
-  - Embed an image with img, src, and alt
-  - Write alt text that describes the image’s role
-  - Optionally set width and height for layout stability
+  - Use img with src and an alt attribute
+  - Write useful alt text for informative images
+  - Recognize empty alt as the intentional pattern for purely decorative images
 exercise:
   mode: html
   starter: |
-    <!-- Add an image with src and alt -->
-    
+    <!-- TODO: add cat.png with an informative alt description -->
   hints:
-    - Use a single img tag (self-closing).
-    - src points to the image file.
-    - alt describes the image for accessibility.
+    - Use an img element; it does not wrap child text.
+    - src identifies the file and alt provides the text alternative.
+    - A valid pattern is <img src="cat.png" alt="A cat sitting by a window">.
   solution: |
-    <img src="cat.png" alt="A cat">
+    <img src="cat.png" alt="A cat sitting by a window">
   expected:
-    type: htmlIncludes
-    needles:
-      - alt=
-      - <img
+    type: htmlTags
+    tags:
+      - tag: img
+        minCount: 1
+        requiredAttrs: [src, alt]
 ---
 
-Images are empty elements: they do not wrap text the way a paragraph does. The `img` tag points to a file with `src` and describes the image for people who cannot see it with `alt`. Good `alt` text is part of accessible HTML, not an optional caption trick.
+An image has two parallel representations: the visual resource loaded from `src` and the **text alternative** exposed when the image cannot or should not be perceived visually.
 
-If the photo were removed, what short sentence would still carry its meaning? That sentence is usually your `alt`.
+## Mental model
 
-| Attribute | Role |
-| --- | --- |
-| `src` | Path or URL of the image file |
-| `alt` | Text alternative for the image |
-| `width` / `height` | Intrinsic size hints (pixels); help reserve space |
+```text
+img
+├─ src -> visual resource
+└─ alt -> text alternative / semantic fallback
+```
+
+`img` is a void element: it has attributes but no child content or closing `</img>` tag in HTML.
+
+## Predict the rendered structure
+
+```html
+<img src="seedling.jpg" alt="Young tomato seedling in a clay pot">
+```
+
+Predict what remains meaningful if the image fails to load or is announced non-visually: the alt text still communicates the image's content. For a purely decorative image that adds no information, `alt=""` can intentionally hide it from assistive reading.
 
 ## Worked example
 
@@ -45,22 +56,31 @@ If the photo were removed, what short sentence would still carry its meaning? Th
   src="tomato-seedling.jpg"
   alt="Young tomato seedling in a clay pot"
   width="640"
-  height="480"
-/>
+  height="480">
 ```
 
-- `src` tells the browser which file to load.
-- `alt` describes the content so it can be announced or shown if the image fails.
-- `width` and `height` match the image’s pixel size so the page does not jump while loading.
+`width` and `height` can help the browser reserve the image's aspect space while it loads. They do not replace responsive CSS later.
 
-If an image is purely decorative, `alt=""` (empty) can be appropriate. For learning pages, prefer real descriptions when the picture teaches something.
+## Debug this
+
+```html
+<img src="chart.png" alt="image">
+```
+
+The attribute exists, but the description throws away the chart's meaning. Alt quality depends on the image's purpose in context, not on merely satisfying an attribute checklist.
 
 ## Common mistakes
 
-- Omitting `alt` — assistive tools then have nothing useful to announce.
-- Stuffing keywords into `alt` (“tomato SEO plant garden buy”) — write a clear description, not a search list.
-- Using huge images without size hints — the layout may shift as each file arrives.
+- Omitting `alt` entirely.
+- Writing file names or generic words such as “image” instead of the useful meaning.
+- Filling decorative images with noisy alt text instead of deliberately using empty alt when appropriate.
 
 ## Your turn
 
-Use the sandbox below to add an image with src and alt. When the checker shows **Correct**, mark this lesson complete.
+Add `cat.png` with an informative text alternative. The grader now requires both `src` and `alt` on an actual `img` element.
+
+## Quick check
+
+Should every image have a long non-empty alt description?
+
+**Answer:** no. Informative images need useful alternatives; purely decorative images commonly use `alt=""`.

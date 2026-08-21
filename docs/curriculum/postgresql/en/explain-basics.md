@@ -3,18 +3,20 @@ id: pg-23-explain
 track: postgresql
 locale: en
 slug: explain-basics
-title: Reading EXPLAIN plans
+title: Reading PostgreSQL query plans with EXPLAIN
 order: 23
 published: true
+can_do: "Read basic PostgreSQL EXPLAIN concepts and distinguish planner estimates from measurements produced by EXPLAIN ANALYZE"
 objectives:
-  - Recognize what EXPLAIN shows
-  - Run a normal SELECT after studying a plan example
+  - Read a plan as a tree of execution nodes
+  - Distinguish estimated cost/rows from actual execution metrics
+  - Use EXPLAIN ANALYZE cautiously because it executes the statement
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "This exercise grades a normal SELECT, not EXPLAIN text."
-    - "Return only the title column."
-    - "Try: SELECT title FROM movies ORDER BY title;"
+    - "The sandbox grades stable query results rather than environment-dependent plan text."
+    - "Return title in deterministic alphabetical order after studying the plan example."
+    - "Use: SELECT title FROM movies ORDER BY title;"
   solution: "SELECT title FROM movies ORDER BY title;"
   preview:
     columns: ["id", "title", "year"]
@@ -32,37 +34,63 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999);"
 ---
 
-Before PostgreSQL runs a query, it builds a **plan** — a step-by-step idea of how to find the rows (scan a table, use an index, sort, and so on). `EXPLAIN` prints that plan as text so you can learn how the database thinks. The output is not your movie list; it is a description of the work.
+PostgreSQL's planner turns a SQL statement into a tree of execution nodes. `EXPLAIN` lets you inspect that proposed plan; `EXPLAIN ANALYZE` runs the statement and adds actual execution measurements.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | Inception | 2010 |
-| 2 | The Matrix | 1999 |
+## Mental model
+
+A simplified plan line:
+
+```text
+Seq Scan on movies  (cost=0.00..12.00 rows=2 width=32)
+```
+
+Read the concepts, not the exact numbers:
+
+| field | meaning |
+| --- | --- |
+| node type | operation such as Seq Scan, Index Scan, Sort, Hash Join |
+| `cost` | planner estimate in internal cost units, not milliseconds |
+| `rows` | estimated rows emitted by the node |
+| `width` | estimated average output row width in bytes |
+
+Plan values vary with statistics, data volume, configuration, and PostgreSQL version. A toy-table plan is not evidence for production scale.
+
+## Predict before you run
+
+For a tiny table and a query that needs all rows, a sequential scan is a plausible plan. But do not turn that into a guarantee: the lesson is about reading planner reasoning, not memorizing one node.
 
 ## Worked example
 
 ```sql
-EXPLAIN SELECT title FROM movies;
+EXPLAIN SELECT title
+FROM movies
+ORDER BY title;
 ```
 
-A typical plan line looks like:
+A plan may contain a scan plus sort. With `EXPLAIN ANALYZE`, PostgreSQL actually executes the statement and can report actual times/rows and buffers when requested.
 
-```text
-Seq Scan on movies  (cost=0.00..1.02 rows=2 width=32)
+The graded sandbox task remains a normal deterministic SELECT because exact plan text is intentionally environment-dependent:
+
+```sql
+SELECT title FROM movies ORDER BY title;
 ```
 
-- `Seq Scan` means “read the table from start to finish” (common on small tables).
-- `cost` and `rows` are planner estimates, not your data values.
-- `EXPLAIN ANALYZE` also runs the query and shows real timings — useful later; start with plain `EXPLAIN`.
+## Debug this
 
-In this lesson’s sandbox, the graded task is a normal `SELECT` so grading stays reliable (plan text is hard to match row-by-row). Use `EXPLAIN` in your own practice after you understand the idea.
+“Cost 100 means the query takes 100 ms” is incorrect. Planner cost uses configurable abstract units. To compare estimates with reality, use `EXPLAIN ANALYZE` on an appropriate representative environment—and remember it executes side effects for modifying statements.
 
 ## Common mistakes
 
-- Expecting `EXPLAIN` to return `title` values — it returns plan text in a column named `QUERY PLAN`.
-- Treating cost numbers as “wrong answers” — they are estimates.
-- Skipping `ORDER BY` on the graded `SELECT` when alphabetical order is required.
+- Comparing cost numbers directly to elapsed milliseconds.
+- Treating one local plan on tiny data as proof of production behavior.
+- Running `EXPLAIN ANALYZE` on a mutation without realizing the mutation is actually executed.
 
 ## Your turn
 
-Return every `title` from `movies`, ordered by title (practice SELECT after reading the EXPLAIN example above).
+After reading the plan model, run the deterministic SELECT required by the sandbox. In real practice, compare EXPLAIN estimates against representative data before optimizing.
+
+## Quick check
+
+What is the most important safety difference between plain `EXPLAIN` and `EXPLAIN ANALYZE`?
+
+**Answer:** `EXPLAIN ANALYZE` actually executes the statement; plain EXPLAIN only plans it.

@@ -3,23 +3,24 @@ id: js-08-functions
 track: javascript-basics
 locale: en
 slug: functions
-title: Reusable blocks with functions
+title: Functions, parameters, and return values
 order: 8
 published: true
+can_do: "Trace a function call from arguments to parameter bindings through return value and caller-side use"
 objectives:
-  - Define a function with function and a name
-  - Pass values in as parameters
-  - Call a function and use its return value
+  - Distinguish function definition from function call
+  - Map arguments to parameters for one call
+  - Distinguish returning a value from logging a value
 exercise:
   starter: |
     function add(a, b) {
-      // return the sum of a and b
+      // TODO: return the sum of a and b
     }
     console.log(add(4, 5));
   hints:
-    - "Call add with 4 and 5."
-    - "console.log prints to the output panel."
-    - "The expected line is just the number 9."
+    - "When add(4, 5) runs, a becomes 4 and b becomes 5 for that call."
+    - "The function must return a value so console.log receives it."
+    - "Use: return a + b;"
   solution: |
     function add(a, b) {
       return a + b;
@@ -31,42 +32,86 @@ exercise:
       - "9"
 ---
 
-A recipe card holds steps you can follow anytime without rewriting them. A **function** is a named, reusable block of code. You **call** it when you need the job done.
+A function packages behavior behind a name. To understand one, trace the boundary between the **caller** and the **function call**.
 
-| Piece | Plain meaning | Example |
-| --- | --- | --- |
-| `function name()` | Define the block | `function greet() { ... }` |
-| Parameters | Inputs the caller passes | `function add(a, b)` |
-| `return` | Send a result back | `return a + b` |
-| Call | Run the function | `greet()` or `add(2, 3)` |
+## Execution model
+
+For this call:
+
+```javascript
+add(4, 5)
+```
+
+```text
+caller supplies arguments 4, 5
+        ↓
+parameter bindings a=4, b=5
+        ↓
+function body executes
+        ↓
+return value 9
+        ↓
+caller receives 9
+```
+
+Parameters are names in the function definition; arguments are the actual values supplied by a particular call.
+
+## Trace it
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+console.log(add(4, 5));
+```
+
+| step | value/effect |
+| ---: | --- |
+| call `add(4, 5)` | `a = 4`, `b = 5` |
+| evaluate `a + b` | `9` |
+| `return 9` | function call expression becomes `9` |
+| `console.log(...)` | logs `9` |
+
+## Predict before you run
+
+Predict what `console.log` receives, not just what happens inside the function: one Number value `9`.
 
 ## Worked example
 
 ```javascript
-function greet(name) {
-  return "Hello, " + name + "!";
+function fullName(first, last) {
+  return `${first} ${last}`;
 }
 
-function add(a, b) {
-  return a + b;
-}
-
-console.log(greet("Sam"));
-const sum = add(4, 5);
-console.log(sum);
+const label = fullName("Ada", "Lovelace");
+console.log(label);
 ```
 
-- `greet` takes one parameter `name` and returns a string.
-- `add` takes two numbers and returns their sum.
-- `greet("Sam")` runs the function once and uses the returned text.
-- `add(4, 5)` returns `9`, stored in `sum`.
+The function computes a value; the caller decides what to do with that returned value.
+
+## Debug this
+
+```javascript
+function add(a, b) {
+  a + b;
+}
+console.log(add(4, 5));
+```
+
+The expression is evaluated and discarded. Without an explicit return, the function returns `undefined`. Logging and returning are different responsibilities.
 
 ## Common mistakes
 
-- Calling a function before it is defined — in small scripts, define functions above the calls (or use consistent order).
-- Forgetting `return` — the function runs but gives back `undefined` when you expected a value.
-- Mixing up parameters and arguments — parameters are names in the definition; arguments are the values you pass in the call.
+- Confusing parameter names with the argument values supplied by a call.
+- Logging inside a function when callers need a reusable returned value.
+- Forgetting `return` and then debugging an unexpected `undefined` at the call site.
 
 ## Your turn
 
-Run the sandbox: `add(4, 5)` should print **9** to the console. When the checker passes, mark complete — you have finished the JavaScript Basics readings.
+Make `add(4, 5)` return `9` so the existing `console.log` prints it.
+
+## Quick check
+
+What is the difference between `return value` and `console.log(value)`?
+
+**Answer:** `return` sends a value back to the caller; `console.log` only produces console output as a side effect.

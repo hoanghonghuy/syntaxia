@@ -6,16 +6,17 @@ slug: insert-into-select
 title: Copying rows with INSERT INTO SELECT
 order: 38
 published: true
+can_do: "Move a query result into a destination table by matching destination columns to SELECT output and verifying the resulting state"
 objectives:
-  - Insert rows by selecting from another table
-  - Copy a filtered subset into a destination table
-  - Use verify_sql style thinking: select after insert to check
+  - Treat SELECT output as the row source for INSERT
+  - Match destination columns to source expressions
+  - Predict and verify the destination table after a filtered copy
 exercise:
   starter: "SELECT title, year FROM archive;"
   hints:
-    - "INSERT INTO archive (title, year) SELECT … copies rows from movies."
-    - "Filter with WHERE year >= 2010 so older films stay out."
-    - "Try: INSERT INTO archive (title, year) SELECT title, year FROM movies WHERE year >= 2010;"
+    - "The destination needs title and year; the source SELECT must return those values in the same order."
+    - "Filter source movies with year >= 2010 before inserting."
+    - "Use: INSERT INTO archive (title, year) SELECT title, year FROM movies WHERE year >= 2010;"
   solution: "INSERT INTO archive (title, year) SELECT title, year FROM movies WHERE year >= 2010;"
   preview:
     columns: ["title", "year"]
@@ -36,23 +37,29 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Dune', 2021);"
 ---
 
-Sometimes you already have rows in one table and want to **copy** some of them into another table — like copying selected spreadsheet rows into a second sheet. `INSERT INTO … SELECT` does that in one step: no typing each value by hand.
+An `INSERT` does not have to get values from a literal `VALUES (...)` list. A `SELECT` can produce the rows to insert, which is useful for copying, archiving, and transforming sets of rows.
 
-**movies** (source — full table)
+## Mental model
 
-| id | title | year |
+Think in a pipeline:
+
+```text
+movies -> WHERE year >= 2010 -> SELECT title, year -> INSERT into archive(title, year)
+```
+
+Trace it:
+
+| source movie | passes filter? | inserted into archive? |
 | --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Dune | 2021 |
+| The Matrix, 1999 | no | no |
+| Inception, 2010 | yes | yes |
+| Dune, 2021 | yes | yes |
 
-**archive** (destination — empty at the start)
+The destination column list `(title, year)` must line up with the two expressions produced by the SELECT.
 
-| title | year |
-| --- | --- |
-| *(no rows yet)* |  |
+## Predict before you run
 
-Goal: copy only films from year **2010 or later** into `archive`.
+`archive` starts empty. Predict its complete after-state: exactly two rows, Inception 2010 and Dune 2021.
 
 ## Worked example
 
@@ -63,24 +70,40 @@ FROM movies
 WHERE year >= 2010;
 ```
 
-- `INSERT INTO archive (title, year)` names the destination columns.
-- `SELECT title, year FROM movies` is the source of those values.
-- `WHERE year >= 2010` keeps Inception and Dune; drops The Matrix (1999).
-- After the insert, check with `SELECT title, year FROM archive ORDER BY title;`.
+Then verify state:
 
-**archive** after the insert:
+```sql
+SELECT title, year
+FROM archive
+ORDER BY title;
+```
 
 | title | year |
-| --- | --- |
+| --- | ---: |
 | Dune | 2021 |
 | Inception | 2010 |
 
+## Debug this
+
+```sql
+INSERT INTO archive (title, year)
+SELECT year, title FROM movies WHERE year >= 2010;
+```
+
+The source expressions are reversed relative to destination columns. Set-based mutations still require explicit value-to-column reasoning.
+
 ## Common mistakes
 
-- Forgetting column lists — if column order differs, values can land in the wrong place; list `(title, year)` on both sides carefully.
-- Using `VALUES` when the data already lives in a table — `SELECT` is the right tool for copying.
-- Inserting without a filter — then every movie is copied; use `WHERE` when you only want a subset.
+- Misaligning destination columns and SELECT expressions.
+- Forgetting the source filter and copying too many rows.
+- Verifying only that the command ran instead of checking the destination after-state.
 
 ## Your turn
 
-Copy `title` and `year` from `movies` into `archive` for films with `year >= 2010`. The checker reads `archive` ordered by `title`.
+Copy title and year for movies from 2010 onward into `archive`. Predict the complete destination state first, then run and verify it.
+
+## Quick check
+
+In `INSERT INTO dest (a, b) SELECT x, y ...`, which source value goes into `b`?
+
+**Answer:** `y`, because SELECT expressions map positionally to the destination column list.

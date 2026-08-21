@@ -3,78 +3,95 @@ id: pg-00-types
 track: postgresql
 locale: vi
 slug: postgresql-types
-title: Kiểu cột trong PostgreSQL
+title: Đọc kiểu cột PostgreSQL
 order: 0
 published: true
+can_do: "Đọc schema PostgreSQL như hợp đồng kiểu dữ liệu và kiểm tra kiểu runtime của biểu thức được lưu"
 objectives:
-  - Nhận biết các kiểu cột PostgreSQL thường gặp
-  - Lọc hàng bằng cột kiểu BOOLEAN
+  - Phân biệt INTEGER, TEXT, NUMERIC và BOOLEAN theo ý nghĩa dữ liệu
+  - Đọc kiểu cột như một phần của hợp đồng dữ liệu
+  - Kiểm tra kiểu biểu thức bằng pg_typeof của PostgreSQL
 exercise:
   starter: "SELECT name, price FROM catalog;"
   hints:
-    - "Thêm WHERE để chỉ giữ các hàng còn hàng trong kho."
-    - "Cột in_stock là BOOLEAN — so sánh với true (không dùng dấu ngoặc)."
-    - "Thử: SELECT name, price FROM catalog WHERE in_stock = true;"
-  solution: "SELECT name, price FROM catalog WHERE in_stock = true;"
+    - "Bài này hỏi PostgreSQL nhìn thấy kiểu gì, không phải lọc product."
+    - "pg_typeof(expression)::text trả tên kiểu PostgreSQL dễ đọc."
+    - "Dùng pg_typeof cho id, name, price, in_stock, đặt bốn alias và LIMIT 1."
+  solution: "SELECT pg_typeof(id)::text AS id_type, pg_typeof(name)::text AS name_type, pg_typeof(price)::text AS price_type, pg_typeof(in_stock)::text AS stock_type FROM catalog LIMIT 1;"
   preview:
     columns: ["id", "name", "price", "in_stock"]
     rows:
-      - [1, "Notebook", 13, true]
-      - [2, "Pencil", 1, false]
-      - [3, "Eraser", 2, true]
+      - [1, "Notebook", 13.50, true]
+      - [2, "Pencil", 1.25, false]
   expected:
-    columns: ["name", "price"]
+    columns: ["id_type", "name_type", "price_type", "stock_type"]
     rows:
-      - ["Notebook", 13]
-      - ["Eraser", 2]
+      - ["integer", "text", "numeric", "boolean"]
 sandbox_seed:
   ddl:
-    - "CREATE TEMP TABLE catalog (id INTEGER, name TEXT, price INTEGER, in_stock BOOLEAN);"
-    - "INSERT INTO catalog VALUES (1, 'Notebook', 13, true), (2, 'Pencil', 1, false), (3, 'Eraser', 2, true);"
+    - "CREATE TEMP TABLE catalog (id INTEGER, name TEXT, price NUMERIC(8,2), in_stock BOOLEAN);"
+    - "INSERT INTO catalog VALUES (1, 'Notebook', 13.50, true), (2, 'Pencil', 1.25, false);"
 ---
 
-Trong bảng tính, một cột có thể chứa số, chữ, hoặc giá trị có/không. PostgreSQL gọi quy tắc đó là **kiểu cột** (column type) — quy định giá trị nào được phép trong cột đó.
+Kiểu dữ liệu PostgreSQL là một phần của mô hình dữ liệu. Nó nói cho database và người phát triển sau này biết giá trị mang ý nghĩa gì và những phép toán nào hợp lý.
 
-Các kiểu thường gặp:
+## Mô hình tư duy
 
-| Kiểu | Nghĩa đơn giản | Ví dụ |
+Xem schema như hợp đồng về kiểu:
+
+| cột | kiểu PostgreSQL | mô hình hóa |
 | --- | --- | --- |
-| `INTEGER` | Số nguyên | `1`, `42` |
-| `TEXT` | Chữ và nhãn | `'Notebook'` |
-| `NUMERIC` | Số thập phân (bài sau) | `12.5` |
-| `BOOLEAN` | Có/không | `true`, `false` |
+| `id` | `INTEGER` | định danh số nguyên |
+| `name` | `TEXT` | văn bản độ dài biến đổi |
+| `price` | `NUMERIC(8,2)` | số thập phân chính xác |
+| `in_stock` | `BOOLEAN` | true / false / unknown (`NULL`) |
 
-Đây là danh sách sản phẩm tên `catalog` dùng `INTEGER`, `TEXT`, và `BOOLEAN`:
+PostgreSQL còn có `pg_typeof(expression)` để kiểm tra kiểu mà server đã gán cho một biểu thức.
 
-| id | name | price | in_stock |
-| --- | --- | --- | --- |
-| 1 | Notebook | 13 | true |
-| 2 | Pencil | 1 | false |
-| 3 | Eraser | 2 | true |
+## Dự đoán trước khi chạy
+
+Từ schema trên, dự đoán bốn tên kiểu PostgreSQL trả về: `integer`, `text`, `numeric`, `boolean`.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT name, price FROM catalog WHERE in_stock = true;
+SELECT
+  pg_typeof(id)::text AS id_type,
+  pg_typeof(name)::text AS name_type,
+  pg_typeof(price)::text AS price_type,
+  pg_typeof(in_stock)::text AS stock_type
+FROM catalog
+LIMIT 1;
 ```
 
-- `in_stock` là cột `BOOLEAN`.
-- `= true` chỉ giữ sản phẩm còn hàng.
-- Pencil bị loại vì `in_stock` là `false`.
+| id_type | name_type | price_type | stock_type |
+| --- | --- | --- | --- |
+| integer | text | numeric | boolean |
 
-Kết quả:
+`NUMERIC(8,2)` vẫn báo base type là `numeric`; precision và scale là modifier trong định nghĩa cột.
 
-| name | price |
-| --- | --- |
-| Notebook | 13 |
-| Eraser | 2 |
+## Tìm lỗi
+
+Nếu tiền được lưu bằng `TEXT`, việc so sánh và tính toán không còn biểu đạt domain rõ ràng. Giá trị *trông giống số* không đồng nghĩa cột đã được mô hình hóa bằng kiểu số.
+
+```sql
+CREATE TABLE bad_catalog (price TEXT);
+```
+
+Schema hợp lệ về cú pháp nhưng là hợp đồng kém nếu price cần cộng, so sánh và kiểm tra như số thập phân.
 
 ## Lỗi thường gặp
 
-- Bọc `true` trong dấu ngoặc (`'true'`) — đó là chữ, không phải boolean.
-- Lọc theo `name` khi bài yêu cầu theo tình trạng kho.
-- Nhầm tên kiểu (`INT` và `INTEGER` đều được trong PostgreSQL; đều là số nguyên).
+- Chọn kiểu chỉ dựa vào cách giá trị hiển thị thay vì ý nghĩa và thao tác cần có.
+- Lưu giá trị tiền tệ thập phân chính xác dưới dạng text tùy ý.
+- Nghĩ literal có dấu nháy và giá trị đã typed luôn thay thế nhau trong mọi ngữ cảnh.
 
 ## Thử ngay
 
-Trả về `name` và `price` của mọi sản phẩm đang còn hàng.
+Dùng `pg_typeof` kiểm tra kiểu runtime của `id`, `name`, `price`, `in_stock` và trả bốn alias được yêu cầu.
+
+## Tự kiểm tra
+
+Vì sao database type không chỉ là định dạng hiển thị?
+
+**Đáp án:** vì nó xác định semantics dữ liệu và các phép toán, so sánh, constraint PostgreSQL có thể áp dụng đúng.

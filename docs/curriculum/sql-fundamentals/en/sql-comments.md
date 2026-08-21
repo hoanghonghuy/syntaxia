@@ -6,18 +6,19 @@ slug: sql-comments
 title: Notes in SQL with comments
 order: 41
 published: true
+can_do: "Add useful SQL comments without accidentally commenting out executable code or changing query behavior"
 objectives:
-  - Write a single-line comment with --
-  - Write a block comment with /* */
-  - Keep comments from changing query results
+  - Use -- for line comments and /* */ for block comments
+  - Separate human explanation from executable SQL
+  - Recognize comment-boundary bugs while debugging
 exercise:
   starter: |
     -- list movie titles A to Z
     SELECT title FROM movies;
   hints:
-    - "Comments are ignored by the database — they do not change the result."
-    - "Keep a -- comment above the SELECT, then select title ordered by title."
-    - "Try: -- list movie titles A to Z\nSELECT title FROM movies ORDER BY title;"
+    - "The comment is already correct; the executable SELECT still needs deterministic ordering."
+    - "Keep the -- line above the SQL and add ORDER BY title to the query."
+    - "Use: -- list movie titles A to Z\nSELECT title FROM movies ORDER BY title;"
   solution: |
     -- list movie titles A to Z
     SELECT title FROM movies ORDER BY title;
@@ -39,24 +40,29 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Dune', 2021);"
 ---
 
-A **comment** is a note for humans. The database skips it when running SQL — like a sticky note on a spreadsheet that does not change the numbers.
+Comments explain **why** SQL exists or what a non-obvious choice means. They are ignored by the SQL engine, so the executable statement still has to be correct on its own.
 
-| Style | How you write it | Use when |
+## Mental model
+
+| syntax | boundary | effect on execution |
 | --- | --- | --- |
-| `-- …` | Two dashes, then text to the end of the line | Short notes above a query |
-| `/* … */` | Slash-star … star-slash | Notes that span several lines |
+| `-- note` | from `--` to end of line | ignored |
+| `/* note */` | between opening and closing markers | ignored |
 
-**movies** (full table)
+Keep human text and executable text visibly separate:
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Dune | 2021 |
+```sql
+-- Stable alphabetical output for the report
+SELECT title FROM movies ORDER BY title;
+```
+
+The comment documents intent; `ORDER BY` is what actually guarantees the order.
+
+## Predict before you run
+
+Removing a well-formed comment should not change query rows. Predict the same three titles with or without the comment.
 
 ## Worked example
-
-A one-line comment above a normal `SELECT`:
 
 ```sql
 -- list movie titles A to Z
@@ -65,34 +71,41 @@ FROM movies
 ORDER BY title;
 ```
 
-- `-- list movie titles A to Z` is ignored.
-- The real work is `SELECT title … ORDER BY title`.
-
-Result (same as without the comment):
-
 | title |
 | --- |
 | Dune |
 | Inception |
 | The Matrix |
 
-A block comment can sit beside the query:
+A block comment is useful when an explanation genuinely needs multiple lines:
 
 ```sql
-SELECT title, year
-FROM movies
-/* only films in this practice table */
-ORDER BY year;
+/* This report intentionally includes all years.
+   Filtering happens in the consuming service. */
+SELECT title FROM movies ORDER BY title;
 ```
 
-The comment between `FROM` and `ORDER BY` is still ignored. Prefer placing long notes **above** the query so beginners do not lose the keywords.
+## Debug this
+
+```sql
+SELECT title FROM movies -- sort titles
+ORDER BY title;
+```
+
+This example still works because only text after `--` on that line is ignored. But placing executable code after `--` on the **same** line can silently comment it out. When debugging strange syntax/behavior, inspect comment boundaries.
 
 ## Common mistakes
 
-- Putting code after `--` on the same line by accident — everything after `--` on that line is a comment.
-- Forgetting to close `/*` with `*/` — the rest of the file may become a comment.
-- Thinking comments change results — they never do; if the answer is wrong, fix the SQL, not the note.
+- Putting executable SQL after `--` and unintentionally disabling it.
+- Leaving a `/*` block unclosed.
+- Writing comments that repeat syntax while failing to explain intent, constraints, or surprising decisions.
 
 ## Your turn
 
-Keep a `--` comment that says you are listing titles A to Z, then select every `title` from `movies` ordered by `title`.
+Keep the existing `--` comment and make the SELECT return titles A to Z with `ORDER BY title`.
+
+## Quick check
+
+Should changing only a correct comment change the rows returned by a query?
+
+**Answer:** no. Comments are ignored by the SQL engine.

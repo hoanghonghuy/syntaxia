@@ -6,23 +6,23 @@ slug: lists
 title: Danh sách
 order: 4
 published: true
+can_do: "Chọn cấu trúc unordered, ordered hoặc description list dựa trên quan hệ giữa các item và lồng list item đúng cách"
 objectives:
-  - Tạo danh sách không thứ tự (ul) và có thứ tự (ol)
-  - Đặt mỗi mục trong thẻ li
-  - Nhận biết danh sách định nghĩa (dl) ở mức giới thiệu
+  - Chọn loại list dựa trên việc thứ tự có ý nghĩa hay không
+  - Đặt li đúng bên trong ul hoặc ol
+  - Nhận biết cấu trúc term-description bằng dl, dt và dd
 exercise:
   mode: html
   starter: |
-    <!-- Build an unordered list with two items -->
-    
+    <!-- TODO: tạo unordered list có ít nhất hai item -->
   hints:
-    - Bắt đầu bằng thẻ mở ul.
-    - Mỗi mục cần một phần tử li.
-    - Thêm ít nhất hai mục li.
+    - Dùng ul vì các item luyện tập này không cần số thứ tự.
+    - Mỗi item phải nằm trong một phần tử li.
+    - Tạo <ul> với ít nhất hai phần tử con <li>...</li>.
   solution: |
     <ul>
-      <li>One</li>
-      <li>Two</li>
+      <li>Water</li>
+      <li>Flour</li>
     </ul>
   expected:
     type: htmlTags
@@ -33,51 +33,66 @@ exercise:
         minCount: 2
 ---
 
-Khi bạn liệt kê bước làm hoặc liệt kê món hàng, HTML có **danh sách**. Có danh sách không cần số thứ tự (`ul`), danh sách có thứ tự (`ol`), và danh sách dạng thuật ngữ–định nghĩa (`dl`).
+List diễn tả mối quan hệ giữa nhiều item. Quyết định quan trọng là **thứ tự có mang ý nghĩa hay không**, không phải thích nhìn bullet hay số hơn.
 
-| Loại | Thẻ bao | Mục | Khi nào dùng |
-| --- | --- | --- | --- |
-| Không thứ tự | `ul` | `li` | Gạch đầu dòng, không cần 1–2–3 |
-| Có thứ tự | `ol` | `li` | Các bước theo thứ tự |
-| Định nghĩa | `dl` | `dt` + `dd` | Thuật ngữ và giải thích |
+## Mô hình tư duy
+
+```text
+unordered: ul -> li, li, li
+ordered:   ol -> li, li, li
+description: dl -> dt + dd, dt + dd
+```
+
+`ul` và `ol` là container; item thực tế nằm trong các phần tử `li`.
+
+## Dự đoán cấu trúc khi render
+
+Các bước của một công thức nấu ăn vẫn có ý nghĩa khi đọc “bước 1, bước 2, bước 3”. Danh sách đồ cần mua thường không cần thứ tự. Hãy đoán cái nào dùng `ol`, cái nào dùng `ul` trước khi viết markup.
 
 ## Ví dụ mẫu
 
 ```html
-<h2>Nguyên liệu</h2>
 <ul>
-  <li>Bột mì</li>
-  <li>Trứng</li>
-  <li>Sữa</li>
+  <li>Nước</li>
+  <li>Bột</li>
 </ul>
 
-<h2>Các bước</h2>
 <ol>
-  <li>Trộn bột và sữa.</li>
-  <li>Thêm trứng.</li>
-  <li>Nướng 20 phút.</li>
+  <li>Trộn bột.</li>
+  <li>Để nghỉ 30 phút.</li>
 </ol>
-```
 
-- Mỗi mục phải nằm trong `li`; không đặt chữ thẳng dưới `ul`/`ol`.
-- `ul` phù hợp nguyên liệu (thứ tự không quan trọng).
-- `ol` phù hợp các bước (thứ tự quan trọng).
-
-Giới thiệu nhanh `dl`:
-
-```html
 <dl>
   <dt>HTML</dt>
-  <dd>Ngôn ngữ đánh dấu cấu trúc trang web.</dd>
+  <dd>Markup dùng cho cấu trúc tài liệu.</dd>
 </dl>
 ```
 
+Lựa chọn phần tử giữ nguyên ý nghĩa quan hệ kể cả khi CSS sau này đổi marker.
+
+## Tìm lỗi
+
+```html
+<ul>
+  Nước
+  <li>Bột</li>
+</ul>
+```
+
+`Nước` đang là text trần chứ không phải list item. Mỗi item cần là `li`; list lồng nhau cũng nên nằm bên trong một `li`, không đứng ngang hàng với item.
+
 ## Lỗi thường gặp
 
-- Viết `<ul>Bột mì</ul>` thiếu `li` — trình duyệt có thể tự sửa, nhưng cấu trúc sai.
-- Dùng `ol` khi thứ tự không quan trọng (hoặc ngược lại) — chọn loại list theo ý nghĩa.
-- Đánh số tay trong `ul` (`1. …`) thay vì dùng `ol` — để trình duyệt lo việc đánh số.
+- Dùng `ol` chỉ vì thích số dù thứ tự không có ý nghĩa.
+- Đặt text item trực tiếp dưới `ul` hoặc `ol`.
+- Tự gõ ký tự bullet thay vì tạo cấu trúc list thật.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để tạo danh sách không thứ tự với hai mục. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Tạo một unordered list có ít nhất hai item và quan sát cấu trúc danh sách trong preview.
+
+## Tự kiểm tra
+
+Khi nào nên dùng ordered list?
+
+**Đáp án:** khi vị trí/thứ tự của các item có ý nghĩa, như quy trình hoặc bảng xếp hạng.

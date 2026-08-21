@@ -3,19 +3,20 @@ id: sql-37-union-all
 track: sql-fundamentals
 locale: vi
 slug: union-all
-title: Giữ bản trùng với UNION ALL
+title: Giữ hàng trùng với UNION ALL
 order: 37
 published: true
+can_do: "Chọn UNION ALL khi gộp các result set tương thích phải giữ mọi hàng nguồn, kể cả hàng trùng"
 objectives:
-  - Xếp chồng hai kết quả SELECT bằng UNION ALL
-  - Thấy UNION ALL giữ giá trị trùng
-  - Phân biệt UNION ALL với UNION
+  - Xếp dọc các result set tương thích
+  - Dự đoán việc giữ duplicate với UNION ALL
+  - Chọn UNION hay UNION ALL từ semantics kết quả
 exercise:
   starter: "SELECT name FROM east;"
   hints:
-    - "UNION ALL xếp chồng mọi hàng của cả hai SELECT, kể cả trùng."
-    - "Nếu Ann có ở cả hai bảng, UNION ALL giữ cả hai hàng Ann."
-    - "Thử: SELECT name FROM east UNION ALL SELECT name FROM west ORDER BY name;"
+    - "Yêu cầu cần giữ mọi hàng nguồn, kể cả Ann lặp lại."
+    - "Xếp hai SELECT tương thích bằng UNION ALL."
+    - "Dùng: SELECT name FROM east UNION ALL SELECT name FROM west ORDER BY name;"
   solution: "SELECT name FROM east UNION ALL SELECT name FROM west ORDER BY name;"
   preview:
     columns: ["name"]
@@ -39,42 +40,39 @@ sandbox_seed:
     - "INSERT INTO west VALUES (1, 'Ann'), (2, 'Cy');"
 ---
 
-`UNION` xếp chồng hai danh sách kết quả và **bỏ trùng**. Đôi khi bạn muốn giữ mọi hàng, kể cả khi cùng một giá trị xuất hiện hai lần — như chồng hai bảng điểm danh mà không xóa tên ký cả hai ngày. Đó là `UNION ALL`.
+`UNION` và `UNION ALL` đều kết hợp hàng theo **chiều dọc**. Điểm cần quyết định là các hàng kết quả trùng nhau có phải dữ liệu cần giữ hay không.
 
-**east**
+## Mô hình tư duy
 
-| id | name |
+Kết quả nguồn:
+
+| east | west |
 | --- | --- |
-| 1 | Ann |
-| 2 | Bo |
+| Ann | Ann |
+| Bo | Cy |
 
-**west**
+Sau khi xếp:
 
-| id | name |
-| --- | --- |
-| 1 | Ann |
-| 2 | Cy |
+| phép toán | các hàng kết quả | số hàng |
+| --- | --- | ---: |
+| `UNION` | Ann, Bo, Cy | 3 |
+| `UNION ALL` | Ann, Ann, Bo, Cy | 4 |
 
-Cả hai danh sách đều có `Ann`. Với `UNION` bạn chỉ thấy `Ann` một lần. Với `UNION ALL` bạn thấy `Ann` hai lần.
+Khác JOIN: JOIN ghép các cột liên quan theo chiều ngang; nhóm UNION xếp các hàng có hình dạng tương thích.
+
+## Dự đoán trước khi chạy
+
+`Ann` có ở cả hai nguồn. Vì yêu cầu coi mọi lần xuất hiện đều có ý nghĩa, hãy dự đoán **4 hàng**, không phải 3.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT name
-FROM east
+SELECT name FROM east
 UNION ALL
-SELECT name
-FROM west
+SELECT name FROM west
 ORDER BY name;
 ```
 
-- `SELECT` thứ nhất trả về Ann, Bo.
-- `SELECT` thứ hai trả về Ann, Cy.
-- `UNION ALL` xếp bốn hàng — không bỏ trùng.
-- `ORDER BY name` sắp danh sách gộp A→Z (cả hai hàng Ann vẫn còn).
-
-Kết quả:
-
 | name |
 | --- |
 | Ann |
@@ -82,22 +80,30 @@ Kết quả:
 | Bo |
 | Cy |
 
-Cùng dữ liệu với `UNION` (để so sánh — không phải bài tập của bạn):
+Hãy chọn theo semantics trước. `UNION ALL` còn có thể tránh công việc loại duplicate, nhưng không được đổi semantics chỉ vì lý do hiệu năng.
 
-| name |
-| --- |
-| Ann |
-| Bo |
-| Cy |
+## Tìm lỗi
 
-Chỉ còn ba hàng, vì Ann thứ hai bị bỏ.
+```sql
+SELECT name FROM east
+UNION
+SELECT name FROM west;
+```
+
+Query chạy được nhưng một Ann biến mất. Nếu mỗi lần xuất hiện là một hàng nguồn có ý nghĩa, đây là lỗi mất dữ liệu logic.
 
 ## Lỗi thường gặp
 
-- Dùng `UNION` khi cần giữ mọi bản trùng — hãy đổi sang `UNION ALL`.
-- Chỉ đặt `ORDER BY` ở SELECT đầu — đặt sau cả chuỗi `UNION ALL`.
-- Hai SELECT khác số cột hoặc kiểu — hai bên phải khớp nhau.
+- Dùng `UNION` theo thói quen khi duplicate cần được giữ.
+- Kết hợp các SELECT không cùng số cột/hình dạng tương thích.
+- Nhầm xếp dọc result set với JOIN theo quan hệ.
 
 ## Thử ngay
 
-Gộp mọi `name` từ `east` và `west` bằng `UNION ALL`. Sắp theo `name`. Giữ cả hai hàng Ann.
+Gộp mọi name từ `east` và `west`, giữ cả hai hàng Ann và sắp kết quả cuối theo name.
+
+## Tự kiểm tra
+
+Nếu duplicate phải còn quan sát được, nên ưu tiên operator nào?
+
+**Đáp án:** `UNION ALL`.

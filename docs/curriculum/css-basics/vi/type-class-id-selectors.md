@@ -3,78 +3,89 @@ id: css-02-selectors
 track: css-basics
 locale: vi
 slug: type-class-id-selectors
-title: Selector type, class và ID
+title: Type, class và ID selector
 order: 2
 published: true
+can_do: "Chọn type, class hoặc ID selector theo phạm vi tái sử dụng mong muốn và dự đoán chính xác element nào được match"
 objectives:
-  - Dùng type selector theo tên thẻ
-  - Dùng class selector với dấu chấm và thuộc tính class
-  - Dùng id selector với dấu # và thuộc tính id
+  - Dùng type selector cho default rộng theo loại element
+  - Dùng class làm styling hook tái sử dụng
+  - Nhận biết ID là identifier duy nhất với specificity cao
 exercise:
   mode: both
   starterHtml: |
-    <p class="note" id="hero">Hi</p>
+    <p class="note">Reusable note</p>
+    <p id="hero">Unique hero copy</p>
   starter: |
-    /* Style .note and #hero */
-    
+    /* TODO: làm .note màu navy và #hero chữ đậm */
   hints:
-    - "Class dùng .tên; id dùng #tên."
-    - Có thể viết hai rule riêng.
-    - "font-weight: bold làm chữ đậm hơn."
+    - Class dùng dấu chấm trong CSS; ID dùng dấu hash.
+    - Viết riêng rule .note và #hero để mỗi target có một nhiệm vụ.
+    - Dùng .note { color: navy; } và #hero { font-weight: bold; }.
   solution: |
     .note { color: navy; }
     #hero { font-weight: bold; }
   expected:
-    type: cssIncludes
-    needles:
-      - .note
-      - "#hero"
+    type: cssRules
+    rules:
+      - selector: .note
+        declarations:
+          color: navy
+      - selector: "#hero"
+        declarations:
+          font-weight: bold
 ---
 
-**Selector** chọn phần tử HTML nào nhận style. Ba loại cơ bản nhất: **type** (theo tên thẻ), **class** (theo nhóm), **id** (theo một phần tử duy nhất trên trang).
+Lựa chọn selector thể hiện **style nên match rộng tới đâu**.
 
-Class linh hoạt: nhiều phần tử có thể cùng `class`. Id nên là duy nhất — một `id` cho một phần tử.
+## Mô hình tư duy
 
-| Loại | Cú pháp CSS | Khớp với HTML |
+| Selector | Phạm vi match | Ý định thường gặp |
 | --- | --- | --- |
-| Type | `p` | mọi thẻ `<p>` |
-| Class | `.note` | `class="note"` |
-| ID | `#logo` | `id="logo"` |
+| `p` | mọi element cùng type | default rộng |
+| `.note` | mọi element mang class đó | component/state style tái sử dụng |
+| `#hero` | element có id duy nhất đó | unique hook; hạn chế dùng cho styling |
+
+Class thường là primitive dễ tái sử dụng nhất cho styling. ID còn tăng specificity mạnh nên rất dễ bị lạm dụng.
+
+## Dự đoán kết quả hiển thị
+
+Với hai paragraph, chỉ paragraph đầu có class `note`, chỉ paragraph sau có id `hero`: hãy dự đoán `.note` và `#hero` match hai element khác nhau. Dấu chấm/hash thuộc cú pháp selector CSS, không nằm trong value attribute HTML.
 
 ## Ví dụ mẫu
 
+```css
+p { line-height: 1.5; }
+.note { color: navy; }
+#hero { font-weight: bold; }
+```
+
+Một element có thể match nhiều rule. Khi declaration xung đột, cascade sẽ quyết định winner ở bài sau.
+
+## Tìm lỗi
+
 ```html
-<p>Đoạn thường.</p>
-<p class="note">Đoạn ghi chú.</p>
-<p id="footer-note">Một dòng cuối trang.</p>
+<p class=".note">Hello</p>
 ```
 
 ```css
-p {
-  color: #333;
-}
-
-.note {
-  color: teal;
-}
-
-#footer-note {
-  font-weight: bold;
-}
+.note { color: navy; }
 ```
 
-- `p { ... }` style mọi đoạn văn (type).
-- `.note` chỉ đoạn có `class="note"` — màu `teal` ghi đè màu chung của `p` cho phần tử đó (bài cascade sẽ giải thích rõ hơn).
-- `#footer-note` chỉ phần tử có `id="footer-note"`.
-
-Trong HTML, class viết không có dấu chấm (`class="note"`); trong CSS, class bắt đầu bằng `.`.
+Class value thực tế là `.note`, nên class `note` dự kiến không tồn tại. Dấu chấm/hash là selector syntax, không phải một phần của tên class/id thông thường trong HTML.
 
 ## Lỗi thường gặp
 
-- Viết `.note` trong HTML (`class=".note"`) — thuộc tính chỉ cần tên `note`, không có dấu chấm.
-- Dùng cùng một `id` trên nhiều phần tử — id phải duy nhất; muốn nhóm thì dùng class.
-- Nhầm `p.note` với `.note` quá sớm — `p.note` chỉ khớp `<p class="note">`; bài sau sẽ nói combinator và nhóm.
+- Tái sử dụng cùng một ID trên nhiều element.
+- Đặt `.` hoặc `#` vào value class/id trong HTML.
+- Chọn ID khi styling intent phù hợp hơn với class tái sử dụng.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để style selector class và id. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Style class tái sử dụng và ID duy nhất bằng hai rule riêng.
+
+## Tự kiểm tra
+
+Selector nào thường phù hợp hơn cho card style được dùng lại 20 lần?
+
+**Đáp án:** class selector.

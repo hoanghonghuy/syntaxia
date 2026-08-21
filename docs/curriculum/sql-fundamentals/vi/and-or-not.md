@@ -6,15 +6,17 @@ slug: and-or-not
 title: Kết hợp bộ lọc với AND, OR, NOT
 order: 5
 published: true
+can_do: "Kết hợp các điều kiện boolean và chọn AND, OR hoặc NOT theo đúng yêu cầu"
 objectives:
-  - Kết hợp hai điều kiện bằng AND
-  - Chỉ giữ hàng thỏa mọi bộ lọc bắt buộc
+  - Đánh giá hai điều kiện trên cùng một hàng
+  - Dùng AND khi mọi điều kiện bắt buộc đều phải đúng
+  - Giải thích OR và NOT thay đổi bộ lọc như thế nào
 exercise:
   starter: "SELECT title FROM movies WHERE year > 2000;"
   hints:
-    - "year > 2000 một mình vẫn gồm mọi phim sau 2000, không chỉ của Nolan."
-    - "Nối điều kiện thứ hai bằng AND để cả hai đều phải đúng."
-    - "Thử: SELECT title FROM movies WHERE year > 2000 AND director = 'Nolan' ORDER BY title;"
+    - "Điều kiện năm một mình vẫn giữ Dune, vì vậy cần thêm một điều kiện nữa."
+    - "Dùng AND khi cả yêu cầu về year và director đều phải đúng trên cùng một hàng."
+    - "Dùng: SELECT title FROM movies WHERE year > 2000 AND director = 'Nolan' ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year > 2000 AND director = 'Nolan' ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -34,25 +36,39 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
-Một bộ lọc thường chưa đủ. `AND` chỉ giữ hàng khi **mọi** điều kiện đều đúng — như hai bộ lọc Excel áp cùng lúc.
+Yêu cầu thực tế thường chứa các từ **và**, **hoặc**, **không**. Kỹ năng quan trọng là chuyển những từ đó thành điều kiện có thể kiểm tra trên từng hàng.
 
-**movies** (bảng đầy đủ)
+## Mô hình tư duy
 
-| id | title | year | director |
+Với hai điều kiện `A` và `B`:
+
+| A | B | `A AND B` | `A OR B` |
 | --- | --- | --- | --- |
-| 1 | Inception | 2010 | Nolan |
-| 2 | The Matrix | 1999 | Wachowski |
-| 3 | Interstellar | 2014 | Nolan |
-| 4 | Dune | 2021 | Villeneuve |
+| true | true | true | true |
+| true | false | false | true |
+| false | true | false | true |
+| false | false | false | false |
 
-Duyệt bảng bằng tay:
+`NOT A` đảo giá trị đúng/sai của `A`.
 
-| title | year > 2000? | director = Nolan? | Cả hai (AND)? |
+Áp dụng vào dữ liệu bài:
+
+| title | `year > 2000` | `director = 'Nolan'` | Kết quả AND |
 | --- | --- | --- | --- |
-| Inception | có | có | **giữ** |
-| The Matrix | không | không | bỏ |
-| Interstellar | có | có | **giữ** |
-| Dune | có | không | bỏ (trượt điều kiện đạo diễn) |
+| Inception | true | true | giữ |
+| The Matrix | false | false | bỏ |
+| Interstellar | true | true | giữ |
+| Dune | true | false | bỏ |
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT title
+FROM movies
+WHERE year > 2000 AND director = 'Nolan';
+```
+
+Hãy dự đoán trước: **Inception** và **Interstellar** được giữ. Dune qua điều kiện năm nhưng trượt điều kiện đạo diễn nên `AND` loại nó.
 
 ## Ví dụ mẫu
 
@@ -63,26 +79,41 @@ WHERE year > 2000 AND director = 'Nolan'
 ORDER BY title;
 ```
 
-- `year > 2000` loại The Matrix (1999).
-- `director = 'Nolan'` loại Dune (Villeneuve), dù Dune sau năm 2000.
-- `AND` đòi cả hai điều kiện: chỉ Inception và Interstellar.
-- `ORDER BY title` sắp tiêu đề theo alphabet.
-
-Kết quả:
-
 | title |
 | --- |
 | Inception |
 | Interstellar |
 
-`OR` giữ hàng nếu **một trong hai** điều kiện đúng (sẽ gồm cả Dune). `NOT` đảo điều kiện. Bài này tập trung vào `AND`.
+Chọn toán tử từ chính yêu cầu:
+
+- **cả hai đều bắt buộc** -> `AND`
+- **một trong hai là đủ** -> `OR`
+- **loại trừ một điều kiện** -> `NOT`
+
+Khi bộ lọc trộn `AND` và `OR`, dùng ngoặc để làm nhóm điều kiện rõ ràng và tránh giấu giả định về độ ưu tiên toán tử.
+
+## Tìm lỗi
+
+Yêu cầu là “sau 2000 **và** do Nolan đạo diễn”, nhưng truy vấn lại viết:
+
+```sql
+WHERE year > 2000 OR director = 'Nolan'
+```
+
+`OR` rộng hơn: Dune vẫn qua vì phim sau 2000 dù đạo diễn là Villeneuve. Đây không phải lỗi cú pháp mà là lỗi logic boolean so với yêu cầu.
 
 ## Lỗi thường gặp
 
-- Dùng `OR` khi ý là “cả hai phải khớp” — `OR` mở rộng kết quả; `AND` thu hẹp.
-- So sánh chữ không có ngoặc (`director = Nolan`) — giá trị chữ cần ngoặc đơn: `'Nolan'`.
-- Quên rằng `year > 2000` một mình vẫn trả về Dune — cần thêm `AND director = 'Nolan'`.
+- Dùng `OR` khi mọi điều kiện đều phải khớp.
+- Quên dấu nháy đơn quanh giá trị text như `'Nolan'`.
+- Trộn `AND` và `OR` mà không dùng ngoặc khi cách nhóm điều kiện không rõ ràng.
 
 ## Thử ngay
 
-Liệt kê tiêu đề có `year` lớn hơn 2000 **và** `director` là `'Nolan'`, sắp theo `title`.
+Trả về các tiêu đề phát hành sau 2000 **và** do Nolan đạo diễn, sắp theo title. Hãy đánh giá cả hai điều kiện trên Dune trước khi bấm Chạy.
+
+## Tự kiểm tra
+
+Toán tử nào thường làm bộ lọc chặt hơn khi bạn thêm một điều kiện bắt buộc?
+
+**Đáp án:** `AND`, vì mọi điều kiện nối với nó đều phải đúng.

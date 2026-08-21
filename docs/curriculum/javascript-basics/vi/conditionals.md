@@ -3,21 +3,22 @@ id: js-06-conditionals
 track: javascript-basics
 locale: vi
 slug: conditionals
-title: Ra quyết định với if và else
+title: Rẽ nhánh với if và else
 order: 6
 published: true
+can_do: "Trace boolean condition vào đúng một branch và dùng strict equality để tránh coercion ngoài ý muốn"
 objectives:
-  - Chạy một nhánh khi điều kiện đúng
-  - Dùng else cho nhánh còn lại
-  - So sánh giá trị bằng ===
+  - Evaluate condition trước khi chọn branch
+  - Dùng strict equality cho comparison rõ type
+  - Phân biệt assignment với comparison
 exercise:
   starter: |
     const lives = 0;
-    // Nếu lives là 0, log "Game over". Ngược lại log "Keep playing".
+    // TODO: if lives is 0 log "Game over", otherwise log "Keep playing"
   hints:
-    - "Khi lives là 0, điều kiện if đúng."
-    - "Chỉ khối if chạy — dùng console.log bên trong."
-    - "In chính xác: Game over"
+    - "Evaluate lives === 0 trước; lives đang là number 0 nên kết quả true."
+    - "Chỉ branch khớp được log một dòng."
+    - "Dùng if/else với lives === 0 và console.log('Game over') ở true branch."
   solution: |
     const lives = 0;
     if (lives === 0) {
@@ -31,43 +32,79 @@ exercise:
       - "Game over"
 ---
 
-Mỗi ngày bạn chọn: nếu trời mưa thì mang ô; không thì đi bình thường. **Điều kiện** (conditional) giúp code chọn tương tự.
+Conditional biến một boolean decision thành control flow. Kỹ năng quan trọng không phải thuộc braces mà là dự đoán **path nào execute và vì sao**.
 
-| Thành phần | Nghĩa đơn giản | Ví dụ |
-| --- | --- | --- |
-| `if (test)` | Chạy khối khi test đúng | `if (score >= 10)` |
-| `else` | Chạy khi test sai | `else { ... }` |
-| `===` | Cùng giá trị và kiểu | `lives === 0` |
+## Mô hình thực thi
 
-Dùng `===` (ba dấu bằng) để so sánh rõ ràng — kiểm tra cả giá trị **và** kiểu.
+```text
+evaluate condition
+    |
+    +-- true  -> execute if block
+    |
+    +-- false -> execute else block
+```
 
-## Ví dụ mẫu
+Với equality, `===` so sánh mà không thực hiện type coercion như `==`.
+
+## Trace từng bước
 
 ```javascript
 const lives = 0;
-
 if (lives === 0) {
   console.log("Game over");
 } else {
   console.log("Keep playing");
 }
+```
 
-const score = 12;
-if (score >= 10) {
-  console.log("You passed");
+| bước | result |
+| ---: | --- |
+| đọc `lives` | number `0` |
+| evaluate `lives === 0` | `true` |
+| chạy `if` block | log `Game over` |
+| `else` block | bỏ qua |
+
+## Dự đoán trước khi chạy
+
+Chính xác một console line: `Game over`. Hai branch không cùng chạy trong một lần if/else evaluate.
+
+## Ví dụ mẫu
+
+```javascript
+const age = 20;
+
+if (age >= 18) {
+  console.log("adult");
+} else {
+  console.log("minor");
 }
 ```
 
-- Khi `lives` là `0`, chỉ khối `if` chạy.
-- Khối `else` chạy khi test trong `if` sai.
-- `if` thứ hai có thể đứng một mình — không bắt buộc có `else`.
+Comparison tạo boolean; boolean điều khiển branch.
+
+## Tìm lỗi
+
+```javascript
+let lives = 3;
+if (lives = 0) {
+  console.log("Game over");
+}
+```
+
+`=` gán value mới chứ không compare. Assignment expression evaluate thành `0`, là falsy, nên branch bị skip—đồng thời `lives` cũng bị đổi. Đây vừa là state bug vừa là control-flow bug.
 
 ## Lỗi thường gặp
 
-- Dùng `=` trong test — đó là gán, không phải so sánh. Dùng `===`.
-- Dùng `==` khi mới học — nên dùng `===` cho rõ.
-- Quên `{ }` quanh nhiều dòng — ngoặc nhóm các dòng thuộc nhánh.
+- Viết assignment `=` khi intent là comparison.
+- Dùng coercive `==` mà không hiểu conversion nó cho phép.
+- Đọc code như thể cả hai branch cùng chạy thay vì trace condition trước.
 
 ## Thử ngay
 
-Với `lives` là `0`, chạy sandbox để console hiện **Game over**. Đánh dấu hoàn thành khi checker báo đúng.
+Hoàn thành if/else để `lives = 0` tạo đúng `Game over`.
+
+## Tự kiểm tra
+
+Khác biệt cốt lõi giữa `=` và `===` là gì?
+
+**Đáp án:** `=` gán value; `===` so sánh value và type mà không dùng coercive equality conversion.

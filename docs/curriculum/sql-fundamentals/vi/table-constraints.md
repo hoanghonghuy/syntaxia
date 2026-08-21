@@ -6,21 +6,21 @@ slug: table-constraints
 title: Quy tắc cột với UNIQUE, CHECK và DEFAULT
 order: 40
 published: true
+can_do: "Dự đoán cách UNIQUE, CHECK và DEFAULT chấp nhận, từ chối hoặc điền giá trị khi INSERT"
 objectives:
-  - Đọc UNIQUE, CHECK và DEFAULT trên CREATE TABLE
-  - Chèn hàng tuân thủ các quy tắc đó
-  - Thấy DEFAULT điền cột bị bỏ trống
+  - Đọc constraint như quy tắc dữ liệu được thực thi
+  - Dự đoán vi phạm UNIQUE và CHECK trước mutation
+  - Hiểu khi nào DEFAULT cung cấp giá trị
 exercise:
-  starter: "INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
+  starter: "INSERT INTO tickets (code, seats) VALUES "
   hints:
-    - "status có DEFAULT 'open' — bỏ qua cột đó thì hàng vẫn nhận open."
-    - "Chỉ chèn code và seats; để DEFAULT điền status."
-    - "Thử: INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
+    - "Cung cấp code duy nhất và seats là số dương."
+    - "Bỏ status để DEFAULT 'open' tự điền."
+    - "Dùng: INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
   solution: "INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
   preview:
     columns: ["code", "seats", "status"]
-    rows:
-      - ["T1", 2, "open"]
+    rows: []
   expected:
     columns: ["code", "seats", "status"]
     rows:
@@ -32,15 +32,11 @@ sandbox_seed:
     - "CREATE TEMP TABLE tickets (code TEXT UNIQUE, seats INT CHECK (seats > 0), status TEXT DEFAULT 'open');"
 ---
 
-Khóa chính và khóa ngoại là hai loại **ràng buộc** (constraint) — quy tắc trên cột. Ba quy tắc thường gặp nữa:
+Constraint biến quy tắc nghiệp vụ thành quy tắc database có thể enforce mỗi lần dữ liệu được ghi. Chúng là một phần của schema contract, không phải lời hứa trong comment.
 
-| Ràng buộc | Nghĩa đơn giản | Ví dụ đời thường |
-| --- | --- | --- |
-| `UNIQUE` | Không hai hàng cùng giá trị này | Mã vé không được trùng |
-| `CHECK (…)` | Giá trị phải qua một phép thử | Số ghế phải lớn hơn 0 |
-| `DEFAULT …` | Nếu bỏ cột, dùng giá trị này | Vé mới bắt đầu ở trạng thái `open` |
+## Mô hình tư duy
 
-**tickets** — bảng trống được định nghĩa như sau (quy tắc, chưa có dữ liệu):
+Schema đã chuẩn bị:
 
 ```sql
 CREATE TABLE tickets (
@@ -50,45 +46,54 @@ CREATE TABLE tickets (
 );
 ```
 
-| Cột | Quy tắc bằng lời |
-| --- | --- |
-| `code` | Mỗi mã xuất hiện nhiều nhất một lần |
-| `seats` | Phải là số dương |
-| `status` | Nếu INSERT bỏ qua, lưu `'open'` |
+Đánh giá các write ứng viên:
 
-Lúc bắt đầu bài tập bảng **chưa có hàng**.
+| ứng viên | UNIQUE | CHECK | DEFAULT | kết quả |
+| --- | --- | --- | --- | --- |
+| `('T1', 2)`, bỏ status | pass | pass | điền `open` | chấp nhận |
+| `T1` bị trùng | fail | — | — | từ chối |
+| seats `0` | pass | fail | — | từ chối |
+
+DEFAULT được dùng khi cột bị bỏ khỏi INSERT (hoặc dùng từ khóa `DEFAULT`). Nó không có nghĩa mọi giá trị `NULL` tường minh đều tự biến thành default.
+
+## Dự đoán trước khi chạy
+
+Bảng ban đầu rỗng. Với `INSERT INTO tickets (code, seats) VALUES ('T1', 2);`, after-state phải là một hàng có status `open`.
 
 ## Ví dụ mẫu
-
-Chèn một vé. Bạn chỉ đưa `code` và `seats` — `status` do `DEFAULT` điền.
 
 ```sql
 INSERT INTO tickets (code, seats)
 VALUES ('T1', 2);
 ```
 
-- `UNIQUE` trên `code` cho phép `'T1'` lần đầu. `'T1'` lần hai sẽ lỗi.
-- `CHECK (seats > 0)` chấp nhận `2`. Chèn `0` hoặc `-1` sẽ lỗi.
-- `status` bị bỏ qua, nên cơ sở dữ liệu lưu `'open'`.
-
-Sau khi chèn, bảng trông như thế này:
-
 | code | seats | status |
-| --- | --- | --- |
+| --- | ---: | --- |
 | T1 | 2 | open |
 
-Kiểm tra bằng:
+Database đánh giá các rule ngay trong quá trình write.
+
+## Tìm lỗi
 
 ```sql
-SELECT code, seats, status FROM tickets ORDER BY code;
+INSERT INTO tickets (code, seats)
+VALUES ('T1', 0);
 ```
+
+Cú pháp đúng nhưng `CHECK (seats > 0)` từ chối hàng. Lỗi database có thể là vi phạm domain rule, không chỉ là SQL sai cú pháp.
 
 ## Lỗi thường gặp
 
-- Bỏ giá trị bắt buộc khi **không** có DEFAULT — INSERT sẽ lỗi; ở đây `status` bỏ được nhờ DEFAULT.
-- Phá CHECK — `seats` phải lớn hơn 0.
-- Dùng lại cùng `code` hai lần — UNIQUE từ chối bản trùng.
+- Nghĩ constraint chỉ có tác dụng lúc tạo bảng chứ không enforce các write sau đó.
+- Nghĩ DEFAULT thay thế mọi `NULL` tường minh.
+- Coi UNIQUE và PRIMARY KEY hoàn toàn giống nhau; chúng cùng liên quan uniqueness nhưng semantics danh tính/nullability khác nhau.
 
 ## Thử ngay
 
-Chèn một hàng `code = 'T1'` và `seats = 2`. Để `DEFAULT` đặt `status`. Checker đọc cả ba cột sắp theo `code`.
+Chèn ticket `T1` với 2 seats và bỏ status để default điền. Hãy đánh giá cả ba rule trước khi chạy.
+
+## Tự kiểm tra
+
+Nếu bỏ `status` khỏi INSERT này thì chuyện gì xảy ra?
+
+**Đáp án:** database cung cấp default đã khai báo là `'open'`.

@@ -3,19 +3,20 @@ id: sql-35-view
 track: sql-fundamentals
 locale: vi
 slug: create-view
-title: Truy vấn đã lưu với view
+title: Query tái sử dụng với view
 order: 35
 published: true
+can_do: "Đưa một query tái sử dụng thành view và xem view như interface suy ra từ dữ liệu gốc"
 objectives:
-  - Tạo view lọc dòng
-  - Truy vấn view như một bảng
-  - Dùng CREATE TEMP VIEW khi bảng gốc là temporary
+  - Phân biệt định nghĩa view với một bảng được sao chép
+  - Tạo view từ SELECT
+  - Query interface suy ra và dự đoán các hàng của nó
 exercise:
   starter: "CREATE TEMP VIEW modern_movies AS "
   hints:
-    - "View lưu một SELECT dưới một tên — sau đó truy vấn như bảng."
-    - "Trong sandbox này dùng CREATE TEMP VIEW vì bảng gốc là temporary."
-    - "Thử: CREATE TEMP VIEW modern_movies AS SELECT title FROM movies WHERE year >= 2000;"
+    - "Định nghĩa một SELECT có tên; đừng copy hàng sang bảng khác."
+    - "Base table tạm nên sandbox này cần temporary view."
+    - "Dùng: CREATE TEMP VIEW modern_movies AS SELECT title FROM movies WHERE year >= 2000;"
   solution: "CREATE TEMP VIEW modern_movies AS SELECT title FROM movies WHERE year >= 2000;"
   preview:
     columns: ["id", "title", "year"]
@@ -38,56 +39,63 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Interstellar', 2014), (4, 'Dune', 2021);"
 ---
 
-**View** là một `SELECT` đã lưu với tên. Bạn truy vấn nó như bảng, nhưng nó không lưu bản sao dòng riêng — nó chạy lại truy vấn.
+View gắn một tên tái sử dụng cho một query. Hãy xem nó như **interface suy ra** từ dữ liệu gốc thay vì một bản copy phải tự đồng bộ bằng tay.
 
-**movies** (bảng gốc)
+## Mô hình tư duy
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | Inception | 2010 |
-| 2 | The Matrix | 1999 |
-| 3 | Interstellar | 2014 |
-| 4 | Dune | 2021 |
+Bảng gốc:
 
-| title | year | Trong `modern_movies` (`year >= 2000`)? |
-| --- | --- | --- |
-| Inception | 2010 | có |
-| The Matrix | 1999 | không |
-| Interstellar | 2014 | có |
-| Dune | 2021 | có |
+| title | year |
+| --- | ---: |
+| Inception | 2010 |
+| The Matrix | 1999 |
+| Interstellar | 2014 |
+| Dune | 2021 |
 
-```sql
-CREATE VIEW modern_movies AS
-SELECT title FROM movies WHERE year >= 2000;
+Định nghĩa view:
+
+```text
+movies -> lọc year >= 2000 -> lấy title -> modern_movies
 ```
 
-Trong sandbox này bảng gốc là temporary, nên dùng `CREATE TEMP VIEW` (cùng ý với view thường, phạm vi phiên).
+Các hàng dự kiến: Dune, Inception, Interstellar. The Matrix bị loại bởi định nghĩa view.
+
+## Dự đoán trước khi chạy
+
+Sau khi tạo view, `SELECT title FROM modern_movies ORDER BY title` phải trả ba hàng. Không cần INSERT riêng vào `modern_movies`.
 
 ## Ví dụ mẫu
 
 ```sql
 CREATE TEMP VIEW modern_movies AS
+SELECT title
+FROM movies
+WHERE year >= 2000;
+```
+
+Sandbox dùng temporary view vì base table là temporary. Concept cốt lõi giống `CREATE VIEW` thông thường.
+
+## Tìm lỗi
+
+```sql
+CREATE TEMP TABLE modern_movies AS
 SELECT title FROM movies WHERE year >= 2000;
 ```
 
-- `modern_movies` là tên view.
-- Bộ lọc giữ title từ năm 2000 trở đi và bỏ The Matrix (1999).
-- Grader sau đó chọn từ view: `SELECT title FROM modern_movies ORDER BY title`.
-
-Kết quả từ view:
-
-| title |
-| --- |
-| Dune |
-| Inception |
-| Interstellar |
+Câu này tạo một table snapshot, không phải view được yêu cầu. Ban đầu chúng có thể trông giống nhau nhưng semantics dữ liệu khác nhau.
 
 ## Lỗi thường gặp
 
-- Chỉ viết `CREATE VIEW` thiếu `TEMP` ở đây — bảng gốc tạm cần view tạm trong sandbox này.
-- Quên `AS` trước `SELECT`.
-- Lọc sai so sánh (`>` thay vì `>=` khi đề gồm năm 2000).
+- Nhầm view với bảng sao chép dữ liệu.
+- Quên `AS` trước SELECT định nghĩa.
+- Viết sai ranh giới filter (`>` thay vì `>=`).
 
 ## Thử ngay
 
-Tạo temporary view `modern_movies` chọn `title` từ movies với `year >= 2000`.
+Tạo temporary view `modern_movies` chứa title có `year >= 2000`. Dự đoán ba hàng trước khi chạy.
+
+## Tự kiểm tra
+
+Thứ gì quyết định các hàng nhìn thấy qua view?
+
+**Đáp án:** câu SELECT được lưu làm định nghĩa view.

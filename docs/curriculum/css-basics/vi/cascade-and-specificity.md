@@ -3,76 +3,89 @@ id: css-05-cascade
 track: css-basics
 locale: vi
 slug: cascade-and-specificity
-title: Cascade và specificity
+title: Giải quyết xung đột bằng cascade
 order: 5
 published: true
+can_do: "Dự đoán declaration thắng khi type, class, inheritance và source order cạnh tranh mà không lạm dụng !important"
 objectives:
-  - Giải thích cascade: nhiều rule cùng nhắm một phần tử
-  - So sánh specificity cơ bản giữa type, class và id
-  - Nhận biết inheritance (thừa kế) với color và font
+  - So sánh selector specificity ở mức nền tảng an toàn
+  - Chỉ dùng source order sau khi specificity bằng nhau
+  - Phân biệt property được inherit với box property không inherit
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <p class="note">Which color wins?</p>
   starter: |
-    /* Make .note purple */
-    
+    /* TODO: giữ type rule màu black, rồi để class rule thắng với purple */
   hints:
-    - Selector class mạnh hơn tên thẻ trần.
-    - "Dùng .note { } để chọn đoạn p."
-    - Đặt color thành giá trị bạn muốn.
+    - Cả hai selector đều match paragraph, nhưng class selector specific hơn type selector.
+    - Viết riêng broad rule p và narrow rule .note.
+    - Dùng p { color: black; } và .note { color: purple; }.
   solution: |
+    p { color: black; }
     .note { color: purple; }
   expected:
-    type: cssIncludes
-    needles:
-      - .note
-      - color
+    type: cssRules
+    rules:
+      - selector: p
+        declarations:
+          color: black
+      - selector: .note
+        declarations:
+          color: purple
 ---
 
-Khi nhiều rule cùng nhắm một phần tử, trình duyệt không “chọn ngẫu nhiên”. **Cascade** (xếp tầng) quyết định rule nào thắng dựa trên nguồn, độ cụ thể (**specificity**), rồi thứ tự trong stylesheet. Một số property còn **inherit** (thừa kế) từ phần tử cha — ví dụ `color` và `font-family` thường lan xuống chữ bên trong.
+Cascade là thuật toán giải quyết các declaration cạnh tranh. Specificity là một input của thuật toán, không phải toàn bộ thuật toán.
 
-| Ý | Nghĩa đơn giản |
-| --- | --- |
-| Cascade | Cách giải xung đột giữa nhiều rule |
-| Specificity | “Độ nặng” của selector (id > class > type, ở mức cơ bản) |
-| Inheritance | Con có thể nhận một số kiểu từ cha |
+## Mô hình tư duy
 
-Thứ tự specificity đơn giản để nhớ: `#id` mạnh hơn `.class`, và `.class` mạnh hơn `p` (type).
+Với author style cơ bản có cùng importance:
+
+```text
+match rules -> so specificity -> nếu bằng nhau thì source order sau thắng -> inherit khi phù hợp
+```
+
+Thứ tự gần đúng cho track này là ID > class/pseudo-class > type. Specificity thật được tính từ các thành phần selector chứ không phải một “điểm sức mạnh” chung chung.
+
+## Dự đoán kết quả hiển thị
+
+```css
+p { color: black; }
+.note { color: purple; }
+```
+
+Với `<p class="note">...</p>`, hãy dự đoán purple. Cả hai rule match nhưng class selector specific hơn. Đảo source order cũng không khiến rule `p` ít specific thắng.
 
 ## Ví dụ mẫu
 
-```html
-<p id="lead" class="note">Chào mừng.</p>
+```css
+body { color: #333; }
+p { color: black; }
+.note { color: purple; }
 ```
+
+`color` có thể inherit từ body, nhưng declaration match trực tiếp paragraph thắng inherited value. Class tiếp tục thắng type rule bằng specificity.
+
+## Tìm lỗi
 
 ```css
-p {
-  color: black;
-  font-family: Georgia, serif;
-}
-
-.note {
-  color: teal;
-}
-
-#lead {
-  color: navy;
-}
+.note { color: purple !important; }
 ```
 
-- Cả ba rule đều có thể ảnh hưởng tới đoạn văn.
-- `#lead` cụ thể hơn `.note` và `p`, nên `color` cuối cùng là `navy`.
-- `font-family` từ rule `p` vẫn áp dụng (không bị rule màu ghi đè) và chữ bên trong thừa kế font đó.
-
-Nếu hai rule cùng specificity, rule khai báo *sau* trong stylesheet thường thắng.
+`!important` có thể thay đổi cascade priority, nhưng dùng nó để né việc hiểu conflict khiến override về sau khó hơn. Trước hết hãy kiểm tra match, specificity, inheritance và source order.
 
 ## Lỗi thường gặp
 
-- Dùng quá nhiều `#id` chỉ để “thắng” style — specificity cao làm stylesheet khó bảo trì; ưu tiên class khi có thể.
-- Nghĩ rule nào viết trước luôn thắng — với cùng phần tử, specificity và thứ tự đều quan trọng.
-- Nhầm mọi property đều thừa kế — `margin` và `padding` thường *không* thừa kế như `color`.
+- Nghĩ “rule ở cuối luôn thắng” dù specificity khác nhau.
+- Nghĩ margin/padding inherit giống text color.
+- Tăng mọi conflict bằng ID hoặc `!important`.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để đặt màu chữ cho .note. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Viết cả hai rule match cùng element và dự đoán purple trước khi mở preview.
+
+## Tự kiểm tra
+
+Nếu `.note` đứng trước `p` trong cùng author stylesheet, màu nào thắng ở ví dụ này?
+
+**Đáp án:** `.note` vẫn thắng vì selector specific hơn.

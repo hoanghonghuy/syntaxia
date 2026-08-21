@@ -6,16 +6,17 @@ slug: full-join
 title: Combining both sides with FULL OUTER JOIN
 order: 22
 published: true
+can_do: "Preserve unmatched rows from both inputs with FULL OUTER JOIN and identify which side is missing"
 objectives:
-  - Keep unmatched rows from both tables with FULL OUTER JOIN
-  - Spot leftovers on either side with NULL checks
-  - Find customers with no orders using IS NULL after the join
+  - Distinguish matched pairs, left-only rows, and right-only rows
+  - Read NULL-extension on either side of a full join
+  - Filter one kind of unmatched row with an appropriate NULL check
 exercise:
   starter: "SELECT name FROM customers;"
   hints:
-    - "FULL OUTER JOIN keeps rows that match and rows that match on only one side."
-    - "Customers with no orders have orders.id as NULL after the join."
-    - "Try: SELECT customers.name FROM customers FULL OUTER JOIN orders ON customers.id = orders.customer_id WHERE orders.id IS NULL ORDER BY customers.name;"
+    - "FULL OUTER JOIN preserves customers and orders even when one side has no match."
+    - "A customer with no order has orders.id as NULL; an orphan order has customer columns as NULL."
+    - "Use: SELECT customers.name FROM customers FULL OUTER JOIN orders ON customers.id = orders.customer_id WHERE orders.id IS NULL ORDER BY customers.name;"
   solution: "SELECT customers.name FROM customers FULL OUTER JOIN orders ON customers.id = orders.customer_id WHERE orders.id IS NULL ORDER BY customers.name;"
   preview:
     columns: ["id", "name"]
@@ -36,65 +37,76 @@ sandbox_seed:
     - "INSERT INTO orders VALUES (1, 1, 50), (2, 99, 20);"
 ---
 
-`LEFT JOIN` keeps the left table; `RIGHT JOIN` keeps the right. `FULL OUTER JOIN` keeps **both**: matches plus leftovers from either side. Think of merging two contact lists and still seeing names that appear in only one list.
+FULL OUTER JOIN is useful when reconciliation matters: you want to see matches **and** leftovers from both datasets instead of choosing one preserved side.
 
-**customers** (full table)
+## Mental model
 
-| id | name |
-| --- | --- |
-| 1 | Ann |
-| 2 | Bob |
-| 3 | Cara |
+Classify every joined outcome into one of three buckets:
 
-**orders** (full table)
-
-| id | customer_id | amount |
+| Outcome | customer side | order side |
 | --- | --- | --- |
-| 1 | 1 | 50 |
-| 2 | 99 | 20 |
+| matched | present | present |
+| customer only | present | NULL-filled |
+| order only | NULL-filled | present |
 
-| Side | What happens |
-| --- | --- |
-| Ann + order 1 | match |
-| Bob, Cara | customer only → order columns `NULL` |
-| order 2 (`customer_id` 99) | order only → customer columns `NULL` |
+With the lesson data:
+
+| outcome | customer | order |
+| --- | --- | --- |
+| match | Ann | order 1 |
+| left-only | Bob | NULL |
+| left-only | Cara | NULL |
+| right-only | NULL | order 2 (`customer_id = 99`) |
+
+## Predict before you run
+
+A full join before filtering should produce **four rows**. Now predict two different NULL filters:
+
+- `orders.id IS NULL` -> Bob and Cara, customers with no order.
+- `customers.id IS NULL` -> the orphan order pointing to customer 99.
+
+The side you test determines which kind of leftover you isolate.
 
 ## Worked example
 
 ```sql
-SELECT customers.name, orders.id AS order_id, orders.amount
+SELECT customers.name
 FROM customers
-FULL OUTER JOIN orders ON customers.id = orders.customer_id
-ORDER BY customers.name, orders.id;
+FULL OUTER JOIN orders
+  ON customers.id = orders.customer_id
+WHERE orders.id IS NULL
+ORDER BY customers.name;
 ```
-
-- Ann matches order `1`.
-- Bob and Cara have no order, so `orders.id` is `NULL`.
-- Order `2` points at customer `99`, who is missing — customer name is `NULL`.
-- `WHERE orders.id IS NULL` returns customers who never ordered (Bob and Cara).
-
-Result of the full join (before the filter):
-
-| name | order_id | amount |
-| --- | --- | --- |
-| Ann | 1 | 50 |
-| Bob |  |  |
-| Cara |  |  |
-|  | 2 | 20 |
-
-Customers with no orders:
 
 | name |
 | --- |
 | Bob |
 | Cara |
 
+The orphan order is not included because its `orders.id` exists; its missing side is `customers` instead.
+
+## Debug this
+
+The requirement is “customers with no orders”, but someone writes:
+
+```sql
+WHERE customers.id IS NULL
+```
+
+That predicate finds the opposite leftover: orders that have no matching customer. With outer joins, always ask **which side should be missing in the rows I want?**
+
 ## Common mistakes
 
-- Using `INNER JOIN` when you need unmatched rows from either side.
-- Writing `FULL JOIN` without understanding it is the same idea as `FULL OUTER JOIN` in PostgreSQL.
-- Filtering with `= NULL` instead of `IS NULL`.
+- Treating FULL JOIN as “every possible combination”; it still uses the ON matching rule.
+- Checking NULL on the wrong side and selecting the opposite kind of orphan.
+- Replacing the outer join with INNER JOIN and losing all unmatched rows.
 
 ## Your turn
 
-List the `name` of every customer who has no matching order. Order by `customers.name`.
+Return customers with no matching order, sorted by customer name. Classify the four full-join outcomes before applying the filter.
+
+## Quick check
+
+In a FULL OUTER JOIN, what does a row with customer columns NULL and order columns present represent?
+
+**Answer:** a right-only order that found no matching customer.

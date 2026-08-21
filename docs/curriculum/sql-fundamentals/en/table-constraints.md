@@ -6,21 +6,21 @@ slug: table-constraints
 title: Column rules with UNIQUE, CHECK, and DEFAULT
 order: 40
 published: true
+can_do: "Predict how UNIQUE, CHECK, and DEFAULT constraints accept, reject, or fill values during INSERT"
 objectives:
-  - Read UNIQUE, CHECK, and DEFAULT on a CREATE TABLE
-  - Insert rows that respect those rules
-  - See how DEFAULT fills a missing column
+  - Read constraints as executable data rules
+  - Predict UNIQUE and CHECK violations before mutation
+  - Understand when DEFAULT supplies a value
 exercise:
-  starter: "INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
+  starter: "INSERT INTO tickets (code, seats) VALUES "
   hints:
-    - "status has DEFAULT 'open' — omit it and the row still gets open."
-    - "Insert code and seats only; let DEFAULT fill status."
-    - "Try: INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
+    - "Supply a unique code and a positive seats value."
+    - "Omit status so DEFAULT 'open' supplies it."
+    - "Use: INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
   solution: "INSERT INTO tickets (code, seats) VALUES ('T1', 2);"
   preview:
     columns: ["code", "seats", "status"]
-    rows:
-      - ["T1", 2, "open"]
+    rows: []
   expected:
     columns: ["code", "seats", "status"]
     rows:
@@ -32,15 +32,11 @@ sandbox_seed:
     - "CREATE TEMP TABLE tickets (code TEXT UNIQUE, seats INT CHECK (seats > 0), status TEXT DEFAULT 'open');"
 ---
 
-Primary keys and foreign keys are two kinds of **constraints** (rules on columns). Three more everyday rules appear on many tables:
+Constraints turn business rules into rules the database can enforce every time data is written. They are part of the schema contract, not comments that developers merely promise to follow.
 
-| Constraint | Plain meaning | Everyday analogy |
-| --- | --- | --- |
-| `UNIQUE` | No two rows share this value | Ticket codes must not collide |
-| `CHECK (…)` | Value must pass a test | Seats must be greater than 0 |
-| `DEFAULT …` | If you omit the column, use this value | New tickets start as `open` |
+## Mental model
 
-**tickets** — how the empty table is defined (rules, not data yet):
+Prepared schema:
 
 ```sql
 CREATE TABLE tickets (
@@ -50,45 +46,54 @@ CREATE TABLE tickets (
 );
 ```
 
-| Column | Rule in words |
-| --- | --- |
-| `code` | Each code appears at most once |
-| `seats` | Must be a positive number |
-| `status` | If you skip it on INSERT, store `'open'` |
+Evaluate candidate writes:
 
-At the start of the exercise the table has **no rows**.
+| candidate | UNIQUE | CHECK | DEFAULT | result |
+| --- | --- | --- | --- | --- |
+| `('T1', 2)`, status omitted | pass | pass | fills `open` | accepted |
+| duplicate `T1` | fail | — | — | rejected |
+| seats `0` | pass | fail | — | rejected |
+
+A DEFAULT is used when the column is omitted (or explicitly requested as `DEFAULT`). It does not mean every explicit `NULL` magically becomes the default.
+
+## Predict before you run
+
+The table begins empty. Predict the after-state for `INSERT INTO tickets (code, seats) VALUES ('T1', 2);`: one row with status `open`.
 
 ## Worked example
-
-Insert one ticket. You supply `code` and `seats` only — `status` is filled by `DEFAULT`.
 
 ```sql
 INSERT INTO tickets (code, seats)
 VALUES ('T1', 2);
 ```
 
-- `UNIQUE` on `code` allows the first `'T1'`. A second `'T1'` would fail.
-- `CHECK (seats > 0)` accepts `2`. Inserting `0` or `-1` would fail.
-- `status` was omitted, so the database stores `'open'`.
-
-After the insert, the table looks like this:
-
 | code | seats | status |
-| --- | --- | --- |
+| --- | ---: | --- |
 | T1 | 2 | open |
 
-Check with:
+The database evaluates the rules as part of the write.
+
+## Debug this
 
 ```sql
-SELECT code, seats, status FROM tickets ORDER BY code;
+INSERT INTO tickets (code, seats)
+VALUES ('T1', 0);
 ```
+
+The syntax is fine, but `CHECK (seats > 0)` rejects the row. Database errors can represent violated domain rules, not merely malformed SQL.
 
 ## Common mistakes
 
-- Omitting a required value when there is **no** DEFAULT — then INSERT fails; here `status` is safe to omit.
-- Breaking CHECK — `seats` must stay greater than 0.
-- Reusing the same `code` twice — UNIQUE rejects the duplicate.
+- Thinking constraints matter only when creating the table, not when writing later rows.
+- Assuming DEFAULT replaces every explicit NULL value.
+- Treating UNIQUE and PRIMARY KEY as identical concepts; they overlap in uniqueness but have different identity/nullability semantics.
 
 ## Your turn
 
-Insert one row with `code = 'T1'` and `seats = 2`. Let `DEFAULT` set `status`. The checker reads all three columns ordered by `code`.
+Insert ticket `T1` with 2 seats and omit status so the default fills it. Evaluate all three rules before running.
+
+## Quick check
+
+What happens if `status` is omitted from this INSERT?
+
+**Answer:** the database supplies the declared default value `'open'`.

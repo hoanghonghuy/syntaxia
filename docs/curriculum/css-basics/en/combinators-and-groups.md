@@ -3,77 +3,86 @@ id: css-03-combinators
 track: css-basics
 locale: en
 slug: combinators-and-groups
-title: Combinators and selector lists
+title: Relationships in selectors
 order: 3
 published: true
+can_do: "Read descendant and child relationships from the HTML tree and write a selector that targets only elements in the intended structural context"
 objectives:
-  - Read descendant and child combinators
-  - Recognize adjacent and general sibling combinators
-  - Group selectors with a comma list
+  - Distinguish descendant and direct-child relationships
+  - Recognize adjacent/general sibling relationships
+  - Understand selector lists as shared declarations for multiple targets
 exercise:
   mode: both
   starterHtml: |
-    <article><p>A</p></article>
+    <article>
+      <p>Inside article</p>
+      <div><p>Nested deeper</p></div>
+    </article>
+    <p>Outside article</p>
   starter: |
-    /* Style paragraphs inside article */
-    
+    /* TODO: make paragraphs anywhere inside article green */
   hints:
-    - "Descendant selector: article then a space then p."
-    - Add a color declaration.
-    - The space means “inside”, not direct child only.
+    - The target relation is descendant, not only direct child.
+    - A space between selectors means “inside at any depth”.
+    - Use: article p { color: green; }
   solution: |
     article p { color: green; }
   expected:
-    type: cssIncludes
-    needles:
-      - article p
+    type: cssRules
+    rules:
+      - selector: article p
+        declarations:
+          color: green
 ---
 
-Often you need to style an element only when it sits in a certain place in the HTML tree. **Combinators** connect selectors to describe that relationship. A **selector list** (comma-separated) applies the same declarations to several targets at once.
+Combinators turn the HTML tree into a selector condition.
 
-Imagine a filing cabinet: “documents inside the Projects drawer” is a descendant idea. “Only the folders directly in that drawer, not nested deeper” is a child idea. “Label A and label B the same way” is a group.
+## Mental model
 
-| Pattern | Syntax idea | Meaning |
-| --- | --- | --- |
-| Descendant | `article p` | A `p` anywhere inside `article` |
-| Child | `ul > li` | An `li` that is a direct child of `ul` |
-| Adjacent sibling | `h2 + p` | A `p` immediately after an `h2` |
-| General sibling | `h2 ~ p` | Any `p` that follows an `h2` as a sibling |
-| Selector list | `h1, h2, h3` | All of those elements get the same rule |
+| Selector | Relationship |
+| --- | --- |
+| `article p` | p anywhere inside article |
+| `article > p` | p whose direct parent is article |
+| `h2 + p` | p immediately following h2 as a sibling |
+| `h2 ~ p` | following p siblings of h2 |
+| `h1, h2` | selector list: same declarations for both targets |
+
+The space in a descendant selector is meaningful syntax.
+
+## Predict the rendered result
+
+For an `article` containing a direct paragraph and another paragraph nested inside a `div`, predict that `article p` matches both. `article > p` would match only the direct child.
 
 ## Worked example
 
 ```css
-article p {
-  line-height: 1.6;
-}
-
-nav > a {
-  text-decoration: none;
-}
-
-h2 + p {
-  margin-top: 0.25rem;
-}
-
-h1, h2, h3 {
-  font-family: Georgia, serif;
-}
+article p { color: green; }
+article > h2 { margin-top: 0; }
+h1, h2 { font-family: sans-serif; }
 ```
 
-- `article p` styles paragraphs nested inside an `article`, even if other elements sit between them.
-- `nav > a` styles only anchors that are **direct** children of `nav`, not links buried deeper.
-- `h2 + p` styles the first paragraph right after a heading — useful for tightening that first line.
-- `h1, h2, h3` is a **selector list**: one rule, three targets.
+Read the HTML relationship before choosing a combinator; do not select based only on current visual position.
 
-Combinators describe structure already present in HTML. They do not create new elements.
+## Debug this
+
+```css
+article > p { color: green; }
+```
+
+If the requirement says “all paragraphs anywhere inside article”, the child combinator is too narrow: nested paragraphs under another element are missed.
 
 ## Common mistakes
 
-- Using a space (`article p`) when you meant a direct child (`article > p`) — the space matches nested descendants too.
-- Writing `h1 h2 h3` without commas when you wanted a list — without commas, that means an `h3` inside an `h2` inside an `h1`.
-- Over-nesting selectors (`body div article section p`) — hard to maintain; prefer a clear class when the structure is complex.
+- Treating descendant space and child `>` as equivalent.
+- Building extremely long selectors tied to incidental markup depth.
+- Confusing a selector list comma with a descendant relationship.
 
 ## Your turn
 
-Use the sandbox below to target p inside article. When the checker shows **Correct**, mark this lesson complete.
+Target every paragraph inside `article`, including the nested one, while leaving the outside paragraph alone.
+
+## Quick check
+
+Which selector is broader inside an article: `article p` or `article > p`?
+
+**Answer:** `article p` because it matches descendants at any depth.

@@ -6,15 +6,17 @@ slug: select-queries
 title: Viết truy vấn SELECT
 order: 2
 published: true
+can_do: "Chọn chính xác các cột mà truy vấn trả về mà không thay đổi tập hàng nguồn"
 objectives:
-  - Chọn cột cụ thể bằng SELECT
-  - Đọc tên bảng và tên cột
+  - Chọn nhiều hơn một cột cụ thể
+  - Dự đoán hình dạng cột của kết quả từ danh sách SELECT
+  - Phân biệt chọn cột rõ ràng với SELECT *
 exercise:
   starter: "SELECT * FROM movies;"
   hints:
-    - "Liệt kê chỉ các cột bạn cần sau SELECT, cách nhau bằng dấu phẩy."
-    - "Đừng giữ dấu * nếu bạn muốn cột cụ thể."
-    - "Thử: SELECT title, year FROM movies ORDER BY title;"
+    - "Đề yêu cầu hai cột đầu ra cụ thể, không phải mọi cột."
+    - "Thay * bằng title, year sau SELECT."
+    - "Dùng: SELECT title, year FROM movies ORDER BY title;"
   solution: "SELECT title, year FROM movies ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -36,9 +38,13 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Thường bạn không cần mọi cột. Hãy nghĩ như ẩn cột trong spreadsheet để chỉ còn **title** và **year**.
+Ứng dụng thực tế hiếm khi cần mọi cột. Chỉ trả những gì màn hình, báo cáo hoặc API cần giúp kết quả dễ hiểu hơn và làm hợp đồng của truy vấn rõ ràng hơn.
 
-**movies** (bảng đầy đủ — bốn cột)
+## Mô hình tư duy
+
+Hãy coi danh sách `SELECT` là **hình dạng đầu ra**.
+
+**Bảng nguồn: movies**
 
 | id | title | year | director |
 | --- | --- | --- | --- |
@@ -47,7 +53,29 @@ Thường bạn không cần mọi cột. Hãy nghĩ như ẩn cột trong sprea
 | 3 | Dune | 2021 | Villeneuve |
 | 4 | Interstellar | 2014 | Nolan |
 
-`SELECT *` sẽ trả về cả bốn cột. Hôm nay bạn chỉ hỏi hai cột.
+So sánh các yêu cầu:
+
+| Danh sách SELECT | Các cột kết quả |
+| --- | --- |
+| `*` | `id`, `title`, `year`, `director` |
+| `title` | `title` |
+| `title, year` | `title`, `year` |
+
+Ở giai đoạn này, thay danh sách SELECT làm thay đổi **cột**, không làm thay đổi những hàng nguồn nào tồn tại trong kết quả.
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT title, year
+FROM movies;
+```
+
+Hãy dự đoán kích thước kết quả:
+
+- **2 cột**: `title`, `year`
+- **4 hàng**: mỗi phim một hàng vì chưa có `WHERE`
+
+`id` và `director` không bị xóa khỏi dữ liệu lưu trữ; chúng chỉ không nằm trong kết quả này.
 
 ## Ví dụ mẫu
 
@@ -56,10 +84,6 @@ SELECT title, year
 FROM movies
 ORDER BY title;
 ```
-
-- Sau `SELECT`, ghi các cột bạn muốn (`title`, `year`), cách nhau bằng dấu phẩy.
-- `FROM movies` vẫn nghĩa là “nhìn vào bảng này”.
-- `ORDER BY title` sắp hàng theo tiêu đề để grader thấy thứ tự ổn định.
 
 Kết quả:
 
@@ -70,14 +94,33 @@ Kết quả:
 | Interstellar | 2014 |
 | The Matrix | 1999 |
 
-Cột `id` và `director` không hiện, vì bạn không hỏi chúng.
+Dấu phẩy tách các biểu thức trong danh sách SELECT. Thứ tự từ trái sang phải của chúng cũng là thứ tự cột trong kết quả.
+
+`ORDER BY title` chỉ được thêm để kết quả bài tập có thứ tự xác định; phần sắp xếp sẽ có bài riêng.
+
+## Tìm lỗi
+
+Câu này trông gần đúng nhưng không thật sự yêu cầu hai cột đầu ra:
+
+```sql
+SELECT title year
+FROM movies;
+```
+
+Thiếu dấu phẩy, SQL có thể hiểu `year` là alias của `title` thay vì cột thứ hai. Muốn hai cột, hãy tách rõ `title, year`.
 
 ## Lỗi thường gặp
 
-- Giữ `SELECT *` khi đề yêu cầu cột cụ thể — grader kiểm tra tên cột.
-- Đặt khoảng trắng hoặc ngoặc quanh tên cột không cần thiết (`"title"` thường không cần ở đây).
-- Đảo thứ tự: `FROM movies SELECT title` không hợp lệ — `SELECT` đứng trước.
+- Giữ `*` khi đề yêu cầu các cột cụ thể.
+- Quên dấu phẩy giữa các cột được chọn.
+- Nghĩ `SELECT title, year` tự động lọc bớt hàng. Lọc hàng là trách nhiệm riêng của `WHERE`.
 
 ## Thử ngay
 
-Đổi truy vấn khởi đầu để chỉ trả về `title` và `year` cho mọi phim, sắp theo `title`.
+Sửa truy vấn khởi đầu để kết quả có đúng hai cột `title`, `year` cho mọi phim, sắp theo `title`.
+
+## Tự kiểm tra
+
+Nếu bảng có mười cột nhưng danh sách SELECT chỉ ghi ba tên cột, kết quả có bao nhiêu cột?
+
+**Đáp án:** ba. Danh sách SELECT quyết định hình dạng cột đầu ra.

@@ -6,16 +6,17 @@ slug: create-view
 title: Saved queries with views
 order: 35
 published: true
+can_do: "Expose a reusable query as a view and reason about the view as a derived interface over base data"
 objectives:
-  - Create a view that filters rows
-  - Query the view like a table
-  - Use CREATE TEMP VIEW when the base table is temporary
+  - Distinguish a view definition from a copied table
+  - Create a view from a SELECT
+  - Query the derived interface and predict its rows
 exercise:
   starter: "CREATE TEMP VIEW modern_movies AS "
   hints:
-    - "A view stores a SELECT under a name — query it later like a table."
-    - "In this sandbox use CREATE TEMP VIEW because the base table is temporary."
-    - "Try: CREATE TEMP VIEW modern_movies AS SELECT title FROM movies WHERE year >= 2000;"
+    - "Define a named SELECT; do not copy rows into another table."
+    - "The temporary base table requires a temporary view in this sandbox."
+    - "Use: CREATE TEMP VIEW modern_movies AS SELECT title FROM movies WHERE year >= 2000;"
   solution: "CREATE TEMP VIEW modern_movies AS SELECT title FROM movies WHERE year >= 2000;"
   preview:
     columns: ["id", "title", "year"]
@@ -38,56 +39,63 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010), (2, 'The Matrix', 1999), (3, 'Interstellar', 2014), (4, 'Dune', 2021);"
 ---
 
-A **view** is a saved `SELECT` with a name. You query it like a table, but it does not store its own copy of the rows — it re-runs the query.
+A view gives a reusable name to a query. Think of it as a **derived interface** over base data rather than a second manually synchronized copy of the table.
 
-**movies** (base table)
+## Mental model
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | Inception | 2010 |
-| 2 | The Matrix | 1999 |
-| 3 | Interstellar | 2014 |
-| 4 | Dune | 2021 |
+Base table:
 
-| title | year | In `modern_movies` (`year >= 2000`)? |
-| --- | --- | --- |
-| Inception | 2010 | yes |
-| The Matrix | 1999 | no |
-| Interstellar | 2014 | yes |
-| Dune | 2021 | yes |
+| title | year |
+| --- | ---: |
+| Inception | 2010 |
+| The Matrix | 1999 |
+| Interstellar | 2014 |
+| Dune | 2021 |
 
-```sql
-CREATE VIEW modern_movies AS
-SELECT title FROM movies WHERE year >= 2000;
+View definition:
+
+```text
+movies -> filter year >= 2000 -> project title -> modern_movies
 ```
 
-In this sandbox the base table is temporary, so use `CREATE TEMP VIEW` (same idea as a regular view, scoped to the session).
+Expected view rows: Dune, Inception, Interstellar. The Matrix is excluded by the definition.
+
+## Predict before you run
+
+After creating the view, `SELECT title FROM modern_movies ORDER BY title` should return three rows. No separate INSERT into `modern_movies` is needed.
 
 ## Worked example
 
 ```sql
 CREATE TEMP VIEW modern_movies AS
+SELECT title
+FROM movies
+WHERE year >= 2000;
+```
+
+The sandbox uses a temporary view because its base table is temporary. The core concept is the same as a regular `CREATE VIEW`.
+
+## Debug this
+
+```sql
+CREATE TEMP TABLE modern_movies AS
 SELECT title FROM movies WHERE year >= 2000;
 ```
 
-- `modern_movies` is the view name.
-- The filter keeps titles from year 2000 onward and drops The Matrix (1999).
-- The grader then selects from the view: `SELECT title FROM modern_movies ORDER BY title`.
-
-Result from the view:
-
-| title |
-| --- |
-| Dune |
-| Inception |
-| Interstellar |
+This creates a table snapshot, not the requested view abstraction. Both may initially show similar rows, but their data semantics are different.
 
 ## Common mistakes
 
-- Writing only `CREATE VIEW` without `TEMP` here — temporary base tables need a temporary view in this sandbox.
-- Forgetting `AS` before the `SELECT`.
-- Filtering with the wrong comparison (`>` instead of `>=` when the task includes year 2000).
+- Confusing a view with a copied table.
+- Forgetting `AS` before the defining SELECT.
+- Writing a filter whose boundary does not match the requirement (`>` instead of `>=`).
 
 ## Your turn
 
-Create a temporary view `modern_movies` that selects `title` from movies with `year >= 2000`.
+Create temporary view `modern_movies` that exposes titles with `year >= 2000`. Predict its three rows before running.
+
+## Quick check
+
+What primarily defines the rows visible through a view?
+
+**Answer:** the SELECT query stored as the view definition.

@@ -3,23 +3,24 @@ id: js-08-functions
 track: javascript-basics
 locale: vi
 slug: functions
-title: Khối tái sử dụng bằng hàm
+title: Function, parameter và return value
 order: 8
 published: true
+can_do: "Trace function call từ argument sang parameter binding rồi return value và cách caller sử dụng"
 objectives:
-  - Định nghĩa hàm bằng function và tên
-  - Truyền giá trị vào qua tham số
-  - Gọi hàm và dùng giá trị return
+  - Phân biệt function definition với function call
+  - Map argument vào parameter của một call
+  - Phân biệt return value với log value
 exercise:
   starter: |
     function add(a, b) {
-      // return tổng của a và b
+      // TODO: return the sum of a and b
     }
     console.log(add(4, 5));
   hints:
-    - "Gọi add với 4 và 5."
-    - "console.log in ra panel kết quả."
-    - "Dòng mong đợi chỉ là số 9."
+    - "Khi add(4, 5) chạy, a thành 4 và b thành 5 trong call đó."
+    - "Function phải return value để console.log nhận được nó."
+    - "Dùng: return a + b;"
   solution: |
     function add(a, b) {
       return a + b;
@@ -31,42 +32,86 @@ exercise:
       - "9"
 ---
 
-Thẻ công thức nấu ăn giữ các bước bạn làm lại bất cứ lúc nào. **Hàm** (function) là khối code có tên, dùng lại được. Bạn **gọi** hàm khi cần thực hiện việc đó.
+Function đóng gói behavior sau một tên. Để hiểu function, hãy trace boundary giữa **caller** và **function call**.
 
-| Thành phần | Nghĩa đơn giản | Ví dụ |
-| --- | --- | --- |
-| `function name()` | Định nghĩa khối | `function greet() { ... }` |
-| Tham số | Đầu vào người gọi truyền | `function add(a, b)` |
-| `return` | Trả kết quả ra | `return a + b` |
-| Gọi hàm | Chạy hàm | `greet()` hoặc `add(2, 3)` |
+## Mô hình thực thi
+
+Với call:
+
+```javascript
+add(4, 5)
+```
+
+```text
+caller truyền argument 4, 5
+        ↓
+parameter binding a=4, b=5
+        ↓
+function body execute
+        ↓
+return value 9
+        ↓
+caller nhận 9
+```
+
+Parameter là tên trong function definition; argument là actual value được truyền trong một call cụ thể.
+
+## Trace từng bước
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+console.log(add(4, 5));
+```
+
+| bước | value/effect |
+| ---: | --- |
+| gọi `add(4, 5)` | `a = 4`, `b = 5` |
+| evaluate `a + b` | `9` |
+| `return 9` | function-call expression trở thành `9` |
+| `console.log(...)` | log `9` |
+
+## Dự đoán trước khi chạy
+
+Dự đoán thứ `console.log` nhận, không chỉ việc xảy ra trong function: một Number value `9`.
 
 ## Ví dụ mẫu
 
 ```javascript
-function greet(name) {
-  return "Hello, " + name + "!";
+function fullName(first, last) {
+  return `${first} ${last}`;
 }
 
-function add(a, b) {
-  return a + b;
-}
-
-console.log(greet("Sam"));
-const sum = add(4, 5);
-console.log(sum);
+const label = fullName("Ada", "Lovelace");
+console.log(label);
 ```
 
-- `greet` nhận một tham số `name` và trả về chuỗi.
-- `add` nhận hai số và trả về tổng.
-- `greet("Sam")` chạy hàm một lần và dùng chuỗi trả về.
-- `add(4, 5)` trả về `9`, lưu trong `sum`.
+Function tính value; caller quyết định làm gì với returned value đó.
+
+## Tìm lỗi
+
+```javascript
+function add(a, b) {
+  a + b;
+}
+console.log(add(4, 5));
+```
+
+Expression được evaluate rồi bỏ đi. Không có explicit return thì function return `undefined`. Logging và returning là hai responsibility khác nhau.
 
 ## Lỗi thường gặp
 
-- Gọi hàm trước khi định nghĩa — trong script ngắn, đặt hàm phía trên chỗ gọi.
-- Quên `return` — hàm chạy nhưng trả về `undefined` khi bạn mong có giá trị.
-- Nhầm tham số và đối số — tham số là tên trong định nghĩa; đối số là giá trị truyền khi gọi.
+- Nhầm parameter name với argument value được truyền vào call.
+- Log trong function khi caller cần reusable returned value.
+- Quên `return` rồi phải debug `undefined` ở call site.
 
 ## Thử ngay
 
-Chạy sandbox: `add(4, 5)` phải in **9** ra console. Khi checker báo đúng, đánh dấu hoàn thành — bạn đã xong phần đọc JavaScript Basics.
+Làm `add(4, 5)` return `9` để `console.log` hiện có in nó ra.
+
+## Tự kiểm tra
+
+Khác biệt giữa `return value` và `console.log(value)` là gì?
+
+**Đáp án:** `return` gửi value về caller; `console.log` chỉ tạo console output như side effect.

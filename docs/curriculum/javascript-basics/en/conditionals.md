@@ -3,21 +3,22 @@ id: js-06-conditionals
 track: javascript-basics
 locale: en
 slug: conditionals
-title: Making decisions with if and else
+title: Branching with if and else
 order: 6
 published: true
+can_do: "Trace a boolean condition into exactly one branch and use strict equality to avoid unintended coercion"
 objectives:
-  - Run one branch when a test is true
-  - Use else for the other path
-  - Compare values with ===
+  - Evaluate a condition before choosing a branch
+  - Use strict equality for explicit type-aware comparison
+  - Distinguish assignment from comparison
 exercise:
   starter: |
     const lives = 0;
-    // If lives is 0, log "Game over". Otherwise log "Keep playing".
+    // TODO: if lives is 0 log "Game over", otherwise log "Keep playing"
   hints:
-    - "When lives is 0, the if test is true."
-    - "Only the if block runs — use console.log inside it."
-    - 'Print exactly: Game over'
+    - "Evaluate lives === 0 first; with lives equal to number 0, it is true."
+    - "Only the matching branch should log a line."
+    - "Use an if/else with lives === 0 and console.log('Game over') in the true branch."
   solution: |
     const lives = 0;
     if (lives === 0) {
@@ -31,43 +32,79 @@ exercise:
       - "Game over"
 ---
 
-Every day you choose: if it is raining, take an umbrella; otherwise walk as usual. A **conditional** lets code make that kind of choice.
+A conditional turns a boolean decision into control flow. The useful skill is not memorizing braces; it is predicting **which path executes and why**.
 
-| Piece | Plain meaning | Example |
-| --- | --- | --- |
-| `if (test)` | Run block when test is true | `if (score >= 10)` |
-| `else` | Run when test is false | `else { ... }` |
-| `===` | Same value and type | `lives === 0` |
+## Execution model
 
-Use `===` (three equals) to compare without surprises. It checks value **and** type.
+```text
+evaluate condition
+    |
+    +-- true  -> execute if block
+    |
+    +-- false -> execute else block
+```
 
-## Worked example
+For equality, `===` compares without performing the type coercion associated with `==`.
+
+## Trace it
 
 ```javascript
 const lives = 0;
-
 if (lives === 0) {
   console.log("Game over");
 } else {
   console.log("Keep playing");
 }
+```
 
-const score = 12;
-if (score >= 10) {
-  console.log("You passed");
+| step | result |
+| ---: | --- |
+| read `lives` | number `0` |
+| evaluate `lives === 0` | `true` |
+| run `if` block | logs `Game over` |
+| `else` block | skipped |
+
+## Predict before you run
+
+Predict exactly one console line: `Game over`. Both branches never run for a single if/else evaluation.
+
+## Worked example
+
+```javascript
+const age = 20;
+
+if (age >= 18) {
+  console.log("adult");
+} else {
+  console.log("minor");
 }
 ```
 
-- When `lives` is `0`, only the `if` block runs.
-- The `else` block runs when the `if` test is false.
-- A second `if` can stand alone — no `else` required.
+The comparison creates a boolean; the boolean controls the branch.
+
+## Debug this
+
+```javascript
+let lives = 3;
+if (lives = 0) {
+  console.log("Game over");
+}
+```
+
+`=` assigns a new value; it does not compare. The assignment expression evaluates to `0`, which is falsy, so the branch is skipped—and `lives` has also been changed. This is a state bug and a control-flow bug at once.
 
 ## Common mistakes
 
-- Using `=` inside the test — that assigns, it does not compare. Use `===`.
-- Using `==` as a beginner — stick to `===` for clear comparisons.
-- Forgetting `{ }` around multi-line blocks — braces group the lines that belong to the branch.
+- Writing assignment `=` when the intention is comparison.
+- Using coercive `==` without understanding the conversions it permits.
+- Reading the code as if both branches execute instead of tracing the condition first.
 
 ## Your turn
 
-With `lives` set to `0`, run the sandbox so the console shows **Game over**. Mark complete when the checker passes.
+Complete the if/else so `lives = 0` produces exactly `Game over`.
+
+## Quick check
+
+What is the key difference between `=` and `===`?
+
+**Answer:** `=` assigns a value; `===` compares value and type without coercive equality conversion.

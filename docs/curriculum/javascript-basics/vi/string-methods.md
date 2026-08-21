@@ -3,21 +3,22 @@ id: js-04-string-methods
 track: javascript-basics
 locale: vi
 slug: string-methods
-title: Phương thức chuỗi hữu ích
+title: Quan sát và biến đổi string
 order: 4
 published: true
+can_do: "Trace string index và immutable transformation để dự đoán method result mà không nghĩ original string bị mutate"
 objectives:
-  - Đọc độ dài chuỗi
-  - Đổi hoa thường bằng toUpperCase và toLowerCase
-  - Lấy một đoạn chữ bằng slice
+  - Đọc vị trí ký tự zero-based và length
+  - Dùng slice với end index exclusive
+  - Giải thích vì sao string method trả string mới
 exercise:
   starter: |
     const code = "Syntaxia";
-    // return ba chữ cái đầu bằng slice
+    // TODO: return the first three characters using slice
   hints:
-    - "slice(start, end) lấy từ start đến trước end."
-    - "Bắt đầu chỉ số 0; kết thúc trước chỉ số 3."
-    - "Đáp án là ba chữ: Syn."
+    - "String index bắt đầu từ 0."
+    - "slice(start, end) không lấy vị trí end."
+    - "Dùng: return code.slice(0, 3);"
   solution: |
     const code = "Syntaxia";
     return code.slice(0, 3);
@@ -26,38 +27,70 @@ exercise:
     value: "Syn"
 ---
 
-Chuỗi không chỉ là nhãn trên hộp — đó là chữ bạn có thể **xem** và **chỉnh nhẹ**. JavaScript cho mỗi chuỗi vài công cụ nhỏ gọi là **phương thức** (method). Bạn gọi bằng dấu chấm sau chuỗi (hoặc biến đang giữ chữ).
+String có property và method để inspect hoặc suy ra text mới. Bản thân string value là immutable: transformation method tạo value string mới.
 
-| Phương thức / thuộc tính | Nghĩa đơn giản | Ví dụ |
-| --- | --- | --- |
-| `.length` | Bao nhiêu ký tự | `"hi".length` → `2` |
-| `.toUpperCase()` | Bản chữ HOA | `"hi".toUpperCase()` → `"HI"` |
-| `.toLowerCase()` | Bản chữ thường | `"HI".toLowerCase()` → `"hi"` |
-| `.slice(start)` | Đoạn con từ vị trí | `"hello".slice(1)` → `"ello"` |
+## Mô hình thực thi
 
-Chỉ số bắt đầu từ **0** — chữ đầu tiên là vị trí 0.
+Với `"Syntaxia"`:
 
-## Ví dụ mẫu
+| index | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| char | S | y | n | t | a | x | i | a |
+
+`.length` là 8. `slice(0, 3)` bắt đầu index 0 và dừng **trước** index 3 nên ra `"Syn"`.
+
+## Trace từng bước
 
 ```javascript
 const code = "Syntaxia";
 const short = code.slice(0, 3);
-
-console.log(code.length);
-console.log(code.toLowerCase());
-console.log(short);
+const upper = code.toUpperCase();
 ```
 
-- `.length` đếm mọi ký tự trong `code` → `8`.
-- `.toLowerCase()` trả về chuỗi thường mới; `code` gốc không đổi.
-- `.slice(0, 3)` lấy ký tự từ 0 đến trước 3 → `"Syn"`.
+| binding | value |
+| --- | --- |
+| `code` | `"Syntaxia"` |
+| `short` | `"Syn"` |
+| `upper` | `"SYNTAXIA"` |
+
+`code` vẫn giữ value gốc.
+
+## Dự đoán trước khi chạy
+
+Đánh dấu index 0, 1, 2 được lấy và 3 bị loại. Kết quả phải là `"Syn"`.
+
+## Ví dụ mẫu
+
+```javascript
+const raw = "  Hello  ";
+const cleaned = raw.trim().toLowerCase();
+console.log(cleaned); // hello
+```
+
+Method có thể chain vì mỗi method trả một value để method tiếp theo xử lý.
+
+## Tìm lỗi
+
+```javascript
+const code = "Syntaxia";
+code.toUpperCase();
+return code;
+```
+
+Nó trả `"Syntaxia"`, không phải uppercase. Method đã tạo string mới nhưng result bị bỏ qua.
 
 ## Lỗi thường gặp
 
-- Quên ngoặc `()` — `code.toUpperCase` không chạy công cụ.
-- Tưởng phương thức đổi chuỗi gốc — chúng trả về **chuỗi mới**; gán vào biến nếu cần giữ.
-- Nhầm chỉ số slice — vị trí `3` là ký tự **thứ tư**; điểm kết thúc slice không tính.
+- Off-by-one do zero-based index và slice end exclusive.
+- Quên `()` khi gọi method như `toUpperCase()`.
+- Nghĩ string method mutate original string.
 
 ## Thử ngay
 
-Return `code.slice(0, 3)` với `"Syntaxia"` trong sandbox. Đánh dấu hoàn thành khi được **Syn**.
+Return ba ký tự đầu của `code` bằng `slice`.
+
+## Tự kiểm tra
+
+`code.toUpperCase()` có mutate string đang nằm trong `code` không?
+
+**Đáp án:** không. Nó trả uppercase string mới; string gốc không đổi.

@@ -3,19 +3,21 @@ id: pg-02-null
 track: postgresql
 locale: en
 slug: handling-null
-title: Finding missing values with NULL
+title: NULL and three-valued logic
 order: 2
 published: true
+can_do: "Reason about PostgreSQL NULL as unknown and choose IS NULL / IS NOT NULL instead of ordinary equality"
 objectives:
-  - Treat NULL as “unknown / missing”, not as empty text
-  - Filter with IS NULL and IS NOT NULL
+  - Distinguish NULL from zero, empty text, and false
+  - Explain why comparisons with NULL become unknown
+  - Filter missing values with IS NULL
 exercise:
   starter: "SELECT name, email FROM contacts;"
   hints:
-    - "Use IS NULL (not = NULL) to find missing values."
-    - "Keep only the name column in the result."
-    - "Try: SELECT name FROM contacts WHERE email IS NULL;"
-  solution: "SELECT name FROM contacts WHERE email IS NULL;"
+    - "Missing email is represented by NULL, not by the text 'NULL'."
+    - "Ordinary = comparison does not turn unknown into true. Use IS NULL."
+    - "Use: SELECT name FROM contacts WHERE email IS NULL ORDER BY name;"
+  solution: "SELECT name FROM contacts WHERE email IS NULL ORDER BY name;"
   preview:
     columns: ["id", "name", "email"]
     rows:
@@ -34,38 +36,59 @@ sandbox_seed:
     - "INSERT INTO contacts VALUES (1, 'Ana', 'ana@example.com'), (2, 'Ben', NULL), (3, 'Chi', 'chi@example.com'), (4, 'Dee', NULL);"
 ---
 
-In a contact list, some people may have no email yet. In SQL that empty cell is usually stored as `NULL` — meaning “unknown” or “not provided”, not the same as the text `''`.
+SQL `NULL` represents missing or unknown information. That creates a third logical state beyond ordinary true and false.
 
-| id | name | email |
-| --- | --- | --- |
-| 1 | Ana | ana@example.com |
-| 2 | Ben | *(null)* |
-| 3 | Chi | chi@example.com |
-| 4 | Dee | *(null)* |
+## Mental model
+
+Compare these values carefully:
+
+| value | meaning |
+| --- | --- |
+| `0` | known numeric zero |
+| `''` | known empty text |
+| `FALSE` | known boolean false |
+| `NULL` | unknown / missing value |
+
+An expression such as `email = NULL` does not become true for a missing email. The comparison result is unknown, which does not pass a WHERE filter. SQL provides `IS NULL` and `IS NOT NULL` for this question.
+
+## Predict before you run
+
+Ben and Dee have missing emails, so `email IS NULL` should keep exactly those two rows. Ana and Chi have known text values.
 
 ## Worked example
 
 ```sql
-SELECT name FROM contacts WHERE email IS NULL;
+SELECT name
+FROM contacts
+WHERE email IS NULL
+ORDER BY name;
 ```
-
-- `IS NULL` keeps rows where the column has no value.
-- `IS NOT NULL` keeps rows that do have a value.
-- Writing `email = NULL` does **not** work the way beginners expect — use `IS NULL`.
-
-Result:
 
 | name |
 | --- |
 | Ben |
 | Dee |
 
+## Debug this
+
+```sql
+WHERE email = NULL
+```
+
+This looks like an equality check, but NULL is not an ordinary value to compare with `=`. Replace the question “equals NULL?” with the predicate “is missing?” → `IS NULL`.
+
 ## Common mistakes
 
-- Using `= NULL` or `!= NULL` — comparisons with `NULL` need `IS NULL` / `IS NOT NULL`.
-- Confusing `NULL` with an empty string `''`.
-- Selecting every column when the task asks only for `name`.
+- Treating NULL as a special string value.
+- Assuming NULL and empty text mean the same thing.
+- Using `= NULL` / `<> NULL` instead of null-aware predicates.
 
 ## Your turn
 
-List the `name` of every contact whose `email` is missing.
+Return contact names whose email is missing, ordered by name.
+
+## Quick check
+
+Is `NULL` the same as boolean `FALSE`?
+
+**Answer:** no. NULL represents unknown/missing information; FALSE is a known boolean value.

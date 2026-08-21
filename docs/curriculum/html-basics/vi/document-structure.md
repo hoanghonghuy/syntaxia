@@ -6,20 +6,20 @@ slug: document-structure
 title: Cấu trúc tài liệu và phần head
 order: 1
 published: true
+can_do: "Tạo bộ khung HTML hoàn chỉnh, đặt metadata trong head và giữ nội dung hiển thị trong body"
 objectives:
-  - Nhận biết khung trang: doctype, html, head, body
-  - Giải thích vai trò của charset, title và lang
-  - Phân biệt nội dung trong head với nội dung trong body
+  - Theo dõi quan hệ cha-con trong bộ khung HTML tối thiểu
+  - Đặt language, charset và title đúng vị trí
+  - Phân biệt metadata của tài liệu với nội dung hiển thị trong body
 exercise:
   mode: html
   starter: |
     <!DOCTYPE html>
-    <!-- Complete html, head with title, and body -->
-    
+    <!-- TODO: thêm html lang, metadata trong head, title và body -->
   hints:
-    - Thêm các phần tử html, head, body và title.
-    - Đặt meta charset và title trong head.
-    - Đặt nội dung hiển thị trong body.
+    - Root là <html lang="en">, bên trong có head và body.
+    - Đặt <meta charset="utf-8"> và <title> trong head; nội dung nhìn thấy đặt trong body.
+    - Hoàn thiện với doctype, html, head, meta charset, title, body và thẻ đóng html.
   solution: |
     <!DOCTYPE html>
     <html lang="en">
@@ -31,30 +31,54 @@ exercise:
       <p>Hello</p>
     </body>
     </html>
-    
   expected:
     type: htmlTags
+    sourceIncludes:
+      - "<!DOCTYPE html>"
     tags:
       - tag: html
         minCount: 1
+        requiredAttrs: [lang]
       - tag: head
+        minCount: 1
+      - tag: meta
+        minCount: 1
+        requiredAttrs: [charset]
+        attrEquals:
+          charset: utf-8
+      - tag: title
         minCount: 1
       - tag: body
         minCount: 1
-      - tag: title
-        minCount: 1
 ---
 
-Một tệp HTML không chỉ là vài thẻ rời. Nó là một *tài liệu* có khung cố định: khai báo loại tài liệu, phần thông tin cho trình duyệt (head), và phần nội dung người dùng nhìn thấy (body).
+Một tài liệu web có hai nhóm trách nhiệm khác nhau: **metadata mô tả tài liệu** và **nội dung được hiển thị trong trang**. Bộ khung rõ ràng giúp hai nhóm này luôn đúng chỗ.
 
-Hãy nghĩ như tờ giấy có phần tiêu đề hồ sơ (meta) và phần nội dung chính.
+## Mô hình tư duy
 
-| Phần | Vai trò | Người dùng có thấy trực tiếp? |
-| --- | --- | --- |
-| `<!DOCTYPE html>` | Báo đây là HTML5 | Không |
-| `<html>` | Gốc toàn trang | Không (bao ngoài) |
-| `<head>` | Tiêu đề tab, mã hóa chữ, liên kết CSS… | Thường không (trừ `title` trên tab) |
-| `<body>` | Chữ, ảnh, form… hiện trên trang | Có |
+```text
+Document
+├─ <!DOCTYPE html>
+└─ html[lang]
+   ├─ head
+   │  ├─ meta charset
+   │  └─ title
+   └─ body
+      └─ nội dung hiển thị
+```
+
+`head` và `body` là hai phần tử cùng cấp bên trong `html`. Title của tab là metadata; `h1` trong body mới là nội dung hiện trên trang.
+
+## Dự đoán cấu trúc khi render
+
+Với đoạn sau, hãy dự đoán chữ nào xuất hiện **trong trang** và chữ nào nằm ở **tab trình duyệt**:
+
+```html
+<head><title>Ghi chú khu vườn</title></head>
+<body><h1>Cà chua</h1></body>
+```
+
+`Cà chua` là nội dung trang; `Ghi chú khu vườn` là metadata dùng cho tab/bookmark.
 
 ## Ví dụ mẫu
 
@@ -62,27 +86,41 @@ Hãy nghĩ như tờ giấy có phần tiêu đề hồ sơ (meta) và phần n�
 <!DOCTYPE html>
 <html lang="vi">
   <head>
-    <meta charset="utf-8" />
-    <title>Bài học đầu tiên</title>
+    <meta charset="utf-8">
+    <title>Ghi chú khu vườn</title>
   </head>
   <body>
-    <p>Nội dung trang nằm ở đây.</p>
+    <h1>Cà chua</h1>
   </body>
 </html>
 ```
 
-- `<!DOCTYPE html>` báo trình duyệt dùng chế độ HTML hiện đại.
-- `lang="vi"` trên `<html>` nói ngôn ngữ chính của trang (hữu ích cho trình đọc màn hình và công cụ).
-- `<meta charset="utf-8" />` giúp hiện đúng dấu tiếng Việt và ký tự đặc biệt.
-- `<title>` là chữ trên tab trình duyệt và khi đánh dấu trang.
-- Mọi thứ người học nhìn trên trang thường nằm trong `<body>`.
+`lang` giúp các công cụ hiểu ngôn ngữ; UTF-8 biểu diễn văn bản hiện đại an toàn; `title` nhận diện tài liệu bên ngoài phần body.
+
+## Tìm lỗi
+
+```html
+<body>
+  <meta charset="utf-8">
+  <title>Ghi chú khu vườn</title>
+  <h1>Cà chua</h1>
+</body>
+```
+
+Metadata đang nằm trong vùng nội dung. Chuyển metadata của tài liệu vào `head`; chỉ giữ nội dung người dùng đọc hoặc tương tác trong body.
 
 ## Lỗi thường gặp
 
-- Đặt đoạn văn hoặc ảnh trong `<head>` — head dành cho metadata; nội dung nhìn thấy thuộc `body`.
-- Quên `charset` rồi thấy tiếng Việt bị “lỗi font” / ký tự lạ.
-- Bỏ `lang` hoặc để sai ngôn ngữ — không làm trang “sập”, nhưng kém hỗ trợ tiếp cận và dịch thuật.
+- Xem `<title>` và `<h1>` như hai cách viết tương đương.
+- Bỏ qua ngôn ngữ của trang dù đã biết rõ.
+- Đặt metadata vào body chỉ vì preview nhìn vẫn có vẻ ổn.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để hoàn thiện khung tài liệu HTML tối thiểu. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Tạo bộ khung tài liệu tối thiểu hoàn chỉnh. Checker giờ kiểm tra cả doctype, language, UTF-8, title, head và body chứ không chỉ đếm container.
+
+## Tự kiểm tra
+
+Khai báo character encoding nên nằm ở đâu?
+
+**Đáp án:** trong `head`, bằng meta charset như `<meta charset="utf-8">`.

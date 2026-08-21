@@ -3,19 +3,21 @@ id: pg-06-date
 track: postgresql
 locale: vi
 slug: date-basics
-title: Lọc theo ngày
+title: DATE, TIMESTAMP và ý nghĩa múi giờ
 order: 6
 published: true
+can_do: "Lọc DATE PostgreSQL bằng literal ISO có kiểu và chọn DATE hay timestamp dựa trên intent domain"
 objectives:
-  - So sánh cột DATE trong WHERE
-  - Viết literal ngày với DATE '…'
+  - So sánh DATE bằng typed ISO date literal
+  - Phân biệt ngày lịch với giá trị timestamp
+  - Nhận ra khi semantics múi giờ có ý nghĩa
 exercise:
   starter: "SELECT title, released FROM movies;"
   hints:
-    - "So sánh released với literal ngày, không chỉ một chuỗi trần."
-    - "Dùng >= để giữ các ngày phát hành từ ngày đó trở đi."
-    - "Thử: SELECT title FROM movies WHERE released >= DATE '2010-01-01';"
-  solution: "SELECT title FROM movies WHERE released >= DATE '2010-01-01';"
+    - "Cột lưu ngày lịch nên hãy so với DATE literal có kiểu."
+    - "On or after cần >= và ngày ISO 2010-01-01."
+    - "Dùng: SELECT title FROM movies WHERE released >= DATE '2010-01-01' ORDER BY released, title;"
+  solution: "SELECT title FROM movies WHERE released >= DATE '2010-01-01' ORDER BY released, title;"
   preview:
     columns: ["id", "title", "released"]
     rows:
@@ -27,49 +29,71 @@ exercise:
     columns: ["title"]
     rows:
       - ["Inception"]
-      - ["Dune"]
       - ["Arrival"]
+      - ["Dune"]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INTEGER, title TEXT, released DATE);"
     - "INSERT INTO movies VALUES (1, 'The Matrix', DATE '1999-03-31'), (2, 'Inception', DATE '2010-07-16'), (3, 'Dune', DATE '2021-10-22'), (4, 'Arrival', DATE '2016-11-11');"
 ---
 
-Lịch phát hành lưu ngày trên lịch. Trong PostgreSQL, cột `DATE` giữ giá trị năm-tháng-ngày. Bạn lọc bằng so sánh, dùng literal như `DATE '2010-01-01'`.
+Dữ liệu thời gian dễ mô hình hóa sai vì “một ngày” và “một thời điểm chính xác” là hai concept domain khác nhau.
 
-| id | title | released |
-| --- | --- | --- |
-| 1 | The Matrix | 1999-03-31 |
-| 2 | Inception | 2010-07-16 |
-| 3 | Dune | 2021-10-22 |
-| 4 | Arrival | 2016-11-11 |
+## Mô hình tư duy
+
+Chọn từ intent trước:
+
+| kiểu | mô hình hóa |
+| --- | --- |
+| `DATE` | ngày lịch, không có giờ |
+| `TIMESTAMP WITHOUT TIME ZONE` | ngày + giờ local, không có semantics chuyển múi giờ |
+| `TIMESTAMP WITH TIME ZONE` (`timestamptz`) | một instant, cách hiển thị phụ thuộc time zone session |
+
+`released` của bài là ngày phát hành theo lịch nên `DATE` phù hợp.
+
+Ưu tiên ISO `YYYY-MM-DD` ở tài liệu và boundary ứng dụng vì rõ ràng, ít mơ hồ.
+
+## Dự đoán trước khi chạy
+
+Với `released >= DATE '2010-01-01'`, The Matrix bị loại. Khi sắp theo ngày phát hành, kết quả là Inception, Arrival, Dune.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title FROM movies WHERE released >= DATE '2010-01-01';
+SELECT title
+FROM movies
+WHERE released >= DATE '2010-01-01'
+ORDER BY released, title;
 ```
-
-- `released` là cột `DATE`.
-- `DATE '2010-01-01'` là literal ngày có kiểu (thứ tự ISO: năm-tháng-ngày).
-- `>=` giữ phim phát hành đúng ngày đó hoặc sau — The Matrix (1999) bị loại.
-
-Kết quả:
 
 | title |
 | --- |
 | Inception |
-| Dune |
 | Arrival |
+| Dune |
 
-`TIMESTAMP` lưu ngày **và** giờ; với lọc theo ngày, `DATE` là đủ.
+## Tìm lỗi
+
+Một event toàn cầu như “payment được nhận tại thời điểm chính xác” lại lưu bằng `DATE`. SQL có thể vẫn chạy nhưng model đã làm mất giờ và ý nghĩa instant/time-zone.
+
+```sql
+CREATE TABLE payments (received_on DATE);
+```
+
+Với semantics instant, timestamp type—thường là `timestamptz` trong application system—là điểm bắt đầu phù hợp hơn.
 
 ## Lỗi thường gặp
 
-- Viết ngày dạng `01/01/2010` — nên dùng ISO `YYYY-MM-DD`.
-- So sánh ngày như chữ thuần không rõ kiểu ngày.
-- Dùng `>` khi bài nói “từ ngày đó trở đi” (`>=`).
+- Dùng date string theo locale như `01/02/2026` ở system boundary.
+- Nghĩ `timestamp without time zone` sẽ giữ source time-zone offset.
+- Dùng timestamp cho domain thực sự chỉ cần ngày lịch hoặc dùng DATE khi instant mới là thứ quan trọng.
 
 ## Thử ngay
 
-Trả về `title` của mọi phim phát hành từ `2010-01-01` trở đi.
+Trả các title phát hành từ `2010-01-01` trở đi, sắp theo ngày phát hành rồi title.
+
+## Tự kiểm tra
+
+Kiểu nào phù hợp nhất cho ngày sinh khi không quan tâm giờ trong ngày?
+
+**Đáp án:** `DATE`.

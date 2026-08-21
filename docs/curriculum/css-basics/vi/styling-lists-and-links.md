@@ -3,83 +3,87 @@ id: css-11-lists-links
 track: css-basics
 locale: vi
 slug: styling-lists-and-links
-title: Style danh sách và liên kết
+title: Style navigation mà không mất semantics
 order: 11
 published: true
+can_do: "Restyle navigation bằng list/link semantic trong khi vẫn giữ focus behavior dễ nhận biết và tách list presentation khỏi link presentation"
 objectives:
-  - Đổi ký hiệu danh sách bằng list-style-type và list-style
-  - Style liên kết trong và ngoài danh sách bằng class và pseudo-class
-  - Bỏ gạch chân mặc định một cách có chủ đích
+  - Bỏ list marker mà không thay đổi list semantics
+  - Style link qua descendant selector
+  - Giữ focus indicator rõ ràng
 exercise:
   mode: both
   starterHtml: |
-    <ul class="menu"><li><a href="#">Home</a></li></ul>
+    <ul class="menu"><li><a href="/home">Home</a></li><li><a href="/docs">Docs</a></li></ul>
   starter: |
-    /* Remove bullets and link underline */
-    
+    /* TODO: bỏ marker, bỏ underline bình thường và thêm focus outline */
   hints:
-    - "list-style: none bỏ dấu đầu dòng."
-    - Chọn liên kết bằng .menu a.
-    - "text-decoration: none bỏ gạch chân."
+    - Style list container và anchor bằng selector riêng.
+    - Dùng list-style: none trên .menu và text-decoration: none trên .menu a.
+    - Thêm .menu a:focus { outline: 2px solid blue; } để keyboard focus vẫn nhìn thấy.
   solution: |
     .menu { list-style: none; }
     .menu a { text-decoration: none; }
+    .menu a:focus { outline: 2px solid blue; }
   expected:
-    type: cssIncludes
-    needles:
-      - list-style
-      - text-decoration
+    type: cssRules
+    rules:
+      - selector: .menu
+        declarations:
+          list-style: none
+      - selector: .menu a
+        declarations:
+          text-decoration: none
+      - selector: .menu a:focus
+        declarations:
+          outline: 2px solid blue
 ---
 
-Danh sách (`ul` / `ol`) và liên kết (`a`) có kiểu mặc định của trình duyệt: dấu đầu dòng, số thứ tự, chữ xanh gạch chân. CSS chỉnh các mặc định đó cho khớp giao diện — vẫn giữ HTML đúng nghĩa.
+CSS có thể đổi rất mạnh appearance của navigation mà không cần vứt bỏ list/link semantics bên dưới.
 
-| Property / selector | Vai trò đơn giản |
-| --- | --- |
-| `list-style-type` | Kiểu dấu: `disc`, `circle`, `square`, `decimal`, `none`… |
-| `list-style` | Viết tắt cho kiểu danh sách |
-| `a` / `a:hover` | Style liên kết và trạng thái hover |
-| `text-decoration` | Gạch chân (`underline`) hoặc `none` |
+## Mô hình tư duy
+
+```text
+HTML semantics giữ nguyên: ul -> li -> a
+CSS presentation thay đổi: marker, decoration, interaction state
+```
+
+Giữ styling responsibility trên selector match đúng box hoặc state liên quan.
+
+## Dự đoán kết quả hiển thị
+
+Bỏ `list-style` làm bullet biến mất nhưng HTML vẫn là list. Bỏ underline thông thường thay visual treatment của link, nên hover/focus rõ ràng càng quan trọng.
 
 ## Ví dụ mẫu
 
-```html
-<nav>
-  <ul class="menu">
-    <li><a href="/sql">SQL</a></li>
-    <li><a href="/css">CSS</a></li>
-  </ul>
-</nav>
+```css
+.menu { list-style: none; }
+.menu a { text-decoration: none; }
+.menu a:focus { outline: 2px solid blue; }
 ```
+
+Presentation không phải lý do để thay semantic link bằng element không phải link.
+
+## Tìm lỗi
 
 ```css
-.menu {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.menu a {
-  color: #0f766e;
-  text-decoration: none;
-}
-
-.menu a:hover,
-.menu a:focus {
-  text-decoration: underline;
-}
+.menu { text-decoration: none; }
 ```
 
-- `list-style-type: none` gỡ dấu đầu dòng của menu điều hướng.
-- `padding-left: 0` bỏ thụt mặc định của danh sách.
-- Liên kết màu teal, không gạch chân lúc bình thường; gạch chân khi `:hover` hoặc `:focus` để vẫn thấy là liên kết khi tương tác.
-
-Menu điều hướng thường bỏ dấu đầu dòng; danh sách nội dung bài học có thể giữ `disc` / `decimal`.
+Trong task này `text-decoration` cần áp dụng lên anchor. Chỉ style list container không mô tả đúng intended link rule; hãy target `.menu a` rõ ràng.
 
 ## Lỗi thường gặp
 
-- `list-style: none` nhưng quên chỉnh `padding` — danh sách vẫn thụt vào như mặc định trình duyệt.
-- Bỏ hết `text-decoration` và không có dấu hiệu khác (màu, weight) — người học khó nhận ra đâu là liên kết.
-- Style mọi `a` trên trang quá mạnh — giới hạn bằng class (`.menu a`) khi chỉ muốn đổi một vùng.
+- Xóa mọi visual cue của link mà không thêm interaction state hữu ích.
+- Thay list/link markup bằng generic div chỉ để style navigation.
+- Áp declaration lên sai box trong structure.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để style danh sách menu và liên kết. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Restyle semantic navigation và giữ focus state nhìn thấy được.
+
+## Tự kiểm tra
+
+`list-style: none` có biến `ul` thành HTML không còn là list không?
+
+**Đáp án:** không. Nó đổi presentation chứ không đổi document semantics.

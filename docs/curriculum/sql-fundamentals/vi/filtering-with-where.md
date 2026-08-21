@@ -6,15 +6,17 @@ slug: filtering-with-where
 title: Lọc với WHERE
 order: 4
 published: true
+can_do: "Lọc các hàng nguồn bằng điều kiện WHERE và dự đoán hàng nào được giữ lại"
 objectives:
-  - Giữ lại các dòng thỏa điều kiện
-  - So sánh cột số
+  - Tách việc chọn cột khỏi việc lọc hàng
+  - Đánh giá phép so sánh số trên từng hàng
+  - Dùng WHERE để chỉ giữ hàng thỏa điều kiện
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "Thêm WHERE sau tên bảng để giữ một số dòng và bỏ các dòng khác."
-    - "So sánh cột year, ví dụ year > 2000."
-    - "Thử: SELECT title FROM movies WHERE year > 2000 ORDER BY title;"
+    - "Đề đang hỏi hàng nào được giữ, vì vậy hãy thêm điều kiện WHERE sau FROM movies."
+    - "So sánh cột year với 2000 bằng toán tử >."
+    - "Dùng: SELECT title FROM movies WHERE year > 2000 ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year > 2000 ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -35,9 +37,19 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-`SELECT` chọn **cột**. `WHERE` chọn **hàng** — giống bộ lọc Excel: “chỉ phim sau năm 2000”.
+Một truy vấn hữu ích thường cần ít hàng hơn, không chỉ ít cột hơn. `WHERE` biến điều kiện thành quyết định đúng/sai cho từng hàng nguồn.
 
-**movies** (bảng đầy đủ)
+## Mô hình tư duy
+
+Tách trách nhiệm của các clause:
+
+| Clause | Công việc chính |
+| --- | --- |
+| `SELECT` | Quyết định các cột kết quả |
+| `FROM` | Chỉ ra bảng nguồn |
+| `WHERE` | Quyết định hàng nguồn nào được giữ |
+
+**movies**
 
 | id | title | year | director |
 | --- | --- | --- | --- |
@@ -46,7 +58,24 @@ sandbox_seed:
 | 3 | Dune | 2021 | Villeneuve |
 | 4 | Interstellar | 2014 | Nolan |
 
-Ba phim sau năm 2000; The Matrix (1999) thì không.
+Với `WHERE year > 2000`, hãy tưởng tượng kiểm tra từng hàng:
+
+| title | `year > 2000` | Giữ? |
+| --- | --- | --- |
+| Inception | true | có |
+| The Matrix | false | không |
+| Dune | true | có |
+| Interstellar | true | có |
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT title
+FROM movies
+WHERE year > 2000;
+```
+
+Trước khi chạy, hãy tự nêu tên ba phim được giữ. Đồng thời dự đoán hình dạng: **1 cột, 3 hàng**.
 
 ## Ví dụ mẫu
 
@@ -57,11 +86,6 @@ WHERE year > 2000
 ORDER BY title;
 ```
 
-- Mỗi dòng được kiểm tra `year > 2000`.
-- Inception (2010), Dune (2021) và Interstellar (2014) được giữ.
-- The Matrix (1999) bị loại.
-- `ORDER BY title` sắp tiêu đề còn lại A→Z để kết quả ổn định.
-
 Kết quả:
 
 | title |
@@ -70,12 +94,32 @@ Kết quả:
 | Inception |
 | Interstellar |
 
+Phép so sánh không thay đổi giá trị `year` được lưu. Nó chỉ quyết định hàng nào tham gia kết quả hiện tại.
+
+## Tìm lỗi
+
+Đề nói “phim phát hành sau năm 2000”, nhưng có người viết:
+
+```sql
+SELECT title
+FROM movies
+WHERE year = 2000;
+```
+
+`=` nghĩa là bằng chính xác. Nó không khớp 2010, 2014 hoặc 2021. Hãy dịch yêu cầu trước: “sau 2000” nghĩa là `year > 2000`.
+
 ## Lỗi thường gặp
 
-- Dùng `=` khi đề bài nói “sau” hoặc “lớn hơn” — ở đây cần `>`, không phải `=`.
-- Đặt `WHERE` trước `FROM` — thứ tự đúng là `SELECT … FROM … WHERE …`.
-- Lọc nhầm cột (ví dụ `id > 2000`) trong khi điều kiện là về `year`.
+- Chọn đúng cột nhưng quên điều kiện lọc hàng.
+- Dùng `=` khi yêu cầu thực tế là `>`, `<`, `>=` hoặc `<=`.
+- Đặt `WHERE` trước `FROM`; thứ tự clause là `SELECT ... FROM ... WHERE ...`.
 
 ## Thử ngay
 
-Liệt kê `title` các phim phát hành **sau** năm 2000. Sắp theo `title`.
+Chỉ trả về `title` của các phim phát hành sau năm 2000, sắp theo `title`. Trước khi chạy, hãy xác định hàng nào sẽ bị loại.
+
+## Tự kiểm tra
+
+Nếu `SELECT` thay đổi cột nào xuất hiện, clause nào thay đổi hàng nào được giữ?
+
+**Đáp án:** `WHERE`.

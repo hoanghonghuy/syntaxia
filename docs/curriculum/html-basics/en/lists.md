@@ -6,23 +6,23 @@ slug: lists
 title: Lists
 order: 4
 published: true
+can_do: "Choose unordered, ordered, or description-list structure from the relationship between items and keep list items nested correctly"
 objectives:
-  - Build unordered and ordered lists
-  - Place each item in an li
-  - Recognize a simple description list
+  - Choose list type from whether order has meaning
+  - Keep li elements as children of ul or ol
+  - Recognize term-description structure with dl, dt, and dd
 exercise:
   mode: html
   starter: |
-    <!-- Build an unordered list with two items -->
-    
+    <!-- TODO: build an unordered list with at least two items -->
   hints:
-    - Start with a ul opening tag.
-    - Each item needs an li element.
-    - Add at least two li items.
+    - Use ul because these practice items do not need a sequence number.
+    - Each list item must be inside an li element.
+    - Build <ul> with at least two <li>...</li> children.
   solution: |
     <ul>
-      <li>One</li>
-      <li>Two</li>
+      <li>Water</li>
+      <li>Flour</li>
     </ul>
   expected:
     type: htmlTags
@@ -33,15 +33,21 @@ exercise:
         minCount: 2
 ---
 
-Lists turn a pile of related items into a clear sequence or bullet set. HTML has **unordered lists** (bullets), **ordered lists** (numbers), and **description lists** (term + definition pairs). Choosing the right list tells readers — and assistive tools — how the items relate.
+A list communicates a relationship between several items. The important decision is whether **sequence matters**, not whether you prefer bullets or numbers visually.
 
-A shopping list does not need numbers. A recipe’s steps do. A glossary needs a term beside its meaning.
+## Mental model
 
-| List type | Elements | Best for |
-| --- | --- | --- |
-| Unordered | `ul` > `li` | Items with no required order |
-| Ordered | `ol` > `li` | Steps or rankings |
-| Description | `dl` > `dt` + `dd` | Terms and definitions |
+```text
+unordered: ul -> li, li, li
+ordered:   ol -> li, li, li
+description: dl -> dt + dd, dt + dd
+```
+
+`ul` and `ol` are containers; their actual items are `li` elements.
+
+## Predict the rendered structure
+
+A recipe sequence should remain meaningful if someone reads “step 1, step 2, step 3”. A shopping set usually does not. Predict which should use `ol` and which should use `ul` before writing markup.
 
 ## Worked example
 
@@ -49,33 +55,44 @@ A shopping list does not need numbers. A recipe’s steps do. A glossary needs a
 <ul>
   <li>Water</li>
   <li>Flour</li>
-  <li>Salt</li>
 </ul>
 
 <ol>
   <li>Mix the dough.</li>
   <li>Rest for 30 minutes.</li>
-  <li>Bake until golden.</li>
 </ol>
 
 <dl>
   <dt>HTML</dt>
-  <dd>Markup that structures a web page.</dd>
+  <dd>Markup for document structure.</dd>
 </dl>
 ```
 
-- `ul` / `ol` wrap the whole list; each item is an `li`.
-- Order in the file becomes the bullet or number order on the page.
-- `dt` is the term; `dd` is the description that follows it.
+The element choice preserves the relationship even if CSS later changes markers.
 
-Never put bare text as a direct child of `ul` or `ol` — always use `li`.
+## Debug this
+
+```html
+<ul>
+  Water
+  <li>Flour</li>
+</ul>
+```
+
+`Water` is bare text instead of a list item. Make every item an `li`; a nested list should likewise live inside an `li`, not beside one.
 
 ## Common mistakes
 
-- Using numbered paragraphs instead of `ol` when order matters — ordered lists expose the sequence to assistive tech.
-- Forgetting `li` and writing only text inside `ul` — invalid structure and unpredictable display.
-- Nesting lists incorrectly — put a nested `ul`/`ol` *inside* an `li`, not beside it.
+- Using `ol` only because you like numbers, even when order has no meaning.
+- Putting bare item text directly under `ul` or `ol`.
+- Creating visual bullet characters manually instead of real list structure.
 
 ## Your turn
 
-Use the sandbox below to build an unordered list with two items. When the checker shows **Correct**, mark this lesson complete.
+Build an unordered list with at least two list items and inspect the resulting list structure in the preview.
+
+## Quick check
+
+When should a list be ordered?
+
+**Answer:** when the position/sequence of its items is meaningful, such as steps or rankings.

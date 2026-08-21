@@ -3,60 +3,86 @@ id: html-03-emphasis
 track: html-basics
 locale: vi
 slug: emphasis-and-importance
-title: Nhấn mạnh và tầm quan trọng
+title: Nhấn mạnh và mức độ quan trọng
 order: 3
 published: true
+can_do: "Chọn em cho trọng âm theo ngữ cảnh và strong cho nội dung quan trọng thay vì chọn phần tử chỉ vì kiểu nghiêng hoặc đậm"
 objectives:
-  - Phân biệt em (nhấn mạnh) và strong (tầm quan trọng)
-  - Giải thích vì sao không dùng b/i chỉ để “làm đẹp”
-  - Đặt đúng chỗ em/strong trong một câu
+  - Phân biệt emphasis theo ngữ cảnh với strong importance
+  - Giữ text-level semantics bên trong nội dung văn bản bình thường
+  - Không dùng emphasis element thay cho heading cấu trúc
 exercise:
   mode: html
   starter: |
-    <!-- Wrap words with em and strong inside a paragraph -->
-    
+    <!-- TODO: tạo một paragraph có một cụm em và một cụm strong -->
   hints:
-    - Bọc một từ bằng em để nhấn giọng.
-    - Bọc từ khác bằng strong để đánh dấu quan trọng.
-    - Giữ cả hai trong một phần tử p.
+    - Dùng em cho từ mà cách nhấn làm thay đổi cách hiểu câu.
+    - Dùng strong cho thông tin đặc biệt quan trọng hoặc khẩn cấp.
+    - Đặt cả hai phần tử bên trong một p.
   solution: |
-    <p><em>quietly</em> and <strong>important</strong></p>
+    <p>Submit <em>before</em> midnight. <strong>Do not miss the deadline.</strong></p>
   expected:
     type: htmlTags
     tags:
+      - tag: p
+        minCount: 1
       - tag: em
         minCount: 1
       - tag: strong
         minCount: 1
 ---
 
-Trong văn bản, đôi khi bạn *nhấn giọng* một từ, đôi khi bạn muốn nói từ đó **quan trọng**. HTML có thẻ riêng cho hai ý này: `em` và `strong`.
+Ngữ nghĩa của text có thể thay đổi mà không thay đổi outline tài liệu. `em` diễn tả trọng âm theo ngữ cảnh; `strong` diễn tả mức độ quan trọng cao. Kiểu nghiêng/đậm mặc định chỉ là presentation.
 
-Trình duyệt thường hiện `em` nghiêng và `strong` đậm — nhưng ý nghĩa ngữ nghĩa mới là điểm chính, không chỉ kiểu chữ.
+## Mô hình tư duy
 
-| Thẻ | Ý nghĩa | Hiện thường thấy |
-| --- | --- | --- |
-| `em` | Nhấn mạnh / đổi trọng tâm câu | Nghiêng |
-| `strong` | Tầm quan trọng, cảnh báo, chú ý mạnh | Đậm |
-| `i` / `b` | Chủ yếu về hình thức (ít dùng khi mới học) | Nghiêng / đậm |
+Hãy hỏi ý định của người viết:
+
+| Ý định | Phần tử |
+| --- | --- |
+| nhấn một từ để câu được hiểu/đọc khác đi | `em` |
+| đánh dấu thông tin đặc biệt quan trọng hoặc khẩn cấp | `strong` |
+| tạo tiêu đề cho section | heading (`h1`–`h6`) |
+| chỉ muốn chữ nghiêng/đậm về mặt hình thức | thường nên dùng CSS |
+
+## Dự đoán cấu trúc khi render
+
+```html
+<p>Tôi nói <em>hôm nay</em>, không phải ngày mai.</p>
+<p><strong>Cảnh báo:</strong> hãy lưu công việc.</p>
+```
+
+Hãy dự đoán cả ý nghĩa lẫn hình thức mặc định: `hôm nay` được nhấn trọng âm; `Cảnh báo:` mang mức độ quan trọng. Trình duyệt thường hiển thị tương ứng bằng chữ nghiêng và đậm.
 
 ## Ví dụ mẫu
 
 ```html
-<p>Hãy nộp bài <em>trước thứ Sáu</em>.</p>
-<p><strong>Cảnh báo:</strong> không chia sẻ mật khẩu.</p>
+<p>Gửi biểu mẫu <em>trước</em> nửa đêm.</p>
+<p><strong>Cảnh báo:</strong> thay đổi chưa lưu sẽ bị mất.</p>
 ```
 
-- Trong câu đầu, `em` nhấn phần thời hạn — trọng tâm câu nằm ở “trước thứ Sáu”.
-- Trong câu sau, `strong` đánh dấu cảnh báo quan trọng.
-- Có thể lồng thẻ chữ trong `p`, miễn cấu trúc vẫn rõ.
+Screen reader hoặc công cụ khác vẫn có thể khai thác phần tử ngữ nghĩa ngay cả khi CSS thay đổi hình thức sau này.
+
+## Tìm lỗi
+
+```html
+<p><b>Cảnh báo:</b> thay đổi chưa lưu sẽ bị mất.</p>
+```
+
+`b` có thể thu hút sự chú ý nhưng không biểu đạt strong importance. Nếu thông tin thực sự quan trọng, `strong` truyền đạt đúng ý nghĩa hơn.
 
 ## Lỗi thường gặp
 
-- Bọc cả đoạn dài trong `strong` chỉ để chữ đậm — mất ý “quan trọng”; nên tô đúng vài từ/cụm cần nhấn.
-- Dùng `b`/`i` thay `strong`/`em` khi đang học ý nghĩa — với người mới, ưu tiên `em` và `strong`.
-- Nhầm `em` với “chữ nghiêng trang trí” — nếu chỉ muốn kiểu chữ, sau này dùng CSS.
+- Bọc một khối lớn bằng `strong` chỉ để có chữ đậm.
+- Dùng `em` thay cho heading.
+- Nghĩ kiểu nghiêng/đậm mặc định chính là định nghĩa ngữ nghĩa của phần tử.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để đánh dấu nhấn mạnh và tầm quan trọng bằng em và strong. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Tạo một paragraph có cả emphasis theo ngữ cảnh và strong importance.
+
+## Tự kiểm tra
+
+Nếu CSS bỏ kiểu chữ đậm của `strong`, ý nghĩa quan trọng có biến mất không?
+
+**Đáp án:** không. Phần tử vẫn mang ngữ nghĩa strong importance.

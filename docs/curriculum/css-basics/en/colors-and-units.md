@@ -3,79 +3,84 @@ id: css-07-units
 track: css-basics
 locale: en
 slug: colors-and-units
-title: Colors and units
+title: Colors and relative units
 order: 7
 published: true
+can_do: "Choose a color representation and a relative length unit, then predict how rem-based text sizing responds to the root font size"
 objectives:
-  - Write colors with keywords, hex, and rgb
-  - Choose among px, em, rem, and percentages
-  - Prefer rem for scalable text sizing
+  - Recognize common color syntaxes
+  - Distinguish fixed and relative length units
+  - Use rem for scalable text sizing
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <p class="note">Readable note</p>
   starter: |
-    /* Set color and font-size on .note */
-    
+    /* TODO: make .note #0b57d0 and 1.25rem */
   hints:
-    - font-size accepts rem values like 1.25rem.
-    - color can be a named color or hex.
-    - Both go inside one .note rule.
+    - Put both declarations on the .note selector.
+    - Use color for the hex color and font-size for text size.
+    - Use .note { color: #0b57d0; font-size: 1.25rem; }.
   solution: |
-    .note { color: teal; font-size: 1.25rem; }
+    .note { color: #0b57d0; font-size: 1.25rem; }
   expected:
-    type: cssIncludes
-    needles:
-      - rem
-      - color
+    type: cssRules
+    rules:
+      - selector: .note
+        declarations:
+          color: "#0b57d0"
+          font-size: 1.25rem
 ---
 
-CSS values need both a **color** language and a set of **units** for length. Colors can be named keywords, hex codes, or `rgb()` functions. Lengths may be absolute (`px`) or relative (`em`, `rem`, `%`) so layouts can adapt.
+CSS values are not just numbers. Their **type and reference point** determine how the browser resolves them.
 
-Think of paint swatches and measuring tape. A keyword like `teal` is a named swatch. A hex code is a precise recipe for that swatch. Relative units are like “half the parent’s width” or “based on the root text size,” not a fixed number of millimeters.
+## Mental model
 
-| Kind | Examples | Beginner tip |
-| --- | --- | --- |
-| Color keyword | `teal`, `black`, `transparent` | Fine for learning; limited palette |
-| Hex | `#0b57d0`, `#333` | Common in real stylesheets |
-| `rgb()` / `rgba()` | `rgb(11, 87, 208)` | Same idea as hex, different spelling |
-| `px` | `16px` | Absolute on the screen; easy but less flexible for text |
-| `em` | `1.25em` | Relative to the element’s own font size |
-| `rem` | `1rem` | Relative to the root (`html`) font size — good default for type |
-| `%` | `50%` | Relative to a parent measurement (often width) |
+| Value | Reference |
+| --- | --- |
+| `16px` | CSS pixel length |
+| `1em` | current element's font size |
+| `1rem` | root element's font size |
+| `50%` | percentage basis depends on the property |
+| `#0b57d0`, `rgb(...)`, color keyword | color value |
+
+Relative units encode a relationship instead of a single fixed measurement.
+
+## Predict the rendered result
+
+If the root font size is `16px`, `1.25rem` resolves to `20px`. If a user's environment makes the root larger, the rem-sized text scales with it.
 
 ## Worked example
 
 ```css
-body {
-  color: #222222;
-  font-size: 1rem;
-  background-color: rgb(250, 250, 248);
-}
-
-.lead {
+.note {
+  color: #0b57d0;
   font-size: 1.25rem;
-  color: teal;
-}
-
-.sidebar {
-  width: 30%;
-  padding: 1em;
 }
 ```
 
-- `#222222` and `rgb(250, 250, 248)` set text and page background with precise colors; `teal` is a keyword on `.lead`.
-- `1rem` on `body` ties the base size to the root. `.lead` at `1.25rem` scales with that root, not with every nested parent.
-- `30%` width makes the sidebar a fraction of its parent. `1em` padding on `.sidebar` scales with that element’s font size.
+Use units because of what they are relative to, not because one syntax is universally “responsive”. Percentages, `em`, and `rem` can resolve against different bases.
 
-When sizing text, prefer `rem` so nested elements do not multiply sizes accidentally the way chained `em` values can.
+## Debug this
+
+```css
+.note { font-size: 1.25; }
+```
+
+Most length properties require a unit for non-zero lengths. The number alone does not mean `rem` or `px` automatically.
 
 ## Common mistakes
 
-- Mixing up `#fff` (white) with invalid shorthand — hex needs 3 or 6 hex digits (or newer forms you will meet later); random lengths fail silently.
-- Nesting many `em` font sizes — each level multiplies the last, and text can become huge or tiny.
-- Using `%` height without a parent that has a defined height — the percentage may resolve to nothing useful.
+- Treating every percentage as relative to the same thing.
+- Removing units from non-zero lengths.
+- Choosing tiny fixed text sizes that do not respect scalable typography.
 
 ## Your turn
 
-Use the sandbox below to set color and font-size with rem. When the checker shows **Correct**, mark this lesson complete.
+Apply the exact color and rem-based size to `.note`, then predict the resolved size before previewing.
+
+## Quick check
+
+What is `rem` relative to?
+
+**Answer:** the root element's font size.

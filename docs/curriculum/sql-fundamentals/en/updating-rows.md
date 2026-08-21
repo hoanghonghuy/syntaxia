@@ -6,15 +6,17 @@ slug: updating-rows
 title: Changing rows with UPDATE
 order: 10
 published: true
+can_do: "Update only intended rows by combining SET with a precise WHERE predicate and verify the after-state"
 objectives:
-  - Change existing values with UPDATE
-  - Always target rows with WHERE
+  - Distinguish the new value in SET from the target rows in WHERE
+  - Predict the blast radius of an UPDATE before running it
+  - Verify the table after an UPDATE
 exercise:
   starter: "SELECT id, title, year FROM movies ORDER BY id;"
   hints:
-    - "UPDATE ... SET column = value WHERE condition."
-    - "Always include WHERE so you change only the intended row."
-    - "Try: UPDATE movies SET year = 2014 WHERE title = 'Interstellar';"
+    - "The row already exists, so use UPDATE rather than INSERT."
+    - "SET defines the new year; WHERE must identify only the Interstellar row."
+    - "Use: UPDATE movies SET year = 2014 WHERE title = 'Interstellar';"
   solution: "UPDATE movies SET year = 2014 WHERE title = 'Interstellar';"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -36,9 +38,18 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'Interstellar', 2010, 'Nolan'), (3, 'The Matrix', 1999, 'Wachowski');"
 ---
 
-`UPDATE` edits cells that already exist. Always use `WHERE` — without it you would change **every** row.
+`UPDATE` changes values in rows that already exist. The dangerous part is not usually `SET`; it is choosing the wrong set of rows to update.
 
-**movies** — before the fix (Interstellar year is wrong: 2010)
+## Mental model
+
+An UPDATE has two independent questions:
+
+| Question | Clause |
+| --- | --- |
+| What new value should be written? | `SET` |
+| Which existing rows are allowed to change? | `WHERE` |
+
+**Before**
 
 | id | title | year | director |
 | --- | --- | --- | --- |
@@ -46,7 +57,21 @@ sandbox_seed:
 | 2 | Interstellar | 2010 | Nolan |
 | 3 | The Matrix | 1999 | Wachowski |
 
-Interstellar should be **2014**. Only that one cell should change.
+Only Interstellar is wrong. The intended state change is one cell: its year becomes 2014.
+
+## Predict before you run
+
+Compare these statements:
+
+```sql
+UPDATE movies SET year = 2014;
+```
+
+```sql
+UPDATE movies SET year = 2014 WHERE title = 'Interstellar';
+```
+
+The first matches **every row**, so all three years would become 2014. The second should match exactly one row. Before an UPDATE, always predict the number of rows that the predicate is supposed to affect.
 
 ## Worked example
 
@@ -56,11 +81,7 @@ SET year = 2014
 WHERE title = 'Interstellar';
 ```
 
-- `SET year = 2014` is the new value.
-- `WHERE title = 'Interstellar'` limits the change to one row.
-- Inception stays at 2010; The Matrix stays at 1999; only Interstellar becomes 2014.
-
-**movies** — after the update (what the checker reads)
+**After**
 
 | id | title | year |
 | --- | --- | --- |
@@ -68,12 +89,32 @@ WHERE title = 'Interstellar';
 | 2 | Interstellar | 2014 |
 | 3 | The Matrix | 1999 |
 
+`SET` describes the change. `WHERE` defines its blast radius. The sandbox then runs a verification SELECT so the mutation is graded by resulting state rather than by matching your SQL text.
+
+## Debug this
+
+The intent is to fix Interstellar only:
+
+```sql
+UPDATE movies
+SET year = 2014
+WHERE director = 'Nolan';
+```
+
+This is valid SQL but wrong logic. Both Inception and Interstellar are directed by Nolan, so the predicate is too broad. A syntactically valid UPDATE can still damage the wrong rows.
+
 ## Common mistakes
 
-- Omitting `WHERE` — that updates every row’s `year` to 2014.
-- Matching the title with the wrong quotes or spelling (`Intersteller`).
-- Using `INSERT` instead of `UPDATE` when the row already exists.
+- Omitting `WHERE` and updating every row.
+- Choosing a predicate that matches more rows than intended.
+- Using INSERT when the target row already exists instead of changing that row with UPDATE.
 
 ## Your turn
 
-Set `year` to `2014` for the movie titled `Interstellar`.
+Set Interstellar's `year` to `2014`. Before pressing Run, inspect the table and confirm your WHERE condition should match exactly one row.
+
+## Quick check
+
+In an UPDATE, which clause controls the **new value**, and which clause controls the **affected rows**?
+
+**Answer:** `SET` controls the new value; `WHERE` controls which rows are affected.

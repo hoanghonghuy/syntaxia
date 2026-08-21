@@ -6,16 +6,17 @@ slug: case-expression
 title: Labeling rows with CASE
 order: 28
 published: true
+can_do: "Translate ordered conditions into a CASE expression that derives a value for each result row"
 objectives:
-  - Build a CASE expression that returns different labels
-  - Alias the result column for grading
-  - Use ELSE as the fallback branch
+  - Evaluate CASE conditions for each row
+  - Understand first-match and ELSE behavior
+  - Produce a derived result column without changing stored data
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "CASE WHEN … THEN … ELSE … END picks a label from a condition."
-    - "Movies before year 2000 are 'classic'; everything else is 'modern'."
-    - "Try: SELECT title, CASE WHEN year < 2000 THEN 'classic' ELSE 'modern' END AS era FROM movies ORDER BY title;"
+    - "The derived era value depends on year for each row."
+    - "Use WHEN year < 2000 THEN 'classic' and ELSE 'modern'."
+    - "Use: SELECT title, CASE WHEN year < 2000 THEN 'classic' ELSE 'modern' END AS era FROM movies ORDER BY title;"
   solution: "SELECT title, CASE WHEN year < 2000 THEN 'classic' ELSE 'modern' END AS era FROM movies ORDER BY title;"
   preview:
     columns: ["id", "title", "year"]
@@ -37,23 +38,32 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Interstellar', 2014), (4, 'Dune', 2021);"
 ---
 
-Spreadsheets often add a helper column with IF formulas. In SQL, `CASE` does the same job: look at a value and return a label. Here we tag each movie as `classic` or `modern` from its year.
+`CASE` derives a value from conditions while the query runs. It is closer to a spreadsheet `IF` column than to an `UPDATE`: the stored movie rows remain unchanged.
 
-**movies** (full table)
+## Mental model
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Interstellar | 2014 |
-| 4 | Dune | 2021 |
+For each input row, walk the `WHEN` branches from top to bottom. The **first true branch wins**; if none match, `ELSE` supplies the fallback.
 
-| title | year | `year < 2000`? | era |
-| --- | --- | --- | --- |
-| The Matrix | 1999 | yes | classic |
-| Inception | 2010 | no | modern |
-| Interstellar | 2014 | no | modern |
-| Dune | 2021 | no | modern |
+| title | year | `year < 2000` | derived `era` |
+| --- | ---: | --- | --- |
+| The Matrix | 1999 | true | classic |
+| Inception | 2010 | false | modern |
+| Interstellar | 2014 | false | modern |
+| Dune | 2021 | false | modern |
+
+The `era` column exists in the result only. It is not added to the `movies` table.
+
+## Predict before you run
+
+```sql
+SELECT title,
+       CASE WHEN year < 2000 THEN 'classic'
+            ELSE 'modern'
+       END AS era
+FROM movies;
+```
+
+Predict four output rows and two output columns. Only The Matrix should receive `classic`.
 
 ## Worked example
 
@@ -68,13 +78,6 @@ FROM movies
 ORDER BY title;
 ```
 
-- `WHEN year < 2000 THEN 'classic'` labels older films.
-- `ELSE 'modern'` covers every other year.
-- `AS era` names the new column so results are easy to read and grade.
-- `END` closes the `CASE` — without it, SQL raises an error.
-
-Result:
-
 | title | era |
 | --- | --- |
 | Dune | modern |
@@ -82,12 +85,33 @@ Result:
 | Interstellar | modern |
 | The Matrix | classic |
 
+`END` closes the expression; `AS era` names the derived output column.
+
+## Debug this
+
+A learner writes:
+
+```sql
+CASE
+  WHEN year >= 2000 THEN 'classic'
+  ELSE 'modern'
+END
+```
+
+The SQL is syntactically valid but the labels are logically reversed. Debug `CASE` by testing representative boundary rows against each condition, not just by checking whether the query runs.
+
 ## Common mistakes
 
-- Forgetting `END` after the `CASE` branches.
-- Omitting `AS era` when the expected column is named `era`.
-- Comparing years with text quotes (`'2000'`) when `year` is a number — keep types consistent.
+- Forgetting `END` or the alias expected by downstream code.
+- Reversing a comparison and producing valid but incorrect labels.
+- Assuming `CASE` changes stored values; it only derives a value for this query unless used inside a mutation statement.
 
 ## Your turn
 
-Return each movie `title` with an `era` label: `classic` when `year < 2000`, otherwise `modern`. Order by `title`.
+Return each movie title with an `era`: `classic` when `year < 2000`, otherwise `modern`. Order by title and verify the boundary around 2000 mentally first.
+
+## Quick check
+
+If multiple `WHEN` conditions are true, which result is used?
+
+**Answer:** the result from the first true `WHEN` branch.

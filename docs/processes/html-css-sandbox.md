@@ -2,120 +2,82 @@
 
 ## Purpose
 
-Locked architecture for **HTML and CSS exercises** on `html-basics` and `css-basics`: live preview in a sandboxed iframe, server-side grading of submitted markup/CSS (same secret model as SQL/JS), UX parity with `JsSandbox`.
+Locked architecture for HTML/CSS exercises on `html-basics` and `css-basics`: script-free live preview plus server-side structural grading. Learner code is never trusted to mark itself passed.
 
-Research date: **2026-07-16** (checklist row **#27**; Phase 5 of [`html-css-basics-tracks.md`](./html-css-basics-tracks.md)).
+## Runtime and security
 
-## When to use
+- Preview uses an iframe `srcdoc` assembled from learner HTML and CSS.
+- The iframe remains sandboxed with no `allow-scripts` and no `allow-same-origin`.
+- HTML and CSS use separate CodeMirror panes when `exercise.mode` is `html`, `css`, or `both`.
+- Grading runs on the API from submitted `{ html, css }` against server-side `exercise.expected`.
+- Public lesson JSON must not expose `expected` or `solution`.
+- Learner JavaScript is never executed in this sandbox.
 
-- Implementing `HtmlCssSandbox` (or equivalent)
-- Adding `exercise` blocks to HTML/CSS lessons
-- Adding `POST /api/v1/sandbox/htmlcss/grade`
-- Security review of learner HTML/CSS preview
+## Grading contracts
 
-## Locked decision (chốt)
+### `htmlTags` — structured HTML
 
-| Layer | Choice |
-|-------|--------|
-| **Preview** | `<iframe>` with **`srcdoc`** built from learner HTML + optional `<style>` from CSS pane. Debounce updates (~300ms). |
-| **iframe sandbox** | Attribute **`sandbox`** with **no** `allow-scripts` and **no** `allow-same-origin` (fully restricted preview). Styles in `<style>` still apply; scripts do not run. |
-| **Editors** | CodeMirror: HTML lang for markup pane; CSS lang for style pane. Lesson may show one or both panes via `exercise.mode`: `html` \| `css` \| `both`. |
-| **Grading** | **Server-side** on submitted `{ html, css }` strings vs `exercise.expected` from Postgres. Never trust client `passed`. |
-| **API** | Authed `POST /api/v1/sandbox/htmlcss/grade` → `{ passed, code?, message? }`. |
-| **Secrets** | Strip `expected` / `solution` from public lesson JSON; solution via existing `GET /lessons/:slug/solution`. |
-| **UX** | Hints, solution after 3 fails, guest soft gate, emit `passed` → progress sync ([`progress-sandbox-sync.md`](./progress-sandbox-sync.md)). |
-| **Curriculum** | `exercise.starter` (or `starterHtml` / `starterCss`), hints, solution, expected — **no** `sandbox_seed`. |
+The API parses tags with `golang.org/x/net/html`. A tag specification supports:
 
-### Expected shapes (v1)
+- `tag`
+- `minCount` and optional `maxCount`
+- `requiredAttrs`
+- `attrEquals`
+- optional top-level `sourceIncludes` for source-only requirements such as doctype
+- optional relations:
+  - `attributeReference` — e.g. `label.for` must reference an existing `input.id`
+  - `sharedAttributeValue` — e.g. at least two radio inputs must share one `name`
 
-| `expected.type` | Input used | Pass when |
-|-----------------|------------|-----------|
-| `htmlTags` | `html` | Each `{ tag, minCount }` appears at least `minCount` times (case-insensitive tag names; parsed with Go `golang.org/x/net/html` or equivalent already in module path — prefer stdlib/`x/net` if already depended) |
-| `cssIncludes` | `css` | Each string in `needles` appears in normalized CSS (whitespace-collapsed, case-sensitive for property text as authored in needles) |
-| `htmlIncludes` | `html` | Each needle appears in normalized HTML source (for attributes like `alt=`, `href=`) |
-
-Reject DOM snapshot grading that requires `allow-same-origin` + parent access. Reject executing learner JS in this sandbox.
-
-### Rejected options
-
-| Option | Why not |
-|--------|---------|
-| Reuse `JsSandbox` / Web Worker | Wrong runtime; JS worker has no DOM/CSS preview. |
-| Reuse SQL sandbox | Wrong runtime. |
-| `sandbox="allow-scripts allow-same-origin"` | MDN: combination lets embedded doc remove sandbox — XSS risk. |
-| Client-only grade with `expected` in bundle | Leaks answers (B1). |
-| Full visual pixel / screenshot compare | Fragile, ops-heavy; out of scope for basics. |
-| Server headless Chrome | Ops cost; deferred. |
-
-## Steps (implementation order)
-
-1. Persist this file + mark Phase 5 research **done** in [`html-css-basics-tracks.md`](./html-css-basics-tracks.md). — **done**
-2. **API** — `GradeHtmlCss` + `POST /api/v1/sandbox/htmlcss/grade` (TDD). — **done**
-3. **Web** — `HtmlCssSandbox.vue` + wire `[slug].vue` for `html-basics` / `css-basics` when `lesson.exercise` present. — **done**
-4. **Curriculum** — add exercises to all HTML/CSS lessons. — **done** (12 + 14 × en/vi)
-5. **Smoke** — `check-htmlcss-sandbox.ps1` + release-smoke step. — **done**
-6. Checklist row **#27** done. — **done** (2026-07-16)
-
-## Exercise frontmatter examples
-
-HTML tags:
+Example:
 
 ```yaml
-exercise:
-  mode: html
-  starter: |
-    <!-- Add a main heading -->
-  hints:
-    - "Use an h1 element for the page title."
-    - "Opening and closing tags wrap the text."
-  solution: |
-    <h1>Welcome</h1>
-  expected:
-    type: htmlTags
-    tags:
-      - tag: h1
-        minCount: 1
+expected:
+  type: htmlTags
+  tags:
+    - tag: input
+      requiredAttrs: [id, name, type]
+      attrEquals:
+        type: email
 ```
 
-CSS includes:
+### `cssRules` — structured CSS basics
+
+The API strips CSS comments, parses top-level beginner rule blocks, normalizes basic selector whitespace, and verifies declarations on the **required selector**. A property appearing in a comment or on the wrong selector cannot satisfy the contract.
 
 ```yaml
-exercise:
-  mode: css
-  starterHtml: |
-    <p class="note">Hello</p>
-  starter: |
-    /* Make .note text blue */
-  hints:
-    - "Select the class with a dot: .note"
-  solution: |
-    .note { color: blue; }
-  expected:
-    type: cssIncludes
-    needles:
-      - ".note"
-      - "color"
+expected:
+  type: cssRules
+  rules:
+    - selector: .note
+      declarations:
+        color: blue
+        font-weight: bold
 ```
 
-## Do / Don't
+The basics parser intentionally does not grade nested at-rules such as `@media`; those belong to a future curriculum/runtime extension.
 
-**Do**
+### Legacy contracts
 
-- Keep preview script-free for v1 HTML/CSS tracks.
-- Normalize whitespace before `htmlIncludes` / `cssIncludes` compares.
-- Soften starters (incomplete); keep solutions server-side.
+`htmlIncludes` and `cssIncludes` remain supported for backward compatibility with historical content. New/migrated HTML/CSS V2 lessons should prefer `htmlTags` or `cssRules` whenever the skill is structurally expressible.
 
-**Don't**
+## Feedback and curriculum rules
 
-- Enable scripts in the preview iframe for these tracks.
-- Put `expected` in public API responses.
-- Grade by asking the client “did it look right?”.
+- Starters are incomplete; solutions remain server-side.
+- Hints progress from concept -> relevant structure/property -> near-complete correction path.
+- HTML V2 grades semantic structure and meaningful attribute relationships where practical.
+- CSS V2 grades selector + declaration pairs rather than substring presence.
+- Pixel-perfect screenshot comparison is deliberately rejected for basics because it is brittle and environment-dependent.
+
+## Rejected designs
+
+- Reusing the JS worker or SQL sandbox.
+- Enabling scripts or same-origin access inside preview.
+- Client-only grading.
+- Headless-browser screenshot comparison for basics.
 
 ## Related
 
 - [`html-css-basics-tracks.md`](./html-css-basics-tracks.md)
-- [`javascript-sandbox.md`](./javascript-sandbox.md) — UX/API pattern to mirror
+- [`it-learning-pedagogy-v2.md`](./it-learning-pedagogy-v2.md)
 - [`progress-sandbox-sync.md`](./progress-sandbox-sync.md)
 - [`sandbox-feedback.md`](./sandbox-feedback.md)
-- [MDN iframe sandbox](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe)
-- [MDN srcdoc](https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/srcdoc)

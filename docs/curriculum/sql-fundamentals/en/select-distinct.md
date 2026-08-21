@@ -6,15 +6,17 @@ slug: select-distinct
 title: Unique values with DISTINCT
 order: 3
 published: true
+can_do: "Return unique result rows with DISTINCT and explain what counts as a duplicate"
 objectives:
-  - Remove duplicate values from a result
-  - Use SELECT DISTINCT on one column
+  - Remove duplicate values from a one-column result
+  - Predict how DISTINCT changes the number of result rows
+  - Understand that DISTINCT applies to the selected column combination
 exercise:
   starter: "SELECT director FROM movies;"
   hints:
-    - "Without DISTINCT, the same director can appear more than once."
-    - "Place DISTINCT right after SELECT."
-    - "Try: SELECT DISTINCT director FROM movies ORDER BY director;"
+    - "The plain director result contains Nolan twice."
+    - "Place DISTINCT immediately after SELECT so duplicate result rows collapse."
+    - "Use: SELECT DISTINCT director FROM movies ORDER BY director;"
   solution: "SELECT DISTINCT director FROM movies ORDER BY director;"
   preview:
     columns: ["id", "title", "director"]
@@ -35,9 +37,13 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 'Nolan'), (2, 'Interstellar', 'Nolan'), (3, 'The Matrix', 'Wachowski'), (4, 'Dune', 'Villeneuve');"
 ---
 
-A table can repeat the same value in many rows. When you only need each value once — like a unique list of directors — use `DISTINCT`.
+Duplicate values are normal in stored data. Two movies can have the same director. The question is whether your **result** needs every occurrence or only unique values.
 
-**movies** (full table — notice Nolan appears twice)
+## Mental model
+
+`DISTINCT` removes duplicate **result rows after the SELECT list has defined their shape**.
+
+**movies**
 
 | id | title | director |
 | --- | --- | --- |
@@ -46,7 +52,22 @@ A table can repeat the same value in many rows. When you only need each value on
 | 3 | The Matrix | Wachowski |
 | 4 | Dune | Villeneuve |
 
-If you select `director` without `DISTINCT`, Nolan shows up twice (once per film).
+A plain `SELECT director` produces four result rows because there are four movies. Two of those rows contain the same value: Nolan.
+
+## Predict before you run
+
+```sql
+SELECT DISTINCT director
+FROM movies;
+```
+
+Which rows can remain if duplicates are collapsed?
+
+- Nolan appears twice in the source but once in the distinct result.
+- Villeneuve appears once.
+- Wachowski appears once.
+
+So the result should have **3 rows**, not 4.
 
 ## Worked example
 
@@ -56,24 +77,37 @@ FROM movies
 ORDER BY director;
 ```
 
-- `SELECT director` alone would return Nolan, Nolan, Wachowski, Villeneuve.
-- `DISTINCT` keeps each director value only once.
-- `ORDER BY director` sorts the list A→Z so the result order is stable.
-
-Result:
-
 | director |
 | --- |
 | Nolan |
 | Villeneuve |
 | Wachowski |
 
+`ORDER BY director` makes the display order explicit. It is separate from `DISTINCT`: one removes duplicate result rows, the other sorts them.
+
+## Debug this
+
+Suppose your real goal is “one row per director”. Why does this query fail to achieve that?
+
+```sql
+SELECT DISTINCT director, title
+FROM movies;
+```
+
+The selected rows are now pairs such as `(Nolan, Inception)` and `(Nolan, Interstellar)`. Those pairs are different, so both survive. `DISTINCT` compares the **whole selected row**, not just the first column.
+
 ## Common mistakes
 
-- Writing `SELECT director DISTINCT` — `DISTINCT` belongs immediately after `SELECT`.
-- Expecting `DISTINCT` to remove whole duplicate rows when you selected several columns — it applies to the combination of columns you listed.
-- Forgetting that without `ORDER BY`, the order of distinct values is not guaranteed.
+- Writing `SELECT director DISTINCT`; `DISTINCT` belongs immediately after `SELECT`.
+- Assuming `DISTINCT` permanently removes duplicate values from the stored table. It only changes this query result.
+- Adding extra selected columns and then wondering why a value still appears more than once.
 
 ## Your turn
 
-List each distinct `director` from `movies`, sorted by `director`.
+Return each distinct `director` exactly once, ordered by `director`.
+
+## Quick check
+
+Would `SELECT DISTINCT director, title` guarantee one row per director?
+
+**Answer:** no. Uniqueness is evaluated on the selected `(director, title)` combination.

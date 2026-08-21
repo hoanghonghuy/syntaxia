@@ -3,18 +3,20 @@ id: pg-11-upsert
 track: postgresql
 locale: vi
 slug: upsert-on-conflict
-title: Upsert với ON CONFLICT
+title: Upsert atomic với ON CONFLICT
 order: 11
 published: true
+can_do: "Dùng INSERT ... ON CONFLICT để định nghĩa hành động atomic thay thế khi unique key bị conflict"
 objectives:
-  - Chèn hoặc cập nhật trong một câu với ON CONFLICT
-  - Cập nhật hàng đã có khi khóa duy nhất trùng
+  - Xác định unique key làm conflict arbiter
+  - Phân biệt giá trị đề xuất EXCLUDED với hàng đang tồn tại
+  - Verify trạng thái cuối sau DO UPDATE
 exercise:
   starter: "SELECT code, title FROM movies ORDER BY code;"
   hints:
-    - "ON CONFLICT nêu cột unique có thể đã tồn tại."
-    - "DO UPDATE SET … đổi hàng cũ thay vì báo lỗi."
-    - "Thử: INSERT INTO movies (code, title) VALUES ('INC', 'Inception Remastered') ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;"
+    - "code là primary key nên insert INC lần nữa sẽ hit conflict target đó."
+    - "EXCLUDED.title là title từ hàng đang được đề xuất insert."
+    - "Dùng: INSERT INTO movies (code, title) VALUES ('INC', 'Inception Remastered') ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;"
   solution: "INSERT INTO movies (code, title) VALUES ('INC', 'Inception Remastered') ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;"
   preview:
     columns: ["code", "title"]
@@ -34,35 +36,65 @@ sandbox_seed:
     - "INSERT INTO movies VALUES ('INC', 'Inception'), ('MTX', 'The Matrix');"
 ---
 
-Đôi khi bạn muốn “chèn nếu mới, không thì cập nhật” — như sửa ô nếu khóa đã có trong bảng. PostgreSQL gọi đó là **upsert**: `INSERT … ON CONFLICT … DO UPDATE`.
+Upsert nghĩa là “thử insert; nếu đụng conflict uniqueness đã khai báo thì thực hiện hành động thay thế”. `ON CONFLICT` của PostgreSQL đưa quyết định đó vào cùng một write statement.
 
-| code | title |
+## Mô hình tư duy
+
+Hàng đề xuất:
+
+```text
+(code='INC', title='Inception Remastered')
+```
+
+State hiện có đã chứa `code='INC'`. Primary key là conflict arbiter nên PostgreSQL đi vào nhánh `DO UPDATE`.
+
+Trong nhánh đó:
+
+| tham chiếu | nghĩa |
 | --- | --- |
-| INC | Inception |
-| MTX | The Matrix |
+| `movies.title` | giá trị của hàng conflict đang tồn tại |
+| `EXCLUDED.title` | giá trị từ hàng ta đã cố insert |
 
-`code` là duy nhất (primary key). Chèn lại `'INC'` thường sẽ lỗi; `ON CONFLICT` xử lý trường hợp đó.
+## Dự đoán trước khi chạy
+
+After-state đầy đủ: INC đổi thành `Inception Remastered`; MTX giữ nguyên. Không có hàng INC thứ hai.
 
 ## Ví dụ mẫu
 
 ```sql
 INSERT INTO movies (code, title)
 VALUES ('INC', 'Inception Remastered')
-ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title;
+ON CONFLICT (code)
+DO UPDATE SET title = EXCLUDED.title;
 ```
 
-- `ON CONFLICT (code)` theo dõi cột unique `code`.
-- `DO UPDATE` đổi hàng đã có thay vì báo lỗi.
-- `EXCLUDED.title` là title từ hàng bạn vừa cố chèn.
+| code | title |
+| --- | --- |
+| INC | Inception Remastered |
+| MTX | The Matrix |
 
-Sau câu lệnh, `INC` hiện title mới; `MTX` không đổi.
+Conflict handling nằm trong INSERT, điều này quan trọng khi concurrent writes làm logic “check trước rồi insert/update” ở application dễ race.
+
+## Tìm lỗi
+
+```text
+SELECT xem INC tồn tại -> application quyết định UPDATE hay INSERT
+```
+
+Giữa lần read và write sau đó, transaction khác có thể thay đổi state. Unique constraint + `ON CONFLICT` để PostgreSQL phân xử conflict tại write time.
 
 ## Lỗi thường gặp
 
-- Bỏ `ON CONFLICT` nên khóa trùng gây lỗi.
-- Quên `EXCLUDED.` khi tham chiếu giá trị đề xuất chèn.
-- Chỉ chạy `UPDATE` khi bài yêu cầu dạng upsert.
+- Chọn conflict target không được backed bởi uniqueness phù hợp.
+- Nhầm `EXCLUDED` proposed value với value đang lưu trong target row.
+- Viết read-then-write upsert dễ race ở application khi database conflict handling phù hợp hơn.
 
 ## Thử ngay
 
-Upsert mã `'INC'` với title `'Inception Remastered'` bằng `ON CONFLICT (code) DO UPDATE`.
+Upsert `INC` để title thành `Inception Remastered`, rồi verify MTX không đổi.
+
+## Tự kiểm tra
+
+`EXCLUDED.title` có nghĩa gì bên trong `DO UPDATE`?
+
+**Đáp án:** title từ hàng được đề xuất insert nhưng đã xảy ra conflict.

@@ -3,80 +3,87 @@ id: css-12-sizing
 track: css-basics
 locale: en
 slug: sizing-and-overflow
-title: Sizing and overflow
+title: Constraints and overflow
 order: 12
 published: true
+can_do: "Constrain a box with maximum dimensions and choose overflow behavior instead of hiding content accidentally when it exceeds the available space"
 objectives:
-  - Set width, height, min, and max constraints
-  - Predict when content overflows its box
-  - Choose overflow values for clipping or scrolling
+  - Distinguish preferred size from min/max constraints
+  - Predict when content exceeds a box constraint
+  - Use overflow auto for conditional scrolling
 exercise:
   mode: both
   starterHtml: |
-    <div class="panel">Long text here</div>
+    <div class="panel">A long block of content that can exceed a compact panel when space is constrained.</div>
   starter: |
-    /* Limit width and handle overflow */
-    
+    /* TODO: cap the panel at 12rem wide and 4rem tall, with scrolling only when needed */
   hints:
-    - max-width limits how wide the box can grow.
-    - "overflow: auto adds scrollbars when needed."
-    - rem works well for max-width.
+    - max-width and max-height set ceilings rather than forcing a fixed size in every case.
+    - overflow: auto introduces scrolling when content actually overflows.
+    - Use max-width: 12rem; max-height: 4rem; overflow: auto;.
   solution: |
-    .panel { max-width: 12rem; overflow: auto; }
+    .panel { max-width: 12rem; max-height: 4rem; overflow: auto; }
   expected:
-    type: cssIncludes
-    needles:
-      - max-width
-      - overflow
+    type: cssRules
+    rules:
+      - selector: .panel
+        declarations:
+          max-width: 12rem
+          max-height: 4rem
+          overflow: auto
 ---
 
-**Sizing** properties set how large a box may be. **Overflow** controls what happens when content does not fit. Together they keep layouts from breaking when text is long or images are wide.
+Content and available space are variable. Sizing constraints describe boundaries; overflow describes what happens when content crosses them.
 
-Imagine a photo frame with a fixed opening. If the photo is larger than the opening, you can crop it, let it stick out, or put it behind a sliding panel — those choices are like `hidden`, `visible`, and `scroll`/`auto`.
+## Mental model
 
-| Property | Role | Example |
-| --- | --- | --- |
-| `width` / `height` | Preferred size | `width: 20rem` |
-| `min-width` / `min-height` | Floor — will not shrink below | `min-width: 12rem` |
-| `max-width` / `max-height` | Ceiling — will not grow beyond | `max-width: 40rem` |
-| `overflow` | Extra content behavior | `visible`, `hidden`, `scroll`, `auto` |
-| `overflow-x` / `overflow-y` | Control one axis | `overflow-x: auto` |
+```text
+content intrinsic size
+       ↓
+min / preferred / max constraints
+       ↓
+fits? -> normal paint
+no    -> overflow policy
+```
+
+`overflow: auto` differs from `scroll`: scrollbars are provided when overflow requires them rather than always reserving them.
+
+## Predict the rendered result
+
+A short panel can remain below its maximum dimensions. If content exceeds the height ceiling, `overflow: auto` lets the user reach hidden content through scrolling instead of silently clipping it.
 
 ## Worked example
 
 ```css
-.article {
-  max-width: 40rem;
-  width: 100%;
-  margin-inline: auto;
-}
-
 .panel {
-  height: 12rem;
+  max-width: 12rem;
+  max-height: 4rem;
   overflow: auto;
-  border: 1px solid #ccc;
-  padding: 0.75rem;
-}
-
-.thumb {
-  width: 8rem;
-  height: 8rem;
-  overflow: hidden;
 }
 ```
 
-- `.article` can grow with a narrow screen (`width: 100%`) but never exceeds `40rem`, which keeps line lengths readable. `margin-inline: auto` centers the block horizontally.
-- `.panel` has a fixed height; `overflow: auto` adds a scrollbar only when the content is taller than the panel.
-- `.thumb` clips anything that sticks outside an 8×8 rem box — useful for cropping images inside a square.
+Prefer constraints when the design goal is “do not exceed this” rather than “always be exactly this size”.
 
-Prefer `max-width` on reading columns over a rigid `width` alone, so small screens can still shrink.
+## Debug this
+
+```css
+.panel { height: 4rem; overflow: hidden; }
+```
+
+This forces the height and clips excess content. If users must still access variable text, clipping is a data-loss-like presentation bug.
 
 ## Common mistakes
 
-- Setting only `height` on a text box without thinking about overflow — long translations or large fonts get clipped or spill out.
-- Using `overflow: hidden` to “fix” layout bugs — content disappears for keyboard and screen-reader users who may still need it.
-- Forgetting `max-width: 100%` on images inside narrow columns — large images can force horizontal page scroll.
+- Confusing `max-width` with a mandatory fixed width.
+- Using `overflow: hidden` to silence layout problems without checking lost content.
+- Forgetting that overflow can happen independently on horizontal and vertical axes.
 
 ## Your turn
 
-Use the sandbox below to cap width and set overflow on .panel. When the checker shows **Correct**, mark this lesson complete.
+Apply both maximum constraints and conditional scrolling.
+
+## Quick check
+
+When is `overflow: auto` preferable to `hidden` for text content?
+
+**Answer:** when excess content must remain accessible instead of being clipped away.
