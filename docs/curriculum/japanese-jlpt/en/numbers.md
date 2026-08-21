@@ -7,6 +7,11 @@ title: Hear and give a simple number
 order: 3
 published: true
 jlpt_level: n5
+unit_id: ja-n5-number-03
+unit_title: "Hear and give a number"
+unit_order: 3
+unit_can_do: "Ask for and give a simple number from one to ten in a short exchange"
+unit_role: lesson
 can_do: "Understand numbers one to ten and answer a simple number question"
 pattern: "何番ですか。 / 八番です。"
 objectives:
