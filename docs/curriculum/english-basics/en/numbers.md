@@ -7,6 +7,11 @@ title: Give and confirm a number
 order: 3
 published: true
 cefr_level: a1
+unit_id: en-a1-find-way-03
+unit_title: "Find your way"
+unit_order: 3
+unit_can_do: "Confirm a room number and ask where a common place is"
+unit_role: lesson
 can_do: "Understand and give a simple number from one to ten in a short exchange"
 pattern: "What number? / Number eight. / Eight? — Yes."
 objectives:
