@@ -44,19 +44,18 @@ type Lesson struct {
 }
 
 type LessonSummary struct {
-	ID            string `json:"id"`
-	Locale        string `json:"locale"`
-	TrackID       string `json:"trackId"`
-	Slug          string `json:"slug"`
-	Title         string `json:"title"`
-	SortOrder     int    `json:"sortOrder"`
-	Published     bool   `json:"published"`
-	UnitID        string `json:"unitId,omitempty"`
-	UnitTitle     string `json:"unitTitle,omitempty"`
-	UnitOrder     int    `json:"unitOrder,omitempty"`
-	UnitNodeOrder int    `json:"unitNodeOrder,omitempty"`
-	UnitCanDo     string `json:"unitCanDo,omitempty"`
-	UnitRole      string `json:"unitRole,omitempty"`
+	ID        string `json:"id"`
+	Locale    string `json:"locale"`
+	TrackID   string `json:"trackId"`
+	Slug      string `json:"slug"`
+	Title     string `json:"title"`
+	SortOrder int    `json:"sortOrder"`
+	Published bool   `json:"published"`
+	UnitID    string `json:"unitId,omitempty"`
+	UnitTitle string `json:"unitTitle,omitempty"`
+	UnitOrder int    `json:"unitOrder,omitempty"`
+	UnitCanDo string `json:"unitCanDo,omitempty"`
+	UnitRole  string `json:"unitRole,omitempty"`
 }
 
 type Progress struct {
