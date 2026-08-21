@@ -7,6 +7,11 @@ title: Ask where a place is
 order: 6
 published: true
 cefr_level: a1
+unit_id: en-a1-find-way-03
+unit_title: "Find your way"
+unit_order: 3
+unit_can_do: "Confirm a room number and ask where a common place is"
+unit_role: lesson
 can_do: "Ask where a common place is and understand a very simple location answer"
 pattern: "Where's the …? / It's here. / It's over there."
 objectives:
