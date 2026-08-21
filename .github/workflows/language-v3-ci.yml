@@ -70,6 +70,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Shell and UI regression
+        run: |
+          npm run test:shell-ux
+          npm run test:ui-refresh
+
       - name: Language v3 contract
         run: npm run test:language-v3
 
