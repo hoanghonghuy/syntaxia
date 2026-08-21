@@ -8,6 +8,11 @@ order: 5
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-study-04
+unit_title: "Lên kế hoạch khi nào và ở đâu để học"
+unit_order: 4
+unit_can_do: "Nói khi nào và ở đâu mình học tiếng Trung và xác nhận một kế hoạch học đơn giản"
+unit_role: lesson
 can_do: "Nói việc xảy ra hôm nay hay ngày mai và đặt nó vào một buổi trong ngày"
 pattern: "我今天… / 我明天上午…"
 objectives:
