@@ -306,7 +306,7 @@ watch(locale, async (loc) => {
   gap: var(--space-3);
 }
 
-.catalog-track-top .track-meta {
+.catalog-track-top > p {
   margin: 0;
 }
 
