@@ -200,6 +200,7 @@ import {
   languageHasSteps,
   languageVocabFromLesson,
 } from '~/utils/languageLesson'
+import { orderLanguageLessons } from '~/utils/languageUnits'
 import { createLessonLoadGuard } from '~/utils/lessonLoadGuard'
 import { pickPrimaryNote, resolveNoteSaveMode } from '~/utils/noteSave'
 import { extractToc } from '~/utils/toc'
@@ -320,7 +321,9 @@ const exercisePreview = computed(() => {
 const sortedLessons = computed(() => {
   const list = catalog.lessonsByTrack[trackId.value]
     || (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
-  return [...list].sort((a, b) => a.sortOrder - b.sortOrder)
+  return isLanguageTrack.value
+    ? orderLanguageLessons(list)
+    : [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
 const currentIndex = computed(() => sortedLessons.value.findIndex((item) => item.slug === slug.value))
 const prevLesson = computed(() => currentIndex.value > 0 ? sortedLessons.value[currentIndex.value - 1] : null)
