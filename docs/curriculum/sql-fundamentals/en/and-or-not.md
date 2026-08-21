@@ -6,15 +6,17 @@ slug: and-or-not
 title: Combining filters with AND, OR, NOT
 order: 5
 published: true
+can_do: "Combine boolean conditions and choose AND, OR, or NOT from the requirement"
 objectives:
-  - Combine two conditions with AND
-  - Keep only rows that match every required filter
+  - Evaluate two conditions for the same row
+  - Use AND when every required condition must be true
+  - Explain how OR and NOT change a filter
 exercise:
   starter: "SELECT title FROM movies WHERE year > 2000;"
   hints:
-    - "year > 2000 alone still includes every post-2000 film, not only Nolan’s."
-    - "Join a second condition with AND so both must be true."
-    - "Try: SELECT title FROM movies WHERE year > 2000 AND director = 'Nolan' ORDER BY title;"
+    - "The year filter alone still keeps Dune, so one more condition is needed."
+    - "Use AND when both year and director requirements must be true for the same row."
+    - "Use: SELECT title FROM movies WHERE year > 2000 AND director = 'Nolan' ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year > 2000 AND director = 'Nolan' ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -34,25 +36,39 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
-One filter is often not enough. `AND` keeps a row only when **every** condition is true — like two spreadsheet filters applied together.
+Requirements often contain words such as **and**, **or**, and **not**. The important skill is translating those words into a condition you can evaluate for each row.
 
-**movies** (full table)
+## Mental model
 
-| id | title | year | director |
+For two conditions `A` and `B`:
+
+| A | B | `A AND B` | `A OR B` |
 | --- | --- | --- | --- |
-| 1 | Inception | 2010 | Nolan |
-| 2 | The Matrix | 1999 | Wachowski |
-| 3 | Interstellar | 2014 | Nolan |
-| 4 | Dune | 2021 | Villeneuve |
+| true | true | true | true |
+| true | false | false | true |
+| false | true | false | true |
+| false | false | false | false |
 
-Walk the table by hand:
+`NOT A` flips the truth value of `A`.
 
-| title | year > 2000? | director = Nolan? | Both (AND)? |
+Now apply that to the lesson data:
+
+| title | `year > 2000` | `director = 'Nolan'` | AND result |
 | --- | --- | --- | --- |
-| Inception | yes | yes | **keep** |
-| The Matrix | no | no | drop |
-| Interstellar | yes | yes | **keep** |
-| Dune | yes | no | drop (fails director) |
+| Inception | true | true | keep |
+| The Matrix | false | false | drop |
+| Interstellar | true | true | keep |
+| Dune | true | false | drop |
+
+## Predict before you run
+
+```sql
+SELECT title
+FROM movies
+WHERE year > 2000 AND director = 'Nolan';
+```
+
+Predict the survivors before running: **Inception** and **Interstellar**. Dune passes the year check but fails the director check, so `AND` removes it.
 
 ## Worked example
 
@@ -63,26 +79,41 @@ WHERE year > 2000 AND director = 'Nolan'
 ORDER BY title;
 ```
 
-- `year > 2000` drops The Matrix (1999).
-- `director = 'Nolan'` drops Dune (Villeneuve), even though Dune is after 2000.
-- `AND` requires both checks: only Inception and Interstellar.
-- `ORDER BY title` sorts the titles alphabetically.
-
-Result:
-
 | title |
 | --- |
 | Inception |
 | Interstellar |
 
-`OR` would keep a row if **either** condition is true (that would include Dune). `NOT` flips a condition. This lesson focuses on `AND`.
+Use the requirement to choose the operator:
+
+- **both conditions required** -> `AND`
+- **either condition is enough** -> `OR`
+- **exclude a condition** -> `NOT`
+
+When a filter mixes `AND` and `OR`, parentheses make the intended grouping visible and prevent precedence assumptions from hiding in the query.
+
+## Debug this
+
+The requirement is “after 2000 **and** directed by Nolan”, but the query uses:
+
+```sql
+WHERE year > 2000 OR director = 'Nolan'
+```
+
+`OR` is broader: Dune passes because it is after 2000 even though Villeneuve directed it. The bug is not syntax; it is the wrong boolean logic for the requirement.
 
 ## Common mistakes
 
-- Using `OR` when you meant “both must match” — `OR` widens the result; `AND` narrows it.
-- Comparing text without quotes (`director = Nolan`) — text values need single quotes: `'Nolan'`.
-- Forgetting that `year > 2000` alone still returns Dune — you need `AND director = 'Nolan'`.
+- Using `OR` for a requirement where every condition must match.
+- Forgetting quotes around text values such as `'Nolan'`.
+- Mixing `AND` and `OR` without parentheses when the intended grouping is not obvious.
 
 ## Your turn
 
-List titles where `year` is greater than 2000 **and** `director` is `'Nolan'`, ordered by `title`.
+Return titles released after 2000 **and** directed by Nolan, ordered by title. Evaluate both conditions against Dune before pressing Run.
+
+## Quick check
+
+Which operator usually makes a filter stricter when you add another required condition?
+
+**Answer:** `AND`, because every connected condition must be true.

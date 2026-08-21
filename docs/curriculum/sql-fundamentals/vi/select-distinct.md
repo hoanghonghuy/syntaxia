@@ -6,15 +6,17 @@ slug: select-distinct
 title: Giá trị duy nhất với DISTINCT
 order: 3
 published: true
+can_do: "Trả về các hàng kết quả duy nhất bằng DISTINCT và giải thích thế nào được xem là trùng"
 objectives:
-  - Loại giá trị trùng trong kết quả
-  - Dùng SELECT DISTINCT trên một cột
+  - Loại giá trị trùng trong kết quả một cột
+  - Dự đoán DISTINCT làm thay đổi số hàng kết quả như thế nào
+  - Hiểu DISTINCT áp dụng cho tổ hợp cột đã chọn
 exercise:
   starter: "SELECT director FROM movies;"
   hints:
-    - "Không có DISTINCT, cùng một đạo diễn có thể xuất hiện nhiều lần."
-    - "Đặt DISTINCT ngay sau SELECT."
-    - "Thử: SELECT DISTINCT director FROM movies ORDER BY director;"
+    - "Kết quả director thông thường chứa Nolan hai lần."
+    - "Đặt DISTINCT ngay sau SELECT để các hàng kết quả trùng nhau được gộp lại."
+    - "Dùng: SELECT DISTINCT director FROM movies ORDER BY director;"
   solution: "SELECT DISTINCT director FROM movies ORDER BY director;"
   preview:
     columns: ["id", "title", "director"]
@@ -35,9 +37,13 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 'Nolan'), (2, 'Interstellar', 'Nolan'), (3, 'The Matrix', 'Wachowski'), (4, 'Dune', 'Villeneuve');"
 ---
 
-Một bảng có thể lặp cùng giá trị trên nhiều hàng. Khi bạn chỉ cần mỗi giá trị một lần — như danh sách đạo diễn không trùng — dùng `DISTINCT`.
+Giá trị lặp là chuyện bình thường trong dữ liệu lưu trữ. Hai phim có thể cùng đạo diễn. Câu hỏi là **kết quả truy vấn** cần mọi lần xuất hiện hay chỉ cần danh sách duy nhất.
 
-**movies** (bảng đầy đủ — chú ý Nolan xuất hiện hai lần)
+## Mô hình tư duy
+
+`DISTINCT` loại các **hàng kết quả** trùng nhau sau khi danh sách SELECT đã xác định hình dạng của hàng đó.
+
+**movies**
 
 | id | title | director |
 | --- | --- | --- |
@@ -46,7 +52,22 @@ Một bảng có thể lặp cùng giá trị trên nhiều hàng. Khi bạn ch�
 | 3 | The Matrix | Wachowski |
 | 4 | Dune | Villeneuve |
 
-Nếu chọn `director` không có `DISTINCT`, Nolan hiện hai lần (mỗi phim một lần).
+`SELECT director` thông thường tạo bốn hàng kết quả vì có bốn phim. Hai hàng trong số đó cùng chứa Nolan.
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT DISTINCT director
+FROM movies;
+```
+
+Nếu hàng trùng bị gộp, những giá trị nào còn lại?
+
+- Nolan xuất hiện hai lần ở bảng nguồn nhưng một lần trong kết quả distinct.
+- Villeneuve xuất hiện một lần.
+- Wachowski xuất hiện một lần.
+
+Vì vậy kết quả phải có **3 hàng**, không phải 4.
 
 ## Ví dụ mẫu
 
@@ -56,24 +77,37 @@ FROM movies
 ORDER BY director;
 ```
 
-- `SELECT director` đơn thuần sẽ trả Nolan, Nolan, Wachowski, Villeneuve.
-- `DISTINCT` giữ mỗi giá trị đạo diễn chỉ một lần.
-- `ORDER BY director` sắp A→Z để thứ tự kết quả ổn định.
-
-Kết quả:
-
 | director |
 | --- |
 | Nolan |
 | Villeneuve |
 | Wachowski |
 
+`ORDER BY director` làm thứ tự hiển thị rõ ràng. Nó tách biệt với `DISTINCT`: một bên bỏ hàng kết quả trùng, một bên sắp xếp.
+
+## Tìm lỗi
+
+Giả sử mục tiêu thật sự là “mỗi đạo diễn một hàng”. Vì sao câu này không đạt mục tiêu?
+
+```sql
+SELECT DISTINCT director, title
+FROM movies;
+```
+
+Hàng kết quả bây giờ là các cặp như `(Nolan, Inception)` và `(Nolan, Interstellar)`. Hai cặp đó khác nhau nên cả hai vẫn tồn tại. `DISTINCT` so sánh **toàn bộ hàng đã chọn**, không chỉ cột đầu tiên.
+
 ## Lỗi thường gặp
 
-- Viết `SELECT director DISTINCT` — `DISTINCT` phải đứng ngay sau `SELECT`.
-- Nghĩ `DISTINCT` luôn bỏ cả hàng trùng khi chọn nhiều cột — nó áp dụng cho tổ hợp các cột bạn liệt kê.
-- Quên rằng không có `ORDER BY` thì thứ tự giá trị distinct không được đảm bảo.
+- Viết `SELECT director DISTINCT`; `DISTINCT` đứng ngay sau `SELECT`.
+- Nghĩ `DISTINCT` xóa giá trị trùng khỏi bảng lưu trữ. Nó chỉ thay đổi kết quả truy vấn hiện tại.
+- Thêm nhiều cột đầu ra rồi thắc mắc vì sao một giá trị vẫn xuất hiện nhiều lần.
 
 ## Thử ngay
 
-Liệt kê mỗi `director` khác nhau từ `movies`, sắp theo `director`.
+Trả về mỗi `director` đúng một lần, sắp theo `director`.
+
+## Tự kiểm tra
+
+`SELECT DISTINCT director, title` có đảm bảo mỗi đạo diễn chỉ còn một hàng không?
+
+**Đáp án:** không. Tính duy nhất được xét trên tổ hợp `(director, title)` đã chọn.

@@ -1,0 +1,67 @@
+name: IT Curriculum V2 CI
+
+on:
+  push:
+    branches:
+      - feature/it-curriculum-v2
+  pull_request:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  curriculum:
+    name: Curriculum · structure and parity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify SQL Fundamentals contract
+        run: node scripts/verify-sql-fundamentals.mjs
+
+  web:
+    name: Web · production build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+  api:
+    name: API · Go test and vet
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+          cache-dependency-path: apps/api/go.sum
+      - name: Verify modules
+        run: go mod verify
+      - name: Unit tests
+        run: go test -mod=readonly ./...
+      - name: Vet
+        run: go vet ./...

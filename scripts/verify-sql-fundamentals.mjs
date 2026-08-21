@@ -47,6 +47,10 @@ const expected = [
   'sql-comments',
 ]
 
+// Only slices listed here are held to the V2 structure. Expand this list as each
+// slice is intentionally migrated; do not make untouched legacy lessons fail.
+const v2Migrated = expected.slice(0, 8)
+
 function parse(md) {
   const m = md.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!m) return { err: 'no fm' }
@@ -57,9 +61,14 @@ function parse(md) {
     return r ? r[1].trim() : ''
   }
   return {
+    id: get('id').replace(/['"]/g, ''),
+    track: get('track').replace(/['"]/g, ''),
+    locale: get('locale').replace(/['"]/g, ''),
     order: Number(get('order')),
     slug: get('slug').replace(/['"]/g, ''),
+    canDo: get('can_do').replace(/^['"]|['"]$/g, ''),
     hasHints: /hints:\s*\n\s*-/.test(fm),
+    hintCount: (fm.match(/^\s{4}-\s+.+$/gm) || []).length,
     hasSol: /solution:/.test(fm),
     hasPrev: /preview:/.test(fm),
     hasExp: /expected:/.test(fm),
@@ -68,19 +77,31 @@ function parse(md) {
     table: /\|\s*-+/.test(body),
     mistakes: /Common mistakes|Lỗi thường gặp/i.test(body),
     published: get('published'),
+    body,
   }
 }
 
+function hasHeading(body, en, vi) {
+  return new RegExp(`^##\\s+(?:${en}|${vi})\\s*$`, 'im').test(body)
+}
+
 const issues = []
+const parsedByLocale = { en: {}, vi: {} }
+
 for (const loc of ['en', 'vi']) {
   const dir = path.join(root, loc)
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'))
   if (files.length !== 42) issues.push(`${loc} file count ${files.length}`)
-  const bySlug = {}
+  const bySlug = parsedByLocale[loc]
+
   for (const f of files) {
     const p = parse(fs.readFileSync(path.join(dir, f), 'utf8'))
     const slug = f.replace(/\.md$/, '')
     bySlug[slug] = p
+    if (p.err) {
+      issues.push(`${loc}/${f} ${p.err}`)
+      continue
+    }
     if (p.leadingH1) issues.push(`${loc}/${f} leading H1`)
     if (!p.hasHints) issues.push(`${loc}/${f} missing hints`)
     if (!p.hasSol) issues.push(`${loc}/${f} missing solution`)
@@ -91,11 +112,25 @@ for (const loc of ['en', 'vi']) {
     if (!p.mistakes) issues.push(`${loc}/${f} missing mistakes section`)
     if (p.published !== 'true') issues.push(`${loc}/${f} not published`)
   }
+
   for (let i = 0; i < expected.length; i++) {
     const slug = expected[i]
     const p = bySlug[slug]
     if (!p) issues.push(`${loc} missing slug ${slug}`)
     else if (p.order !== i) issues.push(`${loc}/${slug} order ${p.order} want ${i}`)
+  }
+
+  for (const slug of v2Migrated) {
+    const p = bySlug[slug]
+    if (!p) continue
+    if (!p.canDo) issues.push(`${loc}/${slug} missing can_do`)
+    if (!hasHeading(p.body, 'Mental model', 'Mô hình tư duy')) issues.push(`${loc}/${slug} missing V2 mental model`)
+    if (!hasHeading(p.body, 'Predict before you run', 'Dự đoán trước khi chạy')) issues.push(`${loc}/${slug} missing V2 prediction`)
+    if (!hasHeading(p.body, 'Worked example', 'Ví dụ mẫu')) issues.push(`${loc}/${slug} missing V2 worked example`)
+    if (!hasHeading(p.body, 'Debug this', 'Tìm lỗi')) issues.push(`${loc}/${slug} missing V2 debugging`)
+    if (!hasHeading(p.body, 'Your turn', 'Thử ngay')) issues.push(`${loc}/${slug} missing V2 build task`)
+    if (!hasHeading(p.body, 'Quick check', 'Tự kiểm tra')) issues.push(`${loc}/${slug} missing V2 recall check`)
+    if (!/```sql[\s\S]*?```/i.test(p.body)) issues.push(`${loc}/${slug} missing SQL example`)
   }
 }
 
@@ -111,9 +146,18 @@ const viSlugs = fs
   .join(',')
 if (enSlugs !== viSlugs) issues.push('en/vi slug mismatch')
 
+for (const slug of expected) {
+  const en = parsedByLocale.en[slug]
+  const vi = parsedByLocale.vi[slug]
+  if (!en || !vi) continue
+  if (en.id !== vi.id) issues.push(`${slug} id mismatch en=${en.id} vi=${vi.id}`)
+  if (en.track !== vi.track) issues.push(`${slug} track mismatch`)
+  if (en.order !== vi.order) issues.push(`${slug} order mismatch`)
+}
+
 if (issues.length) {
   console.log('FAIL')
   console.log(issues.join('\n'))
   process.exit(1)
 }
-console.log('PASS pedagogy+order+parity 42')
+console.log(`PASS pedagogy+order+parity 42; IT V2 migrated ${v2Migrated.length}`)
