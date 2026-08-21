@@ -8,6 +8,11 @@ order: 6
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-study-04
+unit_title: "Lên kế hoạch khi nào và ở đâu để học"
+unit_order: 4
+unit_can_do: "Nói khi nào và ở đâu mình học tiếng Trung và xác nhận một kế hoạch học đơn giản"
+unit_role: lesson
 can_do: "Nói mình là học sinh/sinh viên và mô tả việc học tiếng Trung ở trường"
 pattern: "我是学生。/ 我在学校学习汉语。"
 objectives:
