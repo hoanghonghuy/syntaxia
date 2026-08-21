@@ -7,5 +7,5 @@
 - [x] Render localized unit title/Can-Do and lesson/checkpoint/review node roles.
 - [x] Lock parser and frontend grouping/fallback behavior with automated tests.
 - [x] Add EN/VI unit metadata to the English A1 greetings seed lesson.
-- [ ] Verify Language V3 CI, IT regression CI, and deployment smoke on the draft integration PR.
+- [x] Verify the integration gate on `e854df2`: Language V3 CI #77 green, IT Curriculum V2 CI #27 green, and Vercel deployment status green.
 - [ ] Build full English/Mandarin/Japanese golden units under L5 before mass migration.
