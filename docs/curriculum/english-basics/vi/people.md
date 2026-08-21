@@ -7,6 +7,11 @@ title: Giới thiệu một người khác
 order: 2
 published: true
 cefr_level: a1
+unit_id: en-a1-people-02
+unit_title: "Giới thiệu những người gần gũi"
+unit_order: 2
+unit_can_do: "Hỏi một người là ai và giới thiệu bạn bè hoặc người thân"
+unit_role: lesson
 can_do: "Hỏi một người là ai và giới thiệu một người bạn bằng một đến hai câu ngắn"
 pattern: "Who's that? / This is … / He's … / She's …"
 objectives:
