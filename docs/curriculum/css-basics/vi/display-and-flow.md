@@ -3,80 +3,86 @@ id: css-10-display
 track: css-basics
 locale: vi
 slug: display-and-flow
-title: Display và luồng
+title: Display và normal flow
 order: 10
 published: true
+can_do: "Dự đoán block, inline, inline-block và none tham gia normal flow thế nào và chọn inline-block khi cần inline placement cùng box sizing"
 objectives:
-  - Phân biệt block và inline trong luồng bình thường
-  - Dùng inline-block khi cần vừa xếp ngang vừa đặt width
-  - Ẩn phần tử bằng display: none
+  - So sánh outer behavior của block và inline
+  - Dùng inline-block cho inline-level box cần dimension
+  - Hiểu display none loại box khỏi layout
 exercise:
   mode: both
   starterHtml: |
-    <span class="box">A</span>
+    <span class="badge">A</span>
+    <span>following text</span>
   starter: |
-    /* Change how .box flows in the line */
-    
+    /* TODO: giữ .badge trong dòng nhưng cho nó width và padding dạng box */
   hints:
-    - display thay đổi cách bố cục.
-    - inline-block giữ phần tử trên dòng nhưng cho phép kích thước hộp.
-    - "Viết display: inline-block; trong rule."
+    - Plain inline box không dùng width giống inline-block.
+    - Dùng display: inline-block để badge vẫn ở inline flow và nhận dimension.
+    - Set display: inline-block; width: 3rem; padding: 0.5rem;.
   solution: |
-    .box { display: inline-block; }
+    .badge { display: inline-block; width: 3rem; padding: 0.5rem; }
   expected:
-    type: cssIncludes
-    needles:
-      - display
+    type: cssRules
+    rules:
+      - selector: .badge
+        declarations:
+          display: inline-block
+          width: 3rem
+          padding: 0.5rem
 ---
 
-Trình duyệt xếp phần tử theo **normal flow** (luồng bình thường). Property `display` quyết định hộp tham gia luồng thế nào: chiếm cả hàng (**block**), nằm trong dòng chữ (**inline**), kết hợp (**inline-block**), hoặc không hiện (**none**).
+`display` thay đổi cách một box tham gia layout. Hãy bắt đầu từ **normal flow** trước khi dùng layout system phức tạp.
 
-| Giá trị `display` | Hành vi đơn giản |
+## Mô hình tư duy
+
+| Value | Behavior đơn giản hóa |
 | --- | --- |
-| `block` | Bắt đầu trên hàng mới; có thể đặt `width` / `height` |
-| `inline` | Nằm trong dòng; `width` / `height` thường không áp như block |
-| `inline-block` | Nằm trong dòng nhưng vẫn nhận `width` / `height` / padding đầy đủ hơn |
-| `none` | Không hiện và không chiếm chỗ |
+| `block` | bắt đầu dòng mới, outer flow kiểu block |
+| `inline` | tham gia trong text line |
+| `inline-block` | outer flow inline + dimension dạng box |
+| `none` | không sinh box trong layout |
 
-Thẻ như `p`, `div`, `h1` mặc định thường là block; `a`, `span`, `strong` thường là inline.
+Cách format nội dung bên trong và cách box tham gia bên ngoài có liên quan nhưng không hoàn toàn là một khái niệm.
+
+## Dự đoán kết quả hiển thị
+
+`span` mặc định inline. Chỉ set width có thể không tạo geometry badge như mong đợi. Đổi sang `inline-block` giúp nó vẫn nằm cạnh text nhưng nhận declared width.
 
 ## Ví dụ mẫu
 
-```html
-<p>Đọc <a class="chip" href="#next">bài tiếp</a> ngay.</p>
-<p class="aside">Ghi chú phụ.</p>
-<p class="hidden-label">Chỉ dành cho máy.</p>
+```css
+.badge {
+  display: inline-block;
+  width: 3rem;
+  padding: 0.5rem;
+}
 ```
+
+`display: none` khác với content chỉ trong suốt: nó loại box khỏi layout thay vì đơn thuần làm không nhìn thấy.
+
+## Tìm lỗi
 
 ```css
-.chip {
-  display: inline-block;
-  padding: 4px 8px;
-  background-color: #ecfdf5;
-}
-
-.aside {
-  display: block;
-  width: 60%;
-}
-
-.hidden-label {
-  display: none;
-}
+.badge { width: 3rem; }
 ```
 
-- `.chip` là liên kết dạng “mảnh” trong câu nhưng có padding và nền nhờ `inline-block`.
-- `.aside` là block với chiều ngang 60%.
-- `.hidden-label` biến mất khỏi trang (`none`) — khác với chỉ trong suốt nhưng vẫn chiếm chỗ.
-
-Đổi `display` không xóa HTML; chỉ đổi cách vẽ và xếp chỗ.
+Nếu element vẫn là inline box, requested width không áp dụng như normal block dimension. Hãy inspect display behavior trước khi nghĩ width bị lỗi.
 
 ## Lỗi thường gặp
 
-- Đặt `width` lớn trên phần tử `inline` thuần rồi ngạc nhiên vì không đổi — cần `block` hoặc `inline-block`.
-- Dùng `display: none` khi chỉ muốn tạm ẩn mắt nhưng vẫn để trình đọc màn hình đọc — `none` gỡ khỏi hộp và thường khỏi cây truy cập; cần thận trọng.
-- Nhầm `inline-block` với Flexbox — flex dành cho hàng/cột kiểm soát hơn (bài cuối lộ trình).
+- Xem block/inline chỉ là nhãn hình thức.
+- Dùng `display: none` khi nội dung vẫn cần tồn tại cho interaction hỗ trợ.
+- Set width cho inline content rồi giả định block sizing rule áp dụng y nguyên.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để đặt display cho .box. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Biến badge thành inline-block với dimension yêu cầu.
+
+## Tự kiểm tra
+
+Lợi ích chính của `inline-block` trong ví dụ là gì?
+
+**Đáp án:** nó vẫn tham gia inline flow nhưng nhận box dimension như width.

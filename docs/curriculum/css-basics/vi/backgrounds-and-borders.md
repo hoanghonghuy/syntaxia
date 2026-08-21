@@ -3,77 +3,87 @@ id: css-09-backgrounds
 track: css-basics
 locale: vi
 slug: backgrounds-and-borders
-title: Nền và viền
+title: Surface, border và corner
 order: 9
 published: true
+can_do: "Tạo card surface bằng cách dự đoán box layer nào nhận background, border và corner rounding"
 objectives:
-  - Đặt background-color và hiểu background-image ở mức giới thiệu
-  - Viết border theo độ dày, kiểu và màu
-  - Bo góc bằng border-radius
+  - Phân biệt background fill với border edge
+  - Dùng border shorthand theo width-style-color
+  - Bo border box bằng border-radius
 exercise:
   mode: both
   starterHtml: |
-    <div class="card">Card</div>
+    <div class="card">Card content</div>
   starter: |
-    /* Style .card background and corners */
-    
+    /* TODO: cho .card background sáng, border 1px và corner 8px */
   hints:
-    - background tô nền phía sau nội dung.
-    - border-radius bo góc.
-    - "Màu hex như #eef dùng được cho background."
+    - background-color fill phía sau content và padding.
+    - Border shorthand có thể gộp width, style và color.
+    - Dùng background-color: #eef; border: 1px solid #ccd; border-radius: 8px;.
   solution: |
-    .card { background: #eef; border-radius: 8px; }
+    .card {
+      background-color: #eef;
+      border: 1px solid #ccd;
+      border-radius: 8px;
+    }
   expected:
-    type: cssIncludes
-    needles:
-      - border-radius
-      - background
+    type: cssRules
+    rules:
+      - selector: .card
+        declarations:
+          background-color: "#eef"
+          border: 1px solid #ccd
+          border-radius: 8px
 ---
 
-**Nền** (background) tô phía sau nội dung; **viền** (border) vẽ cạnh hộp. Cùng với `border-radius`, bạn có thể tạo khối nổi bật đơn giản mà chưa cần ảnh phức tạp.
+Background và border nằm ở các phần khác nhau của box. Hiểu layer giúp tránh kiểu style bằng cách thử ngẫu nhiên property.
 
-| Property | Vai trò đơn giản |
-| --- | --- |
-| `background-color` | Màu nền |
-| `background-image` | Ảnh hoặc gradient làm nền (giới thiệu) |
-| `border` | Viết tắt: độ dày + kiểu + màu |
-| `border-radius` | Bo góc hộp |
+## Mô hình tư duy
+
+```text
+border edge
+└─ background paint phía sau content + padding (và vùng dưới border tùy clipping)
+```
+
+`border-radius` đổi hình học border box và background được clip theo corner tùy background clipping rule.
+
+## Dự đoán kết quả hiển thị
+
+Card có background nhưng chưa có border vẫn có surface fill. Thêm `1px solid` tạo edge nhìn thấy. Thêm radius làm corner của edge đó bo tròn.
 
 ## Ví dụ mẫu
 
-```html
-<section class="panel">
-  <p>Thông báo ngắn.</p>
-</section>
+```css
+.card {
+  background-color: #eef;
+  border: 1px solid #ccd;
+  border-radius: 8px;
+}
 ```
+
+Shorthand hữu ích khi cố ý set các thành phần cùng lúc; longhand rõ hơn khi chỉ đổi một phần.
+
+## Tìm lỗi
 
 ```css
-.panel {
-  background-color: #ecfdf5;
-  border: 1px solid #0f766e;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.panel.hero {
-  background-image: url("leaf.png");
-  background-color: #064e3b;
-  color: white;
-}
+.card { border: #ccd; }
 ```
 
-- `.panel` có nền mint nhạt, viền 1px liền màu teal, góc bo 8px.
-- `padding` giữ chữ không dính sát viền (nhắc lại box model).
-- `.panel.hero` thêm ảnh nền; `background-color` vẫn hữu ích khi ảnh chậm tải hoặc lỗi.
-
-`border: 1px solid #0f766e` gồm ba phần: độ dày (`1px`), kiểu (`solid`), màu.
+Visible border hữu ích cần border style như `solid`; shorthand không chỉ có một color value.
 
 ## Lỗi thường gặp
 
-- Đặt chữ màu sáng trên nền sáng — kiểm tra độ tương phản để đọc được.
-- Chỉ dùng `border-radius` mà quên `border` hoặc nền — bo góc vẫn thấy rõ hơn khi có nền/viền.
-- Đường dẫn `url("...")` sai — ảnh nền không hiện; màu nền dự phòng vẫn nên có.
+- Mong background color tự tạo border edge.
+- Quên border style trong shorthand.
+- Dùng radius rất lớn mà không hiểu box geometry đang được bo.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để thêm background và border-radius cho .card. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Tạo card surface với đủ ba declaration như yêu cầu.
+
+## Tự kiểm tra
+
+Property nào tạo khoảng trống bên trong border: background, padding hay margin?
+
+**Đáp án:** padding.

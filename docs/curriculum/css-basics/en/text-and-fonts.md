@@ -3,80 +3,81 @@ id: css-08-text
 track: css-basics
 locale: en
 slug: text-and-fonts
-title: Text and fonts
+title: Readable typography
 order: 8
 published: true
+can_do: "Build a fallback font stack and set readable line-height while distinguishing inherited typography from box layout properties"
 objectives:
-  - Set font-family with a fallback stack
-  - Control size, weight, line-height, and alignment
-  - Keep body text readable for long reading
+  - Write a font-family fallback stack
+  - Use unitless line-height for readable body text
+  - Recognize common inherited text properties
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <article class="copy"><p>Long-form reading should stay comfortable.</p></article>
   starter: |
-    /* Set a font stack on .note */
-    
+    /* TODO: give .copy a Georgia/serif stack and line-height 1.6 */
   hints:
-    - font-family lists fonts separated by commas.
-    - Put a generic family last (serif, sans-serif).
-    - Quote font names with spaces if needed.
+    - A font stack lists candidates from preferred to fallback.
+    - Put the generic family serif last.
+    - Use .copy { font-family: Georgia, serif; line-height: 1.6; }.
   solution: |
-    .note { font-family: Georgia, serif; }
+    .copy { font-family: Georgia, serif; line-height: 1.6; }
   expected:
-    type: cssIncludes
-    needles:
-      - font-family
+    type: cssRules
+    rules:
+      - selector: .copy
+        declarations:
+          font-family: Georgia, serif
+          line-height: "1.6"
 ---
 
-Text styling covers the **font family**, **size**, **weight**, **line height**, and **alignment**. Good defaults make lessons and articles comfortable to read; flashy settings often hurt long-form text.
+Typography affects how text is read, not only how it looks. A font stack provides fallback behavior; line height controls vertical rhythm.
 
-Compare a paperback page: the typeface, how large the letters are, how heavy the strokes feel, and how much air sits between lines. CSS exposes those same choices for the screen.
+## Mental model
 
-| Property | Controls | Beginner values |
-| --- | --- | --- |
-| `font-family` | Typeface stack | `"Source Serif 4", Georgia, serif` |
-| `font-size` | Text size | `1rem`, `1.125rem` |
-| `font-weight` | Thickness | `normal`, `bold`, `600` |
-| `line-height` | Space between lines | `1.5`, `1.6` (unitless is fine) |
-| `text-align` | Horizontal alignment | `left`, `center`, `right` |
-| `text-decoration` | Underlines and more | `none`, `underline` |
+```text
+font-family: first available font -> next fallback -> generic family
+line-height: distance between line boxes
+```
+
+Properties such as `font-family`, `font-size`, and `color` commonly inherit to descendants; box properties such as margin do not inherit by default.
+
+## Predict the rendered result
+
+If Georgia is unavailable, `Georgia, serif` falls back to the browser's serif family. A unitless `line-height: 1.6` scales with the element's font size.
 
 ## Worked example
 
 ```css
-body {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
+.copy {
+  font-family: Georgia, serif;
   line-height: 1.6;
-  color: #222;
-}
-
-h1 {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.intro {
-  font-size: 1.125rem;
-  text-align: left;
 }
 ```
 
-- `font-family` lists a **stack**: the browser uses the first available font, then falls back.
-- Body text uses a comfortable `line-height` (around 1.5–1.6) for reading; headings often use a tighter line height.
-- `font-weight: 700` is another way to say bold. Not every font file includes every weight.
-- Keep long paragraphs left-aligned for languages that read left to right — centered body text is harder to scan.
+A child paragraph can inherit these text settings from the article without repeating the same declarations.
 
-Font choice and spacing matter more for readability than decorative effects.
+## Debug this
+
+```css
+.copy { font-family: Georgia serif; }
+```
+
+Font-family candidates are a comma-separated list. Without the comma, the value is not the intended two-step fallback stack.
 
 ## Common mistakes
 
-- Listing only one fancy font with no fallback — if it fails to load, the browser may substitute an awkward default.
-- Setting `line-height` too tight on body copy — lines collide and reading slows down.
-- Centering large blocks of paragraph text — reserve center alignment for short titles or captions.
+- Omitting a generic fallback family.
+- Using extremely tight line height for long-form text.
+- Repeating inherited typography on every descendant unnecessarily.
 
 ## Your turn
 
-Use the sandbox below to set font-family on .note. When the checker shows **Correct**, mark this lesson complete.
+Set the fallback stack and line height on the parent `.copy`, then inspect the paragraph that inherits them.
+
+## Quick check
+
+Why put `serif` last in `Georgia, serif`?
+
+**Answer:** it is a generic fallback if the preferred face is unavailable.

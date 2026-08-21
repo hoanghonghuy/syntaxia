@@ -3,78 +3,81 @@ id: css-08-text
 track: css-basics
 locale: vi
 slug: text-and-fonts
-title: Chữ và font
+title: Typography dễ đọc
 order: 8
 published: true
+can_do: "Tạo font fallback stack và line-height dễ đọc, đồng thời phân biệt typography được inherit với box layout property"
 objectives:
-  - Đặt font-family với danh sách dự phòng
-  - Điều chỉnh font-size, font-weight và line-height
-  - Căn chữ bằng text-align
+  - Viết font-family fallback stack
+  - Dùng unitless line-height cho body text dễ đọc
+  - Nhận biết các text property thường được inherit
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <article class="copy"><p>Long-form reading should stay comfortable.</p></article>
   starter: |
-    /* Set a font stack on .note */
-    
+    /* TODO: đặt stack Georgia/serif và line-height 1.6 cho .copy */
   hints:
-    - font-family liệt kê font cách nhau bằng dấu phẩy.
-    - Đặt họ chữ generic cuối (serif, sans-serif).
-    - Bọc tên font có dấu cách trong ngoặc kép nếu cần.
+    - Font stack liệt kê candidate từ ưu tiên tới fallback.
+    - Đặt generic family serif ở cuối.
+    - Dùng .copy { font-family: Georgia, serif; line-height: 1.6; }.
   solution: |
-    .note { font-family: Georgia, serif; }
+    .copy { font-family: Georgia, serif; line-height: 1.6; }
   expected:
-    type: cssIncludes
-    needles:
-      - font-family
+    type: cssRules
+    rules:
+      - selector: .copy
+        declarations:
+          font-family: Georgia, serif
+          line-height: "1.6"
 ---
 
-Phần lớn trang web là **chữ**. CSS điều khiển họ font, cỡ chữ, độ đậm, khoảng cách dòng và cách căn dòng — tách khỏi ý nghĩa HTML (`h1`, `p`, `strong`).
+Typography ảnh hưởng tới cách text được đọc chứ không chỉ hình thức. Font stack cung cấp fallback; line height điều khiển vertical rhythm.
 
-| Property | Vai trò đơn giản |
-| --- | --- |
-| `font-family` | Họ chữ; liệt kê phương án dự phòng |
-| `font-size` | Cỡ chữ |
-| `font-weight` | Độ đậm (`normal`, `bold`, hoặc số như `700`) |
-| `line-height` | Khoảng cách giữa các dòng |
-| `text-align` | Căn ngang: `left`, `center`, `right` |
+## Mô hình tư duy
+
+```text
+font-family: font ưu tiên -> fallback tiếp theo -> generic family
+line-height: khoảng cách giữa các line box
+```
+
+Các property như `font-family`, `font-size`, `color` thường inherit xuống descendant; box property như margin mặc định không inherit.
+
+## Dự đoán kết quả hiển thị
+
+Nếu Georgia không có, `Georgia, serif` fallback sang serif family của trình duyệt. `line-height: 1.6` không có unit sẽ scale theo font size của element.
 
 ## Ví dụ mẫu
 
-```html
-<article class="lesson">
-  <h1>Chào buổi sáng</h1>
-  <p>Hôm nay học style chữ với CSS.</p>
-</article>
+```css
+.copy {
+  font-family: Georgia, serif;
+  line-height: 1.6;
+}
 ```
+
+Paragraph con có thể inherit các text setting này từ article mà không cần lặp declaration.
+
+## Tìm lỗi
 
 ```css
-.lesson {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  text-align: left;
-}
-
-.lesson h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  text-align: center;
-}
+.copy { font-family: Georgia serif; }
 ```
 
-- `font-family` thử Georgia trước, rồi Times New Roman, cuối cùng `serif` chung.
-- `line-height: 1.6` (không cần đơn vị khi là hệ số) làm đoạn văn dễ đọc hơn.
-- Tiêu đề lớn hơn (`1.75rem`), đậm hơn, và căn giữa; đoạn văn giữ căn trái.
-
-Tên font có khoảng trắng cần nằm trong dấu ngoặc kép: `"Times New Roman"`.
+Các candidate của font-family là danh sách tách bằng comma. Thiếu comma làm value không còn là fallback stack hai bước dự kiến.
 
 ## Lỗi thường gặp
 
-- Chỉ ghi một font lạ không có trên máy người học — luôn thêm họ dự phòng (`serif` / `sans-serif`).
-- Dùng `font-weight` để thay `strong` trong HTML — độ đậm là trang trí; tầm quan trọng nội dung vẫn nên dùng đúng thẻ.
-- `line-height` quá chật (`1`) — đoạn dài trở nên khó đọc.
+- Không có generic fallback family.
+- Dùng line height quá sít cho văn bản dài.
+- Lặp inherited typography trên mọi descendant không cần thiết.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để đặt font-family cho .note. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Đặt fallback stack và line height trên parent `.copy`, rồi quan sát paragraph inherit chúng.
+
+## Tự kiểm tra
+
+Tại sao đặt `serif` ở cuối `Georgia, serif`?
+
+**Đáp án:** đó là generic fallback khi font ưu tiên không có.

@@ -8,7 +8,7 @@ const expected = [
   'text-and-fonts', 'backgrounds-and-borders', 'display-and-flow',
   'styling-lists-and-links', 'sizing-and-overflow', 'flexbox-basics',
 ]
-const migrated = expected.slice(0, 7)
+const migrated = expected
 
 function parse(md) {
   const match = md.match(/^---\r?\n([\s\S]*?)\r?\n---/)
@@ -32,7 +32,6 @@ function parse(md) {
     leadingH1: /^\s*#\s+[^#]/m.test(body), hasCSSFence: /```css[\s\S]*?```/i.test(body), body,
   }
 }
-
 function heading(body, en, vi) { return new RegExp(`^##\\s+(?:${en}|${vi})\\s*$`, 'im').test(body) }
 
 const issues = []
@@ -53,28 +52,23 @@ for (const locale of ['en', 'vi']) {
     if (lesson.hintCount < 3) issues.push(`${locale}/${file}: needs at least 3 hints`)
     if (!lesson.hasSolution || !lesson.hasExpected) issues.push(`${locale}/${file}: incomplete exercise contract`)
     if (lesson.leadingH1) issues.push(`${locale}/${file}: body must not repeat title as H1`)
+    if (!lesson.canDo) issues.push(`${locale}/${file}: missing can_do`)
+    if (!lesson.cssRules) issues.push(`${locale}/${file}: expected must use cssRules`)
+    if (!lesson.hasCSSFence) issues.push(`${locale}/${file}: missing CSS example fence`)
+    if (!heading(lesson.body, 'Mental model', 'Mô hình tư duy')) issues.push(`${locale}/${file}: missing mental model`)
+    if (!heading(lesson.body, 'Predict the rendered result', 'Dự đoán kết quả hiển thị')) issues.push(`${locale}/${file}: missing prediction`)
+    if (!heading(lesson.body, 'Worked example', 'Ví dụ mẫu')) issues.push(`${locale}/${file}: missing worked example`)
+    if (!heading(lesson.body, 'Debug this', 'Tìm lỗi')) issues.push(`${locale}/${file}: missing debugging`)
+    if (!heading(lesson.body, 'Common mistakes', 'Lỗi thường gặp')) issues.push(`${locale}/${file}: missing mistakes`)
+    if (!heading(lesson.body, 'Your turn', 'Thử ngay')) issues.push(`${locale}/${file}: missing build task`)
+    if (!heading(lesson.body, 'Quick check', 'Tự kiểm tra')) issues.push(`${locale}/${file}: missing recall check`)
   }
   for (let i = 0; i < expected.length; i++) {
     const lesson = parsed[locale][expected[i]]
     if (!lesson) issues.push(`${locale}: missing ${expected[i]}`)
     else if (lesson.order !== i) issues.push(`${locale}/${expected[i]}: order ${lesson.order}, want ${i}`)
   }
-  for (const slug of migrated) {
-    const lesson = parsed[locale][slug]
-    if (!lesson) continue
-    if (!lesson.canDo) issues.push(`${locale}/${slug}: missing can_do`)
-    if (!lesson.cssRules) issues.push(`${locale}/${slug}: expected must use cssRules`)
-    if (!lesson.hasCSSFence) issues.push(`${locale}/${slug}: missing CSS example fence`)
-    if (!heading(lesson.body, 'Mental model', 'Mô hình tư duy')) issues.push(`${locale}/${slug}: missing mental model`)
-    if (!heading(lesson.body, 'Predict the rendered result', 'Dự đoán kết quả hiển thị')) issues.push(`${locale}/${slug}: missing prediction`)
-    if (!heading(lesson.body, 'Worked example', 'Ví dụ mẫu')) issues.push(`${locale}/${slug}: missing worked example`)
-    if (!heading(lesson.body, 'Debug this', 'Tìm lỗi')) issues.push(`${locale}/${slug}: missing debugging`)
-    if (!heading(lesson.body, 'Common mistakes', 'Lỗi thường gặp')) issues.push(`${locale}/${slug}: missing mistakes`)
-    if (!heading(lesson.body, 'Your turn', 'Thử ngay')) issues.push(`${locale}/${slug}: missing build task`)
-    if (!heading(lesson.body, 'Quick check', 'Tự kiểm tra')) issues.push(`${locale}/${slug}: missing recall check`)
-  }
 }
-
 for (const slug of expected) {
   const en = parsed.en[slug], vi = parsed.vi[slug]
   if (!en || !vi) continue
@@ -83,6 +77,5 @@ for (const slug of expected) {
   if (en.track !== vi.track) issues.push(`${slug}: track mismatch`)
   if (en.expectedBlock !== vi.expectedBlock) issues.push(`${slug}: expected grader contract mismatch EN/VI`)
 }
-
 if (issues.length) { console.log('FAIL CSS V2'); console.log(issues.join('\n')); process.exit(1) }
-console.log(`PASS CSS structure 14/14; IT V2 migrated ${migrated.length}/14 EN+VI`)
+console.log(`PASS CSS V2 pedagogy+exercise+parity ${migrated.length}/${expected.length} EN+VI`)
