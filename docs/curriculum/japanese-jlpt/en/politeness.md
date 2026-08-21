@@ -7,6 +7,11 @@ title: Ask for something politely
 order: 1
 published: true
 jlpt_level: n5
+unit_id: ja-n5-shop-request-01
+unit_title: "Ask for an item"
+unit_order: 1
+unit_can_do: "Ask for a chosen item and close a short shop exchange politely"
+unit_role: lesson
 can_do: "Ask for an item politely and use a basic yes, no, or thank-you response"
 pattern: "これをください。 / はい。 / いいえ。 / ありがとうございます。"
 objectives:
@@ -23,6 +28,8 @@ steps:
   - type: scene
     title: "At a small shop"
     body: "You have chosen an item at a shop. Ask for that item and close the exchange politely."
+    visualKey: "shop-counter-request"
+    imageAlt: "A customer at a small shop counter points to an item while speaking to the clerk."
   - type: dialogue
     lines:
       - { speaker: "客", text: "これをください。", reading: "これをください。" }
