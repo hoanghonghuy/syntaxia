@@ -10,7 +10,7 @@ const slugs = ['politeness', 'people', 'numbers', 'family', 'food-drink', 'place
 const read = (path) => readFileSync(path, 'utf8')
 
 function assessedIds(body) {
-  return [...body.matchAll(/^\s+- id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
+  return [...body.matchAll(/^\s+(?:-\s+)?id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
 }
 
 describe('Japanese N5 curriculum v3', () => {
