@@ -23,6 +23,11 @@ export type LessonSummary = {
   title: string
   sortOrder: number
   published: boolean
+  unitId?: string
+  unitTitle?: string
+  unitOrder?: number
+  unitCanDo?: string
+  unitRole?: 'lesson' | 'checkpoint' | 'review'
 }
 
 export type Lesson = LessonSummary & {
