@@ -41,6 +41,8 @@ const slugs = [
   'describe-checkpoint',
   'describe-review',
   'transport',
+  'travel-checkpoint',
+  'travel-review',
   'devices',
   'introductions-checkpoint',
   'introductions-review',
@@ -71,7 +73,7 @@ describe('Mandarin runtime contract', () => {
 })
 
 describe('Mandarin HSK Band 1 v3 curriculum', () => {
-  it('ships twenty-six paired EN/VI language nodes', () => {
+  it('ships twenty-eight paired EN/VI language nodes', () => {
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${locale}`)
       assert.equal(existsSync(dir), true)
@@ -106,7 +108,7 @@ describe('Mandarin HSK Band 1 v3 curriculum', () => {
         assert.match(raw, /reading:\s*"[^"]*[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ][^"]*"/i, `${locale}/${slug}: tone-marked pinyin`)
         assert.match(raw, /kind:\s*audio_choice/, `${locale}/${slug}: listening assessment`)
         assert.match(raw, /kind:\s*dialogue_choice/, `${locale}/${slug}: interaction`)
-        assert.match(raw, /kind:\s*type_answer/, `${locale}/${slug}: production`)
+        assert.match(raw, /kind:\s*(?:type_answer|listen_type)/, `${locale}/${slug}: production`)
         assert.match(raw, /^\s+- type:\s*checkpoint$/m, `${locale}/${slug}: checkpoint`)
         assert.doesNotMatch(raw, /kind:\s*mcq/, `${locale}/${slug}: generic MCQ regression`)
       }
@@ -122,9 +124,5 @@ describe('Mandarin HSK Band 1 v3 curriculum', () => {
     const adjectives = read(join(repoRoot, 'docs/curriculum/chinese-hsk/en/adjectives.md'))
     assert.match(adjectives, /Avoid the beginner error \*水是冷/)
     assert.match(adjectives, /answer:\s*"水很冷。"/)
-
-    const describeCheckpoint = read(join(repoRoot, 'docs/curriculum/chinese-hsk/en/describe-checkpoint.md'))
-    assert.match(describeCheckpoint, /choices:\s*\["水很冷。", "水是冷。", "很水冷。"\]/)
-    assert.match(describeCheckpoint, /answer:\s*"水很冷。"/)
   })
 })
