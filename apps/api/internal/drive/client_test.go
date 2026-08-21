@@ -260,6 +260,18 @@ func TestChineseHSKCurriculumSmoke(t *testing.T) {
 	if len(files) != 24 {
 		t.Fatalf("expected 24 chinese-hsk lessons (12x2 locales), got %d", len(files))
 	}
+	validExerciseTypes := map[string]struct{}{
+		"mcq": {},
+		"meaning_choice": {},
+		"image_choice": {},
+		"audio_choice": {},
+		"dialogue_choice": {},
+		"match_pairs": {},
+		"order_words": {},
+		"fill_blank": {},
+		"type_answer": {},
+		"listen_type": {},
+	}
 	for _, path := range files {
 		raw, err := os.ReadFile(path)
 		if err != nil {
@@ -284,7 +296,7 @@ func TestChineseHSKCurriculumSmoke(t *testing.T) {
 			t.Fatalf("%s: missing exercise", rel)
 		}
 		typ, _ := l.Exercise["type"].(string)
-		if typ != "mcq" && typ != "fill_blank" {
+		if _, ok := validExerciseTypes[typ]; !ok {
 			t.Fatalf("%s: bad exercise type %v", rel, l.Exercise["type"])
 		}
 		ans, _ := l.Exercise["answer"].(string)
