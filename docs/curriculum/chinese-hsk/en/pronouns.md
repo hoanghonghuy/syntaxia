@@ -8,6 +8,11 @@ order: 2
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-people-02
+unit_title: "Introduce yourself and people close to you"
+unit_order: 2
+unit_can_do: "Exchange names and introduce a friend or family member"
+unit_role: lesson
 can_do: "Ask someone's name, say your own name, and refer to another person"
 pattern: "我叫… / 你叫什么名字？ / 他（她）叫…"
 objectives:
