@@ -8,6 +8,11 @@ order: 5
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-study-04
+unit_title: "Plan when and where you study"
+unit_order: 4
+unit_can_do: "Say when and where you study Chinese and confirm a simple study plan"
+unit_role: lesson
 can_do: "Say whether something happens today or tomorrow and place it in a part of the day"
 pattern: "我今天… / 我明天上午…"
 objectives:
