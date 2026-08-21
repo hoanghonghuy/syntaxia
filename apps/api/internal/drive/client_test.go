@@ -303,9 +303,17 @@ func TestChineseHSKCurriculumSmoke(t *testing.T) {
 		if strings.TrimSpace(ans) == "" {
 			t.Fatalf("%s: empty answer", rel)
 		}
-		vocab, ok := l.Exercise["vocab"].([]any)
-		if !ok || len(vocab) == 0 {
-			t.Fatalf("%s: missing vocab merge", rel)
+		role, _ := l.Exercise["unitRole"].(string)
+		if role == "checkpoint" || role == "review" {
+			steps, ok := l.Exercise["steps"].([]any)
+			if !ok || len(steps) == 0 {
+				t.Fatalf("%s: %s node missing steps", rel, role)
+			}
+		} else {
+			vocab, ok := l.Exercise["vocab"].([]any)
+			if !ok || len(vocab) == 0 {
+				t.Fatalf("%s: lesson node missing vocab merge", rel)
+			}
 		}
 		band := l.Exercise["hskBand"]
 		switch v := band.(type) {
