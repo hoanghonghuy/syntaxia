@@ -8,6 +8,11 @@ order: 11
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-travel-08
+unit_title: "Nói bạn di chuyển bằng gì"
+unit_order: 8
+unit_can_do: "Hỏi ai đó di chuyển bằng gì và trả lời bằng tàu hỏa, máy bay hoặc taxi"
+unit_role: lesson
 can_do: "Nói bạn đi tàu, máy bay hay taxi trong một cuộc trao đổi ngắn về di chuyển"
 pattern: "我坐火车。/ 我坐飞机。/ 我打车。"
 objectives:
