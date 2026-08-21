@@ -6,7 +6,16 @@ import { fileURLToPath } from 'node:url'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
-const slugs = ['politeness', 'people', 'numbers', 'family', 'food-drink', 'places']
+const slugs = [
+  'politeness',
+  'politeness-checkpoint',
+  'politeness-review',
+  'people',
+  'numbers',
+  'family',
+  'food-drink',
+  'places',
+]
 const read = (path) => readFileSync(path, 'utf8')
 
 function assessedIds(body) {
