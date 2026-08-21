@@ -8,6 +8,11 @@ order: 9
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-info-06
+unit_title: "Ask about people and places"
+unit_order: 6
+unit_can_do: "Ask who or where and answer with a person, place, or destination in a short exchange"
+unit_role: lesson
 can_do: "Use basic question words and a yes/no question in a short exchange"
 pattern: "什么 / 谁 / 哪里 / …吗？ / …呢？"
 objectives:
