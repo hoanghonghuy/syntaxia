@@ -1,42 +1,47 @@
 <template>
-  <div class="card auth-card">
-    <h1>{{ t('auth.registerTitle') }}</h1>
-    <p class="auth-subtitle">{{ t('auth.registerSubtitle') }}</p>
-    <form class="form-stack" @submit.prevent="onSubmit">
-      <div class="form-field">
-        <label for="reg-name">{{ t('auth.displayName') }}</label>
-        <input id="reg-name" v-model="displayName" type="text" autocomplete="name" />
+  <div class="auth-page">
+    <div class="card auth-card">
+      <div class="auth-head">
+        <NuxtLink :to="localePath('/')" class="auth-brand">Syntaxia</NuxtLink>
+        <h1>{{ t('auth.registerTitle') }}</h1>
       </div>
-      <div class="form-field">
-        <label for="reg-email">{{ t('auth.email') }}</label>
-        <input id="reg-email" v-model="email" type="email" required autocomplete="email" />
-      </div>
-      <div class="form-field">
-        <label for="reg-password">{{ t('auth.password') }}</label>
-        <input
-          id="reg-password"
-          v-model="password"
-          type="password"
-          required
-          minlength="8"
-          autocomplete="new-password"
-        />
-        <p class="field-hint">{{ t('auth.passwordHint') }}</p>
-      </div>
-      <p v-if="error" class="auth-error" role="alert">{{ error }}</p>
-      <button class="btn btn-primary" type="submit" :disabled="submitting">
-        {{ t('auth.submitRegister') }}
-      </button>
-      <a
-        v-if="providers?.google"
-        class="btn btn-ghost"
-        :href="googleAuthHref"
-      >{{ t('auth.google') }}</a>
-      <p class="auth-switch">
-        {{ t('auth.hasAccount') }}
-        <NuxtLink :to="loginLink">{{ t('nav.login') }}</NuxtLink>
-      </p>
-    </form>
+
+      <form class="form-stack" @submit.prevent="onSubmit">
+        <div class="form-field">
+          <label for="reg-name">{{ t('auth.displayName') }}</label>
+          <input id="reg-name" v-model="displayName" type="text" autocomplete="name" />
+        </div>
+        <div class="form-field">
+          <label for="reg-email">{{ t('auth.email') }}</label>
+          <input id="reg-email" v-model="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <label for="reg-password">{{ t('auth.password') }}</label>
+          <input
+            id="reg-password"
+            v-model="password"
+            type="password"
+            required
+            minlength="8"
+            autocomplete="new-password"
+          />
+          <p class="field-hint">{{ t('auth.passwordHint') }}</p>
+        </div>
+        <p v-if="error" class="auth-error" role="alert">{{ error }}</p>
+        <button class="btn btn-primary" type="submit" :disabled="submitting">
+          {{ t('auth.submitRegister') }}
+        </button>
+        <a
+          v-if="providers?.google"
+          class="btn btn-ghost"
+          :href="googleAuthHref"
+        >{{ t('auth.google') }}</a>
+        <p class="auth-switch">
+          {{ t('auth.hasAccount') }}
+          <NuxtLink :to="loginLink">{{ t('nav.login') }}</NuxtLink>
+        </p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -111,29 +116,55 @@ async function onSubmit() {
 </script>
 
 <style scoped>
+.auth-page {
+  display: grid;
+  min-height: 100%;
+  place-items: start center;
+  padding: clamp(2rem, 8vw, 5rem) var(--space-4);
+}
+
 .auth-card {
-  max-width: 24rem;
-  margin: 3rem auto;
+  width: min(100%, 25rem);
+  margin: 0;
+  padding: clamp(1.5rem, 5vw, 2rem);
+  box-shadow: 0 20px 50px color-mix(in srgb, var(--color-ink) 8%, transparent);
 }
-.auth-subtitle {
-  color: var(--color-ink-muted);
-  font-size: 0.95rem;
-  margin: 0 0 1.25rem;
-  line-height: 1.45;
+
+.auth-head {
+  margin-bottom: var(--space-5);
 }
+
+.auth-brand {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-brand-deep);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.auth-head h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 6vw, 2.35rem);
+  letter-spacing: -0.04em;
+}
+
 .field-hint {
   margin: 0.35rem 0 0;
-  font-size: 0.8rem;
   color: var(--color-ink-muted);
+  font-size: 0.8rem;
 }
+
 .auth-error {
-  color: var(--color-error);
   margin: 0;
+  color: var(--color-error);
   font-size: 0.9rem;
 }
+
 .auth-switch {
   margin: 0.5rem 0 0;
-  font-size: 0.9rem;
   color: var(--color-ink-muted);
+  font-size: 0.9rem;
 }
 </style>

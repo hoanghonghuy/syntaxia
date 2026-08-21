@@ -1,4 +1,4 @@
-import type { Lesson, LessonSummary, Note, NoteListItem, Progress, SandboxResult, Track, User } from '~/types/api'
+import type { LanguageReviewCard, Lesson, LessonSummary, Note, NoteListItem, Progress, SandboxResult, Track, User } from '~/types/api'
 
 export function useApi() {
   const config = useRuntimeConfig()
@@ -81,6 +81,21 @@ export function useApi() {
       request<Progress>(`/api/v1/progress/${lessonId}`, {
         method: 'PUT',
         body: JSON.stringify({ locale, completed }),
+      }),
+    dueLanguageReviews: (track: string, locale: string, limit = 12) => {
+      const q = new URLSearchParams({ track, locale, limit: String(limit) })
+      return request<LanguageReviewCard[]>(`/api/v1/language/review/due?${q}`)
+    },
+    recordLanguageReview: (payload: {
+      lessonId: string
+      locale: string
+      itemKey: string
+      rating: 1 | 2 | 3 | 4
+      responseMs?: number
+    }) =>
+      request<LanguageReviewCard>('/api/v1/language/review', {
+        method: 'POST',
+        body: JSON.stringify(payload),
       }),
     listNotes: (slug: string, locale: string, track: string) =>
       request<Note[]>(

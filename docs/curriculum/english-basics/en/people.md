@@ -3,70 +3,91 @@ id: en-a1-02-people
 track: english-basics
 locale: en
 slug: people
-title: People and pronouns
+title: Introduce another person
 order: 2
 published: true
 cefr_level: a1
-can_do: "Introduce yourself with I/you/name"
-pattern: "I am… / My name is…"
+unit_id: en-a1-people-02
+unit_title: "Introduce people close to you"
+unit_order: 2
+unit_can_do: "Ask who someone is and introduce a friend or family member"
+unit_role: lesson
+can_do: "Ask who someone is and introduce a friend in one or two sentences"
+pattern: "Who's that? / This is … / He's … / She's …"
 objectives:
-  - Use subject pronouns I / you / he / she / we / they
-  - Ask for a name and talk about a friend
+  - Ask who a person is
+  - Introduce someone by name
+  - Use he or she in a short follow-up sentence
 vocab:
-  - { word: "I", ipa: "/aɪ/", gloss: "first person" }
-  - { word: "you", ipa: "/juː/", gloss: "second person" }
-  - { word: "he", ipa: "/hiː/", gloss: "male third person" }
-  - { word: "she", ipa: "/ʃiː/", gloss: "female third person" }
-  - { word: "we", ipa: "/wiː/", gloss: "first person plural" }
-  - { word: "they", ipa: "/ðeɪ/", gloss: "third person plural" }
-  - { word: "name", ipa: "/neɪm/", gloss: "what someone is called" }
-  - { word: "friend", ipa: "/frend/", gloss: "person you like" }
+  - { word: "who", ipa: "/huː/", gloss: "asks about a person" }
+  - { word: "this is", ipa: "/ðɪs ɪz/", gloss: "introduces a person or thing" }
+  - { word: "he's", ipa: "/hiːz/", gloss: "short for he is" }
+  - { word: "she's", ipa: "/ʃiːz/", gloss: "short for she is" }
+  - { word: "friend", ipa: "/frend/", gloss: "a person you know and like" }
 steps:
+  - type: scene
+    title: "A friend joins you"
+    body: "You are talking with Mai when her friend Daniel arrives. Ask who he is, then introduce someone yourself."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "Hello! My name is Sam." }
-      - { speaker: "B", text: "Hi! I am Alex." }
-      - { speaker: "A", text: "She is my friend." }
+      - { speaker: "A", text: "Who's that?" }
+      - { speaker: "B", text: "That's Daniel. He's my friend." }
+      - { speaker: "A", text: "Hi, Daniel. I'm Linh." }
+      - { speaker: "B", text: "Daniel, this is Linh." }
+      - { speaker: "C", text: "Nice to meet you, Linh." }
+  - type: listen
+    prompt: "Listen to the introduction once, then notice the phrase used before a name."
+    text: "Daniel, this is Linh."
   - type: tip
-    title: "Pronouns replace names"
-    body: "Use I for yourself, you for the listener. he / she for one person; we includes you and others; they for other people. My name is… introduces you."
+    title: "Introduce first, then add one detail"
+    body: "Use This is + name when you introduce someone. Use He's or She's for a short follow-up detail such as He's my friend."
   - type: teach
     items:
-      - { form: "I", reading: "/aɪ/", gloss: "first person", example: "I am Alex." }
-      - { form: "you", reading: "/juː/", gloss: "second person", example: "You are my friend." }
-      - { form: "name", reading: "/neɪm/", gloss: "what someone is called", example: "My name is Sam." }
-      - { form: "she", reading: "/ʃiː/", gloss: "female third person", example: "She is my friend." }
-      - { form: "we", reading: "/wiː/", gloss: "first person plural", example: "We are friends." }
+      - { form: "Who's that?", reading: "/huːz ðæt/", gloss: "ask who a person is", example: "Who's that?" }
+      - { form: "This is …", reading: "/ðɪs ɪz/", gloss: "introduce someone", example: "This is Linh." }
+      - { form: "He's my friend.", reading: "/hiːz maɪ frend/", gloss: "say who a male person is", example: "He's my friend." }
+      - { form: "She's my friend.", reading: "/ʃiːz maɪ frend/", gloss: "say who a female person is", example: "She's my friend." }
   - type: practice
-    kind: mcq
-    prompt: "In the dialogue, who says “My name is Sam”?"
-    choices: ["A", "B", "they"]
-    answer: "A"
+    id: people-dialogue-1
+    kind: dialogue_choice
+    prompt: "You ask, “Who's that?” Your friend points to Anna. Which reply is natural?"
+    choices: ["That's Anna. She's my friend.", "I'm Anna. Who are you?", "See you, Anna."]
+    answer: "That's Anna. She's my friend."
+    explanation: "The reply identifies Anna, then gives one short detail about her."
+  - type: practice
+    id: people-build-1
+    kind: order_words
+    prompt: "Introduce Linh to Daniel."
+    tokens: ["Linh", "is", "This"]
+    answer: "This is Linh"
+    acceptedAnswers: ["This is Linh."]
     hints:
-      - "Sam is speaker A."
+      - "The introduction starts with This."
   - type: practice
-    kind: mcq
-    prompt: "Which pronoun means “we”?"
-    choices: ["we", "they", "name"]
-    answer: "we"
+    id: people-produce-1
+    kind: type_answer
+    prompt: "Mai is your friend. Write one short sentence about her using “she”."
+    answer: "She's my friend"
+    acceptedAnswers: ["She's my friend.", "She is my friend", "She is my friend."]
+    hints:
+      - "Use She's or She is."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which pronoun means “I”?"
-        choices: ["I", "you", "he"]
-        answer: "I"
-      - kind: mcq
-        prompt: "Review: which word is a greeting?"
-        choices: ["hello", "name", "they"]
-        answer: "hello"
+      - id: people-check-1
+        kind: dialogue_choice
+        prompt: "You want to know the person across the room. What can you ask?"
+        choices: ["Who's that?", "Where is that?", "How many?" ]
+        answer: "Who's that?"
+      - id: people-check-2
+        kind: dialogue_choice
+        prompt: "Review: someone says, “Hi, I'm Alex.” What is a natural first-meeting reply?"
+        choices: ["Hi, Alex. I'm Mai.", "She's my friend.", "Who's that?"]
+        answer: "Hi, Alex. I'm Mai."
 exercise:
-  type: mcq
-  prompt: "Which pronoun means “we”?"
-  choices: ["we", "they", "name"]
-  answer: "we"
-  hints:
-    - "they is for other people."
-    - "we includes the speaker."
+  type: dialogue_choice
+  prompt: "Choose the natural way to introduce Linh."
+  choices: ["This is Linh.", "Who Linh?", "Linh is this?"]
+  answer: "This is Linh."
 ---
 
-Practice introductions step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Use the target phrases to identify and introduce real people, not as a pronoun list to memorize.

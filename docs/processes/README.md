@@ -19,7 +19,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [admin-content-crud.md](./admin-content-crud.md) | Admin lesson CRUD UI/API |
 | [sql-sandbox.md](./sql-sandbox.md) | Isolated Postgres sandbox runner |
 | [sandbox-feedback.md](./sandbox-feedback.md) | Fail copy, hints, solution reveal |
-| [curriculum-pedagogy.md](./curriculum-pedagogy.md) | Lesson depth, voice, mistakes/hints/solution |
+| [curriculum-pedagogy.md](./curriculum-pedagogy.md) | IT lesson depth, voice, mistakes/hints/solution |
 | [sql-fundamentals-w3schools-map.md](./sql-fundamentals-w3schools-map.md) | W3Schools-density SQL Fundamentals outline |
 | [sql-fundamentals-closure.md](./sql-fundamentals-closure.md) | Full path 42 lessons + polish pass (**closed**) |
 | [lesson-reader.md](./lesson-reader.md) | TOC from headings, mobile nav, prose typography |
@@ -55,15 +55,17 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [openspec-skills-only.md](./openspec-skills-only.md) | OpenSpec via skill checklists — **no** Synapse runtime/MCP |
 | [multi-domain-roadmap.md](./multi-domain-roadmap.md) | IT + Languages (+ later) phased plan |
 | [learning-domains.md](./learning-domains.md) | Domain IA (home /tracks filters, last-domain storage) |
-| [english-basics-pedagogy.md](./english-basics-pedagogy.md) | CEFR A1 English track pedagogy lock (before lessons) |
-| [japanese-jlpt-pedagogy.md](./japanese-jlpt-pedagogy.md) | JLPT N5 Japanese track pedagogy lock (placeholder before map) |
-| [language-learning-pedagogy-v2.md](./language-learning-pedagogy-v2.md) | **Locked** sentence-step path (supersedes v1 lesson shape) |
-| [language-unit-path-hub.md](./language-unit-path-hub.md) | Linear unit path on language track hubs |
-| [language-step-audio.md](./language-step-audio.md) | Listen button: audioUrl or TTS |
-| [language-review-session.md](./language-review-session.md) | Review practice from completed units |
+| [english-basics-pedagogy.md](./english-basics-pedagogy.md) | CEFR A1 English track-specific pedagogy |
+| [japanese-jlpt-pedagogy.md](./japanese-jlpt-pedagogy.md) | JLPT N5 Japanese track-specific pedagogy |
+| [language-learning-pedagogy-v3.md](./language-learning-pedagogy-v3.md) | **Active** production language-learning model |
+| [language-content-quality-v3.md](./language-content-quality-v3.md) | **Active** authoring QA: naturalness, visuals, audio, exercises, accessibility |
+| [language-learning-pedagogy-v2.md](./language-learning-pedagogy-v2.md) | Historical compatibility for v2 lesson shape |
+| [language-unit-path-hub.md](./language-unit-path-hub.md) | Historical linear language hub path; v3 unit model still needs replacement |
+| [language-step-audio.md](./language-step-audio.md) | Listen/TTS + audio-first transcript behavior |
+| [language-review-session.md](./language-review-session.md) | FSRS-backed language review behavior and persistence |
 | [chinese-it-vocab-map.md](./chinese-it-vocab-map.md) | szdict-mapped specialty lesson themes |
 | [japanese-jlpt-n5-map.md](./japanese-jlpt-n5-map.md) | First 6 N5 lessons mapped from OpenJLPT vocab-n5 |
-| [chinese-hsk-mvp.md](./chinese-hsk-mvp.md) | Language player + Band 1 curriculum wiring |
+| [chinese-hsk-mvp.md](./chinese-hsk-mvp.md) | Historical language-player + Band 1 MVP wiring |
 
 Add a row here whenever you create a new process file.
 

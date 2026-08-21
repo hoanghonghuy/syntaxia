@@ -3,14 +3,21 @@ id: en-a1-03-numbers
 track: english-basics
 locale: en
 slug: numbers
-title: Numbers one to ten
+title: Give and confirm a number
 order: 3
 published: true
 cefr_level: a1
-can_do: "Count from one to ten"
-pattern: "one … ten"
+unit_id: en-a1-find-way-03
+unit_title: "Find your way"
+unit_order: 3
+unit_can_do: "Confirm a room number and ask where a common place is"
+unit_role: lesson
+can_do: "Understand and give a simple number from one to ten in a short exchange"
+pattern: "What number? / Number eight. / Eight? — Yes."
 objectives:
-  - Count from one to ten in English
+  - Recognize numbers one to ten when you hear them
+  - Give a simple number clearly
+  - Confirm a number you heard
 vocab:
   - { word: "one", ipa: "/wʌn/", gloss: "1" }
   - { word: "two", ipa: "/tuː/", gloss: "2" }
@@ -23,51 +30,65 @@ vocab:
   - { word: "nine", ipa: "/naɪn/", gloss: "9" }
   - { word: "ten", ipa: "/ten/", gloss: "10" }
 steps:
+  - type: scene
+    title: "Find your classroom"
+    body: "At a language school, a staff member tells you your room number. You need to hear it correctly and confirm it."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "One, two, three!" }
-      - { speaker: "B", text: "Four, five, six!" }
-      - { speaker: "A", text: "Seven, eight, nine, ten!" }
+      - { speaker: "Staff", text: "Your class is in room eight." }
+      - { speaker: "You", text: "Room eight?" }
+      - { speaker: "Staff", text: "Yes, eight." }
+      - { speaker: "You", text: "Thank you." }
+  - type: listen
+    prompt: "Listen for the number only."
+    text: "Your class is in room six."
   - type: tip
-    title: "Count in order"
-    body: "English numbers one to ten follow a fixed order. Practice saying them in a row — you will need them for ages, prices, and quantities."
+    title: "Repeat the number to confirm"
+    body: "When a number matters, repeat it with rising intonation: Room eight? This is more useful than reciting one to ten without a situation."
   - type: teach
     items:
-      - { form: "one", reading: "/wʌn/", gloss: "1", example: "One apple." }
-      - { form: "two", reading: "/tuː/", gloss: "2", example: "Two friends." }
-      - { form: "three", reading: "/θriː/", gloss: "3", example: "Three, four, five." }
-      - { form: "five", reading: "/faɪv/", gloss: "5", example: "Five books." }
-      - { form: "ten", reading: "/ten/", gloss: "10", example: "One to ten." }
+      - { form: "one, two, three", reading: "/wʌn tuː θriː/", gloss: "1, 2, 3", example: "Room three." }
+      - { form: "four, five, six", reading: "/fɔːr faɪv sɪks/", gloss: "4, 5, 6", example: "Number six." }
+      - { form: "seven, eight", reading: "/ˈsevən eɪt/", gloss: "7, 8", example: "Room eight." }
+      - { form: "nine, ten", reading: "/naɪn ten/", gloss: "9, 10", example: "Number ten." }
   - type: practice
-    kind: mcq
-    prompt: "Which number comes after two?"
-    choices: ["three", "one", "five"]
-    answer: "three"
+    id: numbers-listen-1
+    kind: listen_type
+    prompt: "Listen and type the number word you hear."
+    audioText: "six"
+    answer: "six"
     hints:
-      - "Count: one, two, …"
+      - "It starts with s-."
   - type: practice
-    kind: fill_blank
-    prompt: "Type the English word for 3."
-    answer: "three"
-    hints:
-      - "It starts with th-."
+    id: numbers-meaning-1
+    kind: meaning_choice
+    prompt: "Which word is the number 8?"
+    choices: ["eight", "three", "ten"]
+    answer: "eight"
+  - type: practice
+    id: numbers-dialogue-1
+    kind: dialogue_choice
+    prompt: "The staff member says “Room five.” You want to confirm. What do you say?"
+    choices: ["Room five?", "Who is five?", "Five is my friend."]
+    answer: "Room five?"
+    explanation: "Repeating the key number as a short question confirms what you heard."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which is the number 10?"
-        choices: ["ten", "nine", "six"]
-        answer: "ten"
-      - kind: mcq
-        prompt: "Review: which pronoun means “I”?"
-        choices: ["I", "ten", "five"]
-        answer: "I"
+      - id: numbers-check-1
+        kind: listen_type
+        prompt: "Listen and type the number word."
+        audioText: "nine"
+        answer: "nine"
+      - id: numbers-check-2
+        kind: dialogue_choice
+        prompt: "Review: you introduce your friend Linh. Which sentence works?"
+        choices: ["This is Linh.", "Room Linh?", "Who's eight?"]
+        answer: "This is Linh."
 exercise:
-  type: fill_blank
-  prompt: "Type the English word for 3."
-  answer: "three"
-  hints:
-    - "It starts with th-."
-    - "Spelling: t-h-r-e-e."
+  type: listen_type
+  prompt: "Listen and type the number word."
+  audioText: "four"
+  answer: "four"
 ---
 
-Practice counting step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The aim is to use small numbers as information in a conversation. Saying the sequence from one to ten is support, not the final skill.

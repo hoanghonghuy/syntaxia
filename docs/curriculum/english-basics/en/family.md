@@ -3,67 +3,88 @@ id: en-a1-04-family
 track: english-basics
 locale: en
 slug: family
-title: Family words
+title: Introduce your family
 order: 4
 published: true
 cefr_level: a1
-can_do: "Name family members"
-pattern: "my mother / father / sister / brother"
+unit_id: en-a1-people-02
+unit_title: "Introduce people close to you"
+unit_order: 2
+unit_can_do: "Ask who someone is and introduce a friend or family member"
+unit_role: lesson
+can_do: "Introduce one or two close family members and say who they are"
+pattern: "This is my … / He's my … / She's my …"
 objectives:
-  - Name close family members
-  - Use the word family
+  - Name close family relationships
+  - Introduce a family member with This is my
+  - Follow with he or she when the person is already known
 vocab:
   - { word: "mother", ipa: "/ˈmʌðər/", gloss: "female parent" }
   - { word: "father", ipa: "/ˈfɑːðər/", gloss: "male parent" }
   - { word: "sister", ipa: "/ˈsɪstər/", gloss: "female sibling" }
   - { word: "brother", ipa: "/ˈbrʌðər/", gloss: "male sibling" }
-  - { word: "family", ipa: "/ˈfæməli/", gloss: "related people living together" }
-  - { word: "baby", ipa: "/ˈbeɪbi/", gloss: "very young child" }
+  - { word: "family", ipa: "/ˈfæməli/", gloss: "your family group" }
 steps:
+  - type: scene
+    title: "Show a family photo"
+    body: "A classmate sees a photo on your phone and asks about the people in it. Introduce two family members."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "This is my mother." }
-      - { speaker: "B", text: "Hello! Is he your father?" }
-      - { speaker: "A", text: "Yes. She is my sister. The baby is my brother." }
+      - { speaker: "A", text: "Who's this?" }
+      - { speaker: "B", text: "This is my sister, Hoa." }
+      - { speaker: "A", text: "And who's he?" }
+      - { speaker: "B", text: "He's my brother, Nam." }
+      - { speaker: "A", text: "Nice photo!" }
+  - type: listen
+    prompt: "Listen and notice the family word after my."
+    text: "This is my sister, Hoa."
   - type: tip
-    title: "my + family word"
-    body: "Use my before mother, father, sister, brother to show who belongs to you. family is the whole group. baby is a very young child."
+    title: "my + relationship"
+    body: "Use my before the relationship: my sister, my father. Once the person is clear, He's or She's can continue the description without repeating the name."
   - type: teach
     items:
-      - { form: "mother", reading: "/ˈmʌðər/", gloss: "female parent", example: "This is my mother." }
-      - { form: "father", reading: "/ˈfɑːðər/", gloss: "male parent", example: "He is my father." }
-      - { form: "sister", reading: "/ˈsɪstər/", gloss: "female sibling", example: "She is my sister." }
-      - { form: "brother", reading: "/ˈbrʌðər/", gloss: "male sibling", example: "My brother is here." }
-      - { form: "family", reading: "/ˈfæməli/", gloss: "related people living together", example: "My family is big." }
+      - { form: "my mother", reading: "/maɪ ˈmʌðər/", gloss: "your female parent", example: "This is my mother." }
+      - { form: "my father", reading: "/maɪ ˈfɑːðər/", gloss: "your male parent", example: "This is my father." }
+      - { form: "my sister", reading: "/maɪ ˈsɪstər/", gloss: "your female sibling", example: "She's my sister." }
+      - { form: "my brother", reading: "/maɪ ˈbrʌðər/", gloss: "your male sibling", example: "He's my brother." }
   - type: practice
-    kind: mcq
-    prompt: "Which means “female parent”?"
-    choices: ["mother", "father", "brother"]
-    answer: "mother"
+    id: family-dialogue-1
+    kind: dialogue_choice
+    prompt: "Someone points to a woman in your family photo and asks “Who's this?” She is your mother. What do you say?"
+    choices: ["This is my mother.", "She's this mother.", "Who is my mother?"]
+    answer: "This is my mother."
+  - type: practice
+    id: family-build-1
+    kind: order_words
+    prompt: "Build a sentence about your brother."
+    tokens: ["brother", "my", "He's"]
+    answer: "He's my brother"
+    acceptedAnswers: ["He's my brother."]
+  - type: practice
+    id: family-produce-1
+    kind: type_answer
+    prompt: "Hoa is your sister. Introduce her with “This is”."
+    answer: "This is my sister Hoa"
+    acceptedAnswers: ["This is my sister, Hoa", "This is my sister Hoa.", "This is my sister, Hoa."]
     hints:
-      - "father is the male parent."
-  - type: practice
-    kind: mcq
-    prompt: "In the dialogue, who is “my sister”?"
-    choices: ["she", "he", "the baby"]
-    answer: "she"
+      - "Use This is my + family word + name."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “male sibling”?"
-        choices: ["brother", "mother", "family"]
-        answer: "brother"
-      - kind: fill_blank
-        prompt: "Review: type the number word for 3."
-        answer: "three"
+      - id: family-check-1
+        kind: meaning_choice
+        prompt: "Which phrase means a male sibling in your family?"
+        choices: ["my brother", "my father", "my friend"]
+        answer: "my brother"
+      - id: family-check-2
+        kind: dialogue_choice
+        prompt: "Review: a staff member says “Room seven.” How can you confirm it?"
+        choices: ["Room seven?", "Who's seven?", "This is seven."]
+        answer: "Room seven?"
 exercise:
-  type: mcq
-  prompt: "Which means “female parent”?"
-  choices: ["mother", "father", "brother"]
-  answer: "mother"
-  hints:
-    - "father is the male parent."
-    - "mother is the female parent."
+  type: dialogue_choice
+  prompt: "Choose the natural family introduction."
+  choices: ["This is my sister.", "My this sister.", "Who sister my?"]
+  answer: "This is my sister."
 ---
 
-Practice family words step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+Use the family words to identify real people in a photo or conversation. The relationship is useful because it completes an introduction, not because it belongs to a vocabulary category.

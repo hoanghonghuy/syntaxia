@@ -53,6 +53,8 @@ describe('language-lesson-path-v2', () => {
   it('all chinese-hsk lessons include steps + can_do (path v2)', () => {
     const slugs = [
       'greetings',
+      'greetings-checkpoint',
+      'greetings-review',
       'pronouns',
       'numbers',
       'family',
@@ -77,12 +79,19 @@ describe('language-lesson-path-v2', () => {
   })
 
   it('all english-basics lessons include steps + can_do (path v2)', () => {
-    const slugs = ['greetings', 'people', 'numbers', 'family', 'food-drink', 'places']
+    const slugs = [
+      'greetings',
+      'meeting-checkpoint',
+      'meeting-review',
+      'people',
+      'numbers',
+      'family',
+      'food-drink',
+      'places',
+    ]
     for (const loc of ['en', 'vi']) {
       for (const slug of slugs) {
-        const raw = read(
-          join(repoRoot, `docs/curriculum/english-basics/${loc}/${slug}.md`),
-        )
+        const raw = read(join(repoRoot, `docs/curriculum/english-basics/${loc}/${slug}.md`))
         assert.match(raw, /can_do:/, `en-basics ${loc}/${slug} missing can_do`)
         assert.match(raw, /steps:/, `en-basics ${loc}/${slug} missing steps`)
         assert.match(raw, /type:\s*dialogue/, `en-basics ${loc}/${slug} missing dialogue`)
@@ -92,12 +101,19 @@ describe('language-lesson-path-v2', () => {
   })
 
   it('all japanese-jlpt lessons include steps + can_do (path v2)', () => {
-    const slugs = ['politeness', 'people', 'numbers', 'family', 'food-drink', 'places']
+    const slugs = [
+      'politeness',
+      'politeness-checkpoint',
+      'politeness-review',
+      'people',
+      'numbers',
+      'family',
+      'food-drink',
+      'places',
+    ]
     for (const loc of ['en', 'vi']) {
       for (const slug of slugs) {
-        const raw = read(
-          join(repoRoot, `docs/curriculum/japanese-jlpt/${loc}/${slug}.md`),
-        )
+        const raw = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${loc}/${slug}.md`))
         assert.match(raw, /can_do:/, `ja ${loc}/${slug} missing can_do`)
         assert.match(raw, /steps:/, `ja ${loc}/${slug} missing steps`)
         assert.match(raw, /type:\s*dialogue/, `ja ${loc}/${slug} missing dialogue`)
@@ -117,9 +133,7 @@ describe('language-lesson-path-v2', () => {
     ]
     for (const loc of ['en', 'vi']) {
       for (const slug of slugs) {
-        const raw = read(
-          join(repoRoot, `docs/curriculum/chinese-it-vocab/${loc}/${slug}.md`),
-        )
+        const raw = read(join(repoRoot, `docs/curriculum/chinese-it-vocab/${loc}/${slug}.md`))
         assert.match(raw, /can_do:/, `zh-it ${loc}/${slug} missing can_do`)
         assert.match(raw, /steps:/, `zh-it ${loc}/${slug} missing steps`)
         assert.match(raw, /type:\s*dialogue/, `zh-it ${loc}/${slug} missing dialogue`)
@@ -128,10 +142,16 @@ describe('language-lesson-path-v2', () => {
     }
   })
 
-  it('lesson page prefers LanguageLessonSteps when steps exist', () => {
-    const src = read(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'))
-    assert.match(src, /LanguageLessonSteps/)
-    assert.match(src, /languageHasStepPath|languageHasSteps/)
-    assert.match(src, /legacyFormatNote/)
+  it('routes step-based language lessons through the dedicated player', () => {
+    const page = read(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'))
+    assert.match(page, /LanguageLessonPlayer/)
+    assert.match(page, /languageHasStepPath|languageHasSteps/)
+    assert.match(page, /legacyFormatNote/)
+
+    const player = read(join(webRoot, 'app/components/LanguageLessonPlayer.vue'))
+    assert.match(player, /LanguageLessonSteps/)
+    assert.match(player, /:lesson="lesson"/)
+    assert.match(player, /:track-id="trackId"/)
+    assert.match(player, /@passed="\$emit\('passed'\)"/)
   })
 })

@@ -3,68 +3,92 @@ id: zh-hsk-b1-01-greetings
 track: chinese-hsk
 locale: en
 slug: greetings
-title: Greetings and courtesy
+title: "Greet, thank, and say goodbye"
 order: 1
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Greet someone and say thank you politely"
-pattern: "你好 / 谢谢 / 再见"
+unit_id: zh-hsk-b1-greeting-01
+unit_title: "Greet and close a short exchange"
+unit_order: 1
+unit_can_do: "Greet someone, thank them, and close a short exchange naturally"
+unit_role: lesson
+can_do: "Greet someone, thank them, and close a short exchange naturally"
+pattern: "你好 / 谢谢 / 不客气 / 再见"
 objectives:
-  - Use 你好 and 再见 in a short exchange
-  - Respond to 谢谢 with 不客气
+  - "Open and close a short greeting exchange"
+  - "Reply naturally to 谢谢"
 vocab:
   - { hanzi: "你好", pinyin: "nǐ hǎo", gloss: "hello" }
-  - { hanzi: "再见", pinyin: "zài jiàn", gloss: "goodbye" }
   - { hanzi: "谢谢", pinyin: "xiè xie", gloss: "thank you" }
   - { hanzi: "不客气", pinyin: "bú kè qi", gloss: "you're welcome" }
-  - { hanzi: "请问", pinyin: "qǐng wèn", gloss: "excuse me (to ask)" }
-  - { hanzi: "对不起", pinyin: "duì bu qǐ", gloss: "sorry" }
-  - { hanzi: "没关系", pinyin: "méi guān xi", gloss: "it's okay / no problem" }
+  - { hanzi: "再见", pinyin: "zài jiàn", gloss: "goodbye" }
 steps:
+  - type: scene
+    title: "Situation"
+    body: "You meet a classmate before class. Greet them, then end the exchange politely."
+    visualKey: "classmates-meeting"
+    imageAlt: "Two classmates face each other before class and begin a short greeting exchange."
   - type: dialogue
     lines:
       - { speaker: "A", text: "你好！", reading: "nǐ hǎo" }
-      - { speaker: "B", text: "你好！谢谢！", reading: "nǐ hǎo! xiè xie!" }
-      - { speaker: "A", text: "不客气。再见！", reading: "bú kè qi. zài jiàn!" }
+      - { speaker: "B", text: "你好！", reading: "nǐ hǎo" }
+      - { speaker: "A", text: "谢谢你。", reading: "xiè xie nǐ" }
+      - { speaker: "B", text: "不客气。", reading: "bú kè qi" }
+      - { speaker: "A", text: "再见！", reading: "zài jiàn" }
+      - { speaker: "B", text: "再见！", reading: "zài jiàn" }
+  - type: listen
+    prompt: "Listen first. Which chunk did A use to thank B?"
+    text: "谢谢你。"
+    reading: "xiè xie nǐ"
   - type: tip
-    title: "Greetings are set phrases"
-    body: "你好 opens a conversation. 谢谢 / 不客气 are a thank-you pair. 再见 closes. Learn them as whole chunks, not single characters alone."
+    title: "Learn the whole exchange"
+    body: "Treat 你好, 谢谢, 不客气, and 再见 as ready-to-use chunks. Pinyin supports pronunciation; the characters remain the target form."
   - type: teach
     items:
       - { form: "你好", reading: "nǐ hǎo", gloss: "hello", example: "你好！" }
-      - { form: "谢谢", reading: "xiè xie", gloss: "thank you", example: "谢谢！" }
+      - { form: "谢谢", reading: "xiè xie", gloss: "thank you", example: "谢谢你。" }
       - { form: "不客气", reading: "bú kè qi", gloss: "you're welcome", example: "不客气。" }
       - { form: "再见", reading: "zài jiàn", gloss: "goodbye", example: "再见！" }
   - type: practice
-    kind: mcq
-    prompt: "In the dialogue, which line means “hello”?"
-    choices: ["你好！", "再见！", "谢谢！"]
-    answer: "你好！"
-    hints:
-      - "The first line is the greeting."
-  - type: practice
-    kind: mcq
-    prompt: "Someone says 谢谢. What do you reply?"
-    choices: ["不客气", "对不起", "请问"]
+    id: zh-greet-reply-1
+    kind: dialogue_choice
+    prompt: "Someone says 谢谢. What is the natural reply?"
+    choices: ["不客气", "再见", "你好"]
     answer: "不客气"
+    explanation: "谢谢 and 不客气 form a common thank-you exchange."
+  - type: practice
+    id: zh-greet-listen-1
+    kind: audio_choice
+    prompt: "Listen and choose what you hear."
+    audioText: "你好"
+    choices: ["你好", "谢谢", "再见"]
+    answer: "你好"
+  - type: practice
+    id: zh-greet-type-1
+    kind: type_answer
+    prompt: "Type the characters for “goodbye”."
+    answer: "再见"
+    hints:
+      - "The first character is 再."
+      - "The second is 见."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “goodbye”?"
-        choices: ["再见", "请问", "没关系"]
+      - id: zh-greet-check-1
+        kind: meaning_choice
+        prompt: "Which chunk closes a meeting?"
+        choices: ["再见", "你好", "谢谢"]
         answer: "再见"
-      - kind: fill_blank
-        prompt: "Type the characters for “thank you”."
-        answer: "谢谢"
+      - id: zh-greet-check-2
+        kind: dialogue_choice
+        prompt: "A classmate says 你好. What can you say back?"
+        choices: ["你好！", "不客气。", "再见。"]
+        answer: "你好！"
 exercise:
-  type: mcq
-  prompt: "Which means “hello”?"
-  choices: ["你好", "再见", "谢谢"]
-  answer: "你好"
-  hints:
-    - "你好 is the everyday greeting."
-    - "再见 is for goodbye."
+  type: dialogue_choice
+  prompt: "Choose the natural reply to 谢谢."
+  choices: ["不客气", "你好", "再见"]
+  answer: "不客气"
 ---
 
-Practice the greeting exchange step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Pinyin supports early reading, while listening, characters, interaction, production, and later review remain the learning loop.

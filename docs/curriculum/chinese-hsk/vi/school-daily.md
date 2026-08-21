@@ -3,75 +3,89 @@ id: zh-hsk-b1-06-school-daily
 track: chinese-hsk
 locale: vi
 slug: school-daily
-title: Trường học và động từ hàng ngày
+title: "Nói việc bạn làm ở trường"
 order: 6
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Nói về trường học và học tiếng Trung"
-pattern: "学校 / 学习 / 汉语"
+unit_id: zh-hsk-b1-study-04
+unit_title: "Lên kế hoạch khi nào và ở đâu để học"
+unit_order: 4
+unit_can_do: "Nói khi nào và ở đâu mình học tiếng Trung và xác nhận một kế hoạch học đơn giản"
+unit_role: lesson
+can_do: "Nói mình là học sinh/sinh viên và mô tả việc học tiếng Trung ở trường"
+pattern: "我是学生。/ 我在学校学习汉语。"
 objectives:
-  - Nói về 学校 / 老师 / 学生
-  - Dùng 学习, 汉语, 吃饭, 喝
+  - "Phân biệt giáo viên / học sinh / trường học"
+  - "Dùng 在 + nơi chốn trước một hành động học đơn giản"
 vocab:
   - { hanzi: "学校", pinyin: "xué xiào", gloss: "trường học" }
   - { hanzi: "老师", pinyin: "lǎo shī", gloss: "giáo viên" }
-  - { hanzi: "学生", pinyin: "xué sheng", gloss: "học sinh" }
-  - { hanzi: "同学", pinyin: "tóng xué", gloss: "bạn cùng lớp" }
+  - { hanzi: "学生", pinyin: "xué sheng", gloss: "học sinh / sinh viên" }
   - { hanzi: "学习", pinyin: "xué xí", gloss: "học" }
-  - { hanzi: "汉语", pinyin: "hàn yǔ", gloss: "tiếng Trung (Hán ngữ)" }
-  - { hanzi: "吃饭", pinyin: "chī fàn", gloss: "ăn cơm / ăn bữa" }
-  - { hanzi: "喝", pinyin: "hē", gloss: "uống" }
+  - { hanzi: "汉语", pinyin: "hàn yǔ", gloss: "tiếng Trung" }
 steps:
+  - type: scene
+    title: "Tình huống"
+    body: "Một bạn học mới hỏi bạn làm gì và học ở đâu."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "我是学生。我在学校学习汉语。", reading: "wǒ shì xué sheng. wǒ zài xué xiào xué xí hàn yǔ." }
-      - { speaker: "B", text: "你的老师好吗？", reading: "nǐ de lǎo shī hǎo ma?" }
-      - { speaker: "A", text: "好！我们同学一起吃饭，喝水。", reading: "hǎo! wǒ men tóng xué yì qǐ chī fàn, hē shuǐ." }
+      - { speaker: "A", text: "你是学生吗？", reading: "nǐ shì xué sheng ma" }
+      - { speaker: "B", text: "是，我是学生。", reading: "shì, wǒ shì xué sheng" }
+      - { speaker: "A", text: "你在哪里学习汉语？", reading: "nǐ zài nǎ lǐ xué xí hàn yǔ" }
+      - { speaker: "B", text: "我在学校学习汉语。", reading: "wǒ zài xué xiào xué xí hàn yǔ" }
+  - type: listen
+    prompt: "Nghe nơi chốn đứng trước hành động."
+    text: "我在学校学习汉语。"
+    reading: "wǒ zài xué xiào xué xí hàn yǔ"
   - type: tip
-    title: "Vai trò trường + động từ hàng ngày"
-    body: "老师 dạy; 学生 học. 学习 là động từ “học”. 吃饭 là “ăn bữa”; 喝 kèm đồ uống (喝水 = uống nước)."
+    title: "在 + nơi chốn + hành động"
+    body: "Dùng 在 để đặt hành động vào một nơi: 我在学校学习汉语. Hãy học cả cụm thay vì ghi nhớ 学校 và 学习 như hai từ rời."
   - type: teach
     items:
+      - { form: "我是学生。", reading: "wǒ shì xué sheng", gloss: "Tôi là học sinh / sinh viên.", example: "我是学生。" }
+      - { form: "老师", reading: "lǎo shī", gloss: "giáo viên", example: "她是老师。" }
       - { form: "学校", reading: "xué xiào", gloss: "trường học", example: "我在学校。" }
-      - { form: "老师", reading: "lǎo shī", gloss: "giáo viên", example: "我的老师" }
-      - { form: "学习", reading: "xué xí", gloss: "học", example: "学习汉语" }
-      - { form: "汉语", reading: "hàn yǔ", gloss: "tiếng Trung", example: "我说汉语。" }
-      - { form: "吃饭", reading: "chī fàn", gloss: "ăn bữa", example: "我们一起吃饭。" }
+      - { form: "我在学校学习汉语。", reading: "wǒ zài xué xiào xué xí hàn yǔ", gloss: "Tôi học tiếng Trung ở trường.", example: "我在学校学习汉语。" }
   - type: practice
-    kind: mcq
-    prompt: "Cụm nào nghĩa là “giáo viên”?"
-    choices: ["老师", "学生", "吃饭"]
-    answer: "老师"
+    id: zh-school-reply-1
+    kind: dialogue_choice
+    prompt: "Ai đó hỏi 你是学生吗？ Chọn câu khẳng định tự nhiên."
+    choices: ["是，我是学生。", "我是学校。", "再见。"]
+    answer: "是，我是学生。"
+  - type: practice
+    id: zh-school-listen-1
+    kind: audio_choice
+    prompt: "Nghe. Người này học tiếng Trung ở đâu?"
+    audioText: "我在学校学习汉语。"
+    choices: ["学校", "家", "商店"]
+    answer: "学校"
+  - type: practice
+    id: zh-school-produce-1
+    kind: type_answer
+    prompt: "Gõ câu: “Tôi học tiếng Trung ở trường.”"
+    answer: "我在学校学习汉语"
+    acceptedAnswers: ["我在学校学习汉语。"]
     hints:
-      - "师 nằm trong từ giáo viên."
-  - type: practice
-    kind: mcq
-    prompt: "Cụm nào nghĩa “học”?"
-    choices: ["学习", "喝", "同学"]
-    answer: "学习"
+      - "Dùng 我在学校 + 学习汉语."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Cụm nào nghĩa “học sinh”?"
-        choices: ["学生", "老师", "学校"]
-        answer: "学生"
-      - kind: mcq
-        prompt: "Cụm nào nghĩa “ngày mai”?"
-        choices: ["明天", "学习", "汉语"]
-        answer: "明天"
-      - kind: mcq
-        prompt: "Cụm nào nghĩa “tiếng Trung”?"
-        choices: ["汉语", "吃饭", "同学"]
-        answer: "汉语"
+      - id: zh-school-check-1
+        kind: meaning_choice
+        prompt: "Từ nào có nghĩa “giáo viên”?"
+        choices: ["老师", "学生", "学校"]
+        answer: "老师"
+      - id: zh-school-check-2
+        kind: audio_choice
+        prompt: "Ôn lại: người này học khi nào?"
+        audioText: "我明天下午学习。"
+        choices: ["明天下午", "今天上午", "昨天晚上"]
+        answer: "明天下午"
 exercise:
-  type: mcq
-  prompt: "Cụm nào nghĩa là “giáo viên”?"
-  choices: ["老师", "学生", "吃饭"]
-  answer: "老师"
-  hints:
-    - "师 nằm trong từ giáo viên."
-    - "学生 là học sinh."
+  type: dialogue_choice
+  prompt: "Từ nào có nghĩa “học sinh / sinh viên”?"
+  choices: ["学生", "老师", "学校"]
+  answer: "学生"
 ---
 
-Luyện đời sống trường và động từ hàng ngày theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Phần học có hướng dẫn ở trên là nội dung chính. Pinyin hỗ trợ đọc ở giai đoạn đầu; nghe, chữ Hán, tương tác, tự tạo câu và ôn lại mới là vòng học cốt lõi.

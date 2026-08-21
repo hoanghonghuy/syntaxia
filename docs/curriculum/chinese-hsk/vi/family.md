@@ -3,73 +3,91 @@ id: zh-hsk-b1-04-family
 track: chinese-hsk
 locale: vi
 slug: family
-title: Từ vựng gia đình
+title: "Giới thiệu người trong gia đình"
 order: 4
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Gọi thành viên gia đình (爸爸/妈妈/…)"
-pattern: "爸爸 / 妈妈 / 家"
+unit_id: zh-hsk-b1-people-02
+unit_title: "Giới thiệu bản thân và người gần gũi"
+unit_order: 2
+unit_can_do: "Trao đổi tên và giới thiệu bạn bè hoặc người thân"
+unit_role: lesson
+can_do: "Chỉ và giới thiệu người thân trong một cuộc trò chuyện đơn giản về ảnh gia đình"
+pattern: "这是我… / 我家…"
 objectives:
-  - Gọi thành viên gia đình gần
-  - Dùng 家 cho nhà / gia đình
+  - "Giới thiệu một người thân gần gũi"
+  - "Dùng 家 để nói về gia đình / nhà"
 vocab:
+  - { hanzi: "家", pinyin: "jiā", gloss: "nhà / gia đình" }
   - { hanzi: "爸爸", pinyin: "bà ba", gloss: "bố" }
   - { hanzi: "妈妈", pinyin: "mā ma", gloss: "mẹ" }
   - { hanzi: "哥哥", pinyin: "gē ge", gloss: "anh trai" }
   - { hanzi: "姐姐", pinyin: "jiě jie", gloss: "chị gái" }
   - { hanzi: "弟弟", pinyin: "dì di", gloss: "em trai" }
   - { hanzi: "妹妹", pinyin: "mèi mei", gloss: "em gái" }
-  - { hanzi: "家", pinyin: "jiā", gloss: "nhà / gia đình" }
 steps:
+  - type: scene
+    title: "Tình huống"
+    body: "Một bạn học nhìn thấy ảnh gia đình trên điện thoại của bạn và hỏi những người trong ảnh là ai."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "我家有四个人。", reading: "wǒ jiā yǒu sì gè rén." }
-      - { speaker: "B", text: "你爸爸、妈妈呢？", reading: "nǐ bà ba, mā ma ne?" }
-      - { speaker: "A", text: "我有哥哥和妹妹。", reading: "wǒ yǒu gē ge hé mèi mei." }
+      - { speaker: "A", text: "这是谁？", reading: "zhè shì shéi" }
+      - { speaker: "B", text: "这是我妈妈。", reading: "zhè shì wǒ mā ma" }
+      - { speaker: "A", text: "他呢？", reading: "tā ne" }
+      - { speaker: "B", text: "他是我哥哥。", reading: "tā shì wǒ gē ge" }
+  - type: listen
+    prompt: "Nghe cụm dùng để giới thiệu một người thân."
+    text: "这是我妈妈。"
+    reading: "zhè shì wǒ mā ma"
   - type: tip
-    title: "Anh/chị/em theo tuổi"
-    body: "哥哥 / 姐姐 là hơn tuổi; 弟弟 / 妹妹 là kém tuổi. Bố mẹ dùng dạng lặp: 爸爸, 妈妈. 家 có thể là nhà hoặc gia đình."
+    title: "Dùng cả mẫu câu giới thiệu"
+    body: "这是我 + từ chỉ người thân là mẫu hữu ích. Trong tiếng Trung đời thường, 的 thường được lược trước các từ thân thuộc như 妈妈 hoặc 爸爸."
   - type: teach
     items:
-      - { form: "爸爸", reading: "bà ba", gloss: "bố", example: "我爸爸" }
-      - { form: "妈妈", reading: "mā ma", gloss: "mẹ", example: "我妈妈" }
-      - { form: "哥哥", reading: "gē ge", gloss: "anh trai", example: "我哥哥" }
-      - { form: "妹妹", reading: "mèi mei", gloss: "em gái", example: "我妹妹" }
-      - { form: "家", reading: "jiā", gloss: "nhà / gia đình", example: "我家" }
+      - { form: "这是我妈妈。", reading: "zhè shì wǒ mā ma", gloss: "Đây là mẹ tôi.", example: "这是我妈妈。" }
+      - { form: "这是我爸爸。", reading: "zhè shì wǒ bà ba", gloss: "Đây là bố tôi.", example: "这是我爸爸。" }
+      - { form: "他是我哥哥。", reading: "tā shì wǒ gē ge", gloss: "Anh ấy là anh trai tôi.", example: "他是我哥哥。" }
+      - { form: "她是我姐姐。", reading: "tā shì wǒ jiě jie", gloss: "Cô ấy là chị gái tôi.", example: "她是我姐姐。" }
   - type: practice
-    kind: mcq
-    prompt: "Cụm nào nghĩa là “mẹ”?"
-    choices: ["妈妈", "爸爸", "家"]
-    answer: "妈妈"
-    hints:
-      - "妈妈 là mẹ."
+    id: zh-family-reply-1
+    kind: dialogue_choice
+    prompt: "Một bạn học hỏi 这是谁？ Chọn câu giới thiệu mẹ của bạn."
+    choices: ["这是我妈妈。", "我是三号。", "再见。"]
+    answer: "这是我妈妈。"
   - type: practice
-    kind: mcq
-    prompt: "Cụm nào nghĩa “anh trai”?"
-    choices: ["哥哥", "弟弟", "妹妹"]
+    id: zh-family-listen-1
+    kind: audio_choice
+    prompt: "Nghe. Người nào đang được giới thiệu?"
+    audioText: "他是我哥哥。"
+    choices: ["哥哥", "姐姐", "妈妈"]
     answer: "哥哥"
+  - type: practice
+    id: zh-family-produce-1
+    kind: type_answer
+    prompt: "Gõ câu: “Đây là bố tôi.”"
+    answer: "这是我爸爸"
+    acceptedAnswers: ["这是我爸爸。"]
+    hints:
+      - "Dùng 这是我 + 爸爸."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Cụm nào nghĩa “chúng tôi / chúng ta”?"
-        choices: ["我们", "家", "妈妈"]
-        answer: "我们"
-      - kind: mcq
-        prompt: "Cụm nào nghĩa “bố”?"
-        choices: ["爸爸", "姐姐", "家"]
-        answer: "爸爸"
-      - kind: fill_blank
-        prompt: "Gõ chữ nghĩa “mẹ”."
-        answer: "妈妈"
+      - id: zh-family-check-1
+        kind: meaning_choice
+        prompt: "Từ nào có nghĩa “chị gái”?"
+        choices: ["姐姐", "妹妹", "妈妈"]
+        answer: "姐姐"
+      - id: zh-family-check-2
+        kind: audio_choice
+        prompt: "Ôn lại: nghe và chọn số."
+        audioText: "三"
+        choices: ["三", "五", "八"]
+        answer: "三"
 exercise:
-  type: mcq
-  prompt: "Cụm nào nghĩa là “mẹ”?"
-  choices: ["妈妈", "爸爸", "家"]
-  answer: "妈妈"
-  hints:
-    - "Bố mẹ đều dùng dạng lặp âm tiết."
-    - "妈妈 là mẹ."
+  type: dialogue_choice
+  prompt: "Câu nào giới thiệu mẹ của bạn?"
+  choices: ["这是我妈妈。", "这是我哥哥。", "我是三号。"]
+  answer: "这是我妈妈。"
 ---
 
-Luyện gọi thành viên gia đình theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Phần học có hướng dẫn ở trên là nội dung chính. Pinyin hỗ trợ đọc ở giai đoạn đầu; nghe, chữ Hán, tương tác, tự tạo câu và ôn lại mới là vòng học cốt lõi.

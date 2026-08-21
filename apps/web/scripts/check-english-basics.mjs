@@ -13,7 +13,22 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
-const SLUGS = ['greetings', 'people', 'numbers', 'family', 'food-drink', 'places']
+const SLUGS = [
+  'greetings',
+  'meeting-checkpoint',
+  'meeting-review',
+  'people',
+  'family',
+  'people-checkpoint',
+  'people-review',
+  'numbers',
+  'places',
+  'find-way-checkpoint',
+  'find-way-review',
+  'food-drink',
+  'cafe-checkpoint',
+  'cafe-review',
+]
 
 describe('english-basics curriculum slice', () => {
   it('ships A1 map process doc', () => {
@@ -24,37 +39,33 @@ describe('english-basics curriculum slice', () => {
     assert.match(body, /greetings/)
   })
 
-  it('ships paired en/vi lessons for mapped slugs only', () => {
+  it('ships paired EN/VI V3 nodes for the published slice', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
       const files = readdirSync(dir).filter((f) => f.endsWith('.md'))
-      assert.deepEqual(
-        files.map((f) => f.replace(/\.md$/, '')).sort(),
-        [...SLUGS].sort(),
-      )
+      assert.deepEqual(files.map((f) => f.replace(/\.md$/, '')).sort(), [...SLUGS].sort())
       for (const slug of SLUGS) {
         const raw = read(join(dir, `${slug}.md`))
         assert.match(raw, /track:\s*english-basics/)
         assert.match(raw, new RegExp(`locale:\\s*${loc}`))
         assert.match(raw, /cefr_level:\s*a1/)
-        assert.match(raw, /type:\s*(mcq|fill_blank)/)
-        assert.match(raw, /word:/)
+        assert.match(raw, /^can_do:\s*".+"/m)
+        assert.match(raw, /^steps:/m)
+        assert.match(raw, /^\s+- type:\s*practice\s*$/m)
+        assert.match(raw, /^\s+- type:\s*checkpoint\s*$/m)
       }
     }
   })
 
-  it('grades each published exercise answer against itself (smoke)', () => {
+  it('grades a published authored answer against itself', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       for (const file of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
         const raw = read(join(dir, file))
         const answerMatch = raw.match(/\n\s*answer:\s*"([^"]+)"/)
-        const typeMatch = raw.match(/\n\s*type:\s*(mcq|fill_blank)/)
         assert.ok(answerMatch, `${loc}/${file} missing answer`)
-        assert.ok(typeMatch, `${loc}/${file} missing type`)
-        const exercise = { type: typeMatch[1], answer: answerMatch[1] }
-        assert.equal(gradeLanguageExercise(exercise, answerMatch[1]), true)
+        assert.equal(gradeLanguageExercise({ answer: answerMatch[1] }, answerMatch[1], 'en'), true)
       }
     }
   })
@@ -62,18 +73,12 @@ describe('english-basics curriculum slice', () => {
   it('placeholder test no longer forbids english curriculum', () => {
     const placeholder = read(join(webRoot, 'scripts/check-languages-placeholder.mjs'))
     assert.match(placeholder, /english-basics/)
-    assert.doesNotMatch(
-      placeholder,
-      /docs\/curriculum\/english-basics[\s\S]*invent/,
-    )
+    assert.doesNotMatch(placeholder, /docs\/curriculum\/english-basics[\s\S]*invent/)
   })
 
   it('lesson fetch includes track so shared slugs do not collide with chinese-hsk', () => {
     const api = read(join(webRoot, 'app/composables/useApi.ts'))
-    assert.match(
-      api,
-      /lesson:\s*\([^)]*track[^)]*\)[\s\S]*\/lessons\/\$\{slug\}\?[^`]*track=/,
-    )
+    assert.match(api, /lesson:\s*\([^)]*track[^)]*\)[\s\S]*\/lessons\/\$\{slug\}\?[^`]*track=/)
     const page = read(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'))
     assert.match(page, /api\.lesson\([^)]*trackId/)
   })

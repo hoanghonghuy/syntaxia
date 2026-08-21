@@ -3,68 +3,87 @@ id: ja-n5-02-people
 track: japanese-jlpt
 locale: en
 slug: people
-title: People and identity
+title: Say your name and ask a name
 order: 2
 published: true
 jlpt_level: n5
-can_do: "Talk about 私 / あなた / 名前 in a short exchange"
-pattern: "私 / あなた / 名前 / 友達"
+unit_id: ja-n5-people-02
+unit_title: "Introduce yourself and people close to you"
+unit_order: 2
+unit_can_do: "Introduce yourself, ask a name, and identify a close family member in a short polite exchange"
+unit_role: lesson
+can_do: "Say your name with です and ask another person's name politely"
+pattern: "わたしは … です。 / お名前は何ですか。"
 objectives:
-  - Name people with watashi / anata
-  - Say person, name, friend
+  - Introduce yourself with わたしは … です
+  - Ask お名前は何ですか
+  - Notice that です gives the sentence a polite neutral style
 vocab:
-  - { surface: "私", reading: "わたくし", gloss: "I; myself (humble form in OpenJLPT)" }
-  - { surface: "あなた", reading: "あなた", gloss: "you" }
-  - { surface: "人", reading: "ひと", gloss: "person" }
+  - { surface: "わたし", reading: "わたし", gloss: "I / me" }
   - { surface: "名前", reading: "なまえ", gloss: "name" }
-  - { surface: "友達", reading: "ともだち", gloss: "friend" }
+  - { surface: "何", reading: "なん", gloss: "what" }
+  - { surface: "です", reading: "です", gloss: "polite copula / sentence ending" }
+  - { surface: "はじめまして", reading: "はじめまして", gloss: "said when meeting someone for the first time" }
 steps:
+  - type: scene
+    title: "Meet a classmate"
+    body: "It is your first Japanese class. Introduce yourself and ask the person next to you for their name."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "私の名前はミキです。", reading: "わたしのなまえはミキです。" }
-      - { speaker: "B", text: "あなたは友達ですか？", reading: "あなたはともだちですか？" }
-      - { speaker: "A", text: "はい、友達です。", reading: "はい、ともだちです。" }
-      - { speaker: "B", text: "いい人ですね。", reading: "いいひとですね。" }
+      - { speaker: "A", text: "はじめまして。わたしはリンです。", reading: "はじめまして。わたしはリンです。" }
+      - { speaker: "B", text: "はじめまして。わたしはゆきです。", reading: "はじめまして。わたしはゆきです。" }
+      - { speaker: "A", text: "お名前は何ですか。", reading: "おなまえはなんですか。" }
+      - { speaker: "B", text: "ゆきです。", reading: "ゆきです。" }
+  - type: listen
+    prompt: "Listen first. What sentence ending do you hear after the speaker's name?"
+    text: "わたしはゆきです。"
+    reading: "わたしはゆきです。"
   - type: tip
-    title: "私 and あなた mark who is speaking"
-    body: "私 means I; あなた means you. 名前 is name; 友達 is friend; 人 is person. Use them in short introductions — not isolated words."
+    title: "Keep the polite frame together"
+    body: "For this starter stage, treat わたしは + name + です as one reliable self-introduction frame. お名前は何ですか is a polite way to ask a person's name."
   - type: teach
     items:
-      - { form: "私", reading: "わたくし", gloss: "I; myself", example: "私の名前はミキです。" }
-      - { form: "あなた", reading: "あなた", gloss: "you", example: "あなたは友達ですか？" }
-      - { form: "名前", reading: "なまえ", gloss: "name", example: "名前はミキです。" }
-      - { form: "友達", reading: "ともだち", gloss: "friend", example: "友達です。" }
-      - { form: "人", reading: "ひと", gloss: "person", example: "いい人ですね。" }
+      - { form: "わたしはリンです。", reading: "わたしはリンです。", gloss: "I am Linh.", example: "わたしはリンです。" }
+      - { form: "お名前は何ですか。", reading: "おなまえはなんですか。", gloss: "What is your name?", example: "お名前は何ですか。" }
+      - { form: "はじめまして。", reading: "はじめまして。", gloss: "Nice to meet you / first-time greeting.", example: "はじめまして。" }
   - type: practice
-    kind: mcq
-    prompt: "Which word means friend?"
-    choices: ["友達", "名前", "人"]
-    answer: "友達"
+    id: ja-people-dialogue-1
+    kind: dialogue_choice
+    prompt: "You meet Yuki for the first time. Which self-introduction is natural at this level?"
+    choices: ["はじめまして。わたしはリンです。", "これをください。", "いいえ、リン。"]
+    answer: "はじめまして。わたしはリンです。"
+  - type: practice
+    id: ja-people-listen-1
+    kind: listen_type
+    prompt: "Listen and type the sentence you hear."
+    audioText: "ゆきです"
+    answer: "ゆきです"
+    acceptedAnswers: ["ゆきです。"]
+  - type: practice
+    id: ja-people-produce-1
+    kind: type_answer
+    prompt: "Your name is リン. Type “I am Linh” using the lesson frame."
+    answer: "わたしはリンです"
+    acceptedAnswers: ["わたしはリンです。"]
     hints:
-      - "A confirms 友達 in the dialogue."
-  - type: practice
-    kind: mcq
-    prompt: "Which word means name?"
-    choices: ["名前", "友達", "あなた"]
-    answer: "名前"
+      - "Use わたしは + リン + です."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means I?"
-        choices: ["私", "あなた", "人"]
-        answer: "私"
-      - kind: mcq
-        prompt: "Which means person?"
-        choices: ["人", "名前", "友達"]
-        answer: "人"
+      - id: ja-people-check-1
+        kind: meaning_choice
+        prompt: "Which question asks a person's name?"
+        choices: ["お名前は何ですか。", "これをください。", "ありがとうございます。"]
+        answer: "お名前は何ですか。"
+      - id: ja-people-check-2
+        kind: dialogue_choice
+        prompt: "Review: you point to an item you want in a shop. What can you say?"
+        choices: ["これをください。", "わたしはこれです。", "お名前は？"]
+        answer: "これをください。"
 exercise:
-  type: mcq
-  prompt: "Which word means friend?"
-  choices: ["友達", "名前", "人"]
-  answer: "友達"
-  hints:
-    - "名前 is name."
-    - "友達 is friend."
+  type: dialogue_choice
+  prompt: "Choose the polite name question."
+  choices: ["お名前は何ですか。", "名前ください。", "何これですか。"]
+  answer: "お名前は何ですか。"
 ---
 
-Practice the introduction exchange step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The lesson keeps kana reading support close to the Japanese while teaching a polite sentence frame, rather than treating わたし or 名前 as isolated glossary entries.

@@ -5,7 +5,7 @@
 #   docker run --env-file .env -p 8080:8080 syntaxia-api
 
 # Stage 1: Build
-FROM golang:1.25-bookworm AS builder
+FROM golang:1.26.5-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends git \
 	&& rm -rf /var/lib/apt/lists/*

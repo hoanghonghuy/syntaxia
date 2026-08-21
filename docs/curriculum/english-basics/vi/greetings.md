@@ -3,69 +3,107 @@ id: en-a1-01-greetings
 track: english-basics
 locale: vi
 slug: greetings
-title: Chào hỏi và lịch sự
+title: Gặp một người và chào hỏi
 order: 1
 published: true
 cefr_level: a1
-can_do: "Chào hỏi và cảm ơn lịch sự"
-pattern: "hello / goodbye / please / thank you"
+unit_id: en-a1-meeting-01
+unit_title: "Gặp một người"
+unit_order: 1
+unit_can_do: "Mở đầu, duy trì và kết thúc một cuộc gặp ngắn"
+unit_role: lesson
+can_do: "Chào hỏi, trao đổi tên và kết thúc một cuộc gặp ngắn một cách lịch sự"
+pattern: "Hi, I'm … / Nice to meet you. / See you."
 objectives:
-  - Dùng hello / goodbye
-  - Nói please, thank you và sorry
+  - Mở đầu một cuộc gặp đơn giản
+  - Nói tên của mình và đáp lại tự nhiên
+  - Kết thúc cuộc trao đổi lịch sự
 vocab:
-  - { word: "hello", ipa: "/həˈloʊ/", gloss: "xin chào" }
-  - { word: "goodbye", ipa: "/ɡʊdˈbaɪ/", gloss: "tạm biệt" }
-  - { word: "please", ipa: "/pliːz/", gloss: "làm ơn" }
-  - { word: "thank you", ipa: "/ˈθæŋk juː/", gloss: "cảm ơn" }
-  - { word: "sorry", ipa: "/ˈsɑːri/", gloss: "xin lỗi" }
-  - { word: "yes", ipa: "/jes/", gloss: "có / vâng" }
-  - { word: "no", ipa: "/noʊ/", gloss: "không" }
+  - { word: "hi", ipa: "/haɪ/", gloss: "lời chào thông dụng" }
+  - { word: "hello", ipa: "/həˈloʊ/", gloss: "lời chào trung tính" }
+  - { word: "I'm", ipa: "/aɪm/", gloss: "dạng rút gọn của I am" }
+  - { word: "nice to meet you", ipa: "/naɪs tə miːt juː/", gloss: "nói khi gặp lần đầu" }
+  - { word: "see you", ipa: "/siː juː/", gloss: "cách chào tạm biệt thân mật" }
 steps:
+  - type: scene
+    title: "Ngày đầu ở lớp"
+    body: "Bạn ngồi cạnh một người chưa từng gặp. Hãy bắt đầu một cuộc trò chuyện ngắn."
+    visualKey: "classmates-meeting"
+    imageAlt: "Hai học sinh ngồi gần nhau trong lớp và quay sang nhau để bắt đầu trò chuyện."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "Hello!" }
-      - { speaker: "B", text: "Hi! Thank you." }
-      - { speaker: "A", text: "You're welcome. Goodbye!" }
+      - { speaker: "A", text: "Hi, I'm Alex." }
+      - { speaker: "B", text: "Hi, Alex. I'm Mai." }
+      - { speaker: "A", text: "Nice to meet you, Mai." }
+      - { speaker: "B", text: "Nice to meet you too." }
+      - { speaker: "A", text: "See you later." }
+      - { speaker: "B", text: "See you!" }
+  - type: listen
+    prompt: "Nghe câu đầu và chú ý cách người nói giới thiệu tên."
+    text: "Hi, I'm Alex."
   - type: tip
-    title: "Cụm lịch sự học theo khối"
-    body: "hello mở hội thoại. please làm yêu cầu nhẹ nhàng; thank you bày tỏ lòng biết ơn. goodbye kết thúc. Học cả cụm, không chỉ từng từ rời."
+    title: "Học theo cả cụm"
+    body: "I'm + tên là cách giới thiệu ngắn, tự nhiên. Nice to meet you là một cụm cố định thường dùng khi gặp lần đầu."
   - type: teach
     items:
-      - { form: "hello", reading: "/həˈloʊ/", gloss: "xin chào", example: "Hello!" }
-      - { form: "thank you", reading: "/ˈθæŋk juː/", gloss: "cảm ơn", example: "Thank you!" }
-      - { form: "please", reading: "/pliːz/", gloss: "làm ơn", example: "Water, please." }
-      - { form: "goodbye", reading: "/ɡʊdˈbaɪ/", gloss: "tạm biệt", example: "Goodbye!" }
-      - { form: "sorry", reading: "/ˈsɑːri/", gloss: "xin lỗi", example: "Sorry!" }
+      - { form: "Hi, I'm …", reading: "/haɪ aɪm/", gloss: "tự giới thiệu", example: "Hi, I'm Mai." }
+      - { form: "Nice to meet you.", reading: "/naɪs tə miːt juː/", gloss: "đáp lại khi gặp lần đầu", example: "Nice to meet you, Alex." }
+      - { form: "See you.", reading: "/siː juː/", gloss: "chào tạm biệt thân mật", example: "See you later." }
   - type: practice
-    kind: mcq
-    prompt: "Trong hội thoại, từ nào mở đầu?"
-    choices: ["Hello!", "Goodbye!", "Sorry!"]
-    answer: "Hello!"
+    id: greet-scene-1
+    kind: image_choice
+    prompt: "Hình nào phù hợp nhất với câu “Hi, I'm Alex.”?"
+    choices: ["meeting", "leaving", "studying"]
+    choiceMedia:
+      - { value: "meeting", visualKey: "classmates-meeting", alt: "Hai học sinh quay sang nhau và bắt đầu trò chuyện trong lớp." }
+      - { value: "leaving", visualKey: "student-leaving", alt: "Một học sinh đi về phía cửa lớp để rời đi." }
+      - { value: "studying", visualKey: "student-studying", alt: "Một học sinh ngồi một mình ở bàn và đọc sách." }
+    answer: "meeting"
+    explanation: "“Hi, I'm Alex.” mở đầu một cuộc gặp, nên hình hai học sinh chào nhau phù hợp với câu này."
+  - type: practice
+    id: greet-response-1
+    kind: dialogue_choice
+    prompt: "Một người nói: “Hi, I'm Alex.” Đáp lại thế nào tự nhiên?"
+    choices: ["Hi, Alex. I'm Mai.", "Thank you, Alex.", "Goodbye, Alex."]
+    answer: "Hi, Alex. I'm Mai."
+    explanation: "Khi gặp lần đầu, hãy đáp lại lời chào rồi nói tên của mình."
+  - type: practice
+    id: greet-build-1
+    kind: order_words
+    prompt: "Sắp xếp thành một câu tự giới thiệu ngắn."
+    tokens: ["I'm", "Mai", "Hi,"]
+    answer: "Hi, I'm Mai"
+    acceptedAnswers: ["Hi, I'm Mai."]
     hints:
-      - "Người nói đầu tiên chào người kia."
+      - "Bắt đầu bằng lời chào."
+      - "Dùng I'm trước tên."
   - type: practice
-    kind: mcq
-    prompt: "Từ nào nghĩa là “cảm ơn”?"
-    choices: ["thank you", "please", "sorry"]
-    answer: "thank you"
+    id: greet-produce-1
+    kind: type_answer
+    prompt: "Tên bạn là Linh. Hãy tự giới thiệu, bắt đầu bằng “Hi”."
+    answer: "Hi, I'm Linh"
+    acceptedAnswers: ["Hi, I'm Linh.", "Hi! I'm Linh."]
+    hints:
+      - "Dùng: Hi, I'm + tên."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào nghĩa “tạm biệt”?"
-        choices: ["goodbye", "hello", "please"]
-        answer: "goodbye"
-      - kind: mcq
-        prompt: "Từ nào dùng để yêu cầu lịch sự?"
-        choices: ["please", "no", "sorry"]
-        answer: "please"
+      - id: greet-check-1
+        kind: meaning_choice
+        prompt: "Cụm nào phù hợp khi gặp lần đầu?"
+        choices: ["Nice to meet you.", "See you yesterday.", "You're welcome."]
+        answer: "Nice to meet you."
+      - id: greet-check-2
+        kind: dialogue_choice
+        prompt: "Lớp học kết thúc. Bạn có thể nói gì với người vừa gặp?"
+        choices: ["See you!", "I'm sorry!", "Please!"]
+        answer: "See you!"
 exercise:
-  type: mcq
-  prompt: "Từ nào dùng để chào?"
-  choices: ["hello", "goodbye", "sorry"]
-  answer: "hello"
+  type: dialogue_choice
+  prompt: "Chọn câu đáp tự nhiên khi gặp lần đầu."
+  choices: ["Hi, I'm Mai.", "Goodbye, I'm Mai.", "Thank you, I'm Mai."]
+  answer: "Hi, I'm Mai."
   hints:
-    - "goodbye dùng khi tạm biệt."
-    - "hello dùng khi gặp người."
+    - "Đáp lại lời chào rồi nói tên của mình."
 ---
 
-Luyện đoạn chào hỏi theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Phần luyện có hướng dẫn ở trên mới là nội dung chính của bài. Đoạn chữ ngắn này chỉ là phần phụ; trọng tâm là nghe, tương tác, tự tạo câu và ôn lại về sau.

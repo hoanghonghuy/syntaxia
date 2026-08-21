@@ -1,0 +1,168 @@
+name: Language v3 CI
+
+on:
+  push:
+    branches:
+      - feature/language-learning-v3
+  pull_request:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+
+concurrency:
+  group: language-v3-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API · Go verify, test and vet
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+
+      - name: Verify committed module graph
+        run: |
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
+
+      - name: Verify module checksums
+        run: go mod verify
+
+      - name: Unit tests
+        run: go test -mod=readonly ./...
+
+      - name: Vet
+        run: go vet -mod=readonly ./...
+
+  web:
+    name: Web · build and language regression
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Shell and UI regression
+        run: |
+          npm run test:shell-ux
+          npm run test:ui-refresh
+
+      - name: Language v3 contract
+        run: npm run test:language-v3
+
+      - name: Language path regression
+        run: npm run test:language-path-v2
+
+      - name: Language audio regression
+        run: npm run test:language-audio
+
+      - name: Language review regression
+        run: npm run test:language-review
+
+      - name: i18n parity
+        run: npm run test:i18n
+
+      - name: Existing audit regression
+        run: npm run test:audit-remediation
+
+  e2e:
+    name: Release · DB-backed E2E and review persistence
+    needs: [api, web]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: syntaxia
+          POSTGRES_PASSWORD: syntaxia
+          POSTGRES_DB: syntaxia
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U syntaxia -d syntaxia"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://syntaxia:syntaxia@127.0.0.1:5432/syntaxia?sslmode=disable
+      SANDBOX_DATABASE_URL: postgres://syntaxia_sandbox:syntaxia_sandbox@127.0.0.1:5432/syntaxia?sslmode=disable
+      JWT_SECRET: language-v3-ci-secret-not-for-production
+      API_PORT: "8082"
+      CORS_ORIGINS: http://127.0.0.1:3001,http://localhost:3001
+      WEB_BASE_URL: http://127.0.0.1:3001
+      CURRICULUM_LOCAL_PATH: ../../docs/curriculum
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+
+      - name: Initialize release-test database
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/init.sql
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/002_sandbox_harden.sql
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/014_language_review_fsrs.sql
+
+      - name: Start API with local curriculum
+        run: |
+          cd apps/api
+          nohup go run ./cmd/server > "$RUNNER_TEMP/syntaxia-api.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/syntaxia-api.pid"
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:8082/health >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/syntaxia-api.log"
+          exit 1
+
+      - name: Run cross-domain E2E smoke
+        shell: pwsh
+        run: ./scripts/e2e-all.ps1 -BaseUrl http://127.0.0.1:8082
+
+      - name: Verify persisted FSRS rows
+        run: |
+          cards=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_cards")
+          logs=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_logs")
+          echo "language_review_cards=$cards"
+          echo "language_review_logs=$logs"
+          test "$cards" -ge 1
+          test "$logs" -ge 2
+
+      - name: Show API log on failure
+        if: failure()
+        run: cat "$RUNNER_TEMP/syntaxia-api.log" || true

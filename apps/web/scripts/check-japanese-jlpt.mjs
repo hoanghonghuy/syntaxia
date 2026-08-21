@@ -17,7 +17,24 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
-const SLUGS = ['politeness', 'people', 'numbers', 'family', 'food-drink', 'places']
+const SLUGS = [
+  'politeness',
+  'politeness-checkpoint',
+  'politeness-review',
+  'people',
+  'people-checkpoint',
+  'people-review',
+  'numbers',
+  'number-checkpoint',
+  'number-review',
+  'family',
+  'food-drink',
+  'cafe-checkpoint',
+  'cafe-review',
+  'places',
+  'location-checkpoint',
+  'location-review',
+]
 
 describe('japanese-jlpt curriculum slice', () => {
   it('treats japanese-jlpt as a language track', () => {
@@ -54,37 +71,34 @@ describe('japanese-jlpt curriculum slice', () => {
     assert.match(body, /politeness/)
   })
 
-  it('ships paired en/vi lessons for mapped slugs only', () => {
+  it('ships paired EN/VI V3 nodes for the published slice', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
       const files = readdirSync(dir).filter((f) => f.endsWith('.md'))
-      assert.deepEqual(
-        files.map((f) => f.replace(/\.md$/, '')).sort(),
-        [...SLUGS].sort(),
-      )
+      assert.deepEqual(files.map((f) => f.replace(/\.md$/, '')).sort(), [...SLUGS].sort())
       for (const slug of SLUGS) {
         const raw = read(join(dir, `${slug}.md`))
         assert.match(raw, /track:\s*japanese-jlpt/)
         assert.match(raw, new RegExp(`locale:\\s*${loc}`))
         assert.match(raw, /jlpt_level:\s*n5/)
-        assert.match(raw, /type:\s*(mcq|fill_blank)/)
-        assert.match(raw, /surface:/)
+        assert.match(raw, /^can_do:\s*".+"/m)
+        assert.match(raw, /^steps:/m)
+        assert.match(raw, /^\s+- type:\s*practice\s*$/m)
+        assert.match(raw, /^\s+- type:\s*checkpoint\s*$/m)
+        assert.match(raw, /reading:\s*"[^\"]+"/)
       }
     }
   })
 
-  it('grades each published exercise answer against itself (smoke)', () => {
+  it('grades a published authored answer against itself', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${loc}`)
       for (const file of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
         const raw = read(join(dir, file))
         const answerMatch = raw.match(/\n\s*answer:\s*"([^"]+)"/)
-        const typeMatch = raw.match(/\n\s*type:\s*(mcq|fill_blank)/)
         assert.ok(answerMatch, `${loc}/${file} missing answer`)
-        assert.ok(typeMatch, `${loc}/${file} missing type`)
-        const exercise = { type: typeMatch[1], answer: answerMatch[1] }
-        assert.equal(gradeLanguageExercise(exercise, answerMatch[1]), true)
+        assert.equal(gradeLanguageExercise({ answer: answerMatch[1] }, answerMatch[1], 'ja'), true)
       }
     }
   })
@@ -92,9 +106,6 @@ describe('japanese-jlpt curriculum slice', () => {
   it('placeholder test allows japanese curriculum after map', () => {
     const placeholder = read(join(webRoot, 'scripts/check-languages-placeholder.mjs'))
     assert.match(placeholder, /japanese-jlpt/)
-    assert.doesNotMatch(
-      placeholder,
-      /docs\/curriculum\/japanese-jlpt[\s\S]*do not invent/,
-    )
+    assert.doesNotMatch(placeholder, /docs\/curriculum\/japanese-jlpt[\s\S]*do not invent/)
   })
 })

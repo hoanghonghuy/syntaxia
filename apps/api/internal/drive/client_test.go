@@ -257,8 +257,20 @@ func TestChineseHSKCurriculumSmoke(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(files) != 24 {
-		t.Fatalf("expected 24 chinese-hsk lessons (12x2 locales), got %d", len(files))
+	if len(files) != 60 {
+		t.Fatalf("expected 60 chinese-hsk lessons (30x2 locales), got %d", len(files))
+	}
+	validExerciseTypes := map[string]struct{}{
+		"mcq": {},
+		"meaning_choice": {},
+		"image_choice": {},
+		"audio_choice": {},
+		"dialogue_choice": {},
+		"match_pairs": {},
+		"order_words": {},
+		"fill_blank": {},
+		"type_answer": {},
+		"listen_type": {},
 	}
 	for _, path := range files {
 		raw, err := os.ReadFile(path)
@@ -284,16 +296,24 @@ func TestChineseHSKCurriculumSmoke(t *testing.T) {
 			t.Fatalf("%s: missing exercise", rel)
 		}
 		typ, _ := l.Exercise["type"].(string)
-		if typ != "mcq" && typ != "fill_blank" {
+		if _, ok := validExerciseTypes[typ]; !ok {
 			t.Fatalf("%s: bad exercise type %v", rel, l.Exercise["type"])
 		}
 		ans, _ := l.Exercise["answer"].(string)
 		if strings.TrimSpace(ans) == "" {
 			t.Fatalf("%s: empty answer", rel)
 		}
-		vocab, ok := l.Exercise["vocab"].([]any)
-		if !ok || len(vocab) == 0 {
-			t.Fatalf("%s: missing vocab merge", rel)
+		role, _ := l.Exercise["unitRole"].(string)
+		if role == "checkpoint" || role == "review" {
+			steps, ok := l.Exercise["steps"].([]any)
+			if !ok || len(steps) == 0 {
+				t.Fatalf("%s: %s node missing steps", rel, role)
+			}
+		} else {
+			vocab, ok := l.Exercise["vocab"].([]any)
+			if !ok || len(vocab) == 0 {
+				t.Fatalf("%s: lesson node missing vocab merge", rel)
+			}
 		}
 		band := l.Exercise["hskBand"]
 		switch v := band.(type) {
