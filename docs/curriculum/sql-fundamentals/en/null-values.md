@@ -6,15 +6,17 @@ slug: null-values
 title: Missing data with NULL
 order: 8
 published: true
+can_do: "Find missing values with IS NULL and explain why ordinary equality does not match NULL"
 objectives:
-  - Treat NULL as missing data, not as zero or empty text
-  - Find rows with IS NULL
+  - Distinguish NULL from zero, empty text, and the string 'NULL'
+  - Reason about NULL as an unknown or missing value in a predicate
+  - Find missing values with IS NULL
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "A missing rating is stored as NULL — it is not the text 'NULL' and not 0."
-    - "Use IS NULL in WHERE; = NULL does not work the way beginners expect."
-    - "Try: SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
+    - "The task is about missing ratings, not the number 0 or the text 'NULL'."
+    - "NULL is tested with IS NULL rather than ordinary equality."
+    - "Use: SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
   solution: "SELECT title FROM movies WHERE rating IS NULL ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "rating"]
@@ -34,18 +36,43 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 8.8), (2, 'The Matrix', 1999, NULL), (3, 'Dune', 2021, 8.0), (4, 'Old Cut', 1985, NULL);"
 ---
 
-Some cells have no value yet — like a blank cell in a spreadsheet. In SQL that missing value is called `NULL`. It is not zero, and it is not the word “NULL”.
+Real data is often incomplete. A rating may not have been entered yet. SQL represents that absence with `NULL`, and treating it like an ordinary number or string creates subtle bugs.
 
-**movies** (full table — blank rating cells are `NULL`)
+## Mental model
+
+`NULL` means the value is **missing or unknown** in this row. It is different from real values that happen to look empty or small.
+
+| Stored state | Meaning |
+| --- | --- |
+| `8.8` | a known numeric rating |
+| `0` | a known numeric value equal to zero |
+| `''` | a known empty string, if the column is text |
+| `NULL` | no known value is present |
+
+**movies**
 
 | id | title | year | rating |
 | --- | --- | --- | --- |
 | 1 | Inception | 2010 | 8.8 |
-| 2 | The Matrix | 1999 | *(missing)* |
+| 2 | The Matrix | 1999 | *(NULL)* |
 | 3 | Dune | 2021 | 8.0 |
-| 4 | Old Cut | 1985 | *(missing)* |
+| 4 | Old Cut | 1985 | *(NULL)* |
 
-Two films have ratings; two do not.
+SQL conditions normally evaluate to true or false, but comparisons involving `NULL` can produce a third logical result: **unknown**. A `WHERE` clause keeps rows only when its condition is true.
+
+## Predict before you run
+
+What happens here?
+
+```sql
+SELECT title
+FROM movies
+WHERE rating = NULL;
+```
+
+It does **not** mean “rating is missing”. For a missing rating, `rating = NULL` evaluates to unknown rather than true, so those rows are not selected.
+
+Now predict the result of `rating IS NULL`: The Matrix and Old Cut should survive.
 
 ## Worked example
 
@@ -56,10 +83,6 @@ WHERE rating IS NULL
 ORDER BY title;
 ```
 
-- Inception (`8.8`) and Dune (`8.0`) have real ratings — they do not match.
-- The Matrix and Old Cut have `NULL` ratings — they match `IS NULL`.
-- Use `IS NULL` (or `IS NOT NULL`) — comparing with `= NULL` does not select missing values.
-
 Result:
 
 | title |
@@ -67,12 +90,30 @@ Result:
 | Old Cut |
 | The Matrix |
 
+`IS NULL` asks the special question “is this value missing?”. `IS NOT NULL` asks the opposite question: “is a value present?”.
+
+## Debug this
+
+A learner wants unrated movies and writes:
+
+```sql
+WHERE rating = 0
+```
+
+That finds rows whose rating is the real number zero. It says nothing about missing values. The requirement must be translated as `rating IS NULL`.
+
 ## Common mistakes
 
-- Writing `WHERE rating = NULL` — that comparison never finds missing values; use `IS NULL`.
-- Searching for the text `'NULL'` — that is a string, not a missing value.
-- Treating `NULL` as `0` — zero is a real number; `NULL` means “unknown / not filled in”.
+- Writing `rating = NULL` instead of `rating IS NULL`.
+- Searching for `'NULL'`, which is text rather than a missing value.
+- Treating `NULL` as zero or an empty string and therefore mixing “unknown” with a known value.
 
 ## Your turn
 
-List the `title` of every movie whose `rating` is missing (`IS NULL`), ordered by `title`.
+Return the titles whose `rating` is missing, ordered by `title`. Before running, identify the two rows where no rating is known.
+
+## Quick check
+
+Which condition finds rows that **do have** a known rating?
+
+**Answer:** `rating IS NOT NULL`.

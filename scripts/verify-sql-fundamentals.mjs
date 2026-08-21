@@ -47,9 +47,10 @@ const expected = [
   'sql-comments',
 ]
 
-// Only slices listed here are held to the V2 structure. Expand this list as each
-// slice is intentionally migrated; do not make untouched legacy lessons fail.
-const v2Migrated = expected.slice(0, 8)
+// Only intentionally migrated slices are held to the V2 contract. Expand this
+// boundary after each coherent block is rewritten and reviewed.
+const v2Migrated = expected.slice(0, 12)
+const mutationSlugs = new Set(['inserting-rows', 'updating-rows', 'deleting-rows'])
 
 function parse(md) {
   const m = md.match(/^---\r?\n([\s\S]*?)\r?\n---/)
@@ -68,11 +69,12 @@ function parse(md) {
     slug: get('slug').replace(/['"]/g, ''),
     canDo: get('can_do').replace(/^['"]|['"]$/g, ''),
     hasHints: /hints:\s*\n\s*-/.test(fm),
-    hintCount: (fm.match(/^\s{4}-\s+.+$/gm) || []).length,
     hasSol: /solution:/.test(fm),
     hasPrev: /preview:/.test(fm),
     hasExp: /expected:/.test(fm),
     hasSeed: /sandbox_seed:/.test(fm),
+    allowsMutations: /allow_mutations:\s*true/.test(fm),
+    hasVerifySql: /verify_sql:\s*["']?SELECT\b/i.test(fm),
     leadingH1: /^\s*#\s+[^#]/m.test(body),
     table: /\|\s*-+/.test(body),
     mistakes: /Common mistakes|Lỗi thường gặp/i.test(body),
@@ -131,6 +133,11 @@ for (const loc of ['en', 'vi']) {
     if (!hasHeading(p.body, 'Your turn', 'Thử ngay')) issues.push(`${loc}/${slug} missing V2 build task`)
     if (!hasHeading(p.body, 'Quick check', 'Tự kiểm tra')) issues.push(`${loc}/${slug} missing V2 recall check`)
     if (!/```sql[\s\S]*?```/i.test(p.body)) issues.push(`${loc}/${slug} missing SQL example`)
+
+    if (mutationSlugs.has(slug)) {
+      if (!p.allowsMutations) issues.push(`${loc}/${slug} mutation lesson missing allow_mutations`)
+      if (!p.hasVerifySql) issues.push(`${loc}/${slug} mutation lesson missing verify_sql SELECT`)
+    }
   }
 }
 

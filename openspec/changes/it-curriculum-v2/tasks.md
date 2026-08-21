@@ -3,11 +3,11 @@
 - [x] Pause Language V3 work and create a clean IT curriculum branch from `develop`.
 - [x] Audit representative SQL, PostgreSQL, JavaScript, HTML, and CSS lesson shapes.
 - [x] Establish the See -> Predict -> Explain -> Debug -> Build -> Recall pedagogy contract.
-- [ ] Migrate SQL Fundamentals Block A (orders 0–7), EN + VI.
-- [ ] Extend `verify-sql-fundamentals.mjs` with V2 checks for the migrated slice.
-- [ ] Add branch CI for structural verifier + web build + API tests.
-- [ ] Verify Block A CI and existing sandbox/grading compatibility.
-- [ ] Migrate Block B (orders 8–11).
+- [x] Migrate SQL Fundamentals Block A (orders 0–7), EN + VI.
+- [x] Extend `verify-sql-fundamentals.mjs` with V2 checks for the migrated slice.
+- [x] Add branch CI for structural verifier + web build + API tests.
+- [ ] Verify Block A/Block B GitHub Actions and existing sandbox/grading compatibility.
+- [x] Migrate Block B (orders 8–11), EN + VI, including mutation-state verification rules.
 - [ ] Migrate Block C (orders 12–18).
 - [ ] Migrate Block D (orders 19–25).
 - [ ] Migrate Block E (orders 26–28).
