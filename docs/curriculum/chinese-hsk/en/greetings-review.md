@@ -3,7 +3,7 @@ id: zh-hsk-b1-u01-review
 track: chinese-hsk
 locale: en
 slug: greetings-review
-title: Review: greetings
+title: "Review: greetings"
 order: 3
 published: true
 hsk_band: 1
