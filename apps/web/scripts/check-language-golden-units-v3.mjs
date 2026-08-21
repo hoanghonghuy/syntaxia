@@ -95,6 +95,17 @@ const migratedUnits = [
       ['number-review', 'review'],
     ],
   },
+  {
+    track: 'chinese-hsk',
+    unitId: 'zh-hsk-b1-study-04',
+    unitOrder: '4',
+    nodes: [
+      ['time-of-day', 'lesson'],
+      ['school-daily', 'lesson'],
+      ['study-checkpoint', 'checkpoint'],
+      ['study-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
