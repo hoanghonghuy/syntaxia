@@ -168,6 +168,16 @@ const migratedUnits = [
       ['people-review', 'review'],
     ],
   },
+  {
+    track: 'japanese-jlpt',
+    unitId: 'ja-n5-number-03',
+    unitOrder: '3',
+    nodes: [
+      ['numbers', 'lesson'],
+      ['number-checkpoint', 'checkpoint'],
+      ['number-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
