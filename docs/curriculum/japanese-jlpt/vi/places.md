@@ -7,6 +7,11 @@ title: Hỏi một địa điểm ở đâu
 order: 6
 published: true
 jlpt_level: n5
+unit_id: ja-n5-location-05
+unit_title: "Hỏi một địa điểm ở đâu"
+unit_order: 5
+unit_can_do: "Hỏi một địa điểm quen thuộc ở đâu và hiểu câu trả lời vị trí ngắn theo góc nhìn"
+unit_role: lesson
 can_do: "Hỏi một địa điểm quen thuộc ở đâu và hiểu ここ・そこ・あそこ trong câu trả lời ngắn"
 pattern: "トイレはどこですか。 / ここです。 / あそこです。"
 objectives:
