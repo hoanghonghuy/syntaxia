@@ -1,21 +1,45 @@
-name: Language v3 CI
+name: Product CI
 
 on:
-  push:
-    branches:
-      - feature/language-learning-v3
   pull_request:
     branches:
       - develop
+      - main
+  push:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: language-v3-ci-${{ github.ref }}
+  group: product-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  curriculum:
+    name: Curriculum · structure and parity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify SQL Fundamentals
+        run: node scripts/verify-sql-fundamentals.mjs
+      - name: Verify PostgreSQL
+        run: node scripts/verify-postgresql-v2.mjs
+      - name: Verify JavaScript
+        run: node scripts/verify-javascript-v2.mjs
+      - name: Verify HTML
+        run: node scripts/verify-html-v2.mjs
+      - name: Verify CSS
+        run: node scripts/verify-css-v2.mjs
+
   api:
     name: API · Go verify, test and vet
     runs-on: ubuntu-latest
@@ -25,30 +49,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version-file: apps/api/go.mod
           cache: true
           cache-dependency-path: apps/api/go.sum
-
       - name: Verify committed module graph
         run: |
           go mod tidy
           git diff --exit-code -- go.mod go.sum
-
       - name: Verify module checksums
         run: go mod verify
-
       - name: Unit tests
         run: go test -mod=readonly ./...
-
       - name: Vet
         run: go vet -mod=readonly ./...
 
   web:
-    name: Web · build and language regression
+    name: Web · build and regression
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -56,46 +75,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
-
       - name: Install dependencies
         run: npm ci
-
       - name: Build
         run: npm run build
-
       - name: Shell and UI regression
         run: |
           npm run test:shell-ux
           npm run test:ui-refresh
-
-      - name: Language v3 contract
-        run: npm run test:language-v3
-
-      - name: Language path regression
-        run: npm run test:language-path-v2
-
-      - name: Language audio regression
-        run: npm run test:language-audio
-
-      - name: Language review regression
-        run: npm run test:language-review
-
+      - name: Language V3 contracts
+        run: |
+          npm run test:language-v3
+          npm run test:language-path-v2
+          npm run test:language-audio
+          npm run test:language-review
       - name: i18n parity
         run: npm run test:i18n
-
       - name: Existing audit regression
         run: npm run test:audit-remediation
 
   e2e:
     name: Release · DB-backed E2E and review persistence
-    needs: [api, web]
+    needs: [curriculum, api, web]
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -114,7 +121,7 @@ jobs:
     env:
       DATABASE_URL: postgres://syntaxia:syntaxia@127.0.0.1:5432/syntaxia?sslmode=disable
       SANDBOX_DATABASE_URL: postgres://syntaxia_sandbox:syntaxia_sandbox@127.0.0.1:5432/syntaxia?sslmode=disable
-      JWT_SECRET: language-v3-ci-secret-not-for-production
+      JWT_SECRET: product-ci-secret-not-for-production
       API_PORT: "8082"
       CORS_ORIGINS: http://127.0.0.1:3001,http://localhost:3001
       WEB_BASE_URL: http://127.0.0.1:3001
@@ -122,20 +129,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version-file: apps/api/go.mod
           cache: true
           cache-dependency-path: apps/api/go.sum
-
       - name: Initialize release-test database
         run: |
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/init.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/002_sandbox_harden.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/014_language_review_fsrs.sql
-
       - name: Start API with local curriculum
         run: |
           cd apps/api
@@ -149,11 +153,9 @@ jobs:
           done
           cat "$RUNNER_TEMP/syntaxia-api.log"
           exit 1
-
       - name: Run cross-domain E2E smoke
         shell: pwsh
         run: ./scripts/e2e-all.ps1 -BaseUrl http://127.0.0.1:8082
-
       - name: Verify persisted FSRS rows
         run: |
           cards=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_cards")
@@ -162,7 +164,6 @@ jobs:
           echo "language_review_logs=$logs"
           test "$cards" -ge 1
           test "$logs" -ge 2
-
       - name: Show API log on failure
         if: failure()
         run: cat "$RUNNER_TEMP/syntaxia-api.log" || true
