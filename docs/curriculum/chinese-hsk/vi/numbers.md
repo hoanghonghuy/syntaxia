@@ -8,6 +8,11 @@ order: 3
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-number-03
+unit_title: "Xác nhận một số"
+unit_order: 3
+unit_can_do: "Nghe, lặp lại và xác nhận một số hiệu đơn giản trong một lượt giao tiếp dịch vụ ngắn"
+unit_role: lesson
 can_do: "Nhận ra số trong thông tin nghe ngắn và xác nhận một số đơn giản"
 pattern: "零 / 一 / 二 / 三 / … / 十 / 百"
 objectives:
