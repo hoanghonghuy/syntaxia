@@ -40,7 +40,7 @@
       <LanguageUnitPath
         v-if="showLanguagePath"
         :track-id="trackId"
-        :lessons="languagePathLessons"
+        :lessons="hubLessons"
         :progress="catalog.progress"
         :locale="locale"
       />
@@ -62,7 +62,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Lesson } from '~/types/api'
 import { buildLearnBreadcrumbs } from '~/utils/breadcrumbs'
 import { isLanguageTrack as trackIsLanguage } from '~/utils/languageLesson'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
@@ -75,10 +74,8 @@ const localePath = useLocalePath()
 const route = useRoute()
 const catalog = useCatalogStore()
 const auth = useAuthStore()
-const api = useApi()
 const { isNarrow } = useLearnNav()
 const loading = ref(true)
-const fullLanguageLessons = ref<Lesson[]>([])
 
 const showSkeleton = computed(() =>
   shouldShowSkeleton(
@@ -159,12 +156,6 @@ const hubLessons = computed(() => {
   return [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
 
-const languagePathLessons = computed(() =>
-  fullLanguageLessons.value.length === hubLessons.value.length
-    ? fullLanguageLessons.value
-    : hubLessons.value,
-)
-
 const showLanguagePath = computed(
   () => isLanguageHub.value && hubLessons.value.length > 0,
 )
@@ -173,28 +164,11 @@ const showReviewCta = computed(
   () => isLanguageHub.value && stats.value.done > 0,
 )
 
-async function loadLanguagePathLessons() {
-  fullLanguageLessons.value = []
-  if (!isLanguageHub.value || hubLessons.value.length === 0) return
-
-  try {
-    const details = await Promise.all(
-      hubLessons.value.map((item) => api.lesson(item.slug, locale.value, trackId.value)),
-    )
-    fullLanguageLessons.value = details.sort((a, b) => a.sortOrder - b.sortOrder)
-  } catch {
-    // Keep the summary path usable. Unmigrated or temporarily unavailable
-    // lesson details render as singleton units instead of breaking the hub.
-    fullLanguageLessons.value = []
-  }
-}
-
 async function loadHub() {
   loading.value = true
   try {
     await catalog.loadTracks()
     await catalog.loadLessons(trackId.value, locale.value)
-    await loadLanguagePathLessons()
     await auth.fetchMe()
     if (auth.user) await catalog.loadProgress()
   } finally {
@@ -217,7 +191,6 @@ watch(locale, async (loc) => {
       loadCatalog: (l) => catalog.loadLessons(trackId.value, l),
       loadProgress: () => catalog.loadProgress(),
     })
-    await loadLanguagePathLessons()
   } finally {
     loading.value = false
   }
