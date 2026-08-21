@@ -3,7 +3,7 @@ id: en-a1-u01-review
 track: english-basics
 locale: vi
 slug: meeting-review
-title: Ôn tập: gặp một người
+title: "Ôn tập: gặp một người"
 order: 3
 published: true
 cefr_level: a1
