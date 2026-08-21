@@ -7,6 +7,11 @@ title: Giới thiệu gia đình
 order: 4
 published: true
 cefr_level: a1
+unit_id: en-a1-people-02
+unit_title: "Giới thiệu những người gần gũi"
+unit_order: 2
+unit_can_do: "Hỏi một người là ai và giới thiệu bạn bè hoặc người thân"
+unit_role: lesson
 can_do: "Giới thiệu một đến hai người thân gần gũi và nói họ là ai"
 pattern: "This is my … / He's my … / She's my …"
 objectives:
