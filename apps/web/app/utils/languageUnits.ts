@@ -57,6 +57,12 @@ function normalizeRole(value: unknown): LanguageUnitRole {
   return 'lesson'
 }
 
+function roleRank(role: LanguageUnitRole): number {
+  if (role === 'checkpoint') return 1
+  if (role === 'review') return 2
+  return 0
+}
+
 export function languageUnitMeta(lesson: LanguageUnitLesson): LanguageUnitMeta {
   const exercise = asRecord(lesson.exercise)
   return {
@@ -66,6 +72,49 @@ export function languageUnitMeta(lesson: LanguageUnitLesson): LanguageUnitMeta {
     sortOrder: positiveInt(lesson.unitOrder) || positiveInt(exercise?.unitOrder),
     role: normalizeRole(lesson.unitRole || exercise?.unitRole),
   }
+}
+
+/**
+ * Return the learner-facing sequence for a language track.
+ *
+ * Explicit units are ordered by unit_order. Inside one unit, acquisition lessons
+ * come first, followed by its checkpoint and then its review node. Lessons with
+ * the same role keep their authored lesson order. Unmigrated content is a
+ * singleton unit keyed only by stable lesson identity/order, never by slug/title.
+ */
+export function orderLanguageLessons<T extends LanguageUnitLesson>(lessons: T[]): T[] {
+  type IndexedLesson = { lesson: T; index: number; role: LanguageUnitRole }
+  type Group = {
+    key: string
+    order: number
+    firstIndex: number
+    lessons: IndexedLesson[]
+  }
+
+  const groups = new Map<string, Group>()
+
+  lessons.forEach((lesson, index) => {
+    const meta = languageUnitMeta(lesson)
+    const key = meta.id || `lesson:${lesson.id}`
+    const order = meta.sortOrder || lesson.sortOrder
+    const existing = groups.get(key)
+    const group = existing || { key, order, firstIndex: index, lessons: [] }
+    if (order < group.order) group.order = order
+    group.lessons.push({ lesson, index, role: meta.role })
+    groups.set(key, group)
+  })
+
+  return [...groups.values()]
+    .sort((a, b) => a.order - b.order || a.firstIndex - b.firstIndex)
+    .flatMap((group) =>
+      [...group.lessons]
+        .sort((a, b) =>
+          roleRank(a.role) - roleRank(b.role)
+          || a.lesson.sortOrder - b.lesson.sortOrder
+          || a.index - b.index,
+        )
+        .map((item) => item.lesson),
+    )
 }
 
 /**
@@ -80,16 +129,16 @@ export function buildLanguageUnits(
   progress: Progress[],
   locale: string,
 ): LanguageUnit[] {
-  const sorted = [...lessons].sort((a, b) => a.sortOrder - b.sortOrder)
+  const ordered = orderLanguageLessons(lessons)
   const completed = new Set(
     progress
       .filter((item) => item.locale === locale && item.completed)
       .map((item) => item.lessonId),
   )
-  const currentId = sorted.find((lesson) => !completed.has(lesson.id))?.id || ''
+  const currentId = ordered.find((lesson) => !completed.has(lesson.id))?.id || ''
   const units = new Map<string, LanguageUnit>()
 
-  for (const lesson of sorted) {
+  for (const lesson of ordered) {
     const meta = languageUnitMeta(lesson)
     const unitId = meta.id || `lesson:${lesson.id}`
     const unitTitle = meta.title || lesson.title
@@ -123,10 +172,5 @@ export function buildLanguageUnits(
     units.set(unitId, unit)
   }
 
-  return [...units.values()]
-    .map((unit) => ({
-      ...unit,
-      nodes: [...unit.nodes].sort((a, b) => a.sortOrder - b.sortOrder),
-    }))
-    .sort((a, b) => a.sortOrder - b.sortOrder)
+  return [...units.values()].sort((a, b) => a.sortOrder - b.sortOrder)
 }
