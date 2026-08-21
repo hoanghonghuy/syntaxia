@@ -3,7 +3,7 @@ id: en-a1-u01-review
 track: english-basics
 locale: en
 slug: meeting-review
-title: Review: meet someone
+title: "Review: meet someone"
 order: 3
 published: true
 cefr_level: a1
