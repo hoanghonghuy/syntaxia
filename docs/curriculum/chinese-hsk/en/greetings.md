@@ -8,6 +8,11 @@ order: 1
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-greeting-01
+unit_title: "Greet and close a short exchange"
+unit_order: 1
+unit_can_do: "Greet someone, thank them, and close a short exchange naturally"
+unit_role: lesson
 can_do: "Greet someone, thank them, and close a short exchange naturally"
 pattern: "你好 / 谢谢 / 不客气 / 再见"
 objectives:
@@ -22,6 +27,8 @@ steps:
   - type: scene
     title: "Situation"
     body: "You meet a classmate before class. Greet them, then end the exchange politely."
+    visualKey: "classmates-meeting"
+    imageAlt: "Two classmates face each other before class and begin a short greeting exchange."
   - type: dialogue
     lines:
       - { speaker: "A", text: "你好！", reading: "nǐ hǎo" }
