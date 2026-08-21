@@ -3,7 +3,7 @@ id: zh-hsk-b1-u01-review
 track: chinese-hsk
 locale: vi
 slug: greetings-review
-title: Ôn tập: chào hỏi
+title: "Ôn tập: chào hỏi"
 order: 3
 published: true
 hsk_band: 1
