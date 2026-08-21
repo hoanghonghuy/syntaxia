@@ -3,7 +3,7 @@ id: en-a1-u04-review
 track: english-basics
 locale: en
 slug: cafe-review
-title: Review: order at a café
+title: "Review: order at a café"
 order: 12
 published: true
 cefr_level: a1
