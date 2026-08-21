@@ -7,6 +7,11 @@ title: Nói tên và hỏi tên
 order: 2
 published: true
 jlpt_level: n5
+unit_id: ja-n5-people-02
+unit_title: "Tự giới thiệu và nói về người thân"
+unit_order: 2
+unit_can_do: "Tự giới thiệu, hỏi tên và xác định một người thân trong đoạn trao đổi lịch sự ngắn"
+unit_role: lesson
 can_do: "Nói tên của mình với です và hỏi tên người khác một cách lịch sự"
 pattern: "わたしは … です。 / お名前は何ですか。"
 objectives:
