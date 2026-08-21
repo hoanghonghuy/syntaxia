@@ -33,7 +33,7 @@ exercise:
       - selector: .card
         declarations:
           background-color: "#eef"
-          border: 1px solid #ccd
+          border: "1px solid #ccd"
           border-radius: 8px
 ---
 
