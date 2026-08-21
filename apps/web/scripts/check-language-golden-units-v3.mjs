@@ -53,6 +53,17 @@ const migratedUnits = [
       ['people-review', 'review'],
     ],
   },
+  {
+    track: 'english-basics',
+    unitId: 'en-a1-find-way-03',
+    unitOrder: '3',
+    nodes: [
+      ['numbers', 'lesson'],
+      ['places', 'lesson'],
+      ['find-way-checkpoint', 'checkpoint'],
+      ['find-way-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
