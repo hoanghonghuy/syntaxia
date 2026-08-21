@@ -6,15 +6,16 @@
 - [x] Migrate SQL Fundamentals Block A (orders 0–7), EN + VI.
 - [x] Extend `verify-sql-fundamentals.mjs` with V2 checks for the migrated slices.
 - [x] Add branch CI for structural verifier + web build + API tests.
-- [ ] Verify migrated SQL GitHub Actions and existing sandbox/grading compatibility.
+- [ ] Verify full push-triggered GitHub Actions result and existing sandbox/grading compatibility after all IT-track changes land.
 - [x] Migrate Block B (orders 8–11), EN + VI, including mutation-state verification rules.
 - [x] Migrate Block C (orders 12–18), EN + VI, including aggregate and predicate mental models.
 - [x] Migrate Block D (orders 19–25), EN + VI, including join matching, outer-row preservation, UNION shape, and GROUP BY buckets.
-- [ ] Migrate Block E (orders 26–28).
-- [ ] Migrate Block F (orders 29–35).
-- [ ] Migrate Block G (orders 36–41).
-- [ ] Audit and migrate PostgreSQL against current PostgreSQL docs.
-- [ ] Migrate JavaScript Basics to trace/debug/build/checkpoint flow.
-- [ ] Migrate HTML + CSS Basics to semantic/render/debug/build flow.
+- [x] Migrate Block E (orders 26–28), including HAVING stage, correlated EXISTS, and CASE classification.
+- [x] Migrate Block F (orders 29–35), including schema contracts, keys, index verification, and views.
+- [x] Migrate Block G (orders 36–41), including wildcard/set/copy/subquery/constraint closure topics.
+- [x] Audit and migrate PostgreSQL 19/19 EN + VI against current PostgreSQL semantics.
+- [x] Migrate JavaScript Basics 9/9 EN + VI to execution-trace/debug/build/recall flow.
+- [x] Migrate HTML Basics 12/12 EN + VI to semantic/render/debug/build flow and strengthen structural grading.
+- [ ] Migrate CSS Basics 14/14 EN + VI to cascade/box/layout prediction and robust CSS grading.
 - [ ] Run cross-track content, sandbox, mobile, accessibility, and release QA.
 - [ ] Resume Language V3 only after IT curriculum quality gates are stable.

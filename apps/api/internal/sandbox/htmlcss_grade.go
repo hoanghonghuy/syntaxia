@@ -79,6 +79,7 @@ func gradeHtmlTags(expected map[string]any, rawHTML string) (bool, string, strin
 		if minCount < 1 {
 			minCount = 1
 		}
+		maxCount := intFromAny(spec["maxCount"])
 
 		requiredAttrs := []string{}
 		if rawRequired, exists := spec["requiredAttrs"]; exists {
@@ -120,6 +121,9 @@ func gradeHtmlTags(expected map[string]any, rawHTML string) (bool, string, strin
 		if matching < minCount {
 			return false, "wrong_result", fmt.Sprintf("expected at least %d matching <%s> element(s)", minCount, tag)
 		}
+		if maxCount > 0 && matching > maxCount {
+			return false, "wrong_result", fmt.Sprintf("expected at most %d matching <%s> element(s)", maxCount, tag)
+		}
 	}
 
 	if rawRelations, exists := expected["relations"]; exists {
@@ -132,7 +136,18 @@ func gradeHtmlTags(expected map[string]any, rawHTML string) (bool, string, strin
 			if !ok {
 				return false, "invalid_expected", "invalid expected HTML relations"
 			}
-			if ok, message := gradeHTMLAttributeReference(relation, elements); !ok {
+			kind, _ := relation["kind"].(string)
+			var passed bool
+			var message string
+			switch kind {
+			case "attributeReference":
+				passed, message = gradeHTMLAttributeReference(relation, elements)
+			case "sharedAttributeValue":
+				passed, message = gradeHTMLSharedAttributeValue(relation, elements)
+			default:
+				return false, "invalid_expected", "unsupported HTML relation"
+			}
+			if !passed {
 				return false, "wrong_result", message
 			}
 		}
@@ -181,10 +196,6 @@ func elementHasAttrs(element htmlElementInfo, required []string, equals map[stri
 }
 
 func gradeHTMLAttributeReference(spec map[string]any, elements []htmlElementInfo) (bool, string) {
-	kind, _ := spec["kind"].(string)
-	if kind != "attributeReference" {
-		return false, "unsupported HTML relation"
-	}
 	fromTag := lowerString(spec["fromTag"])
 	fromAttr := lowerString(spec["fromAttr"])
 	toTag := lowerString(spec["toTag"])
@@ -224,6 +235,44 @@ func gradeHTMLAttributeReference(spec map[string]any, elements []htmlElementInfo
 		return false, fmt.Sprintf("expected <%s %s> to reference <%s %s>", fromTag, fromAttr, toTag, toAttr)
 	}
 	return true, ""
+}
+
+func gradeHTMLSharedAttributeValue(spec map[string]any, elements []htmlElementInfo) (bool, string) {
+	tag := lowerString(spec["tag"])
+	attr := lowerString(spec["attr"])
+	if tag == "" || attr == "" {
+		return false, "invalid shared HTML attribute relation"
+	}
+	minCount := intFromAny(spec["minCount"])
+	if minCount < 2 {
+		minCount = 2
+	}
+	attrEquals := map[string]string{}
+	if rawEquals, exists := spec["attrEquals"]; exists {
+		parsed, ok := anyStringMap(rawEquals)
+		if !ok {
+			return false, "invalid shared HTML attribute filter"
+		}
+		for key, value := range parsed {
+			attrEquals[strings.ToLower(strings.TrimSpace(key))] = value
+		}
+	}
+
+	counts := map[string]int{}
+	for _, element := range elements {
+		if element.tag != tag || !elementHasAttrs(element, nil, attrEquals) {
+			continue
+		}
+		value := strings.TrimSpace(element.attrs[attr])
+		if value == "" {
+			continue
+		}
+		counts[value]++
+		if counts[value] >= minCount {
+			return true, ""
+		}
+	}
+	return false, fmt.Sprintf("expected at least %d <%s> elements to share %s", minCount, tag, attr)
 }
 
 func lowerString(v any) string {

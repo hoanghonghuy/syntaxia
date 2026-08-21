@@ -41,6 +41,17 @@ func TestGradeHtmlCss_htmlTags_requiredAttrsFail(t *testing.T) {
 	}
 }
 
+func TestGradeHtmlCss_htmlTags_maxCount(t *testing.T) {
+	expected := map[string]any{
+		"type": "htmlTags",
+		"tags": []any{map[string]any{"tag": "main", "minCount": float64(1), "maxCount": float64(1)}},
+	}
+	passed, code, _ := GradeHtmlCss(expected, HtmlCssGradeInput{HTML: `<main>A</main><main>B</main>`})
+	if passed || code != "wrong_result" {
+		t.Fatalf("expected max-count failure, got passed=%v code=%q", passed, code)
+	}
+}
+
 func TestGradeHtmlCss_htmlTags_sourceIncludes(t *testing.T) {
 	expected := map[string]any{
 		"type":           "htmlTags",
@@ -61,19 +72,34 @@ func TestGradeHtmlCss_htmlTags_attributeReference(t *testing.T) {
 			map[string]any{"tag": "input", "requiredAttrs": []any{"id"}},
 		},
 		"relations": []any{
-			map[string]any{
-				"kind": "attributeReference", "fromTag": "label", "fromAttr": "for", "toTag": "input", "toAttr": "id",
-			},
+			map[string]any{"kind": "attributeReference", "fromTag": "label", "fromAttr": "for", "toTag": "input", "toAttr": "id"},
 		},
 	}
 	passed, code, _ := GradeHtmlCss(expected, HtmlCssGradeInput{HTML: `<label for="email">Email</label><input id="email">`})
 	if !passed || code != "" {
 		t.Fatalf("expected pass, got passed=%v code=%q", passed, code)
 	}
-
 	passed, code, _ = GradeHtmlCss(expected, HtmlCssGradeInput{HTML: `<label for="wrong">Email</label><input id="email">`})
 	if passed || code != "wrong_result" {
 		t.Fatalf("expected wrong_result for broken relation, got passed=%v code=%q", passed, code)
+	}
+}
+
+func TestGradeHtmlCss_htmlTags_sharedAttributeValue(t *testing.T) {
+	expected := map[string]any{
+		"type": "htmlTags",
+		"tags": []any{map[string]any{"tag": "input", "minCount": float64(2), "attrEquals": map[string]any{"type": "radio"}}},
+		"relations": []any{
+			map[string]any{"kind": "sharedAttributeValue", "tag": "input", "attr": "name", "minCount": float64(2), "attrEquals": map[string]any{"type": "radio"}},
+		},
+	}
+	passed, code, _ := GradeHtmlCss(expected, HtmlCssGradeInput{HTML: `<input type="radio" name="plan"><input type="radio" name="plan">`})
+	if !passed || code != "" {
+		t.Fatalf("expected pass, got passed=%v code=%q", passed, code)
+	}
+	passed, code, _ = GradeHtmlCss(expected, HtmlCssGradeInput{HTML: `<input type="radio" name="a"><input type="radio" name="b">`})
+	if passed || code != "wrong_result" {
+		t.Fatalf("expected shared-name failure, got passed=%v code=%q", passed, code)
 	}
 }
 
@@ -89,10 +115,7 @@ func TestGradeHtmlCss_htmlTags_fail(t *testing.T) {
 }
 
 func TestGradeHtmlCss_cssIncludes_pass(t *testing.T) {
-	expected := map[string]any{
-		"type":    "cssIncludes",
-		"needles": []any{".note", "color"},
-	}
+	expected := map[string]any{"type": "cssIncludes", "needles": []any{".note", "color"}}
 	passed, code, _ := GradeHtmlCss(expected, HtmlCssGradeInput{CSS: ".note { color: blue; }"})
 	if !passed || code != "" {
 		t.Fatalf("expected pass, got passed=%v code=%q", passed, code)
@@ -100,10 +123,7 @@ func TestGradeHtmlCss_cssIncludes_pass(t *testing.T) {
 }
 
 func TestGradeHtmlCss_cssIncludes_fail(t *testing.T) {
-	expected := map[string]any{
-		"type":    "cssIncludes",
-		"needles": []any{"display:flex"},
-	}
+	expected := map[string]any{"type": "cssIncludes", "needles": []any{"display:flex"}}
 	passed, code, _ := GradeHtmlCss(expected, HtmlCssGradeInput{CSS: ".box { color: red; }"})
 	if passed || code != "wrong_result" {
 		t.Fatalf("expected wrong_result, got passed=%v code=%q", passed, code)
@@ -111,10 +131,7 @@ func TestGradeHtmlCss_cssIncludes_fail(t *testing.T) {
 }
 
 func TestGradeHtmlCss_htmlIncludes_pass(t *testing.T) {
-	expected := map[string]any{
-		"type":    "htmlIncludes",
-		"needles": []any{`alt=`, `href=`},
-	}
+	expected := map[string]any{"type": "htmlIncludes", "needles": []any{`alt=`, `href=`}}
 	passed, code, _ := GradeHtmlCss(expected, HtmlCssGradeInput{HTML: `<a href="https://example.com"><img src="a.png" alt="cat"></a>`})
 	if !passed || code != "" {
 		t.Fatalf("expected pass, got passed=%v code=%q", passed, code)

@@ -3,88 +3,104 @@ id: html-07-landmarks
 track: html-basics
 locale: en
 slug: semantic-landmarks
-title: Page landmarks
+title: Semantic page landmarks
 order: 7
 published: true
+can_do: "Map page regions to semantic landmarks and keep a single main content landmark instead of building the document from anonymous layout containers"
 objectives:
-  - Place header, nav, main, and footer landmarks
-  - Use section and article for meaningful chunks
-  - Prefer semantic regions over anonymous divs for page layout roles
+  - Use header, nav, main, article, section, and footer by role
+  - Keep one main landmark for the page's primary content
+  - Distinguish self-contained article content from a themed section
 exercise:
   mode: html
   starter: |
-    <!-- Add header, main, and footer regions -->
-    
+    <!-- TODO: structure a small page with header/nav, one main article, and footer -->
   hints:
-    - Add a header element for the top region.
-    - Wrap main content in main.
-    - Close with a footer element.
+    - Start with header and put navigation links inside a nav region.
+    - Put the unique page content in one main element and use article for the self-contained story.
+    - Finish with footer; the target contains header, nav, exactly one main, article, and footer.
   solution: |
-    <header>Top</header>
-    <main>Content</main>
-    <footer>Bottom</footer>
+    <header>
+      <nav><a href="/">Home</a></nav>
+    </header>
+    <main>
+      <article><h1>News</h1><p>Today's update.</p></article>
+    </main>
+    <footer>Contact</footer>
   expected:
     type: htmlTags
     tags:
       - tag: header
         minCount: 1
+      - tag: nav
+        minCount: 1
       - tag: main
+        minCount: 1
+        maxCount: 1
+      - tag: article
         minCount: 1
       - tag: footer
         minCount: 1
 ---
 
-A long page is easier to navigate when major regions have names. HTML’s **landmark** elements — such as `header`, `nav`, `main`, and `footer` — mark those regions. Assistive tools can jump between them; future CSS can target them cleanly.
+Semantic landmarks name the major regions of a page. They create a useful document map before any CSS layout is applied.
 
-Imagine a building map: entrance, corridors, main hall, exit. Landmarks are that map for a web page.
+## Mental model
 
-| Element | Typical role |
-| --- | --- |
-| `header` | Introductory block (branding, title area) |
-| `nav` | Primary navigation links |
-| `main` | The unique main content of this page (one per page) |
-| `section` | A themed grouping with its own heading |
-| `article` | A self-contained piece (post, card, story) |
-| `footer` | Closing info (credits, contact, secondary links) |
+```text
+page
+├─ header
+│  └─ nav
+├─ main              <- unique primary content
+│  └─ article/section
+└─ footer
+```
+
+Use `article` when the content can reasonably stand on its own; use `section` for a thematic grouping that belongs to a larger whole and normally has a heading.
+
+## Predict the rendered structure
+
+If every region is replaced with `<div>`, the page may look identical after CSS, but its built-in region semantics disappear. Predict what a screen-reader landmark list can identify before and after that replacement.
 
 ## Worked example
 
 ```html
 <header>
   <h1>City Library</h1>
-  <nav>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/events">Events</a></li>
-    </ul>
-  </nav>
+  <nav><a href="/events">Events</a></nav>
 </header>
-
 <main>
   <article>
     <h2>Weekend reading club</h2>
-    <p>Meet on Saturday at 10:00.</p>
+    <p>Meet Saturday at 10:00.</p>
   </article>
 </main>
-
-<footer>
-  <p>Contact: desk@example.com</p>
-</footer>
+<footer>Contact the library desk.</footer>
 ```
 
-- `header` introduces the site area; `nav` holds the menu links.
-- `main` wraps the primary content for this URL — keep one `main` per page.
-- `article` groups a self-contained story; a `section` would fit a titled subsection that is not standalone.
-- `footer` closes with supporting information.
+The source order is meaningful on its own; CSS can rearrange presentation later without requiring anonymous markup everywhere.
 
-Generic `div` boxes still have a place for styling hooks, but they do not name a region the way these elements do.
+## Debug this
+
+```html
+<main>Article A</main>
+<main>Article B</main>
+```
+
+The document now exposes two main landmarks. Put the unique primary region in one `main`, then structure the content inside it with `article`, `section`, headings, and other elements.
 
 ## Common mistakes
 
-- Using several `main` elements on one page — one main landmark is the rule.
-- Wrapping the whole site in `article` by habit — reserve `article` for content that could stand alone.
-- Skipping headings inside `section` — a section without a heading is harder to understand.
+- Using `div` for every region even when a semantic landmark fits.
+- Creating multiple `main` landmarks.
+- Using `section` as a generic styling wrapper with no thematic meaning.
 
 ## Your turn
 
-Use the sandbox below to add header, main, and footer landmarks. When the checker shows **Correct**, mark this lesson complete.
+Structure a small page with header/nav, exactly one main containing an article, and footer.
+
+## Quick check
+
+What is the practical difference between `article` and `section`?
+
+**Answer:** an article is intended to be self-contained; a section groups a themed part of a larger document.
