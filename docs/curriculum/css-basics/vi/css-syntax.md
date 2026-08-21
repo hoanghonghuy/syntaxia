@@ -3,76 +3,96 @@ id: css-01-syntax
 track: css-basics
 locale: vi
 slug: css-syntax
-title: Quy tắc CSS và stylesheet
+title: Rule, selector và declaration
 order: 1
 published: true
+can_do: "Viết một CSS rule hoàn chỉnh có selector và nhiều property-value declaration, đồng thời chẩn đoán declaration sai cú pháp"
 objectives:
-  - Đọc một rule CSS: selector, khối declaration, property và value
-  - Phân biệt stylesheet ngoài (external) với style trong thẻ style (internal)
-  - Nhận biết dấu `;` và `:` trong declaration
+  - Đọc ranh giới giữa selector và declaration block
+  - Viết property-value pair bằng colon và semicolon
+  - Phân biệt CSS source với HTML markup
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <p class="note">Read me</p>
   starter: |
-    /* Style .note text */
-    
+    /* TODO: làm .note màu xanh và chữ đậm */
   hints:
-    - Selector class bắt đầu bằng dấu chấm.
-    - "Đặt khai báo bên trong { }."
-    - Dùng color để đổi màu chữ.
+    - Class selector bắt đầu bằng dấu chấm: .note.
+    - Đặt cả hai declaration trong cùng một cặp braces.
+    - Dùng color: blue; và font-weight: bold;.
   solution: |
-    .note { color: blue; }
+    .note {
+      color: blue;
+      font-weight: bold;
+    }
   expected:
-    type: cssIncludes
-    needles:
-      - .note
-      - "{"
-      - color
+    type: cssRules
+    rules:
+      - selector: .note
+        declarations:
+          color: blue
+          font-weight: bold
 ---
 
-Một **rule** (quy tắc) CSS gồm selector rồi một khối `{ ... }` chứa các **declaration** (khai báo). Mỗi declaration là `property: value;` — hai chấm giữa tên và giá trị, chấm phẩy kết thúc.
+CSS syntax nhỏ gọn, nhưng punctuation quyết định cấu trúc mà parser đọc được.
 
-Bạn có thể đặt CSS trong tệp `.css` riêng rồi gắn bằng `<link>` (external), hoặc viết trong `<style>` trong `<head>` (internal). Cả hai dùng cùng cú pháp rule.
+## Mô hình tư duy
 
-| Phần | Vai trò | Ví dụ |
-| --- | --- | --- |
-| Selector | Chọn phần tử | `h1` |
-| Declaration block | Khối `{ ... }` chứa style | `{ color: navy; }` |
-| Declaration | Một cặp property + value | `color: navy;` |
-| Stylesheet | Tập hợp các rule | tệp `styles.css` hoặc thẻ `<style>` |
-
-## Ví dụ mẫu
-
-```html
-<head>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <h1>Vườn rau</h1>
-</body>
-```
-
-```css
-/* styles.css */
-h1 {
-  color: navy;
-  font-size: 28px;
+```text
+selector {
+  property: value;
+  property: value;
 }
 ```
 
-- `<link rel="stylesheet" href="styles.css" />` gắn stylesheet ngoài vào trang.
-- `h1` là selector type: mọi tiêu đề cấp 1.
-- `color: navy;` và `font-size: 28px;` là hai declaration trong cùng một rule.
+Selector chọn target; braces chứa declaration block; colon tách property khỏi value; semicolon tách các declaration.
 
-Cùng cú pháp cũng chạy trong `<style>h1 { color: navy; }</style>` — chỉ khác chỗ đặt mã.
+## Dự đoán kết quả hiển thị
+
+```css
+.note {
+  color: blue;
+  font-weight: bold;
+}
+```
+
+Hãy dự đoán hai đặc tính độc lập của paragraph match selector: text màu blue và weight bold.
+
+## Ví dụ mẫu
+
+```css
+.note {
+  color: navy;
+  line-height: 1.5;
+}
+```
+
+External stylesheet và `<style>` nội bộ dùng cùng CSS rule syntax; chỉ khác nơi đặt source.
+
+## Tìm lỗi
+
+```css
+.note {
+  color = blue
+  font-weight: bold;
+}
+```
+
+`color = blue` không phải CSS declaration. Cần dùng colon. Thiếu separator cũng có thể khiến declaration phía sau bị bỏ qua.
 
 ## Lỗi thường gặp
 
-- Quên `{ }` quanh declaration — selector một mình không đổi gì trên trang.
-- Viết `color = navy` thay vì `color: navy;` — CSS dùng `:` và thường kết thúc bằng `;`.
-- Gắn sai đường dẫn `href` của `<link>` — stylesheet không tải thì style không áp dụng.
+- Dùng `=` thay cho `:`.
+- Trộn HTML tag vào file `.css`.
+- Nghĩ chỉ cần declaration mà không cần selector/rule block.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để viết rule CSS cho .note. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Viết một rule `.note` đặt cả hai property yêu cầu. Structured grader kiểm tra hai declaration nằm đúng trên selector đó.
+
+## Tự kiểm tra
+
+Selector quyết định gì, còn declaration quyết định gì?
+
+**Đáp án:** selector quyết định element nào match; declaration quyết định style property mà các element đó nhận.

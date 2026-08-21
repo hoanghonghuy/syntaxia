@@ -3,19 +3,21 @@ id: pg-04-boolean
 track: postgresql
 locale: en
 slug: boolean-filters
-title: Filtering with BOOLEAN columns
+title: BOOLEAN filters and unknown values
 order: 4
 published: true
+can_do: "Filter PostgreSQL BOOLEAN values while distinguishing TRUE, FALSE, and unknown NULL"
 objectives:
-  - Use a BOOLEAN column in WHERE
-  - Compare with true / false without quotes
+  - Treat BOOLEAN as true / false with NULL representing unknown
+  - Use IS TRUE to select only known-true rows
+  - Explain how WHERE handles unknown boolean results
 exercise:
   starter: "SELECT name, active FROM members;"
   hints:
-    - "Keep only rows where active is true."
-    - "Compare the BOOLEAN column to true — no quotes around true."
-    - "Try: SELECT name FROM members WHERE active = true;"
-  solution: "SELECT name FROM members WHERE active = true;"
+    - "The requirement wants only known active members, not false or unknown rows."
+    - "IS TRUE is explicit about keeping only TRUE."
+    - "Use: SELECT name FROM members WHERE active IS TRUE ORDER BY name;"
+  solution: "SELECT name FROM members WHERE active IS TRUE ORDER BY name;"
   preview:
     columns: ["id", "name", "active"]
     rows:
@@ -23,6 +25,7 @@ exercise:
       - [2, "Ben", false]
       - [3, "Chi", true]
       - [4, "Dee", false]
+      - [5, "Eve", null]
   expected:
     columns: ["name"]
     rows:
@@ -31,43 +34,59 @@ exercise:
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE members (id INTEGER, name TEXT, active BOOLEAN);"
-    - "INSERT INTO members VALUES (1, 'Ana', true), (2, 'Ben', false), (3, 'Chi', true), (4, 'Dee', false);"
+    - "INSERT INTO members VALUES (1, 'Ana', TRUE), (2, 'Ben', FALSE), (3, 'Chi', TRUE), (4, 'Dee', FALSE), (5, 'Eve', NULL);"
 ---
 
-A membership list often has a yes/no column: still active, or not. In PostgreSQL that column type is `BOOLEAN`, and you filter it with `WHERE` just like other columns — but you compare to `true` or `false`, not to text.
+A PostgreSQL boolean column can hold known `TRUE`, known `FALSE`, or `NULL` when the state is unknown.
 
-| id | name | active |
+## Mental model
+
+| active | meaning | `active IS TRUE` |
 | --- | --- | --- |
-| 1 | Ana | true |
-| 2 | Ben | false |
-| 3 | Chi | true |
-| 4 | Dee | false |
+| `TRUE` | known active | true |
+| `FALSE` | known inactive | false |
+| `NULL` | activity state unknown | false |
+
+`WHERE active` is concise and keeps rows where the expression evaluates true. `IS TRUE` is useful while learning because it makes the treatment of NULL explicit.
+
+## Predict before you run
+
+Ana and Chi are known true. Ben and Dee are false; Eve is unknown. Predict exactly Ana and Chi in the result.
 
 ## Worked example
 
 ```sql
-SELECT name FROM members WHERE active = true;
+SELECT name
+FROM members
+WHERE active IS TRUE
+ORDER BY name;
 ```
-
-- `active` is a `BOOLEAN` column.
-- `= true` keeps only active members.
-- Ben and Dee are dropped because `active` is `false`.
-
-Result:
 
 | name |
 | --- |
 | Ana |
 | Chi |
 
-You can also write `WHERE active` (same meaning as `= true`) or `WHERE NOT active` for inactive rows. Prefer the explicit form while learning.
+## Debug this
+
+```sql
+WHERE active IS NOT FALSE
+```
+
+This includes both TRUE **and NULL**. If the business rule says “confirmed active”, unknown status must not be silently treated as active.
 
 ## Common mistakes
 
-- Writing `'true'` in quotes — that is text, not a boolean.
-- Using `1` / `0` as if this were another database dialect.
-- Selecting every column when the task asks only for `name`.
+- Collapsing NULL into FALSE even when “unknown” has different business meaning.
+- Storing boolean state as arbitrary `1/0` conventions when a BOOLEAN column expresses the domain directly.
+- Choosing a null-aware predicate without checking whether unknown should be included or excluded.
 
 ## Your turn
 
-Return the `name` of every member who is currently active.
+Return only members whose active state is explicitly true, ordered by name.
+
+## Quick check
+
+Does a NULL boolean mean the same thing as FALSE?
+
+**Answer:** no. FALSE is known false; NULL represents an unknown boolean state.

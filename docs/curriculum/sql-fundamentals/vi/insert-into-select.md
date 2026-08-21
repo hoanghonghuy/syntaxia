@@ -6,16 +6,17 @@ slug: insert-into-select
 title: Sao chép hàng với INSERT INTO SELECT
 order: 38
 published: true
+can_do: "Đưa kết quả query vào bảng đích bằng cách ghép cột đích với output SELECT và kiểm tra trạng thái sau mutation"
 objectives:
-  - Chèn hàng bằng cách SELECT từ bảng khác
-  - Sao chép một phần đã lọc sang bảng đích
-  - Nghĩ kiểu kiểm tra: SELECT sau INSERT để xem kết quả
+  - Xem output SELECT như nguồn hàng cho INSERT
+  - Ghép cột đích với biểu thức nguồn
+  - Dự đoán và verify bảng đích sau khi copy có lọc
 exercise:
   starter: "SELECT title, year FROM archive;"
   hints:
-    - "INSERT INTO archive (title, year) SELECT … sao chép hàng từ movies."
-    - "Lọc bằng WHERE year >= 2010 để phim cũ không vào."
-    - "Thử: INSERT INTO archive (title, year) SELECT title, year FROM movies WHERE year >= 2010;"
+    - "Đích cần title và year; SELECT nguồn phải trả hai giá trị đó theo cùng thứ tự."
+    - "Lọc movies nguồn bằng year >= 2010 trước khi insert."
+    - "Dùng: INSERT INTO archive (title, year) SELECT title, year FROM movies WHERE year >= 2010;"
   solution: "INSERT INTO archive (title, year) SELECT title, year FROM movies WHERE year >= 2010;"
   preview:
     columns: ["title", "year"]
@@ -36,23 +37,29 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Dune', 2021);"
 ---
 
-Đôi khi bạn đã có hàng trong một bảng và muốn **sao chép** một phần sang bảng khác — như copy vài dòng spreadsheet sang sheet thứ hai. `INSERT INTO … SELECT` làm việc đó trong một bước: không cần gõ từng giá trị bằng tay.
+`INSERT` không nhất thiết phải nhận dữ liệu từ `VALUES (...)`. Một `SELECT` có thể tạo cả tập hàng để insert, rất hữu ích khi copy, archive hoặc biến đổi dữ liệu theo tập hợp.
 
-**movies** (nguồn — bảng đầy đủ)
+## Mô hình tư duy
 
-| id | title | year |
+Hãy nhìn như pipeline:
+
+```text
+movies -> WHERE year >= 2010 -> SELECT title, year -> INSERT vào archive(title, year)
+```
+
+Trace từng hàng:
+
+| movie nguồn | qua filter? | được insert? |
 | --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Dune | 2021 |
+| The Matrix, 1999 | không | không |
+| Inception, 2010 | có | có |
+| Dune, 2021 | có | có |
 
-**archive** (đích — lúc đầu trống)
+Danh sách cột đích `(title, year)` phải khớp vị trí với hai biểu thức SELECT tạo ra.
 
-| title | year |
-| --- | --- |
-| *(chưa có hàng)* |  |
+## Dự đoán trước khi chạy
 
-Mục tiêu: chỉ copy phim từ năm **2010 trở đi** vào `archive`.
+`archive` ban đầu rỗng. Dự đoán after-state đầy đủ: đúng hai hàng, Inception 2010 và Dune 2021.
 
 ## Ví dụ mẫu
 
@@ -63,24 +70,40 @@ FROM movies
 WHERE year >= 2010;
 ```
 
-- `INSERT INTO archive (title, year)` đặt tên cột đích.
-- `SELECT title, year FROM movies` là nguồn giá trị.
-- `WHERE year >= 2010` giữ Inception và Dune; bỏ The Matrix (1999).
-- Sau khi chèn, kiểm tra bằng `SELECT title, year FROM archive ORDER BY title;`.
+Sau đó verify:
 
-**archive** sau khi chèn:
+```sql
+SELECT title, year
+FROM archive
+ORDER BY title;
+```
 
 | title | year |
-| --- | --- |
+| --- | ---: |
 | Dune | 2021 |
 | Inception | 2010 |
 
+## Tìm lỗi
+
+```sql
+INSERT INTO archive (title, year)
+SELECT year, title FROM movies WHERE year >= 2010;
+```
+
+Các biểu thức nguồn bị đảo so với cột đích. Mutation theo tập hợp vẫn cần suy luận rõ giá trị nào đi vào cột nào.
+
 ## Lỗi thường gặp
 
-- Quên liệt kê cột — nếu thứ tự cột khác, giá trị có thể vào sai chỗ; ghi rõ `(title, year)` ở cả hai bên.
-- Dùng `VALUES` khi dữ liệu đã nằm trong bảng — `SELECT` mới đúng để sao chép.
-- Chèn không lọc — mọi phim bị copy; dùng `WHERE` khi chỉ muốn một phần.
+- Ghép sai vị trí cột đích và biểu thức SELECT.
+- Quên filter nguồn và copy quá nhiều hàng.
+- Chỉ kiểm tra câu lệnh chạy được mà không verify after-state của bảng đích.
 
 ## Thử ngay
 
-Copy `title` và `year` từ `movies` vào `archive` với `year >= 2010`. Checker đọc `archive` sắp theo `title`.
+Copy title và year của các movie từ 2010 trở đi vào `archive`. Dự đoán toàn bộ trạng thái đích trước, rồi chạy và verify.
+
+## Tự kiểm tra
+
+Trong `INSERT INTO dest (a, b) SELECT x, y ...`, giá trị nguồn nào đi vào `b`?
+
+**Đáp án:** `y`, vì biểu thức SELECT ánh xạ theo vị trí với danh sách cột đích.

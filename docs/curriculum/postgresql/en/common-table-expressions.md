@@ -3,18 +3,20 @@ id: pg-21-cte
 track: postgresql
 locale: en
 slug: common-table-expressions
-title: Named steps with WITH (CTE)
+title: Structuring queries with WITH (CTE)
 order: 21
 published: true
+can_do: "Use a CTE as a named query step while separating readability/scope from assumptions about execution performance"
 objectives:
-  - Name a temporary result with WITH
-  - Query that named result in the same statement
+  - Name an intermediate query result with WITH
+  - Trace data flow from a CTE into its consuming query
+  - Avoid treating every CTE as an automatic optimization boundary
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "WITH name AS (SELECT …) defines a temporary named result."
-    - "Then SELECT from that name as if it were a table."
-    - "Try: WITH recent AS (SELECT title, year FROM movies WHERE year >= 2010) SELECT title FROM recent ORDER BY title;"
+    - "Create a named result recent containing movies from 2010 onward."
+    - "The outer SELECT should read from recent, not rebuild the filter."
+    - "Use: WITH recent AS (SELECT title, year FROM movies WHERE year >= 2010) SELECT title FROM recent ORDER BY title;"
   solution: "WITH recent AS (SELECT title, year FROM movies WHERE year >= 2010) SELECT title FROM recent ORDER BY title;"
   preview:
     columns: ["id", "title", "year"]
@@ -35,29 +37,40 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Arrival', 2016), (4, 'Dune', 2021);"
 ---
 
-Long queries are easier when you name an intermediate step — like a labeled range in a spreadsheet. A **common table expression (CTE)** uses `WITH name AS (…)` to define that step, then you `SELECT` from it in the same statement.
+A common table expression gives a query step a name for the duration of one statement. Use it to expose intent and structure complex logic into understandable stages.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Arrival | 2016 |
-| 4 | Dune | 2021 |
+## Mental model
+
+```text
+base table movies
+      |
+      v
+CTE recent: filter year >= 2010
+      |
+      v
+outer query: project title + order
+```
+
+The CTE name is a query-scoped relation, not a permanent table and not automatically a performance optimization.
+
+Modern PostgreSQL can sometimes fold a side-effect-free, non-recursive CTE into the parent query; in other cases materialization can matter. Start by using CTEs for clear query structure, then inspect plans when performance matters.
+
+## Predict before you run
+
+The Matrix never enters `recent`. The outer query sees Arrival, Dune, Inception and orders them alphabetically.
 
 ## Worked example
 
 ```sql
 WITH recent AS (
-  SELECT title, year FROM movies WHERE year >= 2010
+  SELECT title, year
+  FROM movies
+  WHERE year >= 2010
 )
-SELECT title FROM recent ORDER BY title;
+SELECT title
+FROM recent
+ORDER BY title;
 ```
-
-- `WITH recent AS (…)` builds a temporary named result of movies from 2010 onward.
-- The outer `SELECT` reads only from `recent`.
-- The Matrix (1999) never enters `recent`, so it does not appear.
-
-Result:
 
 | title |
 | --- |
@@ -65,12 +78,26 @@ Result:
 | Dune |
 | Inception |
 
+## Debug this
+
+A query is split into five CTEs only because “CTEs are faster”. That premise is unsafe. Query readability and execution planning are separate concerns; use `EXPLAIN` to validate a performance claim instead of inferring it from syntax shape.
+
+```text
+WITH step1 AS (...), step2 AS (...), step3 AS (...) ...
+```
+
 ## Common mistakes
 
-- Forgetting the outer `SELECT` after the CTE definition.
-- Referencing the base table only, skipping the CTE name the task asks for.
-- Omitting `ORDER BY title` when the expected order is alphabetical.
+- Defining a CTE and then accidentally querying the base table again.
+- Assuming the CTE persists beyond the statement.
+- Treating CTE syntax as a guaranteed optimization or materialization strategy.
 
 ## Your turn
 
-Define a CTE `recent` for movies with `year >= 2010`, then return their `title` ordered by title.
+Build a CTE named `recent` for movies from 2010 onward, then select its titles alphabetically.
+
+## Quick check
+
+What is the safest primary reason to introduce a CTE in application SQL?
+
+**Answer:** to name and structure a query step clearly; performance effects should be verified with the planner rather than assumed.

@@ -3,74 +3,89 @@ id: css-05-cascade
 track: css-basics
 locale: en
 slug: cascade-and-specificity
-title: Cascade and specificity
+title: Resolving conflicts with the cascade
 order: 5
 published: true
+can_do: "Predict the winning declaration when type, class, inheritance, and source order compete without reaching for !important"
 objectives:
-  - Explain how conflicting declarations are resolved
-  - Compare type, class, and ID specificity at a beginner level
-  - Recognize inheritance for properties like color and font
+  - Compare selector specificity at a beginner-safe level
+  - Use source order only after specificity ties
+  - Distinguish inherited properties from non-inherited box properties
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <p class="note">Which color wins?</p>
   starter: |
-    /* Make .note purple */
-    
+    /* TODO: keep the type rule black, then make the class rule win with purple */
   hints:
-    - Class selector beats bare element names.
-    - "Use .note { } to target the paragraph."
-    - Set color to any value you like.
+    - Both selectors match the paragraph, but a class selector is more specific than a type selector.
+    - Write the broad p rule and the narrower .note rule separately.
+    - Use p { color: black; } and .note { color: purple; }.
   solution: |
+    p { color: black; }
     .note { color: purple; }
   expected:
-    type: cssIncludes
-    needles:
-      - .note
-      - color
+    type: cssRules
+    rules:
+      - selector: p
+        declarations:
+          color: black
+      - selector: .note
+        declarations:
+          color: purple
 ---
 
-When two rules target the same element and set the same property, the browser must pick a winner. That decision process is the **cascade**. **Specificity** is one of its main tools: more specific selectors beat less specific ones. Some properties also **inherit** from parent to child (for example, `color` and `font-family`).
+The cascade is the algorithm that resolves competing declarations. Specificity is one input to that algorithm, not the whole algorithm.
 
-Think of overlapping sticky notes on a wall. A note pinned closer to the item (more specific) wins. If two notes are equally specific, the one placed later on top wins. Some instructions (“use navy ink”) pass down to nested items automatically — that is inheritance.
+## Mental model
 
-| Factor | Beginner idea | Example |
-| --- | --- | --- |
-| Origin & importance | Author styles vs browser defaults | Your stylesheet overrides defaults |
-| Specificity | ID > class > type (rough order) | `#title` beats `.title` beats `h1` |
-| Source order | Later rule wins if specificity ties | Second `p { color: ... }` overrides the first |
-| Inheritance | Some traits flow to children | `body { color: #222; }` tints nested text |
+For beginner author styles with the same importance:
+
+```text
+match rules -> compare specificity -> if tied, later source order wins -> inherit where applicable
+```
+
+A rough selector hierarchy for this track is ID > class/pseudo-class > type. Real specificity is calculated from selector components rather than a simple global score.
+
+## Predict the rendered result
+
+```css
+p { color: black; }
+.note { color: purple; }
+```
+
+For `<p class="note">...</p>`, predict purple. Both rules match, but the class selector is more specific. Reversing their source order would not make the less-specific `p` rule win.
 
 ## Worked example
 
 ```css
-p {
-  color: black;
-}
-
-.note {
-  color: teal;
-}
-
-#alert {
-  color: crimson;
-}
+body { color: #333; }
+p { color: black; }
+.note { color: purple; }
 ```
 
-Suppose the HTML is `<p id="alert" class="note">Warning</p>`:
+`color` can inherit from body, but a declaration directly matching the paragraph overrides the inherited value. The class then beats the type rule on specificity.
 
-- The type rule `p` is least specific.
-- The class rule `.note` is more specific than `p`.
-- The ID rule `#alert` is more specific still, so **`color: crimson`** wins for that paragraph.
+## Debug this
 
-If two class rules conflict and neither uses an ID, the one that appears **later** in the stylesheet usually wins. Avoid scattering `!important` — it short-circuits normal cascade learning and makes conflicts harder to fix.
+```css
+.note { color: purple !important; }
+```
+
+`!important` can change cascade priority, but using it to avoid understanding ordinary conflicts makes future overrides harder. First inspect matches, specificity, inheritance, and source order.
 
 ## Common mistakes
 
-- Raising specificity with long chains or IDs when a single clear class would do — styles become hard to override later.
-- Assuming every property inherits — `margin`, `padding`, and `border` do **not** inherit by default.
-- Relying on `!important` to “force” a win — fix selector specificity and source order first.
+- Thinking “the last rule always wins” even when specificity differs.
+- Assuming margin/padding inherit like text color often does.
+- Escalating every conflict with IDs or `!important`.
 
 ## Your turn
 
-Use the sandbox below to set .note text color. When the checker shows **Correct**, mark this lesson complete.
+Write both matching rules and predict purple before opening the preview.
+
+## Quick check
+
+If `.note` appears before `p` in the same author stylesheet, which color wins here?
+
+**Answer:** `.note` still wins because its selector is more specific.

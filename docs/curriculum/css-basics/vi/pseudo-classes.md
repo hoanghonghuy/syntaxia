@@ -3,80 +3,84 @@ id: css-04-pseudo
 track: css-basics
 locale: vi
 slug: pseudo-classes
-title: Pseudo-class cho liên kết
+title: Style trạng thái element bằng pseudo-class
 order: 4
 published: true
+can_do: "Dùng pseudo-class để style element hiện có theo interaction state và vẫn giữ focus state nhìn thấy được cho bàn phím"
 objectives:
-  - Giải thích pseudo-class là trạng thái hoặc điều kiện của phần tử
-  - Style liên kết với :link, :visited, :hover, :focus
-  - Hiểu :focus giúp bàn phím và tiếp cận
+  - Đọc pseudo-class như điều kiện state trên một element
+  - Style hover và focus riêng biệt
+  - Không xóa focus indication nếu chưa có replacement
 exercise:
   mode: both
   starterHtml: |
-    <a href="#">Link</a>
+    <a href="/docs">Documentation</a>
   starter: |
-    /* Style the link on hover */
-    
+    /* TODO: làm link màu orange khi hover và có outline nhìn thấy khi focus */
   hints:
-    - "Pseudo-class gắn bằng dấu hai chấm: :hover."
-    - "Viết a:hover trước ngoặc nhọn."
-    - Đổi color khi hover.
+    - Nối :hover và :focus vào anchor selector.
+    - Hai interaction state nên là hai rule riêng.
+    - Dùng a:hover { color: orange; } và a:focus { outline: 2px solid blue; }.
   solution: |
     a:hover { color: orange; }
+    a:focus { outline: 2px solid blue; }
   expected:
-    type: cssIncludes
-    needles:
-      - ":hover"
+    type: cssRules
+    rules:
+      - selector: a:hover
+        declarations:
+          color: orange
+      - selector: a:focus
+        declarations:
+          outline: 2px solid blue
 ---
 
-**Pseudo-class** (lớp giả) chọn phần tử theo *trạng thái* — ví dụ liên kết chưa mở, đã mở, đang hover chuột, hoặc đang có focus bàn phím — mà không cần thêm class trong HTML.
+Pseudo-class thêm một **điều kiện trạng thái** vào selector. Element không biến thành loại element khác; state hiện tại quyết định rule nào match.
 
-Với liên kết (`<a href="...">`), các pseudo-class phổ biến nhất là trạng thái liên kết và tương tác.
+## Mô hình tư duy
 
-| Pseudo-class | Khi nào khớp |
-| --- | --- |
-| `:link` | Liên kết chưa thăm (unvisited) |
-| `:visited` | Liên kết đã thăm |
-| `:hover` | Con trỏ đang nằm trên phần tử |
-| `:focus` | Phần tử đang nhận focus (tab bàn phím, click vào ô nhập…) |
+```text
+anchor + điều kiện state -> rule state được match
+
+a:hover  pointer đang ở trên anchor
+a:focus  anchor đang có focus
+```
+
+Focus đặc biệt quan trọng với người dùng bàn phím điều hướng bằng Tab.
+
+## Dự đoán kết quả hiển thị
+
+Trước khi preview, hãy dự đoán: đưa pointer lên link làm đổi màu; focus bằng bàn phím tạo outline. Hai state có thể xảy ra độc lập.
 
 ## Ví dụ mẫu
 
-```html
-<p><a href="https://example.com">Tài liệu mẫu</a></p>
+```css
+a:hover { color: orange; }
+a:focus { outline: 2px solid blue; }
 ```
+
+Các pseudo-class như `:link`, `:visited`, `:hover`, `:focus`, `:active` đại diện cho các link state khác nhau. Focus cần luôn nhìn thấy được.
+
+## Tìm lỗi
 
 ```css
-a:link {
-  color: navy;
-}
-
-a:visited {
-  color: purple;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-a:focus {
-  outline: 2px solid teal;
-}
+a:focus { outline: none; }
 ```
 
-- `a:link` đặt màu cho liên kết chưa mở.
-- `a:visited` đổi màu sau khi đã thăm (trình duyệt nhớ ở mức riêng tư có giới hạn).
-- `a:hover` thêm gạch chân khi rê chuột.
-- `a:focus` hiện viền rõ khi focus — quan trọng cho người dùng bàn phím.
-
-Thứ tự khai báo các trạng thái liên kết thường được khuyên là link → visited → hover → focus (dễ nhớ: LVHF) để tránh bị ghi đè ngoài ý muốn.
+Xóa focus indicator mặc định mà không có alternative khiến vị trí bàn phím khó nhận biết. Nếu custom focus, phải thay bằng style khác nhìn thấy rõ.
 
 ## Lỗi thường gặp
 
-- Chỉ style `:hover` mà bỏ `:focus` — người chỉ dùng bàn phím khó biết đang đứng ở liên kết nào.
-- Viết `a:hover` như class HTML (`class="hover"`) — pseudo-class chỉ nằm trong CSS, sau dấu `:`.
-- Quên `href` trên `<a>` — không phải liên kết thật thì hành vi `:link` / `:visited` có thể không như mong đợi.
+- Nghĩ `:hover` là class phải thêm vào HTML.
+- Chỉ thiết kế pointer hover và quên keyboard focus.
+- Xóa outline focus chỉ vì hình thức mà không thay accessibility cue khác.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để style liên kết khi hover. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Cài cả hover và focus style. Grader xác minh mỗi declaration nằm đúng state selector tương ứng.
+
+## Tự kiểm tra
+
+`:focus` có cần thêm `class="focus"` vào HTML không?
+
+**Đáp án:** không. Nó tự match state focus hiện tại của element.

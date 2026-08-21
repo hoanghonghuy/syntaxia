@@ -6,16 +6,17 @@ slug: drop-table
 title: Xóa bảng với DROP TABLE
 order: 31
 published: true
+can_do: "Chọn DROP TABLE chỉ khi cần xóa cả object database chứ không chỉ các hàng bên trong"
 objectives:
-  - Drop một bảng không còn dùng
-  - Để các bảng khác nguyên
-  - Phân biệt DROP TABLE với DELETE (chỉ dòng)
+  - Phân biệt DELETE với DROP TABLE
+  - Dự đoán tác động ở cấp object của DROP TABLE
+  - Xóa đúng một bảng mục tiêu mà không ảnh hưởng bảng bên cạnh
 exercise:
   starter: "DROP TABLE "
   hints:
-    - "DROP TABLE xóa cả bảng, không chỉ các dòng."
-    - "Chỉ đặt tên bảng cần xóa — để keepers lại."
-    - "Thử: DROP TABLE obsolete;"
+    - "Yêu cầu là xóa chính object bảng, không chỉ xóa các hàng."
+    - "Nhắm vào obsolete và giữ nguyên keepers."
+    - "Dùng: DROP TABLE obsolete;"
   solution: "DROP TABLE obsolete;"
   preview:
     columns: ["table"]
@@ -35,21 +36,25 @@ sandbox_seed:
     - "INSERT INTO keepers VALUES (1);"
 ---
 
-`DELETE` xóa dòng. `DROP TABLE` xóa cả bảng — cấu trúc và dữ liệu — như xóa cả sheet khỏi workbook.
+Xóa dữ liệu và xóa object database là hai thao tác khác nhau. `DROP TABLE` xóa chính định nghĩa bảng, đồng thời các hàng bên trong cũng không còn.
 
-Bạn có hai bảng tạm:
+## Mô hình tư duy
 
-| table | mục đích | dòng mẫu |
+| Lệnh | Các hàng sau lệnh | Bảng sau lệnh |
 | --- | --- | --- |
-| obsolete | không còn cần | trống |
-| keepers | vẫn dùng | một dòng (`id = 1`) |
+| `DELETE FROM obsolete;` | 0 | vẫn tồn tại |
+| `DROP TABLE obsolete;` | không còn truy cập | không còn tồn tại |
 
-| Lệnh | Xóa gì |
-| --- | --- |
-| `DELETE FROM obsolete` | chỉ dòng — bảng trống vẫn còn |
-| `DROP TABLE obsolete` | cả bảng |
+Sandbox bắt đầu với hai object độc lập: `obsolete` và `keepers`. Yêu cầu chỉ nhắm một bảng.
 
-Chỉ drop `obsolete`. `keepers` phải còn.
+## Dự đoán trước khi chạy
+
+Sau `DROP TABLE obsolete;`:
+
+- `obsolete` không còn resolve thành relation;
+- `keepers` vẫn phải tồn tại cùng hàng dữ liệu của nó.
+
+Đây là mutation ở cấp object nên độ chính xác của tên bảng đặc biệt quan trọng.
 
 ## Ví dụ mẫu
 
@@ -57,16 +62,28 @@ Chỉ drop `obsolete`. `keepers` phải còn.
 DROP TABLE obsolete;
 ```
 
-- `DROP TABLE` là lệnh.
-- `obsolete` là bảng cần xóa.
-- Sau đó truy vấn `obsolete` sẽ lỗi; `keepers` không đổi.
+Verifier kiểm tra relation tạm tên `obsolete` không còn tồn tại.
+
+## Tìm lỗi
+
+```sql
+DELETE FROM obsolete;
+```
+
+Bảng có thể hết dữ liệu nhưng object vẫn còn. Nếu yêu cầu nói chính bảng đã lỗi thời, xóa hàng là sai phạm vi thay đổi.
 
 ## Lỗi thường gặp
 
-- Drop nhầm `keepers` — đọc kỹ tên bảng.
-- Dùng `DELETE FROM obsolete` — xóa dòng nhưng để lại bảng trống.
-- Viết `DROP TABLE obsolete, keepers` khi đề chỉ yêu cầu một bảng.
+- Dùng `DELETE` khi cần xóa cả object bảng.
+- Drop nhầm bảng vì câu lệnh ngắn nhưng có tính phá hủy.
+- Xem DDL phá hủy như thao tác nhẹ; trong hệ thống thật cần thực hiện có chủ đích và kiểm soát.
 
 ## Thử ngay
 
-Drop bảng `obsolete`. Để `keepers` nguyên.
+Drop duy nhất bảng `obsolete`. Trước khi chạy, hãy nói rõ object nào vẫn phải tồn tại sau đó.
+
+## Tự kiểm tra
+
+Sau `DELETE FROM t`, `SELECT * FROM t` vẫn có thể là query hợp lệ không?
+
+**Đáp án:** có, vì `DELETE` xóa hàng nhưng giữ bảng `t`.

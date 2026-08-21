@@ -6,16 +6,17 @@ slug: sql-wildcards
 title: Wildcards with % and _
 order: 36
 published: true
+can_do: "Translate text-shape requirements into LIKE patterns using % for variable length and _ for exactly one character"
 objectives:
-  - Use % to match any number of characters
-  - Use _ to match exactly one character
-  - Combine wildcards inside a LIKE pattern
+  - Distinguish % from _ by how many characters they consume
+  - Trace a LIKE pattern against candidate strings
+  - Build a pattern from a text-shape requirement
 exercise:
   starter: "SELECT code FROM products;"
   hints:
-    - "LIKE with wildcards filters text by pattern, not exact equality."
-    - "Underscore _ matches exactly one character — A_C matches ABC but not AC."
-    - "Try: SELECT code FROM products WHERE code LIKE 'A_C' ORDER BY code;"
+    - "The required shape is A + exactly one character + C."
+    - "Use _ for exactly one character; % would allow zero or many."
+    - "Use: SELECT code FROM products WHERE code LIKE 'A_C' ORDER BY code;"
   solution: "SELECT code FROM products WHERE code LIKE 'A_C' ORDER BY code;"
   preview:
     columns: ["code"]
@@ -35,26 +36,30 @@ sandbox_seed:
     - "INSERT INTO products VALUES (1, 'ABC', 'Alpha'), (2, 'A1C', 'Beta'), (3, 'AC', 'Short'), (4, 'AXYC', 'Long'), (5, 'ZBC', 'Other');"
 ---
 
-`LIKE` uses **wildcards** — special characters that stand for “something else” in the text. Think of a spreadsheet filter where you type `A?C` and the `?` means “any one letter”.
+Wildcards let a `LIKE` predicate describe the **shape** of text instead of one exact string. The key is to reason about how many characters each wildcard can consume.
 
-| Wildcard | Plain meaning | Example pattern | Matches |
+## Mental model
+
+| wildcard | consumes | pattern example | meaning |
 | --- | --- | --- | --- |
-| `%` | Any characters (zero or more) | `'In%'` | `In`, `Inception`, `Interstellar` |
-| `_` | Exactly **one** character | `'A_C'` | `ABC`, `A1C` — not `AC`, not `AXYC` |
+| `%` | zero or more characters | `'A%C'` | starts A, ends C, middle can have any length |
+| `_` | exactly one character | `'A_C'` | A, one middle character, C |
 
-**products** (the full table you will query)
+Trace the exercise candidates:
 
-| id | code | name |
+| code | `LIKE 'A_C'` | why |
 | --- | --- | --- |
-| 1 | ABC | Alpha |
-| 2 | A1C | Beta |
-| 3 | AC | Short |
-| 4 | AXYC | Long |
-| 5 | ZBC | Other |
+| ABC | true | B fills `_` |
+| A1C | true | 1 fills `_` |
+| AC | false | no character for `_` |
+| AXYC | false | two middle characters |
+| ZBC | false | wrong first character |
+
+## Predict before you run
+
+Before executing anything, predict exactly two rows for `'A_C'`: `A1C` and `ABC`. Then compare with `'A%C'`, which would also match `AC` and `AXYC`.
 
 ## Worked example
-
-Find every product whose `code` is exactly three characters: starts with `A`, ends with `C`, and has **one** character in the middle.
 
 ```sql
 SELECT code
@@ -63,33 +68,35 @@ WHERE code LIKE 'A_C'
 ORDER BY code;
 ```
 
-- `'A_C'` means: letter `A`, then exactly one character (`_`), then letter `C`.
-- `ABC` and `A1C` match.
-- `AC` is too short (nothing in the middle).
-- `AXYC` has two characters between `A` and `C`, so it does not match.
-- `ZBC` does not start with `A`.
-
-Result:
-
 | code |
 | --- |
 | A1C |
 | ABC |
 
-Compare with `%` (any length in the middle):
+The pattern is data: keep it quoted like any other text literal.
+
+## Debug this
+
+The requirement says “exactly one character between A and C”, but this query uses:
 
 ```sql
-SELECT code FROM products WHERE code LIKE 'A%C' ORDER BY code;
+WHERE code LIKE 'A%C'
 ```
 
-That pattern would also include `AC` and `AXYC`, because `%` can be empty or many characters.
+It is too permissive because `%` can consume zero, one, or many characters. Debug wildcard queries by testing strings that are deliberately too short and too long.
 
 ## Common mistakes
 
-- Mixing up `%` and `_` — `%` is “any length”; `_` is “exactly one”. Learn `_` in depth in the next lesson on wildcards (`sql-wildcards`).
-- Expecting `_` to mean “optional” — it always consumes one character.
-- Forgetting quotes — patterns are text: `'In%'`, not `In%` without quotes.
+- Swapping `%` and `_` semantics.
+- Forgetting that `_` is mandatory exactly once, not optional.
+- Testing only a string that should pass and missing false positives at the boundaries.
 
 ## Your turn
 
-List every `code` that matches the pattern `A_C` (A, one character, C). Order by `code`.
+List every code matching `A_C`, ordered by code. Classify all five source codes before running the query.
+
+## Quick check
+
+Which wildcard should you use for “any suffix, including an empty suffix”?
+
+**Answer:** `%`, because it can match zero or more characters.

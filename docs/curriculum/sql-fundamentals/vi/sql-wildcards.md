@@ -6,16 +6,17 @@ slug: sql-wildcards
 title: Ký tự đại diện % và _
 order: 36
 published: true
+can_do: "Chuyển yêu cầu về hình dạng chuỗi thành LIKE pattern với % cho độ dài bất kỳ và _ cho đúng một ký tự"
 objectives:
-  - Dùng % để khớp mọi số lượng ký tự
-  - Dùng _ để khớp đúng một ký tự
-  - Kết hợp ký tự đại diện trong mẫu LIKE
+  - Phân biệt % và _ theo số ký tự chúng có thể khớp
+  - Trace LIKE pattern với từng chuỗi ứng viên
+  - Xây pattern từ yêu cầu hình dạng text
 exercise:
   starter: "SELECT code FROM products;"
   hints:
-    - "LIKE với ký tự đại diện lọc chữ theo mẫu, không phải so khớp tuyệt đối."
-    - "Gạch dưới _ khớp đúng một ký tự — A_C khớp ABC nhưng không khớp AC."
-    - "Thử: SELECT code FROM products WHERE code LIKE 'A_C' ORDER BY code;"
+    - "Hình dạng cần tìm là A + đúng một ký tự + C."
+    - "Dùng _ cho đúng một ký tự; % sẽ cho phép 0 hoặc nhiều ký tự."
+    - "Dùng: SELECT code FROM products WHERE code LIKE 'A_C' ORDER BY code;"
   solution: "SELECT code FROM products WHERE code LIKE 'A_C' ORDER BY code;"
   preview:
     columns: ["code"]
@@ -35,26 +36,30 @@ sandbox_seed:
     - "INSERT INTO products VALUES (1, 'ABC', 'Alpha'), (2, 'A1C', 'Beta'), (3, 'AC', 'Short'), (4, 'AXYC', 'Long'), (5, 'ZBC', 'Other');"
 ---
 
-`LIKE` dùng **ký tự đại diện** (wildcard) — ký tự đặc biệt thay cho “chữ gì đó” trong chuỗi. Giống bộ lọc Excel khi bạn gõ `A?C` và `?` nghĩa là “đúng một chữ cái bất kỳ”.
+Wildcard giúp `LIKE` mô tả **hình dạng** của text thay vì một chuỗi chính xác. Điểm cốt lõi là hiểu mỗi wildcard có thể “ăn” bao nhiêu ký tự.
 
-| Ký tự đại diện | Nghĩa đơn giản | Mẫu ví dụ | Khớp |
+## Mô hình tư duy
+
+| wildcard | khớp bao nhiêu ký tự | ví dụ | nghĩa |
 | --- | --- | --- | --- |
-| `%` | Mọi ký tự (không hoặc nhiều) | `'In%'` | `In`, `Inception`, `Interstellar` |
-| `_` | Đúng **một** ký tự | `'A_C'` | `ABC`, `A1C` — không khớp `AC`, không khớp `AXYC` |
+| `%` | 0 hoặc nhiều | `'A%C'` | đầu A, cuối C, phần giữa dài tùy ý |
+| `_` | đúng 1 | `'A_C'` | A, một ký tự giữa, C |
 
-**products** (bảng đầy đủ bạn sẽ truy vấn)
+Trace dữ liệu bài tập:
 
-| id | code | name |
+| code | `LIKE 'A_C'` | lý do |
 | --- | --- | --- |
-| 1 | ABC | Alpha |
-| 2 | A1C | Beta |
-| 3 | AC | Short |
-| 4 | AXYC | Long |
-| 5 | ZBC | Other |
+| ABC | true | B lấp `_` |
+| A1C | true | 1 lấp `_` |
+| AC | false | thiếu ký tự cho `_` |
+| AXYC | false | có hai ký tự giữa |
+| ZBC | false | sai ký tự đầu |
+
+## Dự đoán trước khi chạy
+
+Trước khi chạy, dự đoán đúng hai hàng cho `'A_C'`: `A1C` và `ABC`. So với `'A%C'`, pattern kia còn khớp cả `AC` và `AXYC`.
 
 ## Ví dụ mẫu
-
-Tìm mọi sản phẩm có `code` đúng ba ký tự: bắt đầu bằng `A`, kết thúc bằng `C`, và **một** ký tự ở giữa.
 
 ```sql
 SELECT code
@@ -63,33 +68,35 @@ WHERE code LIKE 'A_C'
 ORDER BY code;
 ```
 
-- `'A_C'` nghĩa là: chữ `A`, rồi đúng một ký tự (`_`), rồi chữ `C`.
-- `ABC` và `A1C` khớp.
-- `AC` quá ngắn (không có ký tự giữa).
-- `AXYC` có hai ký tự giữa `A` và `C`, nên không khớp.
-- `ZBC` không bắt đầu bằng `A`.
-
-Kết quả:
-
 | code |
 | --- |
 | A1C |
 | ABC |
 
-So với `%` (độ dài giữa tùy ý):
+Pattern là dữ liệu text nên vẫn phải đặt trong dấu nháy đơn.
+
+## Tìm lỗi
+
+Yêu cầu là “đúng một ký tự giữa A và C”, nhưng query viết:
 
 ```sql
-SELECT code FROM products WHERE code LIKE 'A%C' ORDER BY code;
+WHERE code LIKE 'A%C'
 ```
 
-Mẫu đó còn gồm cả `AC` và `AXYC`, vì `%` có thể là rỗng hoặc nhiều ký tự.
+Nó quá rộng vì `%` có thể khớp 0, 1 hoặc nhiều ký tự. Khi debug wildcard, hãy chủ động thử cả chuỗi quá ngắn và quá dài.
 
 ## Lỗi thường gặp
 
-- Nhầm `%` với `_` — `%` là “độ dài bất kỳ”; `_` là “đúng một”.
-- Nghĩ `_` là “tùy chọn” — `_` luôn chiếm đúng một ký tự.
-- Quên dấu ngoặc — mẫu là chữ: `'A_C'`, không phải `A_C` không có ngoặc.
+- Đảo nghĩa `%` và `_`.
+- Nghĩ `_` là tùy chọn trong khi nó bắt buộc đúng một ký tự.
+- Chỉ test một chuỗi phải pass mà không test false positive ở biên.
 
 ## Thử ngay
 
-Liệt kê mọi `code` khớp mẫu `A_C` (A, một ký tự, C). Sắp xếp theo `code`.
+Liệt kê mọi code khớp `A_C`, sắp theo code. Hãy phân loại cả năm code nguồn trước khi chạy.
+
+## Tự kiểm tra
+
+Wildcard nào phù hợp với “suffix dài tùy ý, kể cả không có ký tự nào”?
+
+**Đáp án:** `%`, vì nó khớp từ 0 ký tự trở lên.

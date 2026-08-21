@@ -6,15 +6,17 @@ slug: in-list
 title: Khớp danh sách với IN
 order: 16
 published: true
+can_do: "Dùng IN để kiểm tra một giá trị có thuộc tập hữu hạn các giá trị chính xác và phân biệt với khoảng liên tục"
 objectives:
-  - Giữ hàng có giá trị nằm trong danh sách ngắn
-  - Ưu tiên IN hơn nhiều OR
+  - Đánh giá membership của từng hàng trong một danh sách
+  - Viết gọn nhiều phép OR bằng IN
+  - Phân biệt IN với BETWEEN
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "IN (a, b) giữ hàng khi cột bằng a hoặc b."
-    - "Lọc year bằng IN (1999, 2010), rồi chọn title."
-    - "Thử: SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
+    - "Yêu cầu nêu hai year chính xác, nên dùng danh sách membership thay vì khoảng."
+    - "Lọc year bằng IN (1999, 2010)."
+    - "Dùng: SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -34,23 +36,34 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Đôi khi bạn muốn vài giá trị đúng cùng lúc — “năm là 1999 hoặc 2010”. `IN` viết ngắn danh sách đó, thay vì nối nhiều `OR`.
+Một yêu cầu có thể nêu nhiều **lựa chọn chính xác**: “1999 hoặc 2010”. `IN` diễn đạt membership trong tập hữu hạn đó mà không cần lặp đi lặp lại cùng một cột.
 
-**movies** (bảng đầy đủ)
+## Mô hình tư duy
 
-| id | title | year | director |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | Nolan |
-| 2 | The Matrix | 1999 | Wachowski |
-| 3 | Dune | 2021 | Villeneuve |
-| 4 | Interstellar | 2014 | Nolan |
+Với year không NULL, câu này:
 
-| title | year trong (1999, 2010)? |
-| --- | --- |
-| Inception | có (2010) |
-| The Matrix | có (1999) |
-| Dune | không (2021) |
-| Interstellar | không (2014) |
+```sql
+year IN (1999, 2010)
+```
+
+diễn đạt cùng phép membership với:
+
+```sql
+year = 1999 OR year = 2010
+```
+
+Trace các hàng:
+
+| title | year | thuộc `{1999, 2010}`? |
+| --- | ---: | --- |
+| Inception | 2010 | có |
+| The Matrix | 1999 | có |
+| Dune | 2021 | không |
+| Interstellar | 2014 | không |
+
+## Dự đoán trước khi chạy
+
+Hãy dự đoán hai title qua `year IN (1999, 2010)`. Chú ý rằng 2005 **không** khớp chỉ vì nằm giữa hai số đó; IN kiểm tra membership chính xác.
 
 ## Ví dụ mẫu
 
@@ -61,23 +74,35 @@ WHERE year IN (1999, 2010)
 ORDER BY title;
 ```
 
-- `year IN (1999, 2010)` giữ hàng nếu `year` bằng một trong hai giá trị.
-- Cùng ý với `year = 1999 OR year = 2010`, nhưng ngắn hơn.
-- `ORDER BY title` sắp kết quả theo alphabet.
-
-Kết quả:
-
 | title |
 | --- |
 | Inception |
 | The Matrix |
 
+Dùng IN khi yêu cầu cho một tập rời rạc. Dùng predicate dạng range khi mọi giá trị nằm giữa hai biên đều được phép.
+
+## Tìm lỗi
+
+Vì sao câu này không diễn đạt membership của hai giá trị?
+
+```sql
+WHERE year = (1999, 2010)
+```
+
+`=` so sánh với một giá trị/biểu thức. Kiểm tra membership của danh sách phải dùng `IN (...)`.
+
 ## Lỗi thường gặp
 
-- Viết `year = (1999, 2010)` — dùng `IN`, không dùng `=`, cho danh sách.
-- Nhầm `IN` (giá trị đúng) với `BETWEEN` (khoảng liên tục).
-- Quên ngoặc quanh danh sách: `IN (1999, 2010)`.
+- Dùng `=` với danh sách trong ngoặc.
+- Dùng IN khi yêu cầu thật sự là một khoảng liên tục.
+- Quên rằng các phần tử text trong IN cần dấu nháy chuỗi.
 
 ## Thử ngay
 
-Liệt kê `title` các phim có `year` là `1999` hoặc `2010`. Sắp bằng `ORDER BY title`.
+Trả về title có year chính xác là 1999 hoặc 2010, sắp theo title. Đánh giá cả bốn hàng trước khi chạy.
+
+## Tự kiểm tra
+
+`year IN (1999, 2010)` có khớp year 2000 không?
+
+**Đáp án:** không. Chỉ các giá trị được liệt kê rõ trong danh sách mới khớp.

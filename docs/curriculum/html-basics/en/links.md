@@ -6,36 +6,49 @@ slug: links
 title: Creating links
 order: 5
 published: true
+can_do: "Create a real hyperlink with a meaningful destination and descriptive link text, choosing absolute or relative href values appropriately"
 objectives:
-  - Create an anchor with href
-  - Tell absolute URLs from relative paths
-  - Write link text that describes the destination
+  - Create an anchor with a real href attribute
+  - Distinguish absolute URLs, relative paths, and fragments
+  - Write link text that makes sense outside surrounding prose
 exercise:
   mode: html
   starter: |
-    <!-- Add a link to https://example.com -->
-    
+    <!-- TODO: add a descriptive link to https://example.com -->
   hints:
-    - Use an a element for the link.
-    - Set href to the full URL.
-    - Put visible text between the anchor tags.
+    - A real hyperlink uses an a element with an href attribute.
+    - Use the full absolute URL https://example.com for this task.
+    - Put descriptive visible text between <a ...> and </a>.
   solution: |
-    <a href="https://example.com">Example</a>
+    <a href="https://example.com">Visit Example</a>
   expected:
-    type: htmlIncludes
-    needles:
-      - href=
+    type: htmlTags
+    tags:
+      - tag: a
+        minCount: 1
+        requiredAttrs: [href]
 ---
 
-**Links** connect pages. The `a` (anchor) element wraps the clickable text or content, and the `href` attribute holds the destination address. Without good link text, visitors cannot tell where a click will take them.
+A link is both content and navigation. The `a` element provides link semantics; `href` identifies the destination; the link text tells a human what that destination is.
 
-A street sign that says “Museum →” is clearer than “Click here.” The same idea applies on the web.
+## Mental model
 
-| Kind of `href` | Meaning | Example |
-| --- | --- | --- |
-| Absolute URL | Full address, including site | `https://example.com/about` |
-| Relative path | Path from the current page or site root | `about.html` or `/guides/lists` |
-| Same-page fragment | Jump to an id on this page | `#ingredients` |
+```text
+<a href="destination">meaningful label</a>
+         |                 |
+      navigation        user-facing
+       target             purpose
+```
+
+Absolute URLs name a complete web address; relative paths resolve from the current site/document; fragments point to an `id` in the current document.
+
+## Predict the rendered structure
+
+```html
+<a href="/guides/forms">HTML forms guide</a>
+```
+
+Predict two things before preview: it is keyboard-focusable navigation, and `/guides/forms` resolves relative to the current site's origin. The visible label should still make sense in a screen reader's list of links.
 
 ## Worked example
 
@@ -45,24 +58,30 @@ A street sign that says “Museum →” is clearer than “Click here.” The s
   <a href="https://developer.mozilla.org/">MDN Web Docs</a>
   for reference.
 </p>
-<p>
-  Next lesson:
-  <a href="images.html">Images with alt text</a>
-</p>
 ```
 
-- `<a href="...">` opens the link; the text between the tags is what the user reads and activates.
-- The absolute URL points to another website by its full address.
-- The relative `images.html` points to a file beside the current page (exact resolution depends on where the page is hosted).
+The `a` element creates the link role; the absolute `href` names another site; the text names the destination instead of saying only “click here”.
 
-Keep link text short and specific. Avoid empty “click here” when you can name the destination.
+## Debug this
+
+```html
+<a>Documentation</a>
+```
+
+Without `href`, this anchor is not a normal hyperlink to a destination. Do not imitate navigation with styling alone; provide a real destination when the control is a link.
 
 ## Common mistakes
 
-- Leaving out `href` or misspelling it — without a destination, the control is not a real link.
-- Using vague link text (“click here”, “more”) — screen-reader users often browse by link list alone.
-- Putting a full page of text inside one giant link — link the meaningful phrase only.
+- Writing vague labels such as “click here” with no destination context.
+- Confusing site-relative paths with full absolute URLs.
+- Adding `href` text to the wrong element instead of using an anchor.
 
 ## Your turn
 
-Use the sandbox below to add a link with href. When the checker shows **Correct**, mark this lesson complete.
+Create a descriptive anchor to `https://example.com`. The grader now parses the HTML and requires `href` on an actual `a` element.
+
+## Quick check
+
+What is the difference between `<a>Docs</a>` and `<a href="/docs">Docs</a>`?
+
+**Answer:** the second is a hyperlink with a navigation destination; the first has no `href` destination.

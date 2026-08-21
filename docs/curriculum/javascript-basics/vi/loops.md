@@ -3,26 +3,29 @@ id: js-07-loops
 track: javascript-basics
 locale: vi
 slug: loops
-title: Lặp công việc bằng vòng lặp
+title: Lặp và accumulator với loop
 order: 7
 published: true
+can_do: "Trace từng loop iteration, update accumulator an toàn và chọn for...of khi chỉ cần collection value"
 objectives:
-  - Lặp code bằng vòng for
-  - Dùng biến đếm i
-  - Duyệt từng phần tử mảng theo chỉ số
+  - Trace changing state qua các loop iteration
+  - Dùng for...of để iterate trực tiếp array value
+  - Nhận ra off-by-one và loop không terminate
 exercise:
   starter: |
+    const values = [1, 2, 3];
     let total = 0;
-    // Dùng vòng for để cộng 1, 2 và 3 vào total
+    // TODO: add every value into total with a loop
     return total;
   hints:
-    - "Vòng lặp cộng lần lượt 1, 2, 3 vào total."
-    - "Dùng return sau khi vòng lặp kết thúc."
-    - "1 + 2 + 3 là đáp án."
+    - "for...of cho trực tiếp từng array value; bài này không cần index."
+    - "Mỗi iteration update total bằng cách cộng current value."
+    - "Dùng: for (const value of values) { total += value; }"
   solution: |
+    const values = [1, 2, 3];
     let total = 0;
-    for (let n = 1; n <= 3; n++) {
-      total = total + n;
+    for (const value of values) {
+      total += value;
     }
     return total;
   expected:
@@ -30,42 +33,78 @@ exercise:
     value: 6
 ---
 
-Rửa mười dĩa theo cùng một thao tác rất mệt. **Vòng lặp** (loop) lặp một khối code nhỏ cho mỗi bước — cùng mẫu, nhiều lần.
+Loop lặp một rule trong khi state thay đổi từ iteration này sang iteration khác. Cách hiểu tốt là trace state sau **từng iteration**.
 
-| Thành phần | Nghĩa đơn giản | Ví dụ |
-| --- | --- | --- |
-| `for (...)` | Lặp có kiểm soát | `for (let i = 0; i < 3; i++)` |
-| `i` | Biến đếm, thường bắt đầu 0 | `i++` cộng 1 mỗi vòng |
-| `array[i]` | Phần tử ở vị trí `i` | `names[i]` trong vòng |
+## Mô hình thực thi
 
-Vòng `for` thường có ba phần: bắt đầu (`let i = 0`), tiếp tục khi (`i < length`), bước (`i++`).
+Với collection value, `for...of` có thể đọc là:
+
+```text
+với mỗi value trong iterable -> chạy body một lần với value đó
+```
+
+Classic `for (initial; condition; step)` phù hợp khi cần index/control tường minh. `for...of` phù hợp khi chính value là thứ cần xử lý.
+
+## Trace từng bước
+
+```javascript
+const values = [1, 2, 3];
+let total = 0;
+
+for (const value of values) {
+  total += value;
+}
+```
+
+| iteration | `value` | total trước | total sau |
+| ---: | ---: | ---: | ---: |
+| 1 | 1 | 0 | 1 |
+| 2 | 2 | 1 | 3 |
+| 3 | 3 | 3 | 6 |
+
+Invariant của accumulator: sau mỗi iteration, `total` bằng tổng tất cả value đã xử lý tới lúc đó.
+
+## Dự đoán trước khi chạy
+
+Dự đoán state sequence `0 → 1 → 3 → 6`, rồi return value cuối `6`.
 
 ## Ví dụ mẫu
 
 ```javascript
-const names = ["Ana", "Bo", "Cy"];
-
-for (let i = 0; i < names.length; i++) {
-  console.log(i + ": " + names[i]);
-}
-
+const prices = [5, 10, 2];
 let total = 0;
-for (let n = 1; n <= 3; n++) {
-  total = total + n;
+
+for (const price of prices) {
+  total += price;
 }
-console.log(total);
+
+console.log(total); // 17
 ```
 
-- Vòng đầu in mỗi tên kèm chỉ số.
-- `names.length` là `3`, nên `i` chạy `0`, `1`, `2` rồi dừng.
-- Vòng thứ hai cộng `1 + 2 + 3` vào `total` → `6`.
+## Tìm lỗi
+
+```javascript
+const values = [1, 2, 3];
+let total = 0;
+for (let i = 0; i <= values.length; i++) {
+  total += values[i];
+}
+```
+
+Khi `i === values.length`, `values[i]` là `undefined`. Cộng nó với number tạo `NaN`. Đây là off-by-one boundary bug điển hình. Nếu cần index, index hợp lệ cuối là `length - 1`.
 
 ## Lỗi thường gặp
 
-- Lệch một — `i < length` dừng đúng chỉ số cuối; `i <= length` vượt quá mảng.
-- Dùng `i` ngoài vòng — `let i` trong `for` chỉ sống trong khối vòng.
-- Vòng vô hạn — nếu biến đếm không tiến (`thiếu i++`), vòng không bao giờ kết thúc.
+- Không update accumulator bên trong loop.
+- Dùng `<= length` khi index array rồi đi quá một vị trí.
+- Dùng `for...in` khi intent là array value; `for...of` diễn đạt intent trực tiếp hơn.
 
 ## Thử ngay
 
-Return tổng `1 + 2 + 3` bằng vòng `for` như ví dụ mẫu. Đánh dấu hoàn thành khi checker hiện **6**.
+Dùng loop cộng mọi value `[1, 2, 3]` vào `total` và return `6`.
+
+## Tự kiểm tra
+
+Vì sao `for...of` phù hợp bài này?
+
+**Đáp án:** algorithm cần trực tiếp từng array value và không cần numeric index.

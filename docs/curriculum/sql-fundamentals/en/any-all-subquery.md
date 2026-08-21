@@ -6,16 +6,17 @@ slug: any-all-subquery
 title: Comparing with ANY and ALL
 order: 39
 published: true
+can_do: "Evaluate a scalar comparison against a one-column subquery using ANY for at least one and ALL for every returned value"
 objectives:
-  - Use = ANY with a subquery list of values
-  - Understand ALL as “compared to every value”
-  - Read a subquery that returns one column of numbers
+  - Separate the subquery result set from the outer comparison
+  - Interpret ANY as at least one comparison succeeding
+  - Contrast ANY with ALL using concrete values
 exercise:
   starter: "SELECT title, rating FROM movies;"
   hints:
-    - "ANY compares one value to each result of the subquery."
-    - "rating = ANY (SELECT …) keeps movies whose rating appears in that list."
-    - "Try: SELECT title, rating FROM movies WHERE rating = ANY (SELECT rating FROM favorites) ORDER BY title;"
+    - "First evaluate the subquery: favorites returns ratings 9 and 8."
+    - "= ANY means the movie rating only needs to equal one value from that set."
+    - "Use: SELECT title, rating FROM movies WHERE rating = ANY (SELECT rating FROM favorites) ORDER BY title;"
   solution: "SELECT title, rating FROM movies WHERE rating = ANY (SELECT rating FROM favorites) ORDER BY title;"
   preview:
     columns: ["title", "rating"]
@@ -35,32 +36,34 @@ sandbox_seed:
     - "INSERT INTO favorites VALUES (9), (8);"
 ---
 
-`EXISTS` asks “is there at least one related row?”. `ANY` and `ALL` ask a different question: compare this value to **a list** returned by a subquery — like checking whether a score is in a shortlist of “favorite ratings”.
+`ANY` and `ALL` combine a comparison operator with a set returned by a subquery. Learn them by evaluating the **inner set first**, then applying the comparison to that set.
 
-| Operator | Plain meaning | Example idea |
-| --- | --- | --- |
-| `= ANY (…)` | Equal to **at least one** value in the list | rating is 8 or 9 |
-| `> ALL (…)` | Greater than **every** value in the list | rating beats every favorite |
+## Mental model
 
-**movies** (full table)
+The inner query:
 
-| id | title | rating |
-| --- | --- | --- |
-| 1 | The Matrix | 7 |
-| 2 | Inception | 9 |
-| 3 | Dune | 8 |
-| 4 | Old Film | 5 |
+```sql
+SELECT rating FROM favorites;
+```
 
-**favorites** (a short list of ratings you care about)
+returns `{9, 8}`.
 
-| rating |
-| --- |
-| 9 |
-| 8 |
+Now compare one value:
+
+| movie rating | `= ANY {9,8}` | `> ALL {9,8}` |
+| ---: | --- | --- |
+| 9 | true | false |
+| 8 | true | false |
+| 7 | false | false |
+| 10 | false | true |
+
+`ANY` means **at least one** comparison is true. `ALL` means the comparison must be true against **every** value.
+
+## Predict before you run
+
+For `rating = ANY ({9,8})`, predict that Inception (9) and Dune (8) survive; ratings 7 and 5 do not.
 
 ## Worked example
-
-Keep movies whose `rating` equals **any** of the favorite ratings (8 or 9).
 
 ```sql
 SELECT title, rating
@@ -71,27 +74,33 @@ WHERE rating = ANY (
 ORDER BY title;
 ```
 
-- The subquery `SELECT rating FROM favorites` returns the list `9`, `8`.
-- `rating = ANY (…)` is true when the movie’s rating is 9 **or** 8.
-- The Matrix (7) and Old Film (5) are out.
-
-Result:
-
 | title | rating |
-| --- | --- |
+| --- | ---: |
 | Dune | 8 |
 | Inception | 9 |
 
-**Note:** `= ANY (…)` often behaves like `IN (…)` for equality. This lesson practices the `ANY` spelling used on the W3Schools path.
+For equality, `= ANY (...)` often expresses the same membership idea as `IN (...)`; the explicit form helps you understand other operators such as `> ALL (...)`.
 
-For contrast, `rating > ALL (SELECT rating FROM favorites)` would mean “higher than both 8 and 9” — only a rating of 10+ would pass. That is not your exercise today.
+## Debug this
+
+```sql
+WHERE rating = ALL (SELECT rating FROM favorites)
+```
+
+A single rating would need to equal both 9 **and** 8 at the same time, so no movie passes. The keyword changes the quantifier, not just the spelling.
 
 ## Common mistakes
 
-- Writing `= ALL` when you meant “any of these” — `ALL` means every value; for a membership list use `ANY` or `IN`.
-- Subquery returning multiple columns — `ANY` needs one column of values to compare.
-- Forgetting parentheses around the subquery.
+- Reading `ANY` or `ALL` before evaluating what the subquery returns.
+- Using `ALL` when the requirement says “matches at least one”.
+- Returning several columns from a subquery that must provide one comparable value column.
 
 ## Your turn
 
-List `title` and `rating` for movies whose rating equals **any** favorite rating. Order by `title`.
+List movie title and rating when the rating equals any favorite rating, ordered by title. Write down the inner set `{9,8}` before evaluating the outer rows.
+
+## Quick check
+
+What does `score > ALL (subquery)` require?
+
+**Answer:** `score` must be greater than every value returned by that subquery.

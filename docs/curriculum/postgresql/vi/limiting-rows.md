@@ -3,19 +3,21 @@ id: pg-01-limit
 track: postgresql
 locale: vi
 slug: limiting-rows
-title: Giới hạn số hàng với LIMIT
+title: Top-N xác định với LIMIT
 order: 1
 published: true
+can_do: "Xây top-N query PostgreSQL có kết quả xác định bằng cách định nghĩa thứ tự đầy đủ trước LIMIT"
 objectives:
-  - Giới hạn số hàng mà truy vấn trả về
-  - Kết hợp ORDER BY với LIMIT
+  - Giải thích vì sao LIMIT một mình không định nghĩa hàng nào đứng đầu
+  - Định nghĩa ORDER BY xác định cho yêu cầu top-N
+  - Áp dụng LIMIT sau khi sắp xếp
 exercise:
-  starter: "SELECT title, year FROM movies ORDER BY year DESC;"
+  starter: "SELECT title, year FROM movies;"
   hints:
-    - "Thêm LIMIT ở cuối để chỉ giữ N hàng đầu sau khi sắp xếp."
-    - "Bạn cần hai phim mới nhất, nên dùng LIMIT 2."
-    - "Thử: SELECT title, year FROM movies ORDER BY year DESC LIMIT 2;"
-  solution: "SELECT title, year FROM movies ORDER BY year DESC LIMIT 2;"
+    - "Top-N chỉ có nghĩa sau khi thứ tự kết quả đã được định nghĩa."
+    - "Sắp mới nhất trước; title có thể phá tie một cách xác định."
+    - "Dùng: SELECT title, year FROM movies ORDER BY year DESC, title ASC LIMIT 2;"
+  solution: "SELECT title, year FROM movies ORDER BY year DESC, title ASC LIMIT 2;"
   preview:
     columns: ["id", "title", "year"]
     rows:
@@ -34,38 +36,69 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Dune', 2021), (4, 'Arrival', 2016);"
 ---
 
-Đôi khi bảng có rất nhiều hàng, nhưng bạn chỉ cần một mẫu ngắn — giống nhìn phần đầu của cột đã sắp xếp trong bảng tính. Trong SQL, `LIMIT` dừng kết quả sau một số hàng cố định.
+`LIMIT` kiểm soát **bao nhiêu** hàng PostgreSQL trả về. Một mình nó không định nghĩa **hàng nào** được xem là đứng trước.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Dune | 2021 |
-| 4 | Arrival | 2016 |
+## Mô hình tư duy
+
+Top-N là hai bước:
+
+```text
+các hàng khớp -> ORDER BY xác định -> lấy N hàng đầu bằng LIMIT
+```
+
+Với “hai phim mới nhất”:
+
+| title | year | hạng sau `year DESC` |
+| --- | ---: | ---: |
+| Dune | 2021 | 1 |
+| Arrival | 2016 | 2 |
+| Inception | 2010 | 3 |
+| The Matrix | 1999 | 4 |
+
+Sort key phụ như `title ASC` giúp xử lý tie ổn định nếu hai phim cùng năm.
+
+## Dự đoán trước khi chạy
+
+Sau khi sắp mới nhất trước, hai hàng đầu phải là Dune và Arrival. `LIMIT 2` giữ đúng hai hàng đó.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title, year FROM movies ORDER BY year DESC LIMIT 2;
+SELECT title, year
+FROM movies
+ORDER BY year DESC, title ASC
+LIMIT 2;
 ```
 
-- `ORDER BY year DESC` sắp mới nhất trước.
-- `LIMIT 2` chỉ giữ hai hàng đầu sau khi sắp xếp.
-- Không có `ORDER BY`, `LIMIT` vẫn cắt số lượng, nhưng “mới nhất” sẽ không còn ý nghĩa rõ.
-
-Kết quả:
-
 | title | year |
-| --- | --- |
+| --- | ---: |
 | Dune | 2021 |
 | Arrival | 2016 |
 
+PostgreSQL có thể chọn execution plan khác nhau theo LIMIT/OFFSET, nên không được biến thứ tự không khai báo thành contract ngầm.
+
+## Tìm lỗi
+
+```sql
+SELECT title, year
+FROM movies
+LIMIT 2;
+```
+
+Query chỉ yêu cầu tối đa hai hàng, chưa hề định nghĩa “mới nhất”. Nếu một lần chạy tình cờ ra đúng hai phim mong muốn thì đó không phải đảm bảo.
+
 ## Lỗi thường gặp
 
-- Đặt `LIMIT` trước `ORDER BY` — `LIMIT` phải ở cuối.
-- Dùng `LIMIT 1` khi bài yêu cầu hai hàng.
-- Quên `DESC` khi cần “mới nhất trước”.
+- Xem thứ tự insert như sort order ngầm.
+- Dùng LIMIT cho ranking nghiệp vụ mà không ORDER BY.
+- Chỉ dùng sort key không unique khi tie phải được giải quyết nhất quán.
 
 ## Thử ngay
 
-Liệt kê `title` và `year` của **hai phim mới nhất**.
+Trả hai phim mới nhất bằng thứ tự xác định và `LIMIT 2`.
+
+## Tự kiểm tra
+
+Thứ gì làm “hai hàng đầu” có ý nghĩa nghiệp vụ: `LIMIT 2` hay `ORDER BY ... LIMIT 2`?
+
+**Đáp án:** `ORDER BY ... LIMIT 2`, vì ORDER BY định nghĩa hàng nào đứng đầu.

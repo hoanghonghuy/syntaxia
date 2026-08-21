@@ -3,19 +3,20 @@ id: sql-22-full-join
 track: sql-fundamentals
 locale: vi
 slug: full-join
-title: Ghép cả hai phía với FULL OUTER JOIN
+title: Giữ cả hai phía với FULL OUTER JOIN
 order: 22
 published: true
+can_do: "Giữ hàng không match từ cả hai input bằng FULL OUTER JOIN và xác định phía nào đang bị thiếu"
 objectives:
-  - Giữ dòng không khớp từ cả hai bảng với FULL OUTER JOIN
-  - Nhận phần thừa mỗi phía bằng kiểm tra NULL
-  - Tìm khách không có đơn bằng IS NULL sau join
+  - Phân biệt cặp match, hàng chỉ bên trái và hàng chỉ bên phải
+  - Đọc phần NULL ở cả hai phía full join
+  - Lọc một loại hàng orphan bằng NULL check đúng phía
 exercise:
   starter: "SELECT name FROM customers;"
   hints:
-    - "FULL OUTER JOIN giữ dòng khớp và dòng chỉ khớp một phía."
-    - "Khách không có đơn sẽ có orders.id là NULL sau join."
-    - "Thử: SELECT customers.name FROM customers FULL OUTER JOIN orders ON customers.id = orders.customer_id WHERE orders.id IS NULL ORDER BY customers.name;"
+    - "FULL OUTER JOIN giữ cả customer và order kể cả khi một phía không match."
+    - "Customer không có order sẽ có orders.id NULL; order orphan sẽ có cột customer NULL."
+    - "Dùng: SELECT customers.name FROM customers FULL OUTER JOIN orders ON customers.id = orders.customer_id WHERE orders.id IS NULL ORDER BY customers.name;"
   solution: "SELECT customers.name FROM customers FULL OUTER JOIN orders ON customers.id = orders.customer_id WHERE orders.id IS NULL ORDER BY customers.name;"
   preview:
     columns: ["id", "name"]
@@ -36,65 +37,61 @@ sandbox_seed:
     - "INSERT INTO orders VALUES (1, 1, 50), (2, 99, 20);"
 ---
 
-`LEFT JOIN` giữ bảng trái; `RIGHT JOIN` giữ bảng phải. `FULL OUTER JOIN` giữ **cả hai**: khớp cộng phần thừa mỗi phía. Hãy nghĩ tới việc gộp hai danh bạ mà vẫn thấy tên chỉ xuất hiện ở một danh sách.
+FULL OUTER JOIN hữu ích khi đối soát: cần thấy cả match lẫn phần dư ở **cả hai** dataset thay vì chọn một phía được bảo toàn.
 
-**customers** (bảng đầy đủ)
+## Mô hình tư duy
 
-| id | name |
-| --- | --- |
-| 1 | Ann |
-| 2 | Bob |
-| 3 | Cara |
+Mọi kết quả join thuộc một trong ba loại:
 
-**orders** (bảng đầy đủ)
-
-| id | customer_id | amount |
+| Loại | customer | order |
 | --- | --- | --- |
-| 1 | 1 | 50 |
-| 2 | 99 | 20 |
+| match | có | có |
+| chỉ bên trái | có | NULL |
+| chỉ bên phải | NULL | có |
 
-| Phía | Điều gì xảy ra |
-| --- | --- |
-| Ann + đơn 1 | khớp |
-| Bob, Cara | chỉ khách → cột đơn `NULL` |
-| đơn 2 (`customer_id` 99) | chỉ đơn → cột khách `NULL` |
+Dataset này tạo: Ann + order 1; Bob và Cara chỉ bên trái; order 2 với `customer_id = 99` chỉ bên phải.
+
+## Dự đoán trước khi chạy
+
+Trước filter, full join có **4 hàng**. Hai NULL filter khác nhau cho hai câu hỏi khác nhau:
+
+- `orders.id IS NULL` -> Bob, Cara.
+- `customers.id IS NULL` -> order orphan trỏ customer 99.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT customers.name, orders.id AS order_id, orders.amount
+SELECT customers.name
 FROM customers
-FULL OUTER JOIN orders ON customers.id = orders.customer_id
-ORDER BY customers.name, orders.id;
+FULL OUTER JOIN orders
+  ON customers.id = orders.customer_id
+WHERE orders.id IS NULL
+ORDER BY customers.name;
 ```
-
-- Ann khớp đơn `1`.
-- Bob và Cara không có đơn, nên `orders.id` là `NULL`.
-- Đơn `2` trỏ khách `99` không tồn tại — tên khách là `NULL`.
-- `WHERE orders.id IS NULL` trả khách chưa từng đặt hàng (Bob và Cara).
-
-Kết quả join đầy đủ (trước khi lọc):
-
-| name | order_id | amount |
-| --- | --- | --- |
-| Ann | 1 | 50 |
-| Bob |  |  |
-| Cara |  |  |
-|  | 2 | 20 |
-
-Khách không có đơn:
 
 | name |
 | --- |
 | Bob |
 | Cara |
 
+Order orphan không vào kết quả vì `orders.id` của nó có giá trị; phía thiếu của hàng đó là `customers`.
+
+## Tìm lỗi
+
+Yêu cầu là customer chưa có order nhưng lại dùng `WHERE customers.id IS NULL`. Predicate này tìm loại dư ngược lại: order không có customer match.
+
 ## Lỗi thường gặp
 
-- Dùng `INNER JOIN` khi cần dòng không khớp từ cả hai phía.
-- Viết `FULL JOIN` mà không hiểu nó cùng ý với `FULL OUTER JOIN` trong PostgreSQL.
-- Lọc bằng `= NULL` thay vì `IS NULL`.
+- Coi FULL JOIN như mọi tổ hợp có thể; nó vẫn dựa trên quy tắc `ON`.
+- Check NULL sai phía và lấy nhầm loại orphan.
+- Đổi sang INNER JOIN khiến mọi hàng không match biến mất.
 
 ## Thử ngay
 
-Liệt kê `name` mọi khách không có đơn khớp. Sắp theo `customers.name`.
+Trả customer không có order, sắp theo name. Hãy phân loại bốn outcome của full join trước khi filter.
+
+## Tự kiểm tra
+
+Hàng có cột customer NULL nhưng cột order có dữ liệu biểu diễn gì?
+
+**Đáp án:** một order bên phải không tìm được customer match.

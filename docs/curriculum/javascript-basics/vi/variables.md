@@ -3,59 +3,93 @@ id: js-01-variables
 track: javascript-basics
 locale: vi
 slug: variables
-title: Lưu giá trị bằng biến
+title: Binding với const và let
 order: 1
 published: true
+can_do: "Chọn const hay let dựa trên intent reassign và trace value mà binding trỏ tới theo thời gian"
 objectives:
-  - Tạo biến bằng let hoặc const
-  - Cập nhật biến let và đọc lại giá trị
-  - Ưu tiên const khi giá trị không nên đổi
+  - Ưu tiên const khi binding không reassign
+  - Dùng let khi binding phải trỏ tới value mới sau đó
+  - Phân biệt tên binding với value hiện tại
 exercise:
   starter: |
-    let name = "Syntaxia";
-    // return số ký tự trong name
+    const name = "Syntaxia";
+    // TODO: return how many characters are in name
   hints:
-    - "Chuỗi có thuộc tính .length."
-    - "Dùng return ở cuối với name.length."
-    - "Đáp án là số, không phải chữ."
+    - "Binding không cần reassign nên const phù hợp."
+    - "String có property .length."
+    - "Dùng: return name.length;"
   solution: |
-    let name = "Syntaxia";
+    const name = "Syntaxia";
     return name.length;
   expected:
     type: returnValue
     value: 8
 ---
 
-Trong đời thường bạn dán giấy ghi chú lên hộp: “táo = 4”. Sau đó bạn có thể đổi số hoặc đọc lại. Trong JavaScript, hộp có nhãn đó gọi là **biến** (variable).
+Variable giúp code đặt tên có nghĩa cho value. Trong JavaScript hiện đại, lựa chọn quan trọng thường là **binding** có cần reassign hay không.
 
-Hai cách tạo biến thường gặp:
+## Mô hình thực thi
 
-| Từ khóa | Nghĩa đơn giản | Khi nào dùng |
+| khai báo | reassign binding? | cách dùng mặc định tốt |
 | --- | --- | --- |
-| `let` | Hộp có thể đổ đầy lại | Giá trị có thể đổi |
-| `const` | Hộp đổ một lần | Giá trị nên giữ cố định |
+| `const x = value` | không | khi `x` luôn trỏ cùng value |
+| `let x = value` | có | khi `x` cần trỏ sang value khác |
+
+Ưu tiên `const` cho tới khi algorithm thực sự cần reassignment. Nhờ vậy changing state trở nên rõ ràng.
+
+Một nuance quan trọng: `const` ngăn reassign binding; nó không tự deep-freeze object/array phía sau binding.
+
+## Trace từng bước
+
+```javascript
+let score = 0;
+score = score + 10;
+const player = "Sam";
+```
+
+| bước | `score` | `player` |
+| ---: | ---: | --- |
+| sau declaration | 0 | chưa tạo |
+| sau assignment | 10 | chưa tạo |
+| sau const | 10 | Sam |
+
+## Dự đoán trước khi chạy
+
+`"Syntaxia"` có 8 ký tự. Bài chỉ đọc `name`, không reassign, nên `const` là declaration rõ hơn.
 
 ## Ví dụ mẫu
 
 ```javascript
-let score = 0;
-score = 10;
-
-const player = "Sam";
-console.log(player + " scored " + score);
+const taxRate = 0.1;
+let subtotal = 100;
+subtotal = subtotal + 50;
+const total = subtotal * (1 + taxRate);
 ```
 
-- `let score = 0;` tạo `score` và đặt `0` vào trong.
-- `score = 10;` thay nội dung bằng `10` (được phép với `let`).
-- `const player = "Sam";` tạo `player` và khóa đoạn chữ đó.
-- Dòng cuối ghép cả hai giá trị thành một thông báo ngắn.
+Dùng `let` vì `subtotal` thay đổi; dùng `const` cho binding không đổi.
+
+## Tìm lỗi
+
+```javascript
+const score = 0;
+score = 10;
+```
+
+Dòng hai cố reassign const binding và sẽ throw. Khi debug, hỏi state có thực sự cần đổi không; nếu có hãy chọn `let` có chủ đích thay vì biến mọi variable thành mutable.
 
 ## Lỗi thường gặp
 
-- Dùng tên trước khi tạo — phải khai báo bằng `let` hoặc `const` trước.
-- Gán lại `const` (`player = "Alex"`) — sẽ báo lỗi; dùng `let` nếu cần đổi.
-- Nhầm nhãn với giá trị — `score` là tên; `10` là nội dung đang lưu.
+- Dùng `let` cho mọi variable dù không hề reassign.
+- Nhầm assignment (`=`) với equality (`===`).
+- Nghĩ `const` tự làm mọi nested value trong object/array immutable.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới: return độ dài chuỗi `"Syntaxia"`. Khi checker báo **Đúng rồi**, đánh dấu hoàn thành bài.
+Return số ký tự của string `name` đang có.
+
+## Tự kiểm tra
+
+Khi nào nên chọn `let` thay vì `const`?
+
+**Đáp án:** khi binding đó cần được reassign sang value khác trong quá trình chạy.

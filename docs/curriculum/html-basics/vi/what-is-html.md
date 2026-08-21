@@ -6,21 +6,21 @@ slug: what-is-html
 title: HTML là gì?
 order: 0
 published: true
+can_do: "Đọc một đoạn HTML ngắn theo phần tử, thuộc tính và nội dung có ý nghĩa thay vì chỉ nhìn hình thức hiển thị"
 objectives:
-  - Giải thích HTML bằng lời đơn giản (cấu trúc trang, không phải trang trí)
-  - Nhận biết phần tử (element), thẻ (tag) và thuộc tính (attribute)
-  - Đọc một đoạn HTML ngắn và nói từng phần làm gì
+  - Giải thích HTML là lớp cấu trúc và ngữ nghĩa của tài liệu
+  - Phân biệt element, tag, attribute và text content
+  - Dự đoán cấu trúc cơ bản mà trình duyệt nhận được từ một đoạn HTML
 exercise:
   mode: html
   starter: |
-    <!-- Add a paragraph about HTML -->
-    
+    <!-- TODO: thêm một đoạn văn giải thích HTML làm gì -->
   hints:
-    - Dùng thẻ p cho đoạn văn.
-    - Đặt nội dung giữa thẻ mở và thẻ đóng của p.
-    - Đoạn văn có thể mô tả HTML làm gì.
+    - Dùng phần tử p vì nội dung cần tạo là một đoạn văn.
+    - Đặt câu văn giữa thẻ mở <p> và thẻ đóng </p>.
+    - Mẫu hợp lệ là: <p>Nội dung của bạn.</p>
   solution: |
-    <p>HTML marks up meaning.</p>
+    <p>HTML describes the meaning and structure of content.</p>
   expected:
     type: htmlTags
     tags:
@@ -28,36 +28,63 @@ exercise:
         minCount: 1
 ---
 
-Trang web hiện chữ, ảnh và nút. **HTML** (HyperText Markup Language) là ngôn ngữ dùng để *đánh dấu* nội dung: đây là tiêu đề, đây là đoạn văn, đây là liên kết. Trình duyệt đọc HTML rồi dựng trang bạn nhìn thấy.
+HTML là lớp mô tả **ý nghĩa và cấu trúc** của nội dung web. Trước khi nghĩ đến màu sắc hay hành vi khi bấm, cần học cách đọc source như một cây phần tử mà trình duyệt có thể hiểu.
 
-HTML không “làm đẹp” trang (đó là việc của CSS) và cũng không tự động hóa (đó là việc của JavaScript). HTML chỉ nói rõ *cái gì là cái gì*.
+## Mô hình tư duy
 
-Ba ý sẽ lặp lại suốt lộ trình:
+Hãy nghĩ theo chuỗi **source -> phần tử -> cấu trúc tài liệu -> ý nghĩa với trình duyệt/công cụ hỗ trợ**.
 
-| Ý | Nghĩa đơn giản | Ví dụ |
+```html
+<p class="note">Đọc cấu trúc trước.</p>
+```
+
+Đoạn này có một phần tử `p`. Thẻ mở chứa thuộc tính `class`; câu chữ là nội dung; thẻ đóng kết thúc phần tử.
+
+| Thành phần | Trong ví dụ | Vai trò |
 | --- | --- | --- |
-| Phần tử (element) | Một khối nội dung có ý nghĩa | một đoạn văn, một liên kết |
-| Thẻ (tag) | Nhãn mở/đóng bao quanh nội dung | `<p>`, `</p>` |
-| Thuộc tính (attribute) | Thông tin thêm trên thẻ mở | `href`, `src`, `alt` |
+| element | toàn bộ `<p>...</p>` | gán vai trò đoạn văn |
+| tag | `<p>` / `</p>` | đánh dấu biên của phần tử |
+| attribute | `class="note"` | thêm thông tin trên thẻ mở |
+| text | `Đọc cấu trúc trước.` | nội dung nằm bên trong |
+
+## Dự đoán cấu trúc khi render
+
+Trước khi xem preview của đoạn sau:
+
+```html
+<p>Xin chào <strong>web</strong>.</p>
+```
+
+hãy dự đoán cây: một paragraph chứa text, một phần tử con `strong`, rồi thêm text. Trình duyệt thường hiển thị `strong` đậm, nhưng ý nghĩa chính là mức độ quan trọng.
 
 ## Ví dụ mẫu
 
 ```html
-<p>Xin chào, <strong>Syntaxia</strong>.</p>
+<p class="note">HTML đánh dấu ý nghĩa.</p>
 ```
 
-- `<p>` … `</p>` là phần tử đoạn văn (paragraph).
-- `<strong>` … `</strong>` đánh dấu phần chữ *quan trọng*; trình duyệt thường in đậm, nhưng ý nghĩa chính là tầm quan trọng, không chỉ kiểu chữ.
-- Nội dung nằm giữa thẻ mở và thẻ đóng.
+Tên phần tử quyết định vai trò ngữ nghĩa. `class` không biến paragraph thành loại nội dung khác; nó chỉ là metadata để CSS hoặc JavaScript dùng sau này.
 
-Trình duyệt sẽ hiện khoảng: Xin chào, **Syntaxia**.
+## Tìm lỗi
+
+```html
+<p href="/docs">Tài liệu</p>
+```
+
+Đây vẫn là paragraph, không phải link. Gắn một thuộc tính dành cho link lên sai phần tử không tạo ra ngữ nghĩa liên kết. Cần dùng đúng phần tử: `<a href="/docs">Tài liệu</a>`.
 
 ## Lỗi thường gặp
 
-- Nghĩ HTML giống CSS hoặc JavaScript — HTML dựng cấu trúc; CSS trang trí; JavaScript thêm hành vi.
-- Quên thẻ đóng (`</p>`) khi phần tử cần cặp đóng — nhiều trình duyệt vẫn “đoán”, nhưng mã dễ lỗi và khó đọc.
-- Viết thuộc tính sai chỗ (ví dụ đặt `href` trên `<p>`) — mỗi thuộc tính thuộc về loại phần tử phù hợp.
+- Nghĩ HTML là ngôn ngữ lập trình chạy logic nghiệp vụ.
+- Chọn phần tử chỉ vì hình thức mặc định thay vì ý nghĩa của nội dung.
+- Nghĩ rằng thêm một attribute bất kỳ có thể tạo hành vi trên mọi tag.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để thêm một đoạn văn về HTML. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Thêm một paragraph thật trong sandbox. Chọn `p` vì nội dung là văn bản dạng đoạn, không phải vì kiểu hiển thị mặc định.
+
+## Tự kiểm tra
+
+Điều gì quyết định nội dung là paragraph: `class`, câu chữ hay tên phần tử?
+
+**Đáp án:** phần tử `p` tạo ngữ nghĩa đoạn văn.

@@ -3,21 +3,22 @@ id: js-04-string-methods
 track: javascript-basics
 locale: en
 slug: string-methods
-title: Useful string methods
+title: Inspecting and transforming strings
 order: 4
 published: true
+can_do: "Trace string indexing and immutable string transformations to predict method results without mutating the original string"
 objectives:
-  - Read a string's length
-  - Change case with toUpperCase and toLowerCase
-  - Take a slice of text with slice
+  - Read zero-based character positions and length
+  - Use slice with an exclusive end index
+  - Explain why string methods return new strings
 exercise:
   starter: |
     const code = "Syntaxia";
-    // return the first three letters using slice
+    // TODO: return the first three characters using slice
   hints:
-    - "slice(start, end) takes from start up to (not including) end."
-    - "Start at index 0; end before index 3."
-    - 'The answer is three letters: Syn.'
+    - "String indexes start at 0."
+    - "slice(start, end) excludes the end position."
+    - "Use: return code.slice(0, 3);"
   solution: |
     const code = "Syntaxia";
     return code.slice(0, 3);
@@ -26,38 +27,70 @@ exercise:
     value: "Syn"
 ---
 
-A string is more than a label on a box — it is text you can **inspect** and **reshape** a little. JavaScript gives each string small built-in tools called **methods**. You call them with a dot after the string (or a variable holding text).
+Strings expose properties and methods for inspecting or deriving text. String values themselves are immutable: transformation methods produce new string values.
 
-| Method / property | Plain meaning | Example |
-| --- | --- | --- |
-| `.length` | How many characters | `"hi".length` → `2` |
-| `.toUpperCase()` | ALL CAPS copy | `"hi".toUpperCase()` → `"HI"` |
-| `.toLowerCase()` | all lowercase copy | `"HI".toLowerCase()` → `"hi"` |
-| `.slice(start)` | Substring from an index | `"hello".slice(1)` → `"ello"` |
+## Execution model
 
-Indexes start at **0** — the first letter is position 0.
+For `"Syntaxia"`:
 
-## Worked example
+| index | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| char | S | y | n | t | a | x | i | a |
+
+`.length` is 8. `slice(0, 3)` starts at index 0 and stops **before** index 3, giving `"Syn"`.
+
+## Trace it
 
 ```javascript
 const code = "Syntaxia";
 const short = code.slice(0, 3);
-
-console.log(code.length);
-console.log(code.toLowerCase());
-console.log(short);
+const upper = code.toUpperCase();
 ```
 
-- `.length` counts every character in `code` → `8`.
-- `.toLowerCase()` returns a new lowercase string; `code` itself stays the same.
-- `.slice(0, 3)` takes characters from index 0 up to (but not including) 3 → `"Syn"`.
+| binding | value |
+| --- | --- |
+| `code` | `"Syntaxia"` |
+| `short` | `"Syn"` |
+| `upper` | `"SYNTAXIA"` |
+
+`code` itself still holds the original value.
+
+## Predict before you run
+
+Mark indexes 0, 1, 2 as included and index 3 as excluded. Predict `"Syn"`.
+
+## Worked example
+
+```javascript
+const raw = "  Hello  ";
+const cleaned = raw.trim().toLowerCase();
+console.log(cleaned); // hello
+```
+
+Methods can be chained because each returns a value the next method can operate on.
+
+## Debug this
+
+```javascript
+const code = "Syntaxia";
+code.toUpperCase();
+return code;
+```
+
+This returns `"Syntaxia"`, not uppercase text. The method returned a new string but its result was ignored.
 
 ## Common mistakes
 
-- Forgetting parentheses on methods — `code.toUpperCase` without `()` does not run the tool.
-- Thinking methods change the original string — they return a **new** string; store it if you need it.
-- Off-by-one on slice — index `3` is the **fourth** character; slice end is exclusive.
+- Off-by-one errors with zero-based indexes and exclusive slice end.
+- Forgetting `()` when calling a method such as `toUpperCase()`.
+- Assuming string methods mutate the original string.
 
 ## Your turn
 
-Return `code.slice(0, 3)` for `"Syntaxia"` in the sandbox. Mark complete when you get **Syn**.
+Return the first three characters of `code` using `slice`.
+
+## Quick check
+
+Does `code.toUpperCase()` mutate the string stored in `code`?
+
+**Answer:** no. It returns a new uppercase string value; the original string remains unchanged.

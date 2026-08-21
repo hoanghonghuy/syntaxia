@@ -3,19 +3,21 @@ id: pg-22-filter
 track: postgresql
 locale: vi
 slug: filter-clause
-title: Đếm có điều kiện với FILTER
+title: Aggregate có điều kiện với FILTER
 order: 22
 published: true
+can_do: "Tính nhiều aggregate trên các subset hàng khác nhau bằng FILTER condition gắn vào từng aggregate call"
 objectives:
-  - Đếm chỉ hàng khớp bằng FILTER
-  - Kết hợp aggregate với logic giống WHERE bên trong
+  - Giải thích hàng nào đi vào từng aggregate
+  - Đối chiếu aggregate FILTER với top-level WHERE
+  - Tính total và conditional count trong cùng một result row
 exercise:
-  starter: "SELECT COUNT(*) FROM movies;"
+  starter: "SELECT COUNT(*) AS total FROM movies;"
   hints:
-    - "FILTER (WHERE …) giới hạn hàng mà aggregate nhìn thấy."
-    - "Giữ COUNT(*) nhưng thêm FILTER cho year >= 2000."
-    - "Thử: SELECT COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
-  solution: "SELECT COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
+    - "Giữ total không filter rồi thêm COUNT thứ hai cho modern movie."
+    - "Chỉ gắn FILTER (WHERE year >= 2000) vào aggregate modern."
+    - "Dùng: SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
+  solution: "SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
   preview:
     columns: ["id", "title", "year"]
     rows:
@@ -24,48 +26,67 @@ exercise:
       - [3, "Arrival", 2016]
       - [4, "Dune", 2021]
   expected:
-    columns: ["modern"]
+    columns: ["total", "modern"]
     rows:
-      - [3]
+      - [4, 3]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INTEGER, title TEXT, year INTEGER);"
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Arrival', 2016), (4, 'Dune', 2021);"
 ---
 
-Bạn đã biết `COUNT(*)`. Đôi khi bạn muốn một tổng chỉ đếm hàng khớp điều kiện — không dùng `WHERE` riêng sẽ ẩn các aggregate khác. Mệnh đề `FILTER` của PostgreSQL gắn điều kiện đó vào chính aggregate.
+`FILTER` gắn row condition vào một aggregate riêng thay vì lọc toàn bộ query input. Nó đặc biệt hữu ích khi một output row cần nhiều metric trên các subset khác nhau.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Arrival | 2016 |
-| 4 | Dune | 2021 |
+## Mô hình tư duy
+
+Cả bốn hàng đi tới aggregate stage:
+
+| aggregate | các hàng nhận được | result |
+| --- | --- | ---: |
+| `COUNT(*)` | cả bốn | 4 |
+| `COUNT(*) FILTER (WHERE year >= 2000)` | Inception, Arrival, Dune | 3 |
+
+Top-level `WHERE year >= 2000` sẽ loại The Matrix trước **cả hai** aggregate, khiến count đầu không thể còn 4.
+
+## Dự đoán trước khi chạy
+
+Một result row: `total = 4`, `modern = 3`.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;
+SELECT
+  COUNT(*) AS total,
+  COUNT(*) FILTER (WHERE year >= 2000) AS modern
+FROM movies;
 ```
 
-- `COUNT(*)` vẫn đếm hàng.
-- `FILTER (WHERE year >= 2000)` chỉ gồm phim từ năm 2000 trở đi.
-- The Matrix (1999) bị bỏ; còn ba phim hiện đại.
+| total | modern |
+| ---: | ---: |
+| 4 | 3 |
 
-Kết quả:
+## Tìm lỗi
 
-| modern |
-| --- |
-| 3 |
+```sql
+SELECT COUNT(*) AS total, COUNT(*) AS modern
+FROM movies
+WHERE year >= 2000;
+```
 
-Cách di động: `COUNT(CASE WHEN year >= 2000 THEN 1 END)`. `FILTER` là cú pháp PostgreSQL rõ hơn cho cùng ý.
+Cả hai count thành 3 vì top-level WHERE đã thu nhỏ shared input trước. Lỗi nằm ở vị trí filter, không phải syntax COUNT.
 
 ## Lỗi thường gặp
 
-- Chỉ đặt điều kiện năm ở `WHERE` ngoài khi bài yêu cầu `FILTER`.
-- Quên alias `modern`.
-- Viết `FILTER year >= 2000` thiếu `WHERE` trong ngoặc.
+- Chuyển per-metric filter lên WHERE ngoài và làm đổi mọi metric.
+- Quên keyword `WHERE` bên trong `FILTER (...)`.
+- Chạy nhiều query tách biệt khi các conditional aggregate có thể diễn đạt rõ trong một result.
 
 ## Thử ngay
 
-Trả về một cột `modern`: bao nhiêu phim có `year >= 2000`, dùng `FILTER`.
+Trả cả total movie count và count movie từ năm 2000 trong một hàng.
+
+## Tự kiểm tra
+
+Vì sao FILTER có thể tốt hơn top-level WHERE khi tính một dashboard row có nhiều metric?
+
+**Đáp án:** mỗi aggregate có thể nhận subset riêng trong khi aggregate khác vẫn thấy full input hoặc subset khác.

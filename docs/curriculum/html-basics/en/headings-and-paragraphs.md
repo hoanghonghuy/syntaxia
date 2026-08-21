@@ -6,19 +6,19 @@ slug: headings-and-paragraphs
 title: Headings and paragraphs
 order: 2
 published: true
+can_do: "Turn prose into a logical heading outline and paragraph structure without using heading levels as visual-size controls"
 objectives:
-  - Use h1–h6 to outline a page
-  - Wrap ordinary text in p elements
-  - Avoid skipping heading levels for looks
+  - Build a logical heading hierarchy
+  - Use paragraphs for ordinary prose
+  - Separate document semantics from later CSS presentation
 exercise:
   mode: html
   starter: |
-    <!-- Add an h1 and a paragraph -->
-    
+    <!-- TODO: add the page h1 and one paragraph below it -->
   hints:
-    - Use h1 for the main heading.
-    - Use p for the paragraph below it.
-    - Wrap text inside each tag pair.
+    - Use h1 for the page-level heading in this small document.
+    - Put the supporting sentence in a p element.
+    - A valid shape is an h1 followed by a p; styling does not choose the heading level.
   solution: |
     <h1>Welcome</h1>
     <p>This is a short paragraph.</p>
@@ -31,16 +31,29 @@ exercise:
         minCount: 1
 ---
 
-Long pages need a clear outline. **Headings** (`h1` through `h6`) mark titles and section names. **Paragraphs** (`p`) hold ordinary blocks of text. Together they give the page a readable structure — for people scanning with their eyes and for tools that jump by heading.
+Heading levels describe an **outline**, not a font-size menu. Good source structure remains understandable even before CSS loads.
 
-Think of a table of contents: level 1 is the document title, level 2 are main sections, level 3 are subsections. Skipping from `h1` straight to `h4` is like jumping from chapter title to a tiny footnote label with nothing in between.
+## Mental model
 
-| Element | Typical use |
-| --- | --- |
-| `h1` | Main title of the page (usually one) |
-| `h2` | Major section |
-| `h3`–`h6` | Nested subsections |
-| `p` | A block of body text |
+```text
+h1  Page topic
+├─ h2  Major section
+│  └─ h3  Subsection
+└─ h2  Another major section
+```
+
+Paragraphs are content blocks under those headings. A browser or screen reader can use headings as navigation signposts.
+
+## Predict the rendered structure
+
+```html
+<h1>Garden journal</h1>
+<p>Weekend notes.</p>
+<h2>Soil</h2>
+<p>The bed was dry.</p>
+```
+
+Predict the outline before previewing: one page topic, then one child section. The two `p` elements are prose; they are not part of the heading hierarchy themselves.
 
 ## Worked example
 
@@ -50,23 +63,32 @@ Think of a table of contents: level 1 is the document title, level 2 are main se
 
 <h2>Soil</h2>
 <p>The bed was dry after three sunny days.</p>
-
-<h3>Watering plan</h3>
-<p>Water early in the morning twice a week.</p>
 ```
 
-- One `h1` names the whole page.
-- `h2` starts a major section; `h3` sits under that section.
-- Each idea in running prose sits in its own `p`.
+The heading level answers “where is this section in the outline?” CSS later answers “how large or colorful should it look?”.
 
-Headings are for structure, not for making text large. Size and color come later with CSS.
+## Debug this
+
+```html
+<h1>Garden journal</h1>
+<h4>Soil</h4>
+<p>The bed was dry.</p>
+```
+
+Using `h4` just because its default size looks right creates a false hierarchy. If Soil is a direct section of the page, use `h2` and style it later.
 
 ## Common mistakes
 
-- Using headings only to change font size — choose the level that matches the outline, then style with CSS.
-- Skipping levels (`h1` then `h3` with no `h2`) — screen-reader users lose the hierarchy.
-- Putting multiple sentences in one giant block without `p` — paragraphs keep text readable and styled consistently.
+- Picking heading levels by appearance.
+- Skipping logical levels without an actual nested structure.
+- Using line breaks instead of paragraphs for ordinary prose.
 
 ## Your turn
 
-Use the sandbox below to add a main heading and a paragraph. When the checker shows **Correct**, mark this lesson complete.
+Add one page heading and one paragraph. Read the source outline first, then check the preview.
+
+## Quick check
+
+If an `h2` looks too large, should you replace it with `h4`?
+
+**Answer:** no. Keep the semantic level and change presentation with CSS later.

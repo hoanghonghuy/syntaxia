@@ -3,89 +3,118 @@ id: html-10-controls
 track: html-basics
 locale: en
 slug: form-controls
-title: More form controls
+title: Choosing and grouping form controls
 order: 10
 published: true
+can_do: "Choose checkbox, radio, select, and textarea controls by interaction model and correctly group mutually exclusive radio options with one shared name"
 objectives:
-  - Use checkbox, radio, select, and textarea controls
-  - Group related radios with a shared name
-  - Mark a field as required when the answer is mandatory
+  - Match control type to the kind of answer being collected
+  - Group radio choices with one shared name
+  - Combine select, option, and textarea controls in a structured form
 exercise:
   mode: html
   starter: |
-    <!-- Add a checkbox and a select menu -->
-    
+    <!-- TODO: build a form with checkbox, two grouped radios, select with two options, and textarea -->
   hints:
-    - 'Checkbox uses input type="checkbox".'
-    - Select wraps option elements.
-    - Both can live in the same snippet.
+    - Use input type="checkbox" for an independent yes/no choice and two input type="radio" controls for one-of-many choice.
+    - Both radio inputs must share the same name so the browser treats them as one group.
+    - Add a select containing at least two option elements and one textarea for multi-line notes.
   solution: |
-    <label><input type="checkbox"> Agree</label>
-    <select><option>One</option></select>
+    <form>
+      <label><input type="checkbox" name="newsletter"> Newsletter</label>
+      <label><input type="radio" name="plan" value="basic"> Basic</label>
+      <label><input type="radio" name="plan" value="pro"> Pro</label>
+      <select name="role">
+        <option>Developer</option>
+        <option>Designer</option>
+      </select>
+      <textarea name="notes"></textarea>
+    </form>
   expected:
-    type: htmlIncludes
-    needles:
-      - 'type="checkbox"'
-      - <select
+    type: htmlTags
+    tags:
+      - tag: form
+        minCount: 1
+      - tag: input
+        minCount: 1
+        attrEquals:
+          type: checkbox
+      - tag: input
+        minCount: 2
+        requiredAttrs: [name]
+        attrEquals:
+          type: radio
+      - tag: select
+        minCount: 1
+      - tag: option
+        minCount: 2
+      - tag: textarea
+        minCount: 1
+    relations:
+      - kind: sharedAttributeValue
+        tag: input
+        attr: name
+        minCount: 2
+        attrEquals:
+          type: radio
 ---
 
-Text boxes are only one kind of answer. Forms also need **yes/no choices**, **one-of-many choices**, **dropdown lists**, and **multi-line text**. Each control has a suitable HTML element or `input` type. The `required` attribute tells the browser a value must be filled before submit.
+Form controls encode different **interaction models**. Choosing the right control gives the browser useful behavior before any JavaScript is written.
 
-Match the control to the question: a short comment needs `textarea`; a country list fits `select`; “newsletter?” fits a checkbox.
+## Mental model
 
-| Control | Markup | User choice |
-| --- | --- | --- |
-| Checkbox | `input type="checkbox"` | Zero or more independent options |
-| Radio | `input type="radio"` (same `name`) | Exactly one option in the group |
-| Select | `select` > `option` | One (or more) from a list |
-| Textarea | `textarea` | Multi-line text |
-| Required | `required` attribute | Must be completed to submit |
+| Question shape | Control |
+| --- | --- |
+| independent yes/no toggle | checkbox |
+| exactly one choice from a small group | radios sharing one `name` |
+| one choice from a longer list | `select` + `option` |
+| free multi-line text | `textarea` |
+
+Radio grouping is data structure: the shared `name` says these controls answer the same question.
+
+## Predict the rendered structure
+
+Two radios with `name="plan"` are one group. Predict what happens when the user selects Basic and then Pro: Pro becomes selected and Basic is cleared. If the names differ, the browser no longer knows they are mutually exclusive.
 
 ## Worked example
 
 ```html
-<form action="/rsvp" method="post">
-  <label>
-    <input type="checkbox" name="vegetarian" value="yes" />
-    Vegetarian meal
-  </label>
+<label><input type="checkbox" name="newsletter"> Newsletter</label>
 
-  <fieldset>
-    <legend>Attendance</legend>
-    <label>
-      <input type="radio" name="attend" value="yes" required />
-      Yes
-    </label>
-    <label>
-      <input type="radio" name="attend" value="no" />
-      No
-    </label>
-  </fieldset>
+<label><input type="radio" name="plan" value="basic"> Basic</label>
+<label><input type="radio" name="plan" value="pro"> Pro</label>
 
-  <label for="seat">Seat preference</label>
-  <select id="seat" name="seat">
-    <option value="window">Window</option>
-    <option value="aisle">Aisle</option>
-  </select>
+<select name="role">
+  <option>Developer</option>
+  <option>Designer</option>
+</select>
 
-  <label for="notes">Notes</label>
-  <textarea id="notes" name="notes" rows="4"></textarea>
-
-  <button type="submit">Send RSVP</button>
-</form>
+<textarea name="notes"></textarea>
 ```
 
-- Checkbox values stand alone; unchecked boxes typically send nothing.
-- Radios share `name="attend"` so only one can be selected; `required` on one radio in the group makes a choice mandatory.
-- `select` lists options; `textarea` holds longer text (content goes between its tags, not in a `value` attribute).
-- Wrapping a control inside its `label` is another valid way to associate them.
+The control's type should follow the answer model rather than whatever widget happens to look convenient.
+
+## Debug this
+
+```html
+<input type="radio" name="basic" value="basic">
+<input type="radio" name="pro" value="pro">
+```
+
+These are two independent radio groups because their names differ. Give both the same question name, for example `name="plan"`.
 
 ## Common mistakes
 
-- Giving each radio a different `name` — then multiple radios can stay selected and they are not one group.
-- Using a text input for long comments — prefer `textarea`.
-- Marking every field `required` without need — reserve it for answers you truly cannot proceed without.
+- Using radio buttons for independent toggles that should allow multiple selections.
+- Giving each radio option a different `name`.
+- Using a single-line input for long free-form notes instead of `textarea`.
 
 ## Your turn
 
-Use the sandbox below to add a checkbox and a select control. When the checker shows **Correct**, mark this lesson complete.
+Build the integrated control set from the starter. The grader now verifies that at least two radio inputs share the same non-empty `name`.
+
+## Quick check
+
+What makes two radio inputs part of the same mutually exclusive group?
+
+**Answer:** a shared `name` value.

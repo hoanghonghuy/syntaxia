@@ -3,26 +3,29 @@ id: js-07-loops
 track: javascript-basics
 locale: en
 slug: loops
-title: Repeating work with loops
+title: Repetition and accumulators with loops
 order: 7
 published: true
+can_do: "Trace each loop iteration, update an accumulator safely, and choose for...of when only collection values are needed"
 objectives:
-  - Repeat code with a for loop
-  - Use a counter variable i
-  - Visit each array item by index
+  - Trace changing state across loop iterations
+  - Use for...of to iterate array values directly
+  - Recognize off-by-one and non-terminating loop bugs
 exercise:
   starter: |
+    const values = [1, 2, 3];
     let total = 0;
-    // Use a for loop to add 1, 2, and 3 into total
+    // TODO: add every value into total with a loop
     return total;
   hints:
-    - "The loop adds 1, then 2, then 3 into total."
-    - "Use return after the loop finishes."
-    - "1 + 2 + 3 is the answer."
+    - "for...of gives each array value directly; no index is needed here."
+    - "On each iteration update total by adding the current value."
+    - "Use: for (const value of values) { total += value; }"
   solution: |
+    const values = [1, 2, 3];
     let total = 0;
-    for (let n = 1; n <= 3; n++) {
-      total = total + n;
+    for (const value of values) {
+      total += value;
     }
     return total;
   expected:
@@ -30,42 +33,78 @@ exercise:
     value: 6
 ---
 
-Washing ten plates one recipe at a time is tedious. A **loop** repeats a small block of code for each step — same pattern, many times.
+Loops repeat a rule while state changes from one iteration to the next. A good way to understand them is to trace the state after **every iteration**.
 
-| Piece | Plain meaning | Example |
-| --- | --- | --- |
-| `for (...)` | Controlled repeat | `for (let i = 0; i < 3; i++)` |
-| `i` | Counter, often starts at 0 | `i++` adds 1 each round |
-| `array[i]` | Item at position `i` | `names[i]` inside the loop |
+## Execution model
 
-A common `for` loop has three parts: start (`let i = 0`), keep going while (`i < length`), step (`i++`).
+For collection values, `for...of` says:
+
+```text
+for each value in the iterable -> run the body once with that value
+```
+
+A classic `for (initial; condition; step)` is useful when you need explicit index/control. Use `for...of` when the value itself is what matters.
+
+## Trace it
+
+```javascript
+const values = [1, 2, 3];
+let total = 0;
+
+for (const value of values) {
+  total += value;
+}
+```
+
+| iteration | `value` | total before | total after |
+| ---: | ---: | ---: | ---: |
+| 1 | 1 | 0 | 1 |
+| 2 | 2 | 1 | 3 |
+| 3 | 3 | 3 | 6 |
+
+The accumulator invariant is simple: after each iteration, `total` equals the sum of all values processed so far.
+
+## Predict before you run
+
+Predict the state sequence `0 → 1 → 3 → 6`, then the final returned value `6`.
 
 ## Worked example
 
 ```javascript
-const names = ["Ana", "Bo", "Cy"];
-
-for (let i = 0; i < names.length; i++) {
-  console.log(i + ": " + names[i]);
-}
-
+const prices = [5, 10, 2];
 let total = 0;
-for (let n = 1; n <= 3; n++) {
-  total = total + n;
+
+for (const price of prices) {
+  total += price;
 }
-console.log(total);
+
+console.log(total); // 17
 ```
 
-- The first loop prints each name with its index.
-- `names.length` is `3`, so `i` runs `0`, `1`, `2` then stops.
-- The second loop adds `1 + 2 + 3` into `total` → `6`.
+## Debug this
+
+```javascript
+const values = [1, 2, 3];
+let total = 0;
+for (let i = 0; i <= values.length; i++) {
+  total += values[i];
+}
+```
+
+When `i === values.length`, `values[i]` is `undefined`. Adding that to a number produces `NaN`. This is the classic off-by-one boundary bug. If you need indexes, the last valid one is `length - 1`.
 
 ## Common mistakes
 
-- Off-by-one — `i < length` stops at the last index; `i <= length` goes one past the end.
-- Reusing `i` outside the loop — `let i` inside `for` stays inside the loop block.
-- Infinite loops — if the counter never moves toward the end (`i++` missing), the loop never finishes.
+- Failing to update the accumulator inside the loop.
+- Using `<= length` when indexing an array and stepping one position too far.
+- Using `for...in` when the intent is array values; `for...of` communicates that intent directly.
 
 ## Your turn
 
-Return the sum `1 + 2 + 3` using the `for` loop pattern from the worked example. Mark complete when the checker shows **6**.
+Use a loop to add all values `[1, 2, 3]` into `total` and return `6`.
+
+## Quick check
+
+Why is `for...of` a good fit here?
+
+**Answer:** the algorithm needs each array value directly and does not need the numeric index.

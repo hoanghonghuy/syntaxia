@@ -3,19 +3,20 @@ id: sql-24-union
 track: sql-fundamentals
 locale: vi
 slug: union-queries
-title: Ghép tập kết quả với UNION
+title: Kết hợp tập kết quả với UNION
 order: 24
 published: true
+can_do: "Xếp dọc các kết quả SELECT tương thích bằng UNION và dự đoán việc loại hàng trùng"
 objectives:
-  - Xếp chồng dòng từ hai SELECT bằng UNION
-  - Hiểu UNION loại giá trị trùng
-  - Đặt ORDER BY sau toàn bộ UNION
+  - Phân biệt UNION với JOIN
+  - Kiểm tra số cột/type tương thích giữa các nhánh UNION
+  - Giải thích vì sao UNION loại hàng kết quả trùng
 exercise:
   starter: "SELECT name FROM a;"
   hints:
-    - "UNION xếp chồng dòng của hai kết quả SELECT thành một danh sách."
-    - "Tên trùng xuất hiện ở cả hai bảng chỉ được giữ một lần."
-    - "Thử: SELECT name FROM a UNION SELECT name FROM b ORDER BY name;"
+    - "Cần xếp hàng của hai result set vào cùng một cột."
+    - "Dùng UNION giữa hai SELECT name tương thích; UNION loại tên trùng."
+    - "Dùng: SELECT name FROM a UNION SELECT name FROM b ORDER BY name;"
   solution: "SELECT name FROM a UNION SELECT name FROM b ORDER BY name;"
   preview:
     columns: ["name"]
@@ -39,30 +40,17 @@ sandbox_seed:
     - "INSERT INTO b VALUES ('Bob'), ('Cara'), ('Dee');"
 ---
 
-Đôi khi bạn có hai danh sách giống nhau và muốn một danh sách gộp — như xếp chồng hai cột Excel. `UNION` chạy hai `SELECT` rồi gộp dòng. Giá trị trùng chỉ xuất hiện một lần.
+JOIN và UNION đều kết hợp dữ liệu nhưng theo hai trục khác nhau. JOIN tạo hàng **rộng hơn** từ các input có quan hệ; UNION xếp **nhiều hàng hơn** từ các result tương thích.
 
-**a** (bảng đầy đủ)
+## Mô hình tư duy
 
-| name |
-| --- |
-| Ann |
-| Bob |
-| Cara |
+Result A: Ann, Bob, Cara. Result B: Bob, Cara, Dee. `UNION` xếp dọc rồi loại hàng kết quả trùng, còn Ann, Bob, Cara, Dee.
 
-**b** (bảng đầy đủ)
+Hai SELECT phải trả cùng số cột và các type tương ứng có thể kết hợp.
 
-| name |
-| --- |
-| Bob |
-| Cara |
-| Dee |
+## Dự đoán trước khi chạy
 
-| name | Trong `a`? | Trong `b`? | Sau `UNION`? |
-| --- | --- | --- | --- |
-| Ann | có | không | một lần |
-| Bob | có | có | một lần (bỏ trùng) |
-| Cara | có | có | một lần |
-| Dee | không | có | một lần |
+3 + 3 hàng đầu vào nhưng `UNION` chỉ còn **4 hàng**, vì Bob và Cara lặp ở cả hai nhánh.
 
 ## Ví dụ mẫu
 
@@ -73,13 +61,6 @@ SELECT name FROM b
 ORDER BY name;
 ```
 
-- Mỗi `SELECT` phải trả cùng số cột với kiểu tương thích.
-- `UNION` bỏ trùng `Bob` và `Cara`.
-- `ORDER BY name` sắp danh sách gộp — đặt **sau** toàn bộ `UNION`.
-- Để giữ mọi dòng kể cả trùng, dùng `UNION ALL` (bài `union-all`).
-
-Kết quả:
-
 | name |
 | --- |
 | Ann |
@@ -87,12 +68,30 @@ Kết quả:
 | Cara |
 | Dee |
 
+`ORDER BY` áp dụng lên kết quả kết hợp. Bài `UNION ALL` sau này sẽ giữ duplicate.
+
+## Tìm lỗi
+
+```sql
+SELECT name FROM a
+UNION
+SELECT name, age FROM b;
+```
+
+Nhánh đầu một cột, nhánh sau hai cột nên không thể tạo cùng một hình chữ nhật kết quả.
+
 ## Lỗi thường gặp
 
-- Dùng `UNION ALL` khi đề cần giá trị duy nhất — `UNION ALL` giữ trùng (xem `union-all`).
-- Hai `SELECT` khác số cột — gây lỗi.
-- Đặt `ORDER BY` chỉ trên `SELECT` đầu — hãy đặt sau toàn bộ `UNION`.
+- Nhầm UNION xếp dọc với JOIN ghép ngang theo quan hệ.
+- Nghĩ UNION giữ duplicate.
+- Hai nhánh trả số cột khác nhau.
 
 ## Thử ngay
 
-Trả về một danh sách `name` duy nhất đã sắp từ bảng `a` và `b`.
+Trả danh sách name duy nhất từ `a` và `b`, sắp alphabet. Hãy dự đoán duplicate nào biến mất.
+
+## Tự kiểm tra
+
+Nếu cần giữ duplicate, operator ở bài sau là gì?
+
+**Đáp án:** `UNION ALL`.
