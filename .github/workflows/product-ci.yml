@@ -92,6 +92,7 @@ jobs:
           npm run test:ui-refresh
           npm run test:ui-system
           npm run test:e2e-suite
+          npm run test:release-contract
       - name: Language V3 contracts
         run: |
           npm run test:language-v3

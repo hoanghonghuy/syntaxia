@@ -70,8 +70,10 @@ test('lesson and review routes use the production language flow', () => {
   assert.match(lesson, /catalog\.loadError|loadError/, 'lesson route missing recoverable load state')
 
   const review = read('app/pages/tracks/[track]/review.vue')
-  assert.match(review, /language\/review\/due|reviewDue|listLanguageReviewDue/, 'review route missing due-card flow')
-  assert.match(review, /submitLanguageReview|language\/review/, 'review route missing persisted review submission')
+  assert.match(review, /dueLanguageReviews\(/, 'review route missing due-card flow')
+  assert.match(review, /recordLanguageReview\(/, 'review route missing persisted review submission')
+  assert.match(review, /completedLessonSummaries/, 'review route must derive reviewable completed lessons')
+  assert.match(review, /extractIndexedReviewExercisesFromLesson/, 'review route must map authored stable review items')
 })
 
 test('auth pages keep explicit redirect handling', () => {

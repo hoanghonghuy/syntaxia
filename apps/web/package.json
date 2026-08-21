@@ -15,6 +15,7 @@
     "test:ui-refresh": "node --test scripts/check-ui-refresh.mjs",
     "test:ui-system": "node --test scripts/check-ui-system.mjs",
     "test:product-flows": "node --test scripts/check-product-flows.mjs",
+    "test:release-contract": "node --test scripts/check-release-contract.mjs",
     "test:soft-loading": "node --experimental-strip-types --test scripts/check-soft-loading.mjs",
     "test:catalog-browse": "node --experimental-strip-types --test scripts/check-catalog-browse.mjs",
     "test:learning-path": "node --experimental-strip-types --test scripts/check-learning-path.mjs",
