@@ -60,11 +60,11 @@ function normalizeRole(value: unknown): LanguageUnitRole {
 export function languageUnitMeta(lesson: LanguageUnitLesson): LanguageUnitMeta {
   const exercise = asRecord(lesson.exercise)
   return {
-    id: text(exercise?.unitId),
-    title: text(exercise?.unitTitle),
-    canDo: text(exercise?.unitCanDo),
-    sortOrder: positiveInt(exercise?.unitOrder),
-    role: normalizeRole(exercise?.unitRole),
+    id: text(lesson.unitId) || text(exercise?.unitId),
+    title: text(lesson.unitTitle) || text(exercise?.unitTitle),
+    canDo: text(lesson.unitCanDo) || text(exercise?.unitCanDo),
+    sortOrder: positiveInt(lesson.unitOrder) || positiveInt(exercise?.unitOrder),
+    role: normalizeRole(lesson.unitRole || exercise?.unitRole),
   }
 }
 
