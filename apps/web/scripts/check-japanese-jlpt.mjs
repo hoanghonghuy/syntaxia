@@ -25,6 +25,8 @@ const SLUGS = [
   'people-checkpoint',
   'people-review',
   'numbers',
+  'number-checkpoint',
+  'number-review',
   'family',
   'food-drink',
   'places',
