@@ -7,6 +7,11 @@ title: Introduce your family
 order: 4
 published: true
 cefr_level: a1
+unit_id: en-a1-people-02
+unit_title: "Introduce people close to you"
+unit_order: 2
+unit_can_do: "Ask who someone is and introduce a friend or family member"
+unit_role: lesson
 can_do: "Introduce one or two close family members and say who they are"
 pattern: "This is my … / He's my … / She's my …"
 objectives:
