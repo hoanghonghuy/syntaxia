@@ -6,16 +6,17 @@ slug: drop-table
 title: Removing a table with DROP TABLE
 order: 31
 published: true
+can_do: "Choose DROP TABLE only when the entire database object, not merely its rows, should be removed"
 objectives:
-  - Drop an unused table
-  - Leave other tables untouched
-  - Contrast DROP TABLE with DELETE (rows only)
+  - Contrast DELETE with DROP TABLE
+  - Predict the object-level effect of DROP TABLE
+  - Remove one target table without touching neighboring tables
 exercise:
   starter: "DROP TABLE "
   hints:
-    - "DROP TABLE removes the whole table, not just rows."
-    - "Name only the table you want gone — leave keepers alone."
-    - "Try: DROP TABLE obsolete;"
+    - "The requirement removes the table object itself, not only its rows."
+    - "Target obsolete and leave keepers untouched."
+    - "Use: DROP TABLE obsolete;"
   solution: "DROP TABLE obsolete;"
   preview:
     columns: ["table"]
@@ -35,21 +36,25 @@ sandbox_seed:
     - "INSERT INTO keepers VALUES (1);"
 ---
 
-`DELETE` removes rows. `DROP TABLE` removes the entire table — structure and data — like deleting a whole sheet from a workbook.
+Deleting data and deleting a database object are different operations. `DROP TABLE` removes the table definition itself, including the rows inside it.
 
-You have two temporary tables:
+## Mental model
 
-| table | purpose | sample rows |
+| Command | Rows after | Table after |
 | --- | --- | --- |
-| obsolete | no longer needed | empty |
-| keepers | still in use | one row (`id = 1`) |
+| `DELETE FROM obsolete;` | 0 | still exists |
+| `DROP TABLE obsolete;` | unavailable | no longer exists |
 
-| Command | What it removes |
-| --- | --- |
-| `DELETE FROM obsolete` | rows only — empty table remains |
-| `DROP TABLE obsolete` | the whole table |
+The sandbox starts with two independent table objects: `obsolete` and `keepers`. The requirement targets only one of them.
 
-Drop only `obsolete`. `keepers` must remain.
+## Predict before you run
+
+After `DROP TABLE obsolete;`:
+
+- resolving `obsolete` should fail / return no relation;
+- `keepers` should still exist with its row.
+
+This is an object-scope mutation, so table-name accuracy matters more than with a read-only query.
 
 ## Worked example
 
@@ -57,16 +62,28 @@ Drop only `obsolete`. `keepers` must remain.
 DROP TABLE obsolete;
 ```
 
-- `DROP TABLE` names the command.
-- `obsolete` is the table to remove.
-- After this, queries against `obsolete` fail; `keepers` is unchanged.
+The verifier checks that the temporary relation named `obsolete` can no longer be resolved.
+
+## Debug this
+
+```sql
+DELETE FROM obsolete;
+```
+
+This may leave zero rows, but the table object still exists. If the requirement says the table itself is obsolete, clearing its data is the wrong scope of change.
 
 ## Common mistakes
 
-- Dropping `keepers` by mistake — read the table name carefully.
-- Using `DELETE FROM obsolete` — that clears rows but leaves the empty table.
-- Writing `DROP TABLE obsolete, keepers` when the task asks for one table only.
+- Using `DELETE` when the whole table object must disappear.
+- Dropping the wrong table because the command is short and destructive.
+- Assuming `DROP TABLE` is reversible in normal application workflows; treat destructive DDL deliberately.
 
 ## Your turn
 
-Drop the `obsolete` table. Leave `keepers` in place.
+Drop only `obsolete`. Before running, state which database object should still exist afterward.
+
+## Quick check
+
+After `DELETE FROM t`, can `SELECT * FROM t` still be a valid query?
+
+**Answer:** yes, because `DELETE` removes rows but leaves table `t` itself.

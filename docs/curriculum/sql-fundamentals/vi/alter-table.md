@@ -3,19 +3,20 @@ id: sql-30-alter
 track: sql-fundamentals
 locale: vi
 slug: alter-table
-title: Đổi bảng với ALTER TABLE
+title: Thay đổi bảng với ALTER TABLE
 order: 30
 published: true
+can_do: "Tiến hóa schema của bảng đang tồn tại bằng ALTER TABLE và dự đoán cấu trúc sau thay đổi"
 objectives:
-  - Thêm cột bằng ALTER TABLE … ADD COLUMN
-  - Chọn kiểu cho cột mới
-  - Xác nhận cột mới tồn tại trên bảng
+  - Phân biệt thay đổi schema với thay đổi hàng dữ liệu
+  - Thêm cột có kiểu bằng ALTER TABLE
+  - Kiểm tra cấu trúc bảng sau thay đổi
 exercise:
   starter: "ALTER TABLE movies ADD COLUMN "
   hints:
-    - "ALTER TABLE đổi bảng đã có mà không cần tạo lại."
-    - "ADD COLUMN đặt tên cột mới và kiểu của nó."
-    - "Thử: ALTER TABLE movies ADD COLUMN year INT;"
+    - "Bảng đã tồn tại; hãy đổi schema thay vì tạo lại bảng."
+    - "ADD COLUMN cần cả tên cột và kiểu dữ liệu."
+    - "Dùng: ALTER TABLE movies ADD COLUMN year INT;"
   solution: "ALTER TABLE movies ADD COLUMN year INT;"
   preview:
     columns: ["id", "title"]
@@ -31,37 +32,66 @@ sandbox_seed:
     - "CREATE TEMP TABLE movies (id INT, title TEXT);"
 ---
 
-Bảng thay đổi theo thời gian. `ALTER TABLE` thêm (hoặc chỉnh) cột trên bảng đã có — như chèn thêm tiêu đề vào spreadsheet mà không bắt đầu lại.
+Ứng dụng thay đổi theo thời gian nên schema cũng phải tiến hóa. `ALTER TABLE` thay đổi hợp đồng của bảng đang tồn tại thay vì giả vờ đó là một bảng hoàn toàn mới.
 
-**movies** (hình dạng ban đầu)
+## Mô hình tư duy
 
-| id | title |
+Trước:
+
+| column | type |
 | --- | --- |
-|  |  |
+| id | INT |
+| title | TEXT |
 
-| Bước | Hình dạng |
+Biến đổi:
+
+```text
+schema hiện tại + ADD COLUMN year INT -> schema mới
+```
+
+Sau:
+
+| column | type |
 | --- | --- |
-| Trước | `id`, `title` |
-| Sau `ADD COLUMN year INT` | `id`, `title`, `year` |
+| id | INT |
+| title | TEXT |
+| year | INT |
 
-Dòng sẵn có sẽ nhận `NULL` ở `year` cho đến khi bạn điền. Sandbox này bắt đầu trống và kiểm tra cột tên `year` có tồn tại.
+Nếu bảng đã có dữ liệu, cột nullable mới sẽ là `NULL` ở các hàng cũ cho đến khi được điền.
+
+## Dự đoán trước khi chạy
+
+`ALTER TABLE movies ADD COLUMN year INT;` chỉ đổi **cấu trúc**, không thêm hay xóa movie. Verifier hỏi catalog của database xem cột `year` có tồn tại đúng một lần hay không.
 
 ## Ví dụ mẫu
 
 ```sql
-ALTER TABLE movies ADD COLUMN year INT;
+ALTER TABLE movies
+ADD COLUMN year INT;
 ```
 
-- `ALTER TABLE movies` chỉ định bảng cần đổi.
-- `ADD COLUMN year INT` tạo cột mới `year` chứa số nguyên.
-- Bạn không tạo lại bảng bằng `CREATE TABLE` — bạn mở rộng nó.
+Câu lệnh thể hiện rõ bảng hiện tại, thao tác cấu trúc, tên cột mới và kiểu dữ liệu.
+
+## Tìm lỗi
+
+```sql
+CREATE TABLE movies (year INT);
+```
+
+Đây không phải “thêm cột”; nó cố tạo một bảng khác cùng tên `movies`. Khi object đã tồn tại và cần đổi schema, hãy dùng `ALTER TABLE`.
 
 ## Lỗi thường gặp
 
-- Viết `CREATE TABLE` lần nữa thay vì `ALTER TABLE` — bảng đã tồn tại.
-- Quên kiểu (`ADD COLUMN year` thiếu `INT`).
-- Sai tên bảng (`actors` thay vì `movies`).
+- Tạo lại bảng thay vì alter bảng đang có.
+- Quên kiểu dữ liệu của cột mới.
+- Nhầm thay đổi schema với `UPDATE` giá trị của hàng.
 
 ## Thử ngay
 
-Thêm cột số nguyên tên `year` vào `movies`.
+Thêm cột số nguyên `year` vào `movies`. Trước khi chạy, hãy dự đoán danh sách cột sau thay đổi.
+
+## Tự kiểm tra
+
+Lệnh nào đổi cấu trúc: `UPDATE movies SET ...` hay `ALTER TABLE movies ...`?
+
+**Đáp án:** `ALTER TABLE` đổi cấu trúc; `UPDATE` đổi giá trị trong các hàng đã có.

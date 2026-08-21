@@ -6,16 +6,17 @@ slug: primary-key
 title: Primary keys
 order: 32
 published: true
+can_do: "Reason about row identity and insert data that satisfies PRIMARY KEY uniqueness and non-null requirements"
 objectives:
-  - Explain what a PRIMARY KEY does
-  - Insert a row that respects the primary key
-  - See why duplicate ids are rejected
+  - Treat a primary key as stable row identity
+  - Predict duplicate and NULL key violations
+  - Insert a row that satisfies the key contract
 exercise:
   starter: "INSERT INTO actors (id, name) VALUES "
   hints:
-    - "A primary key uniquely identifies each row — often an id."
-    - "Insert one row with a unique id and a name."
-    - "Try: INSERT INTO actors (id, name) VALUES (1, 'Ada');"
+    - "The id column is the row identity and must be unique and non-null."
+    - "The empty table can accept id 1 exactly once."
+    - "Use: INSERT INTO actors (id, name) VALUES (1, 'Ada');"
   solution: "INSERT INTO actors (id, name) VALUES (1, 'Ada');"
   preview:
     columns: ["id", "name"]
@@ -31,7 +32,9 @@ sandbox_seed:
     - "CREATE TEMP TABLE actors (id INT PRIMARY KEY, name TEXT);"
 ---
 
-A **primary key** is a column (or set of columns) that uniquely identifies each row — like an employee ID that must never repeat.
+A primary key is not merely “an indexed column”. Its main job is **row identity**: each row must be distinguishable by a key value that is present and unique.
+
+## Mental model
 
 ```sql
 CREATE TABLE actors (
@@ -40,43 +43,53 @@ CREATE TABLE actors (
 );
 ```
 
-| Rule | Meaning |
-| --- | --- |
-| Unique | two rows cannot share the same `id` |
-| Not null | every row needs an `id` |
-| Lookup | databases use the key to find a row quickly and to link tables later |
+| Candidate row | Valid? | Reason |
+| --- | --- | --- |
+| `(1, 'Ada')` | yes | first use of key 1 |
+| `(1, 'Grace')` after Ada | no | duplicate identity |
+| `(NULL, 'Linus')` | no | primary key cannot be NULL |
 
-Empty `actors` table in this sandbox (already created with a primary key on `id`):
+The key belongs to the row's identity; descriptive fields such as `name` can change without changing which row it is.
 
-| id | name |
-| --- | --- |
-|  |  |
+## Predict before you run
 
-After a valid insert:
-
-| id | name |
-| --- | --- |
-| 1 | Ada |
-
-Your task is not to create the key — it is already there. Insert one valid row.
+The table is empty. Predict whether `id = 1` can be inserted once, then whether the same id could be inserted again.
 
 ## Worked example
 
 ```sql
-INSERT INTO actors (id, name) VALUES (1, 'Ada');
+INSERT INTO actors (id, name)
+VALUES (1, 'Ada');
 ```
 
-- `id = 1` satisfies the primary key (unique and not null).
-- A second insert with `id = 1` would fail — duplicate key.
-- `name` is ordinary text; it is not the primary key here.
+| id | name |
+| ---: | --- |
+| 1 | Ada |
+
+The prepared schema enforces the key; your INSERT does not need to repeat `PRIMARY KEY`.
+
+## Debug this
+
+If the table already contained `id = 1`, this would fail:
+
+```sql
+INSERT INTO actors (id, name) VALUES (1, 'Grace');
+```
+
+The problem is not that Grace duplicates a name; the identity value `1` already belongs to another row.
 
 ## Common mistakes
 
-- Inserting the same `id` twice — the primary key rejects duplicates.
-- Leaving `id` out or setting it to `NULL` — primary keys require a value.
-- Trying to `ALTER` or recreate the table — the sandbox already defined the key.
-- Other column rules (UNIQUE, CHECK, DEFAULT) live in `table-constraints`.
+- Thinking duplicate primary-key values are acceptable if other columns differ.
+- Treating a nullable descriptive column as equivalent to row identity.
+- Recreating the constraint in an INSERT instead of satisfying the schema that already enforces it.
 
 ## Your turn
 
-Insert actor `id = 1`, `name = 'Ada'` into `actors`.
+Insert actor `id = 1`, `name = 'Ada'`. Explain why this id is valid in the current empty table.
+
+## Quick check
+
+Can two primary-key rows share the same key value?
+
+**Answer:** no. A primary key uniquely identifies each row and cannot be NULL.

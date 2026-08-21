@@ -6,16 +6,17 @@ slug: foreign-key
 title: Foreign keys
 order: 33
 published: true
+can_do: "Trace a foreign-key reference from child to parent and insert only references that preserve referential integrity"
 objectives:
-  - Explain how a FOREIGN KEY links tables
-  - Insert a child row that references a valid parent
-  - See why unknown parent ids are rejected
+  - Distinguish child identity from a parent reference
+  - Trace director_id to directors.id
+  - Predict valid and invalid foreign-key inserts
 exercise:
   starter: "INSERT INTO movies (id, title, director_id) VALUES "
   hints:
-    - "A foreign key points at a primary key in another table."
-    - "directors already has id = 1 ('Nolan') — use that director_id."
-    - "Try: INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);"
+    - "director_id must reference an id that already exists in directors."
+    - "The parent table contains Nolan at directors.id = 1."
+    - "Use: INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);"
   solution: "INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);"
   preview:
     columns: ["id", "name"]
@@ -34,58 +35,65 @@ sandbox_seed:
     - "CREATE TEMP TABLE movies (id INT PRIMARY KEY, title TEXT, director_id INT REFERENCES directors(id));"
 ---
 
-A **foreign key** is a column that points to a primary key in another table — like writing an employee ID on a timesheet so each line ties back to one person.
+A foreign key protects a relationship between tables. It says a reference stored in a child row must point to a valid key in the parent table.
 
-**directors** (parent — already filled)
+## Mental model
 
-| id | name |
-| --- | --- |
-| 1 | Nolan |
+Relationship:
 
-**movies** (child — empty; `director_id` must match a `directors.id`)
-
-| id | title | director_id |
-| --- | --- | --- |
-|  |  |  |
-
-```sql
-CREATE TABLE movies (
-  id INT PRIMARY KEY,
-  title TEXT,
-  director_id INT REFERENCES directors(id)
-);
+```text
+movies.director_id  ----references---->  directors.id
 ```
 
-| `director_id` | Allowed? |
-| --- | --- |
-| 1 | yes — Nolan exists |
-| 99 | no — no such director |
-| NULL | depends on column nullability (not used in this exercise) |
+Parent data:
 
-Both tables already exist in the sandbox; `directors` already has Nolan.
+| directors.id | name |
+| ---: | --- |
+| 1 | Nolan |
+
+Evaluate candidate child rows:
+
+| movie id | director_id | valid? | reason |
+| ---: | ---: | --- | --- |
+| 1 | 1 | yes | parent key 1 exists |
+| 2 | 99 | no | no director 99 |
+
+`movies.id` is the movie's own identity. `movies.director_id` is a reference to someone else's identity.
+
+## Predict before you run
+
+Predict whether an Inception row with `director_id = 1` passes the relationship contract, then predict the same row with `director_id = 99`.
 
 ## Worked example
 
 ```sql
-INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);
+INSERT INTO movies (id, title, director_id)
+VALUES (1, 'Inception', 1);
 ```
 
-- `id = 1` is this movie’s own primary key.
-- `director_id = 1` matches Nolan in `directors`.
-- The foreign key accepts the row because the parent key exists.
+The foreign key accepts the row because parent key `directors.id = 1` already exists.
 
-Result in `movies`:
+## Debug this
 
-| id | title | director_id |
-| --- | --- | --- |
-| 1 | Inception | 1 |
+```sql
+INSERT INTO movies (id, title, director_id)
+VALUES (1, 'Inception', 99);
+```
+
+The SQL shape is valid, but referential integrity fails. Debug foreign-key errors by tracing the child reference to the exact parent key it claims exists.
 
 ## Common mistakes
 
-- Using a `director_id` that is not in `directors` — the foreign key rejects it.
-- Confusing the movie `id` with `director_id` — they are different columns.
-- Trying to insert into `directors` instead of `movies`.
+- Confusing a row's own primary key with its foreign-key reference.
+- Referencing a parent id that has not been inserted.
+- Thinking a foreign key copies the parent row; it stores a key relationship, not duplicated parent data.
 
 ## Your turn
 
-Insert movie `id = 1`, `title = 'Inception'`, `director_id = 1`.
+Insert Inception with movie `id = 1` and `director_id = 1`. Trace the reference to Nolan before running.
+
+## Quick check
+
+Which table must contain `director_id = 1` as a valid parent key before the movie insert succeeds?
+
+**Answer:** `directors`, specifically `directors.id = 1`.

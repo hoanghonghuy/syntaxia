@@ -6,16 +6,17 @@ slug: creating-tables
 title: Tables and columns
 order: 29
 published: true
+can_do: "Read a CREATE TABLE schema as a data contract and insert values that match its columns and types"
 objectives:
-  - Understand CREATE TABLE column definitions
-  - Match INSERT column lists to typed columns
-  - Insert into a prepared empty table
+  - Read table, column, and type definitions
+  - Distinguish schema from the rows stored under that schema
+  - Insert a row that satisfies the prepared schema
 exercise:
   starter: "SELECT id, name FROM actors;"
   hints:
-    - "The empty actors table already exists — you only need to INSERT."
-    - "List columns (id, name) then VALUES with matching types."
-    - "Try: INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');"
+    - "The actors table already exists; read its schema first, then insert a matching row."
+    - "The column order is id INT, name TEXT."
+    - "Use: INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');"
   solution: "INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');"
   preview:
     columns: ["id", "name"]
@@ -31,7 +32,9 @@ sandbox_seed:
     - "CREATE TEMP TABLE actors (id INT, name TEXT);"
 ---
 
-A table is a named grid with typed columns — the “header row” of your spreadsheet, defined once.
+A table is more than a grid of values. Its **schema** is a contract that says which columns exist and what kind of values belong in each column.
+
+## Mental model
 
 ```sql
 CREATE TABLE actors (
@@ -40,44 +43,61 @@ CREATE TABLE actors (
 );
 ```
 
-| Part | Meaning |
+Read this definition before thinking about rows:
+
+| Schema part | Contract |
 | --- | --- |
 | `actors` | table name |
-| `id INT` | whole-number column |
-| `name TEXT` | text column |
+| `id INT` | `id` accepts whole numbers |
+| `name TEXT` | `name` accepts text |
 
-In this sandbox the empty `actors` table is already created for you (same shape). Your job is to add the first row with `INSERT`.
+Schema and data are different layers:
 
-**actors** (before your insert)
+| Layer | Example | Changes with |
+| --- | --- | --- |
+| structure | columns `id`, `name` | `CREATE/ALTER/DROP` |
+| data | row `(1, 'DiCaprio')` | `INSERT/UPDATE/DELETE` |
 
-| id | name |
-| --- | --- |
-|  |  |
+The sandbox has already created the empty table so this exercise can focus on using the contract correctly.
 
-**actors** (after a successful insert)
+## Predict before you run
 
-| id | name |
-| --- | --- |
-| 1 | DiCaprio |
+If you insert `(1, 'DiCaprio')`, predict the result of `SELECT id, name FROM actors`: one row, with an integer in `id` and text in `name`.
 
 ## Worked example
 
 ```sql
-INSERT INTO actors (id, name) VALUES (1, 'DiCaprio');
+INSERT INTO actors (id, name)
+VALUES (1, 'DiCaprio');
 ```
 
-- You do not need to run `CREATE TABLE` here — it is already done.
-- `(id, name)` lists the columns you fill.
-- `VALUES (1, 'DiCaprio')` fills `id` then `name` in that order.
-- Text values use **single** quotes.
+| id | name |
+| ---: | --- |
+| 1 | DiCaprio |
+
+The explicit column list makes the mapping visible and protects you from relying on an assumed physical column order.
+
+## Debug this
+
+```sql
+INSERT INTO actors (id, name)
+VALUES ('DiCaprio', 1);
+```
+
+The values are reversed relative to the schema. Debug inserts by matching each destination column to its value and type before running the statement.
 
 ## Common mistakes
 
-- Trying to `CREATE TABLE actors` again — the table already exists in the sandbox.
-- Using double quotes around the name (`"DiCaprio"`) instead of single quotes.
-- Inserting into the wrong table name (`movies` instead of `actors`).
-- Wanting UNIQUE / CHECK / DEFAULT on columns — see the later lesson `table-constraints`.
+- Treating schema and data as the same thing.
+- Omitting a column list and then losing track of which value maps to which column.
+- Using a text value where the schema expects a number, or vice versa.
 
 ## Your turn
 
-Insert `(1, 'DiCaprio')` into `actors`.
+Insert actor `id = 1`, `name = 'DiCaprio'`. Before running, map each value to the schema column it satisfies.
+
+## Quick check
+
+Does `INSERT` change the table's schema?
+
+**Answer:** no. It adds data that must conform to the existing schema.
