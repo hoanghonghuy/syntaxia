@@ -52,11 +52,14 @@ if ($me.Json.email -ne $email) {
 }
 Ok "auth/me"
 
+# Exact EN-locale inventories after the Language V3 starter migration.
+# Static curriculum tests lock file parity; this live API check verifies the
+# synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
-  @{ Track = "chinese-hsk"; Slug = "greetings"; MinLessons = 30 },
-  @{ Track = "english-basics"; Slug = "greetings"; MinLessons = 13 },
-  @{ Track = "japanese-jlpt"; Slug = "politeness"; MinLessons = 16 },
-  @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; MinLessons = 6 }
+  @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 29 },
+  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 10 },
+  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 15 },
+  @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
 
 $reviewLessonId = $null
@@ -67,9 +70,10 @@ foreach ($flow in $flows) {
 
   $list = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/lessons?track=$track&locale=en" -Session $session
   $lessons = @($list.Json)
-  if ($lessons.Count -lt $flow.MinLessons) {
-    Fail "$track lesson count $($lessons.Count) < $($flow.MinLessons)"
+  if ($lessons.Count -ne $flow.ExpectedLessons) {
+    Fail "$track lesson count $($lessons.Count) != expected $($flow.ExpectedLessons)"
   }
+  Ok "$track exact lesson inventory=$($lessons.Count)"
 
   if ($track -ne "chinese-it-vocab") {
     $unitRows = @($lessons | Where-Object { $_.unitId })
