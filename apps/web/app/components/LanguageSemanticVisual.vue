@@ -38,6 +38,21 @@
         <path class="visual-line" d="M118 111c16-8 28-8 42 0 14-8 26-8 42 0v20c-16-8-28-8-42 0-14-8-26-8-42 0z" />
         <path class="visual-line" d="M160 111v20" />
       </g>
+
+      <g v-else-if="visualKey === 'shop-counter-request'">
+        <rect class="visual-surface" x="34" y="110" width="252" height="28" rx="8" />
+        <rect class="visual-surface" x="178" y="64" width="46" height="36" rx="6" />
+        <path class="visual-line" d="M184 73h34M184 82h22" />
+        <circle class="visual-person-a" cx="88" cy="72" r="17" />
+        <path class="visual-person-a" d="M62 126c4-27 13-40 26-40s22 13 26 40z" />
+        <circle class="visual-person-b" cx="250" cy="72" r="17" />
+        <path class="visual-person-b" d="M224 126c4-27 13-40 26-40s22 13 26 40z" />
+        <path class="visual-line visual-arrow" d="M116 91c24 0 37-3 55-12m-9-6 9 6-6 10" />
+        <path class="visual-bubble" d="M108 36c0-10 9-18 21-18h26c12 0 21 8 21 18s-9 18-21 18h-15l-9 8 2-9c-14-1-25-7-25-17z" />
+        <circle class="visual-dot" cx="132" cy="36" r="3" />
+        <circle class="visual-dot" cx="143" cy="36" r="3" />
+        <circle class="visual-dot" cx="154" cy="36" r="3" />
+      </g>
     </svg>
   </div>
 </template>
