@@ -3,7 +3,7 @@ id: en-a1-u02-review
 track: english-basics
 locale: en
 slug: people-review
-title: Review: introduce people
+title: "Review: introduce people"
 order: 8
 published: true
 cefr_level: a1
