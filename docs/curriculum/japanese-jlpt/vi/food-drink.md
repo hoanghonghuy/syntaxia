@@ -7,6 +7,11 @@ title: Gọi một món đơn giản
 order: 5
 published: true
 jlpt_level: n5
+unit_id: ja-n5-cafe-04
+unit_title: "Gọi món tại quầy"
+unit_order: 4
+unit_can_do: "Yêu cầu một món ăn hoặc đồ uống và kết thúc một lượt giao tiếp ngắn tại quầy một cách lịch sự"
+unit_role: lesson
 can_do: "Yêu cầu một món ăn hoặc đồ uống đơn giản bằng N をください"
 pattern: "お茶をください。 / 水をください。"
 objectives:
