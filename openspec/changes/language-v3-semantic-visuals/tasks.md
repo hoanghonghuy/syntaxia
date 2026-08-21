@@ -9,4 +9,4 @@
 - [x] Add `check-language-visuals-v3.mjs` and wire it into `test:language-v3`.
 - [x] Update language content-quality rules and close the verified L2 smoke task.
 - [x] Run targeted Node 22 semantic-visual regression: 6/6 pass.
-- [ ] Verify feature-branch web build/smoke after publishing this single logical commit.
+- [x] Verify feature-branch web build/smoke after publishing: Vercel green after the `develop` sync on `870e865`.
