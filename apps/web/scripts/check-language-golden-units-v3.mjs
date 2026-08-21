@@ -137,6 +137,16 @@ const migratedUnits = [
       ['describe-review', 'review'],
     ],
   },
+  {
+    track: 'chinese-hsk',
+    unitId: 'zh-hsk-b1-travel-08',
+    unitOrder: '8',
+    nodes: [
+      ['transport', 'lesson'],
+      ['travel-checkpoint', 'checkpoint'],
+      ['travel-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
