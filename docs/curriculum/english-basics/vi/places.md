@@ -7,6 +7,11 @@ title: Hỏi một địa điểm ở đâu
 order: 6
 published: true
 cefr_level: a1
+unit_id: en-a1-find-way-03
+unit_title: "Tìm đường và địa điểm"
+unit_order: 3
+unit_can_do: "Xác nhận số phòng và hỏi vị trí một địa điểm quen thuộc"
+unit_role: lesson
 can_do: "Hỏi một địa điểm quen thuộc ở đâu và hiểu câu trả lời vị trí rất đơn giản"
 pattern: "Where's the …? / It's here. / It's over there."
 objectives:
