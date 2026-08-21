@@ -8,6 +8,11 @@ order: 11
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-travel-08
+unit_title: "Say how you travel"
+unit_order: 8
+unit_can_do: "Ask how someone is traveling and answer with a train, plane, or taxi choice"
+unit_role: lesson
 can_do: "Say whether you are taking a train, plane, or taxi in a short travel exchange"
 pattern: "我坐火车。/ 我坐飞机。/ 我打车。"
 objectives:
