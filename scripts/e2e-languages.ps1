@@ -56,9 +56,9 @@ Ok "auth/me"
 # Static curriculum tests lock file parity; this live API check verifies the
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
-  @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 29 },
+  @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 30 },
   @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 14 },
-  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 15 },
+  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 16 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
 
