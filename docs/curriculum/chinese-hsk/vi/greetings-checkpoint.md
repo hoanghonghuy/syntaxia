@@ -3,7 +3,7 @@ id: zh-hsk-b1-u01-checkpoint
 track: chinese-hsk
 locale: vi
 slug: greetings-checkpoint
-title: Checkpoint: chào hỏi
+title: "Checkpoint: chào hỏi"
 order: 2
 published: true
 hsk_band: 1
