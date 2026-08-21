@@ -32,6 +32,8 @@ const SLUGS = [
   'cafe-checkpoint',
   'cafe-review',
   'places',
+  'location-checkpoint',
+  'location-review',
 ]
 
 describe('japanese-jlpt curriculum slice', () => {
