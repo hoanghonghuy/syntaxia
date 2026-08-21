@@ -6,16 +6,17 @@ slug: right-join
 title: Keeping unmatched rows with RIGHT JOIN
 order: 21
 published: true
+can_do: "Reason about RIGHT JOIN as right-side preservation and identify an equivalent LEFT JOIN orientation"
 objectives:
-  - Keep every row from the right table even when the left side has no match
-  - Read NULL on the left side as “no match”
-  - Find directors with no movies using RIGHT JOIN and IS NULL
+  - Keep unmatched rows from the right input
+  - Detect missing left matches with IS NULL
+  - Relate RIGHT JOIN to LEFT JOIN with swapped table order
 exercise:
   starter: "SELECT name FROM directors;"
   hints:
-    - "RIGHT JOIN keeps every director, even when no movie points to them."
-    - "After the join, directors with no movies have movies.id as NULL."
-    - "Try: SELECT directors.name FROM movies RIGHT JOIN directors ON movies.director_id = directors.id WHERE movies.id IS NULL;"
+    - "The table that must be preserved is directors, which is written on the right."
+    - "After the join, directors with no movie have movies.id as NULL."
+    - "Use: SELECT directors.name FROM movies RIGHT JOIN directors ON movies.director_id = directors.id WHERE movies.id IS NULL;"
   solution: "SELECT directors.name FROM movies RIGHT JOIN directors ON movies.director_id = directors.id WHERE movies.id IS NULL;"
   preview:
     columns: ["id", "name"]
@@ -35,65 +36,80 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 1), (2, 'The Matrix', 1999, 2), (3, 'Interstellar', 2014, 1);"
 ---
 
-`RIGHT JOIN` is the mirror of `LEFT JOIN`: every row from the **right** table is kept. If the left table has no match, left-side columns become `NULL`. Use it when the table you must keep is written on the right of `JOIN`.
+RIGHT JOIN does not introduce a new matching mechanism. It uses the same `ON` rule and changes only which side is preserved when a match is missing.
 
-**directors** (full table)
+## Mental model
 
-| id | name |
+Compare the preservation rule:
+
+| Join form | Unmatched rows guaranteed to survive |
 | --- | --- |
-| 1 | Nolan |
-| 2 | Wachowski |
-| 3 | Villeneuve |
+| `A LEFT JOIN B` | A |
+| `A RIGHT JOIN B` | B |
 
-**movies** (full table)
+Here `directors` is on the right, so all three directors survive even though Villeneuve has no matching movie.
 
-| id | title | year | director_id |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | 1 |
-| 2 | The Matrix | 1999 | 2 |
-| 3 | Interstellar | 2014 | 1 |
+| director | matching movie? | movies.id after join |
+| --- | --- | --- |
+| Nolan | yes | non-NULL |
+| Wachowski | yes | non-NULL |
+| Villeneuve | no | NULL |
 
-| name | Has a movie? |
-| --- | --- |
-| Nolan | yes (Inception, Interstellar) |
-| Wachowski | yes (The Matrix) |
-| Villeneuve | no → left side `NULL` |
+## Predict before you run
+
+```sql
+SELECT directors.name, movies.title
+FROM movies
+RIGHT JOIN directors
+  ON movies.director_id = directors.id;
+```
+
+Predict that Villeneuve still appears with a NULL movie. Then `WHERE movies.id IS NULL` isolates exactly that director.
 
 ## Worked example
 
 ```sql
-SELECT movies.title, directors.name
+SELECT directors.name
 FROM movies
-RIGHT JOIN directors ON movies.director_id = directors.id
-ORDER BY directors.name, movies.title;
+RIGHT JOIN directors
+  ON movies.director_id = directors.id
+WHERE movies.id IS NULL;
 ```
-
-- `RIGHT JOIN directors` keeps every director.
-- Villeneuve has no movie, so `movies.title` is `NULL`.
-- `WHERE movies.id IS NULL` isolates directors with no films.
-- Many teams rewrite this as a `LEFT JOIN` with the tables swapped — same idea.
-
-Result of the full join (before the filter):
-
-| title | name |
-| --- | --- |
-| Inception | Nolan |
-| Interstellar | Nolan |
-| The Matrix | Wachowski |
-|  | Villeneuve |
-
-Directors with no movies:
 
 | name |
 | --- |
 | Villeneuve |
 
+The same logic can often be written more familiarly as:
+
+```sql
+SELECT directors.name
+FROM directors
+LEFT JOIN movies
+  ON movies.director_id = directors.id
+WHERE movies.id IS NULL;
+```
+
+Swapping table order turns the preserved right side into a preserved left side.
+
+## Debug this
+
+A learner says “RIGHT JOIN returns rows from the right table only.” Why is that wrong?
+
+Matched pairs still contain columns from **both** inputs. RIGHT only describes what happens to an unmatched right-side row; it does not discard the left side from successful matches.
+
 ## Common mistakes
 
-- Expecting `RIGHT JOIN` to keep unmatched **left** rows — that is `LEFT JOIN`.
-- Filtering with `WHERE movies.id = NULL` instead of `IS NULL`.
-- Forgetting that `LEFT JOIN` with tables swapped is often clearer than `RIGHT JOIN`.
+- Thinking RIGHT JOIN uses a different relationship than LEFT JOIN.
+- Testing missing matches with `= NULL`.
+- Using RIGHT JOIN when a swapped LEFT JOIN would make the query easier for the team to read.
 
 ## Your turn
 
-List the `name` of every director who has no matching movie (`movies.id IS NULL`).
+Return directors that have no matching movie. Before running, rewrite the query mentally as the equivalent LEFT JOIN to confirm which side must be preserved.
+
+## Quick check
+
+What is the simplest conceptual rewrite of `A RIGHT JOIN B`?
+
+**Answer:** `B LEFT JOIN A`, using the same matching relationship with the inputs swapped.

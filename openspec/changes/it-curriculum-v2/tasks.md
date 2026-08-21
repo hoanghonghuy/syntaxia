@@ -9,7 +9,7 @@
 - [ ] Verify migrated SQL GitHub Actions and existing sandbox/grading compatibility.
 - [x] Migrate Block B (orders 8–11), EN + VI, including mutation-state verification rules.
 - [x] Migrate Block C (orders 12–18), EN + VI, including aggregate and predicate mental models.
-- [ ] Migrate Block D (orders 19–25).
+- [x] Migrate Block D (orders 19–25), EN + VI, including join matching, outer-row preservation, UNION shape, and GROUP BY buckets.
 - [ ] Migrate Block E (orders 26–28).
 - [ ] Migrate Block F (orders 29–35).
 - [ ] Migrate Block G (orders 36–41).

@@ -3,19 +3,20 @@ id: sql-03-join
 track: sql-fundamentals
 locale: vi
 slug: inner-join
-title: Ghép bảng với INNER JOIN
+title: Kết hợp bảng với INNER JOIN
 order: 19
 published: true
+can_do: "Ghép các hàng liên quan từ hai bảng bằng điều kiện ON và dự đoán kết quả kết hợp"
 objectives:
-  - Ghép hai bảng liên quan qua khóa chung
-  - Chọn cột từ cả hai bảng trong một kết quả
-  - Thấy INNER JOIN bỏ dòng không khớp
+  - Xác định cột quan hệ trỏ sang bảng còn lại
+  - Trace các cặp hàng thỏa điều kiện join
+  - Chọn cột từ cả hai hàng đã match
 exercise:
   starter: "SELECT movies.title FROM movies;"
   hints:
-    - "movies.director_id khớp với directors.id — đó là khóa để JOIN."
-    - "Dùng INNER JOIN … ON để nối hai bảng."
-    - "Thử: SELECT movies.title, directors.name FROM movies INNER JOIN directors ON movies.director_id = directors.id ORDER BY movies.title;"
+    - "Quan hệ là movies.director_id -> directors.id."
+    - "Dùng INNER JOIN directors ON movies.director_id = directors.id."
+    - "Dùng: SELECT movies.title, directors.name FROM movies INNER JOIN directors ON movies.director_id = directors.id ORDER BY movies.title;"
   solution: "SELECT movies.title, directors.name FROM movies INNER JOIN directors ON movies.director_id = directors.id ORDER BY movies.title;"
   preview:
     columns: ["id", "title", "director_id"]
@@ -37,44 +38,40 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 1), (2, 'The Matrix', 1999, 2), (3, 'Interstellar', 2014, 1);"
 ---
 
-Dữ liệu thật thường tách nhiều sheet. Một bảng liệt kê phim; bảng khác liệt kê đạo diễn. Một id chung nối chúng — giống VLOOKUP trong Excel.
+Dữ liệu quan hệ thường được tách để không lặp tên đạo diễn trong mọi hàng phim. JOIN dựng lại góc nhìn cần dùng bằng cách match các hàng liên quan tại thời điểm truy vấn.
 
-**directors** (bảng đầy đủ)
+## Mô hình tư duy
 
-| id | name |
-| --- | --- |
-| 1 | Nolan |
-| 2 | Wachowski |
+Đừng nghĩ “trộn hai bảng”. Hãy nghĩ **tạo các cặp hàng hợp lệ theo quy tắc `ON`**.
 
-**movies** (bảng đầy đủ)
+| movie | director_id | directors.id khớp | name |
+| --- | ---: | ---: | --- |
+| Inception | 1 | 1 | Nolan |
+| The Matrix | 2 | 2 | Wachowski |
+| Interstellar | 1 | 1 | Nolan |
 
-| id | title | year | director_id |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | 1 |
-| 2 | The Matrix | 1999 | 2 |
-| 3 | Interstellar | 2014 | 1 |
+Quy tắc quan hệ là `movies.director_id = directors.id`.
 
-| title | director_id | Khớp đạo diễn? |
-| --- | --- | --- |
-| Inception | 1 | Nolan |
-| The Matrix | 2 | Wachowski |
-| Interstellar | 1 | Nolan |
+## Dự đoán trước khi chạy
+
+```sql
+SELECT movies.title, directors.name
+FROM movies
+INNER JOIN directors
+  ON movies.director_id = directors.id;
+```
+
+Dự đoán: **2 cột, 3 hàng**. Dataset này có match cho mọi phim. Với INNER JOIN, hàng không tạo được cặp hợp lệ sẽ không nằm trong kết quả.
 
 ## Ví dụ mẫu
 
 ```sql
 SELECT movies.title, directors.name
 FROM movies
-INNER JOIN directors ON movies.director_id = directors.id
+INNER JOIN directors
+  ON movies.director_id = directors.id
 ORDER BY movies.title;
 ```
-
-- `INNER JOIN directors` kéo bảng thứ hai vào.
-- `ON movies.director_id = directors.id` là quy tắc khớp (**khóa**).
-- `INNER JOIN` chỉ giữ dòng khớp được cả hai phía.
-- Nếu phim có `director_id` không tồn tại trong `directors`, phim đó sẽ **biến mất** khỏi kết quả (xem bài sau `left-join`).
-
-Kết quả:
 
 | title | name |
 | --- | --- |
@@ -82,12 +79,28 @@ Kết quả:
 | Interstellar | Nolan |
 | The Matrix | Wachowski |
 
+`ON` quyết định các hàng liên quan; `SELECT` quyết định cột nào từ các cặp đó xuất hiện.
+
+## Tìm lỗi
+
+```sql
+ON movies.id = directors.id
+```
+
+`movies.id` là định danh phim, không phải tham chiếu đạo diễn. Quan hệ nằm ở `movies.director_id`; match hai primary ID độc lập chỉ tạo các cặp tình cờ sai nghĩa.
+
 ## Lỗi thường gặp
 
-- Join sai cột (`movies.id = directors.id`) — ở đây khóa là `director_id`, không phải `id` của phim.
-- Chỉ chọn một bảng trong khi đề bài cần cả `title` và `name`.
-- Quên `ON …` sau `JOIN` — pattern này cần điều kiện khớp rõ ràng.
+- Join các cột vì giá trị trông giống nhau thay vì theo quan hệ thật.
+- Không qualify tên cột khi hai bảng có tên cột trùng nhau.
+- Mong hàng không match vẫn tồn tại trong INNER JOIN.
 
 ## Thử ngay
 
-Trả về mỗi `title` phim kèm `name` đạo diễn, sắp theo `movies.title`.
+Trả title của từng phim cùng name đạo diễn, sắp theo title. Trước khi chạy, trace ba cặp `director_id -> id`.
+
+## Tự kiểm tra
+
+`ON` chủ yếu định nghĩa điều gì?
+
+**Đáp án:** quy tắc quyết định hàng của hai input nào được phép ghép thành một cặp.

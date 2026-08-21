@@ -49,7 +49,7 @@ const expected = [
 
 // Only intentionally migrated slices are held to the V2 contract. Expand this
 // boundary after each coherent block is rewritten and reviewed.
-const v2Migrated = expected.slice(0, 19)
+const v2Migrated = expected.slice(0, 26)
 const mutationSlugs = new Set(['inserting-rows', 'updating-rows', 'deleting-rows'])
 
 function parse(md) {
