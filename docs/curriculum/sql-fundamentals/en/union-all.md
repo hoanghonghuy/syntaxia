@@ -6,16 +6,17 @@ slug: union-all
 title: Keeping duplicates with UNION ALL
 order: 37
 published: true
+can_do: "Choose UNION ALL when combining compatible result sets must preserve every source row, including duplicates"
 objectives:
-  - Stack two SELECT results with UNION ALL
-  - See that UNION ALL keeps duplicate values
-  - Contrast UNION ALL with UNION
+  - Stack compatible result sets vertically
+  - Predict duplicate preservation with UNION ALL
+  - Choose UNION versus UNION ALL from result semantics
 exercise:
   starter: "SELECT name FROM east;"
   hints:
-    - "UNION ALL stacks every row from both SELECTs, including duplicates."
-    - "If Ann appears in both tables, UNION ALL keeps both Ann rows."
-    - "Try: SELECT name FROM east UNION ALL SELECT name FROM west ORDER BY name;"
+    - "The requirement says keep every source row, including repeated Ann."
+    - "Stack the two compatible SELECTs with UNION ALL."
+    - "Use: SELECT name FROM east UNION ALL SELECT name FROM west ORDER BY name;"
   solution: "SELECT name FROM east UNION ALL SELECT name FROM west ORDER BY name;"
   preview:
     columns: ["name"]
@@ -39,42 +40,39 @@ sandbox_seed:
     - "INSERT INTO west VALUES (1, 'Ann'), (2, 'Cy');"
 ---
 
-`UNION` stacks two result lists and **removes duplicates**. Sometimes you want every row, even when the same value appears twice — like stacking two attendance sheets without deleting a name that signed both days. That is `UNION ALL`.
+`UNION` and `UNION ALL` both combine rows **vertically**. The decision is whether duplicate result rows are part of the data you must preserve.
 
-**east**
+## Mental model
 
-| id | name |
+Source results:
+
+| east | west |
 | --- | --- |
-| 1 | Ann |
-| 2 | Bo |
+| Ann | Ann |
+| Bo | Cy |
 
-**west**
+After stacking:
 
-| id | name |
-| --- | --- |
-| 1 | Ann |
-| 2 | Cy |
+| operation | output rows | count |
+| --- | --- | ---: |
+| `UNION` | Ann, Bo, Cy | 3 |
+| `UNION ALL` | Ann, Ann, Bo, Cy | 4 |
 
-Both lists contain `Ann`. With `UNION` you would see `Ann` once. With `UNION ALL` you see `Ann` twice.
+Contrast this with a JOIN: JOIN combines related columns horizontally; UNION-family operators stack compatible row shapes.
+
+## Predict before you run
+
+The same name `Ann` appears in both sources. Because the requirement says every occurrence matters, predict **4 rows**, not 3.
 
 ## Worked example
 
 ```sql
-SELECT name
-FROM east
+SELECT name FROM east
 UNION ALL
-SELECT name
-FROM west
+SELECT name FROM west
 ORDER BY name;
 ```
 
-- First `SELECT` returns Ann, Bo.
-- Second `SELECT` returns Ann, Cy.
-- `UNION ALL` stacks all four rows — no duplicate removal.
-- `ORDER BY name` sorts the combined list A→Z (both Ann rows stay).
-
-Result:
-
 | name |
 | --- |
 | Ann |
@@ -82,22 +80,30 @@ Result:
 | Bo |
 | Cy |
 
-Same data with `UNION` (for comparison — not your exercise):
+Choose semantics first. `UNION ALL` can also avoid duplicate-elimination work, but performance is not a reason to silently change required result semantics.
 
-| name |
-| --- |
-| Ann |
-| Bo |
-| Cy |
+## Debug this
 
-Only three rows, because the second Ann was dropped.
+```sql
+SELECT name FROM east
+UNION
+SELECT name FROM west;
+```
+
+The query runs, but one Ann disappears. This is a logical data-loss bug when duplicate occurrences represent meaningful source rows.
 
 ## Common mistakes
 
-- Using `UNION` when you need every duplicate — switch to `UNION ALL`.
-- Putting `ORDER BY` only on the first SELECT — put it after the whole `UNION ALL` chain.
-- Different column counts or types in the two SELECTs — both sides must line up.
+- Using `UNION` by habit when duplicates must be preserved.
+- Combining SELECTs with incompatible column counts/shapes.
+- Confusing vertical stacking with JOIN-based relationship matching.
 
 ## Your turn
 
-Combine every `name` from `east` and `west` with `UNION ALL`. Order by `name`. Keep both Ann rows.
+Combine every name from `east` and `west`, keep both Ann rows, and order the final result by name.
+
+## Quick check
+
+If duplicate rows must remain observable, which operator should you reach for first?
+
+**Answer:** `UNION ALL`.
