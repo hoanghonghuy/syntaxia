@@ -88,69 +88,82 @@ func ParseLessonFile(entry FileEntry) (domain.Lesson, error) {
 	if ex, ok := fm["exercise"].(map[string]any); ok {
 		l.Exercise = ex
 	}
-	// Language lessons: top-level vocab / hsk_band merge into exercise JSONB (no extra columns).
-	if vocab, ok := fm["vocab"]; ok {
+	ensureExercise := func() {
 		if l.Exercise == nil {
 			l.Exercise = map[string]any{}
 		}
+	}
+	// Language lessons: top-level authoring metadata is stored in exercise JSONB
+	// so the existing lesson schema remains stable while the player can evolve.
+	if vocab, ok := fm["vocab"]; ok {
+		ensureExercise()
 		if _, exists := l.Exercise["vocab"]; !exists {
 			l.Exercise["vocab"] = vocab
 		}
 	}
 	if band := getInt("hsk_band"); band > 0 {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["hskBand"]; !exists {
 			l.Exercise["hskBand"] = band
 		}
 	}
 	if ver := getStr("hsk_version"); ver != "" {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["hskVersion"]; !exists {
 			l.Exercise["hskVersion"] = ver
 		}
 	}
 	if cefr := getStr("cefr_level"); cefr != "" {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["cefrLevel"]; !exists {
 			l.Exercise["cefrLevel"] = cefr
 		}
 	}
 	if jlpt := getStr("jlpt_level"); jlpt != "" {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["jlptLevel"]; !exists {
 			l.Exercise["jlptLevel"] = jlpt
 		}
 	}
 	if steps, ok := fm["steps"]; ok {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["steps"]; !exists {
 			l.Exercise["steps"] = steps
 		}
 	}
 	if canDo := getStr("can_do"); canDo != "" {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["canDo"]; !exists {
 			l.Exercise["canDo"] = canDo
 		}
 	}
 	if pattern := getStr("pattern"); pattern != "" {
-		if l.Exercise == nil {
-			l.Exercise = map[string]any{}
-		}
+		ensureExercise()
 		if _, exists := l.Exercise["pattern"]; !exists {
 			l.Exercise["pattern"] = pattern
+		}
+	}
+	unitStrings := []struct {
+		frontmatter string
+		exercise    string
+	}{
+		{frontmatter: "unit_id", exercise: "unitId"},
+		{frontmatter: "unit_title", exercise: "unitTitle"},
+		{frontmatter: "unit_can_do", exercise: "unitCanDo"},
+		{frontmatter: "unit_role", exercise: "unitRole"},
+	}
+	for _, field := range unitStrings {
+		if value := strings.TrimSpace(getStr(field.frontmatter)); value != "" {
+			ensureExercise()
+			if _, exists := l.Exercise[field.exercise]; !exists {
+				l.Exercise[field.exercise] = value
+			}
+		}
+	}
+	if unitOrder := getInt("unit_order"); unitOrder > 0 {
+		ensureExercise()
+		if _, exists := l.Exercise["unitOrder"]; !exists {
+			l.Exercise["unitOrder"] = unitOrder
 		}
 	}
 	if seed, ok := fm["sandbox_seed"].(map[string]any); ok {
