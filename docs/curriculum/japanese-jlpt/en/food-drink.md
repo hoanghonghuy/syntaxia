@@ -7,6 +7,11 @@ title: Order one simple item
 order: 5
 published: true
 jlpt_level: n5
+unit_id: ja-n5-cafe-04
+unit_title: "Order at a café"
+unit_order: 4
+unit_can_do: "Ask for one food or drink and close a short counter exchange politely"
+unit_role: lesson
 can_do: "Ask for one simple food or drink using N をください"
 pattern: "お茶をください。 / 水をください。"
 objectives:
