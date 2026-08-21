@@ -8,6 +8,11 @@ order: 10
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-describe-07
+unit_title: "Describe something simply"
+unit_order: 7
+unit_can_do: "Describe an object's size or temperature naturally and respond to a simple description question"
+unit_role: lesson
 can_do: "Describe something as big/small or hot/cold with a natural beginner sentence"
 pattern: "很大 / 很小 / 很热 / 很冷"
 objectives:
