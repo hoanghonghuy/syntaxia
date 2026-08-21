@@ -3,6 +3,7 @@ package markdown
 import (
 	"bytes"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -23,10 +24,50 @@ func Parse(raw string) (Document, error) {
 		return Document{Body: raw}, nil
 	}
 	var fm map[string]any
-	if err := yaml.Unmarshal([]byte(parts[1]), &fm); err != nil {
+	frontmatter := normalizeLegacyHintScalars(parts[1])
+	if err := yaml.Unmarshal([]byte(frontmatter), &fm); err != nil {
 		return Document{}, err
 	}
 	return Document{Frontmatter: fm, Body: strings.TrimSpace(parts[2])}, nil
+}
+
+// normalizeLegacyHintScalars preserves older curriculum authoring where a
+// plain hint contains YAML-looking text such as "box-sizing: border-box".
+// Only list items nested under a hints: key are normalized; other frontmatter
+// remains strict YAML so malformed titles/metadata still fail fast.
+func normalizeLegacyHintScalars(raw string) string {
+	lines := strings.Split(raw, "\n")
+	hintsIndent := -1
+
+	for i, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		indent := len(line) - len(strings.TrimLeft(line, " \t"))
+
+		if hintsIndent >= 0 && trimmed != "" && indent <= hintsIndent {
+			hintsIndent = -1
+		}
+		if trimmed == "hints:" {
+			hintsIndent = indent
+			continue
+		}
+		if hintsIndent < 0 || indent <= hintsIndent {
+			continue
+		}
+
+		item := strings.TrimSpace(line)
+		if !strings.HasPrefix(item, "- ") {
+			continue
+		}
+		value := strings.TrimSpace(strings.TrimPrefix(item, "- "))
+		if value == "" || strings.HasPrefix(value, `"`) || strings.HasPrefix(value, `'`) || !strings.Contains(value, ": ") {
+			continue
+		}
+
+		leading := line[:len(line)-len(strings.TrimLeft(line, " \t"))]
+		lines[i] = leading + "- " + strconv.Quote(value)
+	}
+
+	return strings.Join(lines, "\n")
 }
 
 var (
