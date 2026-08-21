@@ -8,6 +8,11 @@ order: 4
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-people-02
+unit_title: "Introduce yourself and people close to you"
+unit_order: 2
+unit_can_do: "Exchange names and introduce a friend or family member"
+unit_role: lesson
 can_do: "Point out and introduce close family members in a simple photo conversation"
 pattern: "这是我… / 我家…"
 objectives:
