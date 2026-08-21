@@ -7,6 +7,11 @@ title: Giới thiệu người trong ảnh gia đình
 order: 4
 published: true
 jlpt_level: n5
+unit_id: ja-n5-people-02
+unit_title: "Tự giới thiệu và nói về người thân"
+unit_order: 2
+unit_can_do: "Tự giới thiệu, hỏi tên và xác định một người thân trong đoạn trao đổi lịch sự ngắn"
+unit_role: lesson
 can_do: "Xác định một đến hai người trong gia đình mình trong một đoạn hội thoại đơn giản về ảnh"
 pattern: "この人はだれですか。 / 母です。 / 兄です。"
 objectives:
