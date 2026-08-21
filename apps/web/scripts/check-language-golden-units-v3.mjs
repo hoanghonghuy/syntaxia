@@ -178,6 +178,16 @@ const migratedUnits = [
       ['number-review', 'review'],
     ],
   },
+  {
+    track: 'japanese-jlpt',
+    unitId: 'ja-n5-cafe-04',
+    unitOrder: '4',
+    nodes: [
+      ['food-drink', 'lesson'],
+      ['cafe-checkpoint', 'checkpoint'],
+      ['cafe-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
