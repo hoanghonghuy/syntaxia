@@ -8,6 +8,11 @@ order: 4
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-people-02
+unit_title: "Giới thiệu bản thân và người gần gũi"
+unit_order: 2
+unit_can_do: "Trao đổi tên và giới thiệu bạn bè hoặc người thân"
+unit_role: lesson
 can_do: "Chỉ và giới thiệu người thân trong một cuộc trò chuyện đơn giản về ảnh gia đình"
 pattern: "这是我… / 我家…"
 objectives:
