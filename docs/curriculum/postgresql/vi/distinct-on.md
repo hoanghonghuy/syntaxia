@@ -3,19 +3,21 @@ id: pg-15-distinct
 track: postgresql
 locale: vi
 slug: distinct-on
-title: Một hàng mỗi nhóm với DISTINCT ON
+title: Một hàng xác định mỗi nhóm với DISTINCT ON
 order: 15
 published: true
+can_do: "Dùng DISTINCT ON PostgreSQL cùng ORDER BY tương thích và xác định để chọn đúng một hàng mong muốn mỗi nhóm"
 objectives:
-  - Giữ một hàng mỗi khóa với DISTINCT ON
-  - Kết hợp DISTINCT ON với ORDER BY
+  - Giải thích vì sao DISTINCT ON giữ hàng đầu tiên trong nhóm
+  - Căn DISTINCT ON với các leftmost ORDER BY key
+  - Thêm tie-breaker khi winner phải xác định
 exercise:
   starter: "SELECT director, title, year FROM movies ORDER BY director, year DESC;"
   hints:
-    - "DISTINCT ON (director) giữ hàng đầu tiên cho mỗi đạo diễn."
-    - "ORDER BY phải bắt đầu bằng cùng biểu thức với DISTINCT ON, rồi tiêu chí chọn hàng thắng."
-    - "Thử: SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC;"
-  solution: "SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC;"
+    - "DISTINCT ON (director) giữ hàng được sort đầu tiên cho mỗi director."
+    - "ORDER BY phải bắt đầu bằng director, rồi xếp year mới nhất trước."
+    - "Dùng: SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC, id DESC;"
+  solution: "SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC, id DESC;"
   preview:
     columns: ["id", "director", "title", "year"]
     rows:
@@ -34,42 +36,60 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Nolan', 'Inception', 2010), (2, 'Nolan', 'Interstellar', 2014), (3, 'Villeneuve', 'Arrival', 2016), (4, 'Villeneuve', 'Dune', 2021);"
 ---
 
-Bạn có thể muốn “phim mới nhất mỗi đạo diễn” — một hàng mỗi người, không phải mọi phim. `DISTINCT ON (cột)` của PostgreSQL giữ hàng đầu tiên cho mỗi giá trị khác nhau của cột đó, sau khi sắp xếp.
+`DISTINCT ON` là shortcut riêng của PostgreSQL cho “chọn một hàng mỗi nhóm”. Ý quan trọng là nó giữ **hàng đầu tiên sau khi sort**, nên ORDER BY định nghĩa winner.
 
-| id | director | title | year |
-| --- | --- | --- | --- |
-| 1 | Nolan | Inception | 2010 |
-| 2 | Nolan | Interstellar | 2014 |
-| 3 | Villeneuve | Arrival | 2016 |
-| 4 | Villeneuve | Dune | 2021 |
+## Mô hình tư duy
+
+Pipeline:
+
+```text
+sort theo group + tiêu chí winner -> DISTINCT ON giữ hàng đầu mỗi group
+```
+
+Với Nolan, year giảm dần đặt Interstellar trước Inception. Với Villeneuve, Dune trước Arrival.
+
+PostgreSQL yêu cầu expression của `DISTINCT ON` khớp các expression ngoài cùng bên trái của `ORDER BY`. Các key sau đó quyết định precedence trong nhóm.
+
+## Dự đoán trước khi chạy
+
+Một winner mỗi director: Nolan → Interstellar; Villeneuve → Dune.
 
 ## Ví dụ mẫu
 
 ```sql
 SELECT DISTINCT ON (director) director, title
 FROM movies
-ORDER BY director, year DESC;
+ORDER BY director, year DESC, id DESC;
 ```
-
-- `DISTINCT ON (director)` giữ một hàng mỗi đạo diễn.
-- `ORDER BY director, year DESC` phải bắt đầu bằng `director`, rồi năm mới nhất trước để hàng giữ lại là phim mới nhất.
-- Không có `ORDER BY` khớp, hàng được giữ không có ý nghĩa rõ.
-
-Kết quả:
 
 | director | title |
 | --- | --- |
 | Nolan | Interstellar |
 | Villeneuve | Dune |
 
-Đây là dạng đặc thù PostgreSQL; SQL di động thường dùng hàm cửa sổ hoặc subquery.
+`id DESC` là tie-breaker nếu hai hàng cùng director và year; thiếu ordering đủ mạnh thì “hàng đầu” vẫn có thể mơ hồ.
+
+## Tìm lỗi
+
+```sql
+SELECT DISTINCT ON (director) director, title
+FROM movies;
+```
+
+Query yêu cầu một hàng mỗi director nhưng không nói hàng nào được ưu tiên. SQL chạy được vẫn có thể nondeterministic về semantics.
 
 ## Lỗi thường gặp
 
-- Quên `ORDER BY` bắt đầu bằng cùng cột với `DISTINCT ON`.
-- Chỉ sắp theo `year` mà không có `director` trước.
-- Kỳ vọng mọi phim xuất hiện — `DISTINCT ON` cố ý bỏ phần dư.
+- Bỏ ORDER BY rồi giả định hàng đầu có ý nghĩa.
+- Không bắt đầu ORDER BY bằng expression của DISTINCT ON.
+- Quên tie-breaker khi business rule cần winner ổn định duy nhất.
 
 ## Thử ngay
 
-Với mỗi `director`, trả về `director` và `title` của phim mới nhất.
+Trả movie mới nhất cho mỗi director bằng `DISTINCT ON`, kèm tie-breaker xác định.
+
+## Tự kiểm tra
+
+Điều gì quyết định hàng nào sống sót trong mỗi DISTINCT ON group?
+
+**Đáp án:** hàng đứng đầu theo chuỗi ORDER BY tương thích.
