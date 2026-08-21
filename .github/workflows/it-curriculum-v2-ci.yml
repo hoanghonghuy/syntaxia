@@ -30,6 +30,8 @@ jobs:
         run: node scripts/verify-javascript-v2.mjs
       - name: Verify HTML V2 contract
         run: node scripts/verify-html-v2.mjs
+      - name: Verify CSS V2 contract
+        run: node scripts/verify-css-v2.mjs
 
   web:
     name: Web · production build

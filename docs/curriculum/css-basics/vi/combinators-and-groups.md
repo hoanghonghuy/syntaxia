@@ -3,84 +3,86 @@ id: css-03-combinators
 track: css-basics
 locale: vi
 slug: combinators-and-groups
-title: Combinator và danh sách selector
+title: Quan hệ trong selector
 order: 3
 published: true
+can_do: "Đọc quan hệ descendant và child từ cây HTML rồi viết selector chỉ target các element trong đúng structural context"
 objectives:
-  - Phân biệt descendant (khoảng trắng) và child (`>`)
-  - Nhận biết sibling (`+`, `~`) ở mức cơ bản
-  - Nhóm nhiều selector bằng dấu phẩy
+  - Phân biệt descendant với direct-child relationship
+  - Nhận biết adjacent/general sibling relationship
+  - Hiểu selector list là cách dùng chung declaration cho nhiều target
 exercise:
   mode: both
   starterHtml: |
-    <article><p>A</p></article>
+    <article>
+      <p>Inside article</p>
+      <div><p>Nested deeper</p></div>
+    </article>
+    <p>Outside article</p>
   starter: |
-    /* Style paragraphs inside article */
-    
+    /* TODO: làm mọi paragraph nằm trong article thành màu green */
   hints:
-    - "Selector con cháu: article rồi dấu cách rồi p."
-    - Thêm khai báo color.
-    - Dấu cách nghĩa là “bên trong”, không chỉ con trực tiếp.
+    - Quan hệ cần target là descendant, không chỉ direct child.
+    - Dấu cách giữa selector nghĩa là “nằm bên trong ở bất kỳ độ sâu nào”.
+    - Dùng: article p { color: green; }
   solution: |
     article p { color: green; }
   expected:
-    type: cssIncludes
-    needles:
-      - article p
+    type: cssRules
+    rules:
+      - selector: article p
+        declarations:
+          color: green
 ---
 
-**Combinator** nối các phần selector để mô tả *quan hệ* giữa phần tử: nằm bên trong, là con trực tiếp, hoặc là anh/em kế bên. **Danh sách selector** dùng dấu phẩy để áp cùng style cho nhiều selector khác nhau.
+Combinator biến cây HTML thành điều kiện selector.
 
-| Cú pháp | Tên thường gọi | Ý nghĩa đơn giản |
-| --- | --- | --- |
-| `A B` | Descendant | `B` nằm đâu đó trong `A` |
-| `A > B` | Child | `B` là con *trực tiếp* của `A` |
-| `A + B` | Adjacent sibling | `B` đứng ngay sau `A` cùng cấp |
-| `A ~ B` | General sibling | `B` đứng sau `A` cùng cấp (không nhất thiết sát) |
-| `A, B` | Selector list | Style cho cả `A` và `B` |
+## Mô hình tư duy
+
+| Selector | Quan hệ |
+| --- | --- |
+| `article p` | p ở bất kỳ đâu bên trong article |
+| `article > p` | p có parent trực tiếp là article |
+| `h2 + p` | p là sibling đứng ngay sau h2 |
+| `h2 ~ p` | các p sibling đứng sau h2 |
+| `h1, h2` | selector list: dùng cùng declaration cho cả hai target |
+
+Dấu cách trong descendant selector là cú pháp có ý nghĩa.
+
+## Dự đoán kết quả hiển thị
+
+Với `article` chứa một paragraph trực tiếp và một paragraph khác nằm trong `div`, hãy dự đoán `article p` match cả hai. `article > p` chỉ match direct child.
 
 ## Ví dụ mẫu
 
-```html
-<article>
-  <h2>Ghi chú</h2>
-  <p>Mở đầu.</p>
-  <p class="tip">Mẹo nhỏ.</p>
-</article>
-<p>Ngoài article.</p>
+```css
+article p { color: green; }
+article > h2 { margin-top: 0; }
+h1, h2 { font-family: sans-serif; }
 ```
+
+Đọc quan hệ trong HTML trước khi chọn combinator; đừng chọn chỉ dựa trên vị trí hình ảnh hiện tại.
+
+## Tìm lỗi
 
 ```css
-article p {
-  color: #333;
-}
-
-article > p {
-  margin-left: 8px;
-}
-
-h2 + p {
-  font-weight: bold;
-}
-
-h2, .tip {
-  color: teal;
-}
+article > p { color: green; }
 ```
 
-- `article p` chọn mọi `p` bên trong `article` (kể cả lồng sâu hơn — ở đây là con trực tiếp).
-- `article > p` chỉ `p` là con trực tiếp của `article`.
-- `h2 + p` chọn đoạn “Mở đầu.” vì nó đứng ngay sau `h2`.
-- `h2, .tip` cùng màu `teal` cho tiêu đề và phần tử class `tip`.
-
-Đoạn “Ngoài article.” không khớp `article p`.
+Nếu yêu cầu là “mọi paragraph ở bất kỳ đâu trong article”, child combinator quá hẹp: paragraph lồng dưới element khác sẽ bị bỏ sót.
 
 ## Lỗi thường gặp
 
-- Nhầm khoảng trắng `article p` với `article > p` — descendant rộng hơn; child chặt hơn.
-- Quên rằng `+` chỉ khớp phần tử *ngay sau* — có thẻ xen giữa thì `h2 + p` không khớp.
-- Viết `h2 .tip` (có khoảng trắng) khi muốn danh sách — khoảng trắng là descendant; danh sách dùng dấu phẩy: `h2, .tip`.
+- Xem descendant space và child `>` là tương đương.
+- Tạo selector quá dài phụ thuộc vào độ sâu markup tình cờ.
+- Nhầm comma của selector list với descendant relationship.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để chọn p bên trong article. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Target mọi paragraph trong `article`, kể cả paragraph lồng sâu, và để paragraph ngoài article không bị ảnh hưởng.
+
+## Tự kiểm tra
+
+Selector nào rộng hơn trong article: `article p` hay `article > p`?
+
+**Đáp án:** `article p` vì nó match descendant ở bất kỳ độ sâu nào.

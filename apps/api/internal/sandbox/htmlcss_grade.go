@@ -24,6 +24,8 @@ func GradeHtmlCss(expected map[string]any, input HtmlCssGradeInput) (bool, strin
 	switch typ {
 	case "htmlTags":
 		return gradeHtmlTags(expected, input.HTML)
+	case "cssRules":
+		return gradeCSSRules(expected, input.CSS)
 	case "cssIncludes":
 		return gradeIncludes(expected, normalizeWhitespace(input.CSS), "CSS")
 	case "htmlIncludes":
@@ -273,6 +275,168 @@ func gradeHTMLSharedAttributeValue(spec map[string]any, elements []htmlElementIn
 		}
 	}
 	return false, fmt.Sprintf("expected at least %d <%s> elements to share %s", minCount, tag, attr)
+}
+
+type cssRule struct {
+	selector     string
+	declarations map[string]string
+}
+
+func gradeCSSRules(expected map[string]any, rawCSS string) (bool, string, string) {
+	rawRules, ok := expected["rules"].([]any)
+	if !ok || len(rawRules) == 0 {
+		return false, "invalid_expected", "invalid expected CSS rules"
+	}
+
+	rules, err := parseCSSRules(rawCSS)
+	if err != nil {
+		return false, "wrong_result", "could not parse CSS rules"
+	}
+
+	for _, rawRule := range rawRules {
+		spec, ok := rawRule.(map[string]any)
+		if !ok {
+			return false, "invalid_expected", "invalid expected CSS rule"
+		}
+		selector, _ := spec["selector"].(string)
+		selector = normalizeCSSSelector(selector)
+		if selector == "" {
+			return false, "invalid_expected", "missing expected CSS selector"
+		}
+		expectedDecls, ok := anyStringMap(spec["declarations"])
+		if !ok || len(expectedDecls) == 0 {
+			return false, "invalid_expected", "missing expected CSS declarations"
+		}
+		for property, value := range expectedDecls {
+			delete(expectedDecls, property)
+			expectedDecls[strings.ToLower(strings.TrimSpace(property))] = normalizeCSSValue(value)
+		}
+
+		matched := false
+		for _, rule := range rules {
+			if rule.selector != selector {
+				continue
+			}
+			if cssDeclarationsContain(rule.declarations, expectedDecls) {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			return false, "wrong_result", fmt.Sprintf("expected CSS rule for %s with required declarations", selector)
+		}
+	}
+	return true, "", ""
+}
+
+func parseCSSRules(raw string) ([]cssRule, error) {
+	css := stripCSSComments(raw)
+	rules := []cssRule{}
+	pos := 0
+	for pos < len(css) {
+		rest := css[pos:]
+		openRel := strings.Index(rest, "{")
+		if openRel < 0 {
+			if strings.TrimSpace(rest) != "" {
+				return nil, fmt.Errorf("trailing CSS without rule block")
+			}
+			break
+		}
+		open := pos + openRel
+		selectorText := strings.TrimSpace(css[pos:open])
+		if selectorText == "" {
+			return nil, fmt.Errorf("empty CSS selector")
+		}
+		closeRel := strings.Index(css[open+1:], "}")
+		if closeRel < 0 {
+			return nil, fmt.Errorf("unclosed CSS rule")
+		}
+		close := open + 1 + closeRel
+		body := css[open+1 : close]
+		if strings.Contains(body, "{") {
+			return nil, fmt.Errorf("nested CSS blocks are not supported in basics grader")
+		}
+		decls, err := parseCSSDeclarations(body)
+		if err != nil {
+			return nil, err
+		}
+		for _, rawSelector := range strings.Split(selectorText, ",") {
+			selector := normalizeCSSSelector(rawSelector)
+			if selector == "" {
+				return nil, fmt.Errorf("empty selector in selector list")
+			}
+			rules = append(rules, cssRule{selector: selector, declarations: decls})
+		}
+		pos = close + 1
+	}
+	return rules, nil
+}
+
+func parseCSSDeclarations(body string) (map[string]string, error) {
+	decls := map[string]string{}
+	for _, rawDecl := range strings.Split(body, ";") {
+		rawDecl = strings.TrimSpace(rawDecl)
+		if rawDecl == "" {
+			continue
+		}
+		parts := strings.SplitN(rawDecl, ":", 2)
+		if len(parts) != 2 {
+			return nil, fmt.Errorf("invalid CSS declaration")
+		}
+		property := strings.ToLower(strings.TrimSpace(parts[0]))
+		value := normalizeCSSValue(parts[1])
+		if property == "" || value == "" {
+			return nil, fmt.Errorf("invalid CSS declaration")
+		}
+		decls[property] = value
+	}
+	if len(decls) == 0 {
+		return nil, fmt.Errorf("CSS rule has no declarations")
+	}
+	return decls, nil
+}
+
+func stripCSSComments(raw string) string {
+	var out strings.Builder
+	for i := 0; i < len(raw); {
+		if i+1 < len(raw) && raw[i] == '/' && raw[i+1] == '*' {
+			end := strings.Index(raw[i+2:], "*/")
+			if end < 0 {
+				break
+			}
+			i += end + 4
+			continue
+		}
+		out.WriteByte(raw[i])
+		i++
+	}
+	return out.String()
+}
+
+func normalizeCSSSelector(selector string) string {
+	s := strings.Join(strings.Fields(strings.TrimSpace(selector)), " ")
+	for _, combinator := range []string{">", "+", "~"} {
+		s = strings.ReplaceAll(s, " "+combinator+" ", combinator)
+		s = strings.ReplaceAll(s, " "+combinator, combinator)
+		s = strings.ReplaceAll(s, combinator+" ", combinator)
+	}
+	return strings.ToLower(s)
+}
+
+func normalizeCSSValue(value string) string {
+	v := strings.ToLower(strings.Join(strings.Fields(strings.TrimSpace(value)), " "))
+	v = strings.ReplaceAll(v, ", ", ",")
+	return v
+}
+
+func cssDeclarationsContain(actual, expected map[string]string) bool {
+	for property, expectedValue := range expected {
+		actualValue, ok := actual[property]
+		if !ok || actualValue != expectedValue {
+			return false
+		}
+	}
+	return true
 }
 
 func lowerString(v any) string {

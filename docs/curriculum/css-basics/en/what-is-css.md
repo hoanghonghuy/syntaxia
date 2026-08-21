@@ -3,41 +3,57 @@ id: css-00-intro
 track: css-basics
 locale: en
 slug: what-is-css
-title: What is CSS?
+title: CSS as rules over HTML
 order: 0
 published: true
+can_do: "Trace a CSS rule from selector match to declaration and predict which existing HTML element changes presentation"
 objectives:
-  - Explain CSS as the presentation layer of a web page
-  - Distinguish HTML structure from CSS style
-  - Recognize how a stylesheet attaches to a page
+  - Separate HTML semantics from CSS presentation
+  - Read selector, property, and value as one styling rule
+  - Predict the visible effect only on matching elements
 exercise:
   mode: both
   starterHtml: |
     <h1>Welcome</h1>
+    <p>Start here.</p>
   starter: |
-    /* Style the h1 heading */
-    
+    /* TODO: make only the h1 text teal */
   hints:
-    - Target h1 with a type selector.
-    - Add a color property inside curly braces.
-    - End the declaration with a semicolon.
+    - The target is the h1 element, so use the type selector h1.
+    - The property that changes text color is color.
+    - Use: h1 { color: teal; }
   solution: |
     h1 { color: teal; }
   expected:
-    type: cssIncludes
-    needles:
-      - color
+    type: cssRules
+    rules:
+      - selector: h1
+        declarations:
+          color: teal
 ---
 
-HTML labels *what* content is (a heading, a paragraph, a link). **CSS** (Cascading Style Sheets) describes *how* that content should look: colors, spacing, fonts, and layout. Without CSS, pages are readable but plain. With CSS, the same HTML can look like a newspaper, a product card, or a quiet reading layout.
+CSS does not create the page structure; it attaches presentation rules to HTML that already exists.
 
-Think of a printed flyer. The words and section titles are the content (HTML). The choice of typeface, ink color, and margins is the design (CSS). You can redesign the flyer without rewriting every sentence.
+## Mental model
 
-| Layer | Job | Example |
-| --- | --- | --- |
-| HTML | Structure and meaning | `<h1>Welcome</h1>` |
-| CSS | Presentation | Make that heading green and larger |
-| How they connect | Stylesheet linked or embedded | A `.css` file, or a `<style>` block |
+```text
+HTML element -> selector match? -> declarations -> rendered style
+```
+
+For `h1 { color: teal; }`, the browser first finds matching `h1` elements, then applies the `color` declaration to them. A paragraph does not change just because it sits nearby.
+
+## Predict the rendered result
+
+```html
+<h1>Welcome</h1>
+<p>Start here.</p>
+```
+
+```css
+h1 { color: teal; }
+```
+
+Predict before previewing: the heading text becomes teal; the paragraph keeps its current color.
 
 ## Worked example
 
@@ -48,18 +64,28 @@ h1 {
 }
 ```
 
-- `h1` is the **selector**: it targets every `h1` element in the HTML.
-- Inside the curly braces, each line is a **declaration**: a property (`color`) and a value (`teal`).
-- Together, the selector and its declarations form a **rule**. The browser applies matching rules when it paints the page.
+A rule is **selector + declarations**. Each declaration is **property: value**. The HTML keeps its heading semantics even if the visual design changes completely.
 
-CSS does not replace HTML. It only styles elements that already exist in the document.
+## Debug this
+
+```css
+p { color: teal; }
+```
+
+The syntax is valid, but it targets the wrong element for a heading-color requirement. Debug CSS by asking both “is the declaration right?” and “does this selector match the intended element?”.
 
 ## Common mistakes
 
-- Trying to “write content” in CSS — headings and paragraphs still belong in HTML; CSS only styles them.
-- Expecting one stylesheet to magically invent missing markup — if there is no `h1` in the HTML, a `h1 { ... }` rule has nothing to style.
-- Confusing CSS with JavaScript — CSS changes appearance; it does not run click logic or fetch data.
+- Expecting CSS to invent missing HTML content.
+- Checking only the property while ignoring which selector receives it.
+- Confusing appearance changes with semantic changes.
 
 ## Your turn
 
-Use the sandbox below to style the heading color. When the checker shows **Correct**, mark this lesson complete.
+Make only the existing `h1` teal. The grader now requires `color: teal` on an actual `h1` rule.
+
+## Quick check
+
+If no `h1` exists in the HTML, what does `h1 { color: teal; }` visibly change?
+
+**Answer:** nothing; the selector matches no element.
