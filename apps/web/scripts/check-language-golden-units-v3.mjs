@@ -64,6 +64,16 @@ const migratedUnits = [
       ['find-way-review', 'review'],
     ],
   },
+  {
+    track: 'english-basics',
+    unitId: 'en-a1-cafe-04',
+    unitOrder: '4',
+    nodes: [
+      ['food-drink', 'lesson'],
+      ['cafe-checkpoint', 'checkpoint'],
+      ['cafe-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
@@ -139,7 +149,9 @@ describe('Language V3 golden communicative units', () => {
           assertV3Node(body, label)
           roles.push(role)
         }
-        assert.deepEqual(roles, ['lesson', 'lesson', 'checkpoint', 'review'])
+        assert.deepEqual(roles, unit.nodes.map(([, role]) => role))
+        assert.equal(roles.at(-2), 'checkpoint')
+        assert.equal(roles.at(-1), 'review')
       }
     }
   })
