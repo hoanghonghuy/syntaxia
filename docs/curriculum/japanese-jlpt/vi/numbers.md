@@ -7,6 +7,11 @@ title: Nghe và nói một con số đơn giản
 order: 3
 published: true
 jlpt_level: n5
+unit_id: ja-n5-number-03
+unit_title: "Nghe và nói một con số"
+unit_order: 3
+unit_can_do: "Hỏi và nói một con số đơn giản từ một đến mười trong một đoạn trao đổi ngắn"
+unit_role: lesson
 can_do: "Hiểu các số từ một đến mười và trả lời một câu hỏi số đơn giản"
 pattern: "何番ですか。 / 八番です。"
 objectives:
