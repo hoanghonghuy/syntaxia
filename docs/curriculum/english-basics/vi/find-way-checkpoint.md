@@ -3,7 +3,7 @@ id: en-a1-u03-checkpoint
 track: english-basics
 locale: vi
 slug: find-way-checkpoint
-title: Kiểm tra: tìm đường và địa điểm
+title: "Kiểm tra: tìm đường và địa điểm"
 order: 9
 published: true
 cefr_level: a1
