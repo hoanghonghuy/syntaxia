@@ -8,6 +8,11 @@ order: 7
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-counter-05
+unit_title: "Gọi món tại quầy"
+unit_order: 5
+unit_can_do: "Gọi một món ăn hoặc đồ uống đơn giản và phản hồi một câu hỏi ngắn tại quầy"
+unit_role: lesson
 can_do: "Gọi một đồ uống hoặc món ăn cơ bản và phản hồi lịch sự tại quầy"
 pattern: "我要… / 喝水 / 吃米饭"
 objectives:
