@@ -14,6 +14,7 @@ published: true
 unit_id: en-a1-meeting-01
 unit_title: Meet someone
 unit_order: 1
+unit_node_order: 1
 unit_can_do: Start, sustain, and close a short first meeting
 unit_role: lesson
 exercise:
@@ -36,11 +37,12 @@ Body.
 	}
 
 	want := map[string]any{
-		"unitId":    "en-a1-meeting-01",
-		"unitTitle": "Meet someone",
-		"unitOrder": 1,
-		"unitCanDo": "Start, sustain, and close a short first meeting",
-		"unitRole":  "lesson",
+		"unitId":        "en-a1-meeting-01",
+		"unitTitle":     "Meet someone",
+		"unitOrder":     1,
+		"unitNodeOrder": 1,
+		"unitCanDo":     "Start, sustain, and close a short first meeting",
+		"unitRole":      "lesson",
 	}
 	for key, expected := range want {
 		if got := lesson.Exercise[key]; got != expected {
