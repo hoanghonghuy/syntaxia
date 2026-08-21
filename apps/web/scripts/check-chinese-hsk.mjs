@@ -19,6 +19,8 @@ const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 const slugs = [
   'greetings',
+  'greetings-checkpoint',
+  'greetings-review',
   'pronouns',
   'numbers',
   'family',
@@ -57,7 +59,7 @@ describe('Mandarin runtime contract', () => {
 })
 
 describe('Mandarin HSK Band 1 v3 curriculum', () => {
-  it('ships exactly twelve paired EN/VI lessons', () => {
+  it('ships fourteen paired EN/VI language nodes', () => {
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${locale}`)
       assert.equal(existsSync(dir), true)
