@@ -7,6 +7,11 @@ title: Order a simple food or drink
 order: 5
 published: true
 cefr_level: a1
+unit_id: en-a1-cafe-04
+unit_title: "Order at a café"
+unit_order: 4
+unit_can_do: "Order one item politely and finish a simple café exchange"
+unit_role: lesson
 can_do: "Order one simple food or drink politely and understand a basic confirmation"
 pattern: "I'd like …, please. / Anything else? / That's all, thank you."
 objectives:
