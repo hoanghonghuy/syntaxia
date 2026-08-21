@@ -1,5 +1,5 @@
 <template>
-  <div class="hub-page-wide">
+  <div class="hub-page-wide tracks-page">
     <SkeletonHub v-if="showSkeleton" :filters="true" :cards="6" card-height="9rem" />
 
     <template v-else-if="catalog.loadError">
@@ -14,10 +14,9 @@
       <HubHeader
         :eyebrow="t(`domain.${domain === 'all' ? 'it' : domain}`)"
         :title="t('catalog.tracksTitle')"
-        :lead="t('catalog.tracksLead')"
       />
 
-      <div class="category-filters" role="tablist" :aria-label="t('catalog.allDomains')">
+      <div class="category-filters domain-filters" role="tablist" :aria-label="t('catalog.allDomains')">
         <NuxtLink
           v-for="d in domainTabs"
           :key="d"
@@ -61,38 +60,33 @@
 
       <p v-if="slice.total === 0" class="hub-empty">{{ t('catalog.emptyCategory') }}</p>
 
-      <div v-else class="track-grid track-grid--flush">
-        <article v-for="track in slice.items" :key="track.id" class="card">
-          <p class="track-meta">
-            {{ t(`catalog.category.${track.category || 'sql'}`) }}
-            ·
-            {{ t(`catalog.level.${track.level || 'basic'}`) }}
-          </p>
+      <div v-else class="track-grid track-grid--flush tracks-grid">
+        <article v-for="track in slice.items" :key="track.id" class="card catalog-track-card">
+          <div class="catalog-track-top">
+            <p class="track-meta">
+              {{ t(`catalog.category.${track.category || 'sql'}`) }}
+              <span aria-hidden="true">·</span>
+              {{ t(`catalog.level.${track.level || 'basic'}`) }}
+            </p>
+            <span class="catalog-track-arrow" aria-hidden="true">↗</span>
+          </div>
+
           <h2 class="card-title">{{ track.title[locale] || track.title.en }}</h2>
-          <p>{{ track.description[locale] || track.description.en }}</p>
-          <p v-if="auth.user && lessonsReady" class="muted">
-            {{
-              t('lesson.progress', {
-                done: catalog.progressForTrack(track.id, locale).done,
-                total: catalog.progressForTrack(track.id, locale).total,
-              })
-            }}
-            ·
-            {{
-              t('lesson.progressPercent', {
-                percent: catalog.progressForTrack(track.id, locale).percent,
-              })
-            }}
-          </p>
+
+          <template v-if="auth.user && lessonsReady">
+            <div class="catalog-track-progress" aria-hidden="true">
+              <span :style="{ width: `${catalog.progressForTrack(track.id, locale).percent}%` }" />
+            </div>
+            <p class="muted catalog-track-progress-copy">
+              {{ t('lesson.progressPercent', { percent: catalog.progressForTrack(track.id, locale).percent }) }}
+            </p>
+          </template>
+
           <div class="card-actions">
             <NuxtLink
               v-if="auth.user && catalog.nextForTrack(track.id, locale)"
               class="btn btn-primary"
-              :to="
-                localePath(
-                  `/tracks/${track.id}/lessons/${catalog.nextForTrack(track.id, locale)!.slug}`,
-                )
-              "
+              :to="localePath(`/tracks/${track.id}/lessons/${catalog.nextForTrack(track.id, locale)!.slug}`)"
             >
               {{ t('lesson.continue') }}
             </NuxtLink>
@@ -103,7 +97,11 @@
         </article>
       </div>
 
-      <nav v-if="slice.totalPages > 1" class="catalog-pager" :aria-label="t('catalog.pageOf', { page: slice.page, total: slice.totalPages })">
+      <nav
+        v-if="slice.totalPages > 1"
+        class="catalog-pager"
+        :aria-label="t('catalog.pageOf', { page: slice.page, total: slice.totalPages })"
+      >
         <NuxtLink
           class="btn btn-ghost"
           :class="{ 'is-disabled': slice.page <= 1 }"
@@ -210,7 +208,6 @@ watch(
 watch(
   () => slice.value.page,
   (page) => {
-    // Only correct out-of-range ?page= on this catalog route — never bounce other navigations.
     if (route.params.track) return
     if (page === parsed.value.page) return
     navigateTo(pageLink(page), { replace: true })
@@ -274,3 +271,96 @@ watch(locale, async (loc) => {
   }
 })
 </script>
+
+<style scoped>
+.tracks-page {
+  max-width: 72rem;
+}
+
+.domain-filters {
+  margin-top: var(--space-4);
+}
+
+.tracks-grid {
+  max-width: none;
+}
+
+.catalog-track-card {
+  position: relative;
+  min-height: 12rem;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.catalog-track-card:hover,
+.catalog-track-card:focus-within {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-brand) 34%, var(--color-hairline));
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--color-ink) 9%, transparent);
+}
+
+.catalog-track-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.catalog-track-top .track-meta {
+  margin: 0;
+}
+
+.catalog-track-arrow {
+  color: var(--color-ink-faint);
+  font-size: 1.05rem;
+  transition: transform 160ms ease, color 160ms ease;
+}
+
+.catalog-track-card:hover .catalog-track-arrow,
+.catalog-track-card:focus-within .catalog-track-arrow {
+  color: var(--color-brand-deep);
+  transform: translate(2px, -2px);
+}
+
+.catalog-track-card .card-title {
+  margin: var(--space-5) 0;
+  font-family: var(--font-display);
+  font-size: 1.28rem;
+  letter-spacing: -0.025em;
+}
+
+.catalog-track-progress {
+  height: 0.38rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-soft);
+}
+
+.catalog-track-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-brand);
+  transition: width 240ms ease;
+}
+
+.catalog-track-progress-copy {
+  margin: var(--space-2) 0 0;
+  font-size: 0.8rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalog-track-card,
+  .catalog-track-arrow,
+  .catalog-track-progress span {
+    transition: none;
+  }
+
+  .catalog-track-card:hover,
+  .catalog-track-card:focus-within,
+  .catalog-track-card:hover .catalog-track-arrow,
+  .catalog-track-card:focus-within .catalog-track-arrow {
+    transform: none;
+  }
+}
+</style>
