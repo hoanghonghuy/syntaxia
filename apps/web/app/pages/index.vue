@@ -496,7 +496,7 @@ watch(locale, async (loc) => {
   gap: var(--space-3);
 }
 
-.domain-card-top .track-meta {
+.domain-card-top > p {
   margin: 0;
   text-align: right;
 }
