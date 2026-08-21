@@ -26,6 +26,8 @@ jobs:
         run: node scripts/verify-sql-fundamentals.mjs
       - name: Verify PostgreSQL V2 contract
         run: node scripts/verify-postgresql-v2.mjs
+      - name: Verify JavaScript V2 contract
+        run: node scripts/verify-javascript-v2.mjs
 
   web:
     name: Web · production build

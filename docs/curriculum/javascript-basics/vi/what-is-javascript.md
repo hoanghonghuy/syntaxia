@@ -6,58 +6,96 @@ slug: what-is-javascript
 title: JavaScript là gì?
 order: 0
 published: true
+can_do: "Trace một chương trình JavaScript nhỏ từ value sang variable rồi tới output quan sát được"
 objectives:
-  - Giải thích JavaScript bằng lời đơn giản
-  - Nhìn một đoạn mã ngắn lưu giá trị và hiện thông báo
-  - Chạy console.log đầu tiên trong sandbox JS
+  - Phân biệt behavior JavaScript với structure HTML và presentation CSS
+  - Trace statement theo thứ tự thực thi
+  - Tạo output quan sát được bằng console.log
 exercise:
   starter: |
-    let name = "Ada";
-    // In lời chào: Hello, Ada
+    const name = "Ada";
+    // TODO: log exactly: Hello, Ada
   hints:
-    - "Dùng console.log để in thông báo."
-    - "Nối chữ bằng + giữa chuỗi trong ngoặc và biến name."
-    - "Dòng kết quả phải là Hello, Ada (có dấu phẩy sau Hello)."
+    - "Value Ada đã nằm trong name; việc còn lại là tạo output."
+    - "Dùng console.log(...) và template literal có ${name}."
+    - "Dùng: console.log(`Hello, ${name}`);"
   solution: |
-    let name = "Ada";
-    console.log("Hello, " + name);
+    const name = "Ada";
+    console.log(`Hello, ${name}`);
   expected:
     type: console
     lines:
       - "Hello, Ada"
 ---
 
-Một trang web có thể hiện chữ và hình ảnh. **JavaScript** là ngôn ngữ giúp trang *làm* việc — nhớ một tên, tính tổng, hoặc đổi nội dung sau khi bạn bấm.
+JavaScript là ngôn ngữ lập trình tạo behavior và logic cho trải nghiệm web. Cùng ngôn ngữ đó cũng chạy ngoài trang web như server hoặc tooling; API khả dụng sẽ phụ thuộc runtime.
 
-Bạn không cần là lập trình viên để bắt đầu. Hãy nghĩ JavaScript như một danh sách hướng dẫn ngắn mà trình duyệt làm lần lượt.
+## Mô hình thực thi
 
-Đây là “giấy ghi chú” các ý sẽ dùng:
+Trước mắt, hãy đọc script nhỏ như chuỗi instruction:
 
-| Ý | Nghĩa đơn giản | Ví dụ |
+```text
+source code -> evaluate statement 1 -> cập nhật program state -> evaluate statement 2 -> kết quả quan sát được
+```
+
+Ba building block:
+
+| ý tưởng | ví dụ | vai trò |
 | --- | --- | --- |
-| Giá trị (value) | Một mẩu thông tin | `"Ada"`, `3` |
-| Biến (variable) | Hộp có nhãn chứa giá trị | `name` |
-| Câu lệnh (statement) | Một hướng dẫn, thường kết thúc bằng `;` | `let name = "Ada";` |
+| value | `"Ada"`, `42`, `true` | thông tin |
+| binding | `const name = "Ada"` | đặt tên cho value |
+| statement | `console.log(name)` | thực hiện instruction |
+
+HTML mô tả cấu trúc, CSS mô tả presentation, JavaScript đánh giá logic và phản ứng với state/event thay đổi.
+
+## Trace từng bước
+
+```javascript
+const name = "Ada";
+console.log(`Hello, ${name}`);
+```
+
+| bước | state / effect |
+| ---: | --- |
+| 1 | binding `name` trỏ tới string `"Ada"` |
+| 2 | template literal đọc `name` và tạo `"Hello, Ada"` |
+| 3 | `console.log` đưa string đó ra console output |
+
+## Dự đoán trước khi chạy
+
+Trước khi Run, viết chính xác dòng output gồm cả dấu phẩy và space: `Hello, Ada`.
 
 ## Ví dụ mẫu
 
 ```javascript
-let name = "Ada";
-console.log("Hello, " + name);
+const language = "JavaScript";
+const message = `Learning ${language}`;
+console.log(message);
 ```
 
-- `let name = "Ada";` tạo hộp có nhãn `name` và đặt chữ Ada vào trong.
-- `console.log(...)` nhờ công cụ trình duyệt hiện một thông báo (cách phổ biến để kiểm tra khi học).
-- `"Hello, " + name` nối hai đoạn chữ thành một câu.
+Program tạo value, suy ra value mới, rồi tạo side effect quan sát được bằng log.
 
-Nếu chạy trong console trình duyệt, bạn sẽ thấy: `Hello, Ada`.
+## Tìm lỗi
+
+```javascript
+const name = Ada;
+console.log(`Hello, ${name}`);
+```
+
+`Ada` không có quote sẽ được hiểu là identifier. Nếu không có binding tên Ada, execution lỗi trước khi log thành công. Khi debug, hãy hỏi token đó phải là **data** hay **identifier**.
 
 ## Lỗi thường gặp
 
-- Nghĩ JavaScript giống HTML hoặc CSS — HTML dựng cấu trúc trang, CSS trang trí, JavaScript thêm hành vi.
-- Quên dấu ngoặc quanh chữ (`Ada` thay vì `"Ada"`) — không có ngoặc, trình duyệt tìm một tên không tồn tại.
-- Mong Syntaxia chạy JS trong sandbox SQL — trình chạy đó chỉ dành cho SQL; dùng **sandbox JavaScript** bên dưới trên lộ trình này.
+- Nghĩ JavaScript, HTML và CSS có cùng trách nhiệm.
+- Chỉ nhìn dòng cuối thay vì trace value đi tới đó như nào.
+- Bỏ quote khỏi string data rồi vô tình biến thành identifier lookup.
 
 ## Thử ngay
 
-Chạy sandbox: in `Hello, Ada` bằng `console.log` và biến `name`. Khi checker báo đúng, đánh dấu hoàn thành bài.
+Hoàn thành sandbox để log chính xác `Hello, Ada` bằng binding `name` đã có.
+
+## Tự kiểm tra
+
+Khác biệt chính giữa value `"Ada"` và identifier `name` là gì?
+
+**Đáp án:** value là dữ liệu; identifier là tên mà program dùng để tham chiếu value.
