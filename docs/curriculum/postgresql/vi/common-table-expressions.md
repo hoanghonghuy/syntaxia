@@ -3,18 +3,20 @@ id: pg-21-cte
 track: postgresql
 locale: vi
 slug: common-table-expressions
-title: Các bước có tên với WITH (CTE)
+title: Cấu trúc query với WITH (CTE)
 order: 21
 published: true
+can_do: "Dùng CTE như named query step đồng thời tách readability/scope khỏi giả định về execution performance"
 objectives:
-  - Đặt tên kết quả tạm bằng WITH
-  - Truy vấn kết quả đó trong cùng câu lệnh
+  - Đặt tên intermediate query result bằng WITH
+  - Trace data flow từ CTE sang query sử dụng nó
+  - Không coi mọi CTE là optimization boundary tự động
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "WITH name AS (SELECT …) định nghĩa kết quả tạm có tên."
-    - "Rồi SELECT từ tên đó như một bảng."
-    - "Thử: WITH recent AS (SELECT title, year FROM movies WHERE year >= 2010) SELECT title FROM recent ORDER BY title;"
+    - "Tạo named result recent chứa movie từ 2010 trở đi."
+    - "Outer SELECT phải đọc từ recent, không dựng lại filter."
+    - "Dùng: WITH recent AS (SELECT title, year FROM movies WHERE year >= 2010) SELECT title FROM recent ORDER BY title;"
   solution: "WITH recent AS (SELECT title, year FROM movies WHERE year >= 2010) SELECT title FROM recent ORDER BY title;"
   preview:
     columns: ["id", "title", "year"]
@@ -35,29 +37,40 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Arrival', 2016), (4, 'Dune', 2021);"
 ---
 
-Câu truy vấn dài dễ hơn khi bạn đặt tên bước trung gian — như vùng có nhãn trong bảng tính. **CTE** (common table expression) dùng `WITH name AS (…)` để định nghĩa bước đó, rồi `SELECT` từ nó trong cùng câu lệnh.
+Common table expression gắn tên cho một query step trong phạm vi một statement. Dùng nó để lộ intent và chia logic phức tạp thành các stage dễ hiểu.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Arrival | 2016 |
-| 4 | Dune | 2021 |
+## Mô hình tư duy
+
+```text
+base table movies
+      |
+      v
+CTE recent: filter year >= 2010
+      |
+      v
+outer query: project title + order
+```
+
+Tên CTE là relation trong scope query, không phải table vĩnh viễn và cũng không tự động là performance optimization.
+
+PostgreSQL hiện đại đôi khi có thể fold CTE non-recursive, side-effect-free vào parent query; trong trường hợp khác materialization có thể có ý nghĩa. Hãy dùng CTE trước hết cho cấu trúc rõ, rồi đọc plan khi performance quan trọng.
+
+## Dự đoán trước khi chạy
+
+The Matrix không vào `recent`. Outer query thấy Arrival, Dune, Inception rồi sắp alphabet.
 
 ## Ví dụ mẫu
 
 ```sql
 WITH recent AS (
-  SELECT title, year FROM movies WHERE year >= 2010
+  SELECT title, year
+  FROM movies
+  WHERE year >= 2010
 )
-SELECT title FROM recent ORDER BY title;
+SELECT title
+FROM recent
+ORDER BY title;
 ```
-
-- `WITH recent AS (…)` tạo kết quả tạm tên `recent` gồm phim từ 2010 trở đi.
-- `SELECT` ngoài chỉ đọc từ `recent`.
-- The Matrix (1999) không vào `recent`, nên không xuất hiện.
-
-Kết quả:
 
 | title |
 | --- |
@@ -65,12 +78,26 @@ Kết quả:
 | Dune |
 | Inception |
 
+## Tìm lỗi
+
+Một query bị chia thành năm CTE chỉ vì “CTE nhanh hơn”. Tiền đề đó không an toàn. Readability và execution planning là hai concern khác nhau; hãy dùng `EXPLAIN` để verify performance claim thay vì suy ra từ hình dạng syntax.
+
+```text
+WITH step1 AS (...), step2 AS (...), step3 AS (...) ...
+```
+
 ## Lỗi thường gặp
 
-- Quên `SELECT` ngoài sau định nghĩa CTE.
-- Chỉ tham chiếu bảng gốc, bỏ qua tên CTE mà bài yêu cầu.
-- Bỏ `ORDER BY title` khi thứ tự kỳ vọng là theo alphabet.
+- Định nghĩa CTE rồi lại vô tình query base table.
+- Nghĩ CTE tồn tại sau khi statement kết thúc.
+- Coi CTE syntax là cam kết optimization/materialization.
 
 ## Thử ngay
 
-Định nghĩa CTE `recent` cho phim có `year >= 2010`, rồi trả về `title` sắp theo title.
+Tạo CTE `recent` cho movie từ 2010, sau đó select title theo alphabet.
+
+## Tự kiểm tra
+
+Lý do an toàn nhất để đưa CTE vào application SQL là gì?
+
+**Đáp án:** để đặt tên và cấu trúc query step rõ ràng; ảnh hưởng performance phải kiểm tra bằng planner chứ không nên giả định.

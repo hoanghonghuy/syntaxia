@@ -3,19 +3,21 @@ id: pg-22-filter
 track: postgresql
 locale: en
 slug: filter-clause
-title: Conditional counts with FILTER
+title: Conditional aggregates with FILTER
 order: 22
 published: true
+can_do: "Compute multiple aggregates over different row subsets by attaching FILTER conditions to individual aggregate calls"
 objectives:
-  - Count only matching rows with FILTER
-  - Combine an aggregate with WHERE-like logic inside it
+  - Explain which rows each aggregate receives
+  - Contrast aggregate FILTER with a top-level WHERE
+  - Compute total and conditional counts in one result row
 exercise:
-  starter: "SELECT COUNT(*) FROM movies;"
+  starter: "SELECT COUNT(*) AS total FROM movies;"
   hints:
-    - "FILTER (WHERE …) limits which rows an aggregate sees."
-    - "Keep COUNT(*) but add FILTER for year >= 2000."
-    - "Try: SELECT COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
-  solution: "SELECT COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
+    - "Keep the unfiltered total and add a second COUNT for modern movies."
+    - "Attach FILTER (WHERE year >= 2000) only to the modern aggregate."
+    - "Use: SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
+  solution: "SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;"
   preview:
     columns: ["id", "title", "year"]
     rows:
@@ -24,48 +26,67 @@ exercise:
       - [3, "Arrival", 2016]
       - [4, "Dune", 2021]
   expected:
-    columns: ["modern"]
+    columns: ["total", "modern"]
     rows:
-      - [3]
+      - [4, 3]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE movies (id INTEGER, title TEXT, year INTEGER);"
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Arrival', 2016), (4, 'Dune', 2021);"
 ---
 
-You already know `COUNT(*)`. Sometimes you want one total that only counts rows matching a condition — without a separate `WHERE` that would hide other aggregates. PostgreSQL’s `FILTER` clause attaches that condition to the aggregate itself.
+`FILTER` attaches a row condition to one aggregate instead of filtering the whole query input. That becomes especially useful when one output row needs several metrics over different subsets.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Arrival | 2016 |
-| 4 | Dune | 2021 |
+## Mental model
+
+All four rows reach the SELECT's aggregate stage:
+
+| aggregate | rows it receives | result |
+| --- | --- | ---: |
+| `COUNT(*)` | all four | 4 |
+| `COUNT(*) FILTER (WHERE year >= 2000)` | Inception, Arrival, Dune | 3 |
+
+A top-level `WHERE year >= 2000` would remove The Matrix before **both** aggregates, making it impossible for the first count to remain 4.
+
+## Predict before you run
+
+Predict one result row with `total = 4` and `modern = 3`.
 
 ## Worked example
 
 ```sql
-SELECT COUNT(*) FILTER (WHERE year >= 2000) AS modern FROM movies;
+SELECT
+  COUNT(*) AS total,
+  COUNT(*) FILTER (WHERE year >= 2000) AS modern
+FROM movies;
 ```
 
-- `COUNT(*)` still counts rows.
-- `FILTER (WHERE year >= 2000)` includes only movies from year 2000 onward.
-- The Matrix (1999) is skipped; three modern movies remain.
+| total | modern |
+| ---: | ---: |
+| 4 | 3 |
 
-Result:
+## Debug this
 
-| modern |
-| --- |
-| 3 |
+```sql
+SELECT COUNT(*) AS total, COUNT(*) AS modern
+FROM movies
+WHERE year >= 2000;
+```
 
-Portable alternative: `COUNT(CASE WHEN year >= 2000 THEN 1 END)`. `FILTER` is clearer PostgreSQL syntax for the same idea.
+Both counts become 3 because the top-level WHERE reduced the shared input first. The bug is filter placement, not COUNT syntax.
 
 ## Common mistakes
 
-- Putting the year test only in a top-level `WHERE` when the lesson asks for `FILTER`.
-- Forgetting the `modern` alias.
-- Writing `FILTER year >= 2000` without `WHERE` inside the parentheses.
+- Moving a per-metric filter to top-level WHERE and changing every metric.
+- Forgetting the `WHERE` keyword inside `FILTER (...)`.
+- Repeating separate queries when several conditional aggregates can be expressed clearly in one result.
 
 ## Your turn
 
-Return a single column `modern`: how many movies have `year >= 2000`, using `FILTER`.
+Return both total movie count and count of movies from year 2000 onward in one row.
+
+## Quick check
+
+Why can FILTER be better than a top-level WHERE when computing a dashboard row with several metrics?
+
+**Answer:** each aggregate can receive its own subset while other aggregates still see the full or a different input set.
