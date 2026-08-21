@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import type { LessonSummary, Progress, Track } from '~/types/api'
 import { formatCatalogLoadError } from '~/utils/catalogLoad'
+import { isLanguageTrack } from '~/utils/languageLesson'
+import { orderLanguageLessons } from '~/utils/languageUnits'
 import { nextIncompleteLesson, trackProgress } from '~/utils/learningPath'
 
 export const useCatalogStore = defineStore('catalog', () => {
@@ -23,7 +25,8 @@ export const useCatalogStore = defineStore('catalog', () => {
 
   async function loadLessons(trackId: string, locale: string) {
     try {
-      lessons.value = await api.lessons(trackId, locale)
+      const loaded = await api.lessons(trackId, locale)
+      lessons.value = isLanguageTrack(trackId) ? orderLanguageLessons(loaded) : loaded
       lessonsByTrack.value = { ...lessonsByTrack.value, [trackId]: lessons.value }
       loadError.value = null
     } catch (e) {
