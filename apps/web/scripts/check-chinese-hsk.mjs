@@ -44,6 +44,8 @@ const slugs = [
   'travel-checkpoint',
   'travel-review',
   'devices',
+  'device-checkpoint',
+  'device-review',
   'introductions-checkpoint',
   'introductions-review',
 ]
@@ -73,7 +75,7 @@ describe('Mandarin runtime contract', () => {
 })
 
 describe('Mandarin HSK Band 1 v3 curriculum', () => {
-  it('ships twenty-eight paired EN/VI language nodes', () => {
+  it('ships thirty paired EN/VI language nodes', () => {
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/chinese-hsk/${locale}`)
       assert.equal(existsSync(dir), true)
