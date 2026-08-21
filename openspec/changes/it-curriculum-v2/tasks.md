@@ -4,11 +4,11 @@
 - [x] Audit representative SQL, PostgreSQL, JavaScript, HTML, and CSS lesson shapes.
 - [x] Establish the See -> Predict -> Explain -> Debug -> Build -> Recall pedagogy contract.
 - [x] Migrate SQL Fundamentals Block A (orders 0–7), EN + VI.
-- [x] Extend `verify-sql-fundamentals.mjs` with V2 checks for the migrated slice.
+- [x] Extend `verify-sql-fundamentals.mjs` with V2 checks for the migrated slices.
 - [x] Add branch CI for structural verifier + web build + API tests.
-- [ ] Verify Block A/Block B GitHub Actions and existing sandbox/grading compatibility.
+- [ ] Verify migrated SQL GitHub Actions and existing sandbox/grading compatibility.
 - [x] Migrate Block B (orders 8–11), EN + VI, including mutation-state verification rules.
-- [ ] Migrate Block C (orders 12–18).
+- [x] Migrate Block C (orders 12–18), EN + VI, including aggregate and predicate mental models.
 - [ ] Migrate Block D (orders 19–25).
 - [ ] Migrate Block E (orders 26–28).
 - [ ] Migrate Block F (orders 29–35).

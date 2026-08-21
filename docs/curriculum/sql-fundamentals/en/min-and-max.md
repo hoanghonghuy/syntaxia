@@ -6,15 +6,17 @@ slug: min-and-max
 title: Finding extremes with MIN and MAX
 order: 12
 published: true
+can_do: "Collapse a numeric column to its smallest or largest value with MIN or MAX"
 objectives:
-  - Find the smallest value with MIN
-  - Find the largest value with MAX
+  - Recognize MIN and MAX as aggregate functions
+  - Predict how many rows an ungrouped aggregate returns
+  - Choose the correct extreme for a requirement
 exercise:
   starter: "SELECT year FROM movies;"
   hints:
-    - "MIN and MAX look across a whole column and return one value."
-    - "Give the result a clear name with AS, such as newest_year."
-    - "Try: SELECT MAX(year) AS newest_year FROM movies;"
+    - "The task wants one summary value, not the list of every year."
+    - "Use MAX(year) because newest means the largest year, then name the result newest_year."
+    - "Use: SELECT MAX(year) AS newest_year FROM movies;"
   solution: "SELECT MAX(year) AS newest_year FROM movies;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -33,43 +35,72 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Sometimes you do not need every row — you need the smallest or largest number in a column, like the earliest or latest year in a list.
+Some questions ask for a summary of many rows rather than the rows themselves: “What is the newest year?” or “What is the smallest price?”. `MIN` and `MAX` are aggregates that collapse many input values into one answer.
 
-**movies** (full table)
+## Mental model
 
-| id | title | year | director |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | Nolan |
-| 2 | The Matrix | 1999 | Wachowski |
-| 3 | Dune | 2021 | Villeneuve |
-| 4 | Interstellar | 2014 | Nolan |
+Think **many values -> one summary value**.
 
-Years in the column: 2010, 1999, 2021, 2014 → smallest **1999**, largest **2021**.
+| year |
+| ---: |
+| 2010 |
+| 1999 |
+| 2021 |
+| 2014 |
+
+For this set:
+
+- `MIN(year)` -> `1999`
+- `MAX(year)` -> `2021`
+
+Without `GROUP BY`, an aggregate over the whole table produces one summary row.
+
+## Predict before you run
+
+```sql
+SELECT MAX(year) AS newest_year
+FROM movies;
+```
+
+Predict both dimensions and value: **1 column, 1 row, value 2021**. The four source rows are inputs to the calculation; they do not each become an output row.
 
 ## Worked example
 
 ```sql
-SELECT MIN(year) AS oldest_year FROM movies;
+SELECT MIN(year) AS oldest_year
+FROM movies;
 ```
 
-- `MIN(year)` scans the `year` column and keeps the smallest value (`1999`).
-- `MAX(year)` would keep the largest (`2021`).
-- `AS oldest_year` names the result column so the output is easier to read.
-
-Result of `MIN`:
-
 | oldest_year |
-| --- |
+| ---: |
 | 1999 |
 
-Your exercise asks for `MAX` under the name `newest_year` → `2021`.
+`MIN` and `MAX` answer questions about an extreme **value**. They do not automatically return the rest of the row that contained that value.
+
+## Debug this
+
+Why does this not answer “newest year” as one value?
+
+```sql
+SELECT year
+FROM movies
+ORDER BY year DESC;
+```
+
+It sorts all four years but still returns four rows. Sorting and aggregation solve different problems. Use `MAX(year)` when the requested answer itself is one largest value.
 
 ## Common mistakes
 
-- Expecting one row per movie — `MIN` / `MAX` return a single summary value, not a filtered list of titles.
-- Forgetting parentheses: write `MAX(year)`, not `MAX year`.
-- Mixing up which extreme you need — `MIN` is smallest; `MAX` is largest.
+- Expecting `MAX(year)` to automatically return the movie title associated with that year.
+- Forgetting parentheses: aggregate functions are called as `MAX(year)`.
+- Choosing `MIN` when the requirement means largest/latest/newest.
 
 ## Your turn
 
-Find the newest release year in `movies`. Return one column named `newest_year` using `MAX(year)`.
+Return the newest release year as one column named `newest_year`. Before running, predict why the result has only one row.
+
+## Quick check
+
+What is the key difference between `ORDER BY year DESC` and `MAX(year)`?
+
+**Answer:** `ORDER BY` keeps and rearranges rows; `MAX` reduces the input values to one summary value.

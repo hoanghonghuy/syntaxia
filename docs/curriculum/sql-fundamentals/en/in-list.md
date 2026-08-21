@@ -6,15 +6,17 @@ slug: in-list
 title: Matching a list with IN
 order: 16
 published: true
+can_do: "Use IN for membership in a finite list of exact values and contrast it with a continuous range"
 objectives:
-  - Keep rows whose value is in a short list
-  - Prefer IN over many OR comparisons
+  - Evaluate list membership for each row
+  - Rewrite repeated OR equality checks as IN
+  - Distinguish IN from BETWEEN
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "IN (a, b) keeps rows where the column equals a or b."
-    - "Filter on year with IN (1999, 2010), then select title."
-    - "Try: SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
+    - "The requirement names two exact years, so use a membership list rather than a range."
+    - "Filter year with IN (1999, 2010)."
+    - "Use: SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
   solution: "SELECT title FROM movies WHERE year IN (1999, 2010) ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -34,23 +36,34 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-Sometimes you want several exact values at once — “year is 1999 or 2010”. `IN` is a short way to write that list, instead of chaining many `OR`s.
+A requirement can name several **exact alternatives**: “1999 or 2010”. `IN` expresses membership in that finite set without repeating the same column comparison.
 
-**movies** (full table)
+## Mental model
 
-| id | title | year | director |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | Nolan |
-| 2 | The Matrix | 1999 | Wachowski |
-| 3 | Dune | 2021 | Villeneuve |
-| 4 | Interstellar | 2014 | Nolan |
+For a non-NULL year, this:
 
-| title | year in (1999, 2010)? |
-| --- | --- |
-| Inception | yes (2010) |
-| The Matrix | yes (1999) |
-| Dune | no (2021) |
-| Interstellar | no (2014) |
+```sql
+year IN (1999, 2010)
+```
+
+expresses the same membership test as:
+
+```sql
+year = 1999 OR year = 2010
+```
+
+Trace the rows:
+
+| title | year | member of `{1999, 2010}`? |
+| --- | ---: | --- |
+| Inception | 2010 | yes |
+| The Matrix | 1999 | yes |
+| Dune | 2021 | no |
+| Interstellar | 2014 | no |
+
+## Predict before you run
+
+Predict which two titles survive `year IN (1999, 2010)`. Notice that 2005 would **not** match merely because it lies numerically between those values; IN is about exact membership.
 
 ## Worked example
 
@@ -61,23 +74,35 @@ WHERE year IN (1999, 2010)
 ORDER BY title;
 ```
 
-- `year IN (1999, 2010)` keeps a row if `year` equals either value.
-- Same idea as `year = 1999 OR year = 2010`, but shorter.
-- `ORDER BY title` sorts the result alphabetically.
-
-Result:
-
 | title |
 | --- |
 | Inception |
 | The Matrix |
 
+Use IN when the requirement gives a discrete set. Use a range predicate when every value between bounds should qualify.
+
+## Debug this
+
+Why does this not express membership in two values?
+
+```sql
+WHERE year = (1999, 2010)
+```
+
+`=` compares against one value/expression. A list-membership test uses `IN (...)`.
+
 ## Common mistakes
 
-- Writing `year = (1999, 2010)` — use `IN`, not `=`, for a list.
-- Mixing up `IN` (exact values) with `BETWEEN` (a continuous range).
-- Forgetting parentheses around the list: `IN (1999, 2010)`.
+- Using `=` with a parenthesized list.
+- Using IN when the requirement actually means a continuous interval.
+- Forgetting that text members of an IN list need string quotes.
 
 ## Your turn
 
-List the `title` of movies whose `year` is `1999` or `2010`. Sort with `ORDER BY title`.
+Return titles whose year is exactly 1999 or 2010, ordered by title. Evaluate all four rows before running.
+
+## Quick check
+
+Would `year IN (1999, 2010)` match the year 2000?
+
+**Answer:** no. Only values explicitly present in the list match.

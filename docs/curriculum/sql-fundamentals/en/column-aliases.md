@@ -6,15 +6,17 @@ slug: column-aliases
 title: Renaming columns with AS
 order: 18
 published: true
+can_do: "Give result expressions clear temporary names with AS without changing the stored schema"
 objectives:
-  - Give result columns clearer names with AS
-  - Sort by an alias when the database allows it
+  - Separate stored column names from result labels
+  - Alias multiple selected columns
+  - Recognize aliases as query-output names rather than schema changes
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "AS renames a column only in the result — the table itself stays unchanged."
-    - "Use title AS film_name and year AS release_year."
-    - "Try: SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
+    - "The task changes result labels, not stored column names."
+    - "Write title AS film_name and year AS release_year."
+    - "Use: SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
   solution: "SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -36,46 +38,74 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999, 'Wachowski'), (2, 'Inception', 2010, 'Nolan'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
-Column names in the table may be short or technical. `AS` renames a column in the **result** only — like a display label on a spreadsheet export, without renaming the real column.
+Database schemas often use short technical names, while a report or API may need clearer output labels. An alias changes the **name exposed by this query result**, not the stored table definition.
 
-**movies** (full table — real column names stay `title` and `year`)
+## Mental model
 
-| id | title | year | director |
-| --- | --- | --- | --- |
-| 1 | The Matrix | 1999 | Wachowski |
-| 2 | Inception | 2010 | Nolan |
-| 3 | Interstellar | 2014 | Nolan |
-| 4 | Dune | 2021 | Villeneuve |
+Separate source identity from output label:
+
+| Source expression | Alias | Result heading |
+| --- | --- | --- |
+| `title` | `film_name` | `film_name` |
+| `year` | `release_year` | `release_year` |
+
+The source table still has columns named `title` and `year` after the query finishes.
+
+## Predict before you run
+
+```sql
+SELECT title AS film_name,
+       year AS release_year
+FROM movies;
+```
+
+Predict what changes and what does not:
+
+- result headings: change to `film_name`, `release_year`
+- result values: unchanged
+- stored schema: unchanged
 
 ## Worked example
 
 ```sql
-SELECT title AS film_name, year AS release_year
+SELECT title AS film_name,
+       year AS release_year
 FROM movies
 ORDER BY release_year;
 ```
 
-- `title AS film_name` shows the title under the heading `film_name`.
-- `year AS release_year` shows the year under `release_year`.
-- `ORDER BY release_year` sorts using that result name (oldest year first).
-
-Result:
-
 | film_name | release_year |
-| --- | --- |
+| --- | ---: |
 | The Matrix | 1999 |
 | Inception | 2010 |
 | Interstellar | 2014 |
 | Dune | 2021 |
 
-The stored table still uses `title` and `year` — only this query’s output headings changed.
+PostgreSQL allows this result alias to be referenced by `ORDER BY`, which makes the intended output name readable here.
+
+## Debug this
+
+After running a SELECT with `title AS film_name`, a learner assumes this will work as a stored-column change:
+
+```sql
+SELECT film_name
+FROM movies;
+```
+
+It will not: the original table still has `title`, not `film_name`. An alias normally lives only within the query/result context where it is defined.
 
 ## Common mistakes
 
-- Thinking `AS` renames the stored column forever — it only changes the output heading.
-- Selecting `title, year` when the grader expects `film_name` and `release_year`.
-- Putting `AS` after `FROM` — aliases belong next to the selected expressions.
+- Treating AS as a permanent schema rename.
+- Forgetting the exact alias expected by a result contract or grader.
+- Assuming an alias is available in every clause or in later independent queries.
 
 ## Your turn
 
-Select `title` as `film_name` and `year` as `release_year`. Sort by `release_year`.
+Return `title` as `film_name` and `year` as `release_year`, ordered by `release_year`. Predict the two output headings before running.
+
+## Quick check
+
+Does `SELECT title AS film_name FROM movies` rename the stored column in `movies`?
+
+**Answer:** no. It changes only the result label for that query.

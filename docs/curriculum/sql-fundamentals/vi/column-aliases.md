@@ -3,18 +3,20 @@ id: sql-18-aliases
 track: sql-fundamentals
 locale: vi
 slug: column-aliases
-title: Đổi tên cột với AS
+title: Đổi tên cột kết quả với AS
 order: 18
 published: true
+can_do: "Đặt tên tạm rõ ràng cho biểu thức kết quả bằng AS mà không thay đổi schema lưu trữ"
 objectives:
-  - Đặt tên cột kết quả rõ hơn bằng AS
-  - Sắp xếp theo alias khi cơ sở dữ liệu cho phép
+  - Tách tên cột lưu trữ khỏi nhãn kết quả
+  - Đặt alias cho nhiều cột SELECT
+  - Nhận ra alias là tên đầu ra của truy vấn chứ không phải schema change
 exercise:
   starter: "SELECT title, year FROM movies;"
   hints:
-    - "AS chỉ đổi tên cột trong kết quả — bảng thật không đổi."
-    - "Dùng title AS film_name và year AS release_year."
-    - "Thử: SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
+    - "Đề thay đổi nhãn kết quả, không đổi tên cột lưu trữ."
+    - "Viết title AS film_name và year AS release_year."
+    - "Dùng: SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
   solution: "SELECT title AS film_name, year AS release_year FROM movies ORDER BY release_year;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -36,46 +38,74 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999, 'Wachowski'), (2, 'Inception', 2010, 'Nolan'), (3, 'Interstellar', 2014, 'Nolan'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
-Tên cột trong bảng có thể ngắn hoặc kỹ thuật. `AS` đổi tên cột chỉ trong **kết quả** — như nhãn hiển thị khi xuất spreadsheet, không đổi tên cột thật.
+Schema database thường dùng tên ngắn hoặc kỹ thuật, trong khi báo cáo hay API có thể cần nhãn đầu ra dễ hiểu hơn. Alias thay đổi **tên được expose bởi kết quả truy vấn này**, không sửa định nghĩa bảng lưu trữ.
 
-**movies** (bảng đầy đủ — tên cột thật vẫn là `title` và `year`)
+## Mô hình tư duy
 
-| id | title | year | director |
-| --- | --- | --- | --- |
-| 1 | The Matrix | 1999 | Wachowski |
-| 2 | Inception | 2010 | Nolan |
-| 3 | Interstellar | 2014 | Nolan |
-| 4 | Dune | 2021 | Villeneuve |
+Tách identity của nguồn khỏi nhãn đầu ra:
+
+| Biểu thức nguồn | Alias | Tiêu đề kết quả |
+| --- | --- | --- |
+| `title` | `film_name` | `film_name` |
+| `year` | `release_year` | `release_year` |
+
+Sau khi query xong, bảng nguồn vẫn có các cột tên `title` và `year`.
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT title AS film_name,
+       year AS release_year
+FROM movies;
+```
+
+Dự đoán phần nào thay đổi và phần nào không:
+
+- tiêu đề kết quả: đổi thành `film_name`, `release_year`
+- giá trị kết quả: không đổi
+- schema lưu trữ: không đổi
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title AS film_name, year AS release_year
+SELECT title AS film_name,
+       year AS release_year
 FROM movies
 ORDER BY release_year;
 ```
 
-- `title AS film_name` hiện tiêu đề dưới heading `film_name`.
-- `year AS release_year` hiện năm dưới `release_year`.
-- `ORDER BY release_year` sắp bằng tên kết quả đó (năm cũ trước).
-
-Kết quả:
-
 | film_name | release_year |
-| --- | --- |
+| --- | ---: |
 | The Matrix | 1999 |
 | Inception | 2010 |
 | Interstellar | 2014 |
 | Dune | 2021 |
 
-Bảng lưu trữ vẫn dùng `title` và `year` — chỉ heading của truy vấn này đổi.
+PostgreSQL cho phép dùng alias kết quả này trong `ORDER BY`, giúp tên đầu ra cần dùng dễ đọc hơn ở đây.
+
+## Tìm lỗi
+
+Sau khi chạy SELECT có `title AS film_name`, người học nghĩ alias đã trở thành tên cột lưu trữ và viết query mới:
+
+```sql
+SELECT film_name
+FROM movies;
+```
+
+Không đúng: bảng gốc vẫn có `title`, không có `film_name`. Alias thường chỉ sống trong context query/kết quả nơi nó được định nghĩa.
 
 ## Lỗi thường gặp
 
-- Nghĩ `AS` đổi tên cột lưu trữ mãi mãi — nó chỉ đổi heading đầu ra.
-- Chọn `title, year` khi grader đòi `film_name` và `release_year`.
-- Đặt `AS` sau `FROM` — alias đứng cạnh biểu thức được chọn.
+- Coi AS như thao tác đổi tên schema vĩnh viễn.
+- Quên alias chính xác mà hợp đồng kết quả hoặc grader yêu cầu.
+- Giả định alias dùng được ở mọi clause hoặc trong các query độc lập sau đó.
 
 ## Thử ngay
 
-Chọn `title` thành `film_name` và `year` thành `release_year`. Sắp theo `release_year`.
+Trả `title` dưới tên `film_name` và `year` dưới tên `release_year`, sắp theo `release_year`. Hãy dự đoán hai tiêu đề cột đầu ra trước khi chạy.
+
+## Tự kiểm tra
+
+`SELECT title AS film_name FROM movies` có đổi tên cột được lưu trong `movies` không?
+
+**Đáp án:** không. Nó chỉ đổi nhãn kết quả của query đó.
