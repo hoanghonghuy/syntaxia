@@ -7,6 +7,11 @@ title: Gọi một món ăn hoặc đồ uống đơn giản
 order: 5
 published: true
 cefr_level: a1
+unit_id: en-a1-cafe-04
+unit_title: "Gọi món ở quán cà phê"
+unit_order: 4
+unit_can_do: "Gọi một món lịch sự và kết thúc một lượt gọi món đơn giản"
+unit_role: lesson
 can_do: "Gọi một món ăn hoặc đồ uống đơn giản một cách lịch sự và hiểu câu xác nhận cơ bản"
 pattern: "I'd like …, please. / Anything else? / That's all, thank you."
 objectives:
