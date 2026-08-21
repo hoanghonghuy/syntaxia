@@ -7,6 +7,11 @@ title: Yêu cầu một món đồ một cách lịch sự
 order: 1
 published: true
 jlpt_level: n5
+unit_id: ja-n5-shop-request-01
+unit_title: "Yêu cầu một món đồ"
+unit_order: 1
+unit_can_do: "Yêu cầu món đồ đã chọn và kết thúc một lượt mua hàng ngắn một cách lịch sự"
+unit_role: lesson
 can_do: "Yêu cầu một món đồ một cách lịch sự và dùng câu đáp cơ bản có/không/cảm ơn"
 pattern: "これをください。 / はい。 / いいえ。 / ありがとうございます。"
 objectives:
@@ -23,6 +28,8 @@ steps:
   - type: scene
     title: "Ở một cửa hàng nhỏ"
     body: "Bạn đã chọn một món đồ. Hãy yêu cầu món đó rồi kết thúc lượt giao tiếp một cách lịch sự."
+    visualKey: "shop-counter-request"
+    imageAlt: "Một khách hàng đứng trước quầy cửa hàng nhỏ, chỉ vào món đồ và nói với nhân viên."
   - type: dialogue
     lines:
       - { speaker: "客", text: "これをください。", reading: "これをください。" }
