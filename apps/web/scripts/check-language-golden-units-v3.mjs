@@ -157,6 +157,17 @@ const migratedUnits = [
       ['device-review', 'review'],
     ],
   },
+  {
+    track: 'japanese-jlpt',
+    unitId: 'ja-n5-people-02',
+    unitOrder: '2',
+    nodes: [
+      ['people', 'lesson'],
+      ['family', 'lesson'],
+      ['people-checkpoint', 'checkpoint'],
+      ['people-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
