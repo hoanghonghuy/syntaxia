@@ -33,7 +33,7 @@ const slugs = [
 ]
 
 function assessedIds(raw) {
-  return [...raw.matchAll(/^\s{4,}id:\s*([^\s]+)\s*$/gm)].map((m) => m[1])
+  return [...raw.matchAll(/^\s+(?:-\s+)?id:\s*([^\s]+)\s*$/gm)].map((m) => m[1])
 }
 
 function lessonIdentity(raw) {
