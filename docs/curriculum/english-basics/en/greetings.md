@@ -7,6 +7,11 @@ title: Meet someone and say hello
 order: 1
 published: true
 cefr_level: a1
+unit_id: en-a1-meeting-01
+unit_title: "Meet someone"
+unit_order: 1
+unit_can_do: "Start, sustain, and close a short first meeting"
+unit_role: lesson
 can_do: "Greet someone, exchange a name, and end a short meeting politely"
 pattern: "Hi, I'm … / Nice to meet you. / See you."
 objectives:
