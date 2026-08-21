@@ -7,6 +7,11 @@ title: Say your name and ask a name
 order: 2
 published: true
 jlpt_level: n5
+unit_id: ja-n5-people-02
+unit_title: "Introduce yourself and people close to you"
+unit_order: 2
+unit_can_do: "Introduce yourself, ask a name, and identify a close family member in a short polite exchange"
+unit_role: lesson
 can_do: "Say your name with です and ask another person's name politely"
 pattern: "わたしは … です。 / お名前は何ですか。"
 objectives:
