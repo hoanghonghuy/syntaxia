@@ -8,6 +8,11 @@ order: 7
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-counter-05
+unit_title: "Order at a counter"
+unit_order: 5
+unit_can_do: "Order a simple food or drink item and respond to a short follow-up at a counter"
+unit_role: lesson
 can_do: "Ask for a basic drink or food item and respond politely at a counter"
 pattern: "我要… / 喝水 / 吃米饭"
 objectives:
