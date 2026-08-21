@@ -8,6 +8,11 @@ order: 6
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-study-04
+unit_title: "Plan when and where you study"
+unit_order: 4
+unit_can_do: "Say when and where you study Chinese and confirm a simple study plan"
+unit_role: lesson
 can_do: "Say that you are a student and describe studying Chinese at school"
 pattern: "我是学生。/ 我在学校学习汉语。"
 objectives:
