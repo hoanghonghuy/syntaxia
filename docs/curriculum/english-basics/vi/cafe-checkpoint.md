@@ -3,7 +3,7 @@ id: en-a1-u04-checkpoint
 track: english-basics
 locale: vi
 slug: cafe-checkpoint
-title: Kiểm tra: gọi món ở quán
+title: "Kiểm tra: gọi món ở quán"
 order: 11
 published: true
 cefr_level: a1
