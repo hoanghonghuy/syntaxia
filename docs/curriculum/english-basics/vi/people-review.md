@@ -3,7 +3,7 @@ id: en-a1-u02-review
 track: english-basics
 locale: vi
 slug: people-review
-title: Ôn tập: giới thiệu người
+title: "Ôn tập: giới thiệu người"
 order: 8
 published: true
 cefr_level: a1
