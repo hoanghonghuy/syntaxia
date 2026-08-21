@@ -8,6 +8,11 @@ order: 3
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-number-03
+unit_title: "Confirm a number"
+unit_order: 3
+unit_can_do: "Hear, repeat, and confirm a simple numbered label in a short service exchange"
+unit_role: lesson
 can_do: "Recognize numbers in short spoken information and confirm a simple number"
 pattern: "零 / 一 / 二 / 三 / … / 十 / 百"
 objectives:
