@@ -3,7 +3,7 @@ id: en-a1-u01-checkpoint
 track: english-basics
 locale: vi
 slug: meeting-checkpoint
-title: Checkpoint: gặp lần đầu
+title: "Checkpoint: gặp lần đầu"
 order: 2
 published: true
 cefr_level: a1
