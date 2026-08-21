@@ -90,6 +90,7 @@ jobs:
           npm run test:product-flows
           npm run test:shell-ux
           npm run test:ui-refresh
+          npm run test:ui-system
       - name: Language V3 contracts
         run: |
           npm run test:language-v3
