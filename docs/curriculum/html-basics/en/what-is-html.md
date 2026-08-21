@@ -6,21 +6,21 @@ slug: what-is-html
 title: What is HTML?
 order: 0
 published: true
+can_do: "Read a small HTML fragment as semantic elements, attributes, and text instead of treating it as visual formatting"
 objectives:
-  - Explain HTML as the structure of a web page
-  - Recognize elements, tags, and attributes
-  - Read a short piece of HTML and name its parts
+  - Explain HTML as the semantic structure of a document
+  - Distinguish an element, tag, attribute, and text content
+  - Predict the basic document structure a browser receives from a fragment
 exercise:
   mode: html
   starter: |
-    <!-- Add a paragraph about HTML -->
-    
+    <!-- TODO: add one paragraph explaining what HTML does -->
   hints:
-    - Use a p element to mark a paragraph.
-    - Put text between opening and closing p tags.
-    - Your paragraph can describe what HTML does.
+    - Use a p element because the requested content is a paragraph.
+    - Put the sentence between an opening <p> and closing </p> tag.
+    - A valid pattern is: <p>Your sentence here.</p>
   solution: |
-    <p>HTML marks up meaning.</p>
+    <p>HTML describes the meaning and structure of content.</p>
   expected:
     type: htmlTags
     tags:
@@ -28,17 +28,34 @@ exercise:
         minCount: 1
 ---
 
-A web page is more than plain text. Browsers need **labels** that say “this is a heading,” “this is a paragraph,” or “this is a link.” **HTML** (HyperText Markup Language) is that labeling system. It does not style colors or make buttons interactive — it describes the *structure* of content.
+HTML is the layer that gives web content **meaning and structure**. Before thinking about colors or click behavior, learn to read source as a tree of elements the browser can understand.
 
-Think of a printed handout with clear section titles and body text. HTML gives the browser those roles so it can show the page correctly and help tools (such as screen readers) understand it.
+## Mental model
 
-Here are the three words you will see everywhere:
+Think **source -> elements -> document structure -> browser/assistive meaning**.
 
-| Word | Plain meaning | Example |
+```html
+<p class="note">Read the structure first.</p>
+```
+
+This fragment contains one `p` element. Its opening tag carries a `class` attribute; the sentence is text content; the closing tag ends the element.
+
+| Part | In the example | Job |
 | --- | --- | --- |
-| Element | A unit of content with a meaning | A paragraph |
-| Tag | The markers that open and close an element | `<p>` and `</p>` |
-| Attribute | Extra information on the opening tag | `lang="en"` |
+| element | the whole `<p>...</p>` | gives the content a paragraph role |
+| tag | `<p>` / `</p>` | marks the element boundaries |
+| attribute | `class="note"` | adds information to the opening tag |
+| text | `Read the structure first.` | content inside the element |
+
+## Predict the rendered structure
+
+Before previewing this:
+
+```html
+<p>Hello <strong>web</strong>.</p>
+```
+
+predict the tree: one paragraph contains text, then one `strong` child element, then more text. The browser may draw `strong` as bold, but its semantic role is strong importance.
 
 ## Worked example
 
@@ -46,19 +63,28 @@ Here are the three words you will see everywhere:
 <p class="note">HTML marks up meaning.</p>
 ```
 
-- `<p>` opens a **paragraph** element.
-- `class="note"` is an **attribute**: a name (`class`) and a value (`note`).
-- `HTML marks up meaning.` is the text content.
-- `</p>` closes the paragraph.
+The tag name decides the semantic role. The class does not turn a paragraph into another kind of element; it is metadata that CSS or JavaScript can use later.
 
-Most elements have an opening tag and a closing tag. A few (you will meet later) are empty and use a single tag, such as images.
+## Debug this
+
+```html
+<p href="/docs">Documentation</p>
+```
+
+The browser still has a paragraph, not a link. Adding a link-only attribute to the wrong element does not create link semantics. Use the correct element for the job: `<a href="/docs">Documentation</a>`.
 
 ## Common mistakes
 
-- Treating HTML like a programming language that “runs” logic — HTML describes structure; scripts and styles are separate.
-- Leaving out the closing tag when one is required — the browser may guess wrong and the page can look broken.
-- Confusing the tag name with the attribute — in `<p class="note">`, `p` is the element; `class` is extra data on that tag.
+- Treating HTML as a programming language that executes business logic.
+- Choosing elements only by their default appearance instead of their meaning.
+- Assuming any attribute can create behavior on any tag.
 
 ## Your turn
 
-Use the sandbox below to add a paragraph about HTML. When the checker shows **Correct**, mark this lesson complete.
+Add one real paragraph in the sandbox. Choose `p` because the content is prose, not because of how the default style looks.
+
+## Quick check
+
+What decides whether content is a paragraph: its `class`, its text, or the element name?
+
+**Answer:** the `p` element gives it paragraph semantics.
