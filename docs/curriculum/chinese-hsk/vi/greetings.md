@@ -8,6 +8,11 @@ order: 1
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-greeting-01
+unit_title: "Chào hỏi và kết thúc một lượt giao tiếp"
+unit_order: 1
+unit_can_do: "Chào một người, cảm ơn và kết thúc một lượt giao tiếp ngắn một cách tự nhiên"
+unit_role: lesson
 can_do: "Chào một người, cảm ơn và kết thúc một lượt giao tiếp ngắn một cách tự nhiên"
 pattern: "你好 / 谢谢 / 不客气 / 再见"
 objectives:
@@ -21,7 +26,9 @@ vocab:
 steps:
   - type: scene
     title: "Tình huống"
-    body: "Bạn gặp một bạn học trước giờ học. Hãy chào và kết thúc cuộc nói chuyện lịch sự."
+    body: "Bạn gặp một bạn học trước giờ học. Hãy chào rồi kết thúc cuộc nói chuyện lịch sự."
+    visualKey: "classmates-meeting"
+    imageAlt: "Hai bạn học quay sang nhau trước giờ học và bắt đầu một lượt chào hỏi ngắn."
   - type: dialogue
     lines:
       - { speaker: "A", text: "你好！", reading: "nǐ hǎo" }
