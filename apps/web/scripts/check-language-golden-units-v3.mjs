@@ -74,6 +74,17 @@ const migratedUnits = [
       ['cafe-review', 'review'],
     ],
   },
+  {
+    track: 'chinese-hsk',
+    unitId: 'zh-hsk-b1-people-02',
+    unitOrder: '2',
+    nodes: [
+      ['pronouns', 'lesson'],
+      ['family', 'lesson'],
+      ['introductions-checkpoint', 'checkpoint'],
+      ['introductions-review', 'review'],
+    ],
+  },
 ]
 
 function assessedIds(body) {
