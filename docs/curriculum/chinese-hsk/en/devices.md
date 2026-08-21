@@ -8,6 +8,11 @@ order: 12
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-device-09
+unit_title: "Use everyday devices"
+unit_order: 9
+unit_can_do: "Identify a common device and say which device you use to go online"
+unit_role: lesson
 can_do: "Identify a phone/computer and say which device you use to go online"
 pattern: "这是我的手机。/ 我用手机上网。"
 objectives:
