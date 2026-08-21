@@ -1,36 +1,41 @@
 <template>
-  <div class="card auth-card">
-    <h1>{{ t('auth.loginTitle') }}</h1>
-    <p class="auth-subtitle">{{ t('auth.loginSubtitle') }}</p>
-    <form class="form-stack" @submit.prevent="onSubmit">
-      <div class="form-field">
-        <label for="login-email">{{ t('auth.email') }}</label>
-        <input id="login-email" v-model="email" type="email" required autocomplete="email" />
+  <div class="auth-page">
+    <div class="card auth-card">
+      <div class="auth-head">
+        <NuxtLink :to="localePath('/')" class="auth-brand">Syntaxia</NuxtLink>
+        <h1>{{ t('auth.loginTitle') }}</h1>
       </div>
-      <div class="form-field">
-        <label for="login-password">{{ t('auth.password') }}</label>
-        <input
-          id="login-password"
-          v-model="password"
-          type="password"
-          required
-          autocomplete="current-password"
-        />
-      </div>
-      <p v-if="error" class="auth-error" role="alert">{{ error }}</p>
-      <button class="btn btn-primary" type="submit" :disabled="submitting">
-        {{ t('auth.submitLogin') }}
-      </button>
-      <a
-        v-if="providers?.google"
-        class="btn btn-ghost"
-        :href="googleAuthHref"
-      >{{ t('auth.google') }}</a>
-      <p class="auth-switch">
-        {{ t('auth.noAccount') }}
-        <NuxtLink :to="registerLink">{{ t('nav.register') }}</NuxtLink>
-      </p>
-    </form>
+
+      <form class="form-stack" @submit.prevent="onSubmit">
+        <div class="form-field">
+          <label for="login-email">{{ t('auth.email') }}</label>
+          <input id="login-email" v-model="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <label for="login-password">{{ t('auth.password') }}</label>
+          <input
+            id="login-password"
+            v-model="password"
+            type="password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        <p v-if="error" class="auth-error" role="alert">{{ error }}</p>
+        <button class="btn btn-primary" type="submit" :disabled="submitting">
+          {{ t('auth.submitLogin') }}
+        </button>
+        <a
+          v-if="providers?.google"
+          class="btn btn-ghost"
+          :href="googleAuthHref"
+        >{{ t('auth.google') }}</a>
+        <p class="auth-switch">
+          {{ t('auth.noAccount') }}
+          <NuxtLink :to="registerLink">{{ t('nav.register') }}</NuxtLink>
+        </p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -107,24 +112,49 @@ async function onSubmit() {
 </script>
 
 <style scoped>
+.auth-page {
+  display: grid;
+  min-height: 100%;
+  place-items: start center;
+  padding: clamp(2rem, 8vw, 5rem) var(--space-4);
+}
+
 .auth-card {
-  max-width: 24rem;
-  margin: 3rem auto;
-}
-.auth-subtitle {
-  color: var(--color-ink-muted);
-  font-size: 0.95rem;
-  margin: 0 0 1.25rem;
-  line-height: 1.45;
-}
-.auth-error {
-  color: var(--color-error);
+  width: min(100%, 25rem);
   margin: 0;
+  padding: clamp(1.5rem, 5vw, 2rem);
+  box-shadow: 0 20px 50px color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+.auth-head {
+  margin-bottom: var(--space-5);
+}
+
+.auth-brand {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-brand-deep);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.auth-head h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 6vw, 2.35rem);
+  letter-spacing: -0.04em;
+}
+
+.auth-error {
+  margin: 0;
+  color: var(--color-error);
   font-size: 0.9rem;
 }
+
 .auth-switch {
   margin: 0.5rem 0 0;
-  font-size: 0.9rem;
   color: var(--color-ink-muted);
+  font-size: 0.9rem;
 }
 </style>
