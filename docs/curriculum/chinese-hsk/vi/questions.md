@@ -8,6 +8,11 @@ order: 9
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-info-06
+unit_title: "Hỏi về người và nơi chốn"
+unit_order: 6
+unit_can_do: "Hỏi ai hoặc ở đâu và trả lời bằng một người, địa điểm hoặc nơi đến trong hội thoại ngắn"
+unit_role: lesson
 can_do: "Dùng các từ để hỏi cơ bản và một câu hỏi có/không trong hội thoại ngắn"
 pattern: "什么 / 谁 / 哪里 / …吗？ / …呢？"
 objectives:
