@@ -3,7 +3,7 @@ id: en-a1-u02-checkpoint
 track: english-basics
 locale: vi
 slug: people-checkpoint
-title: Kiểm tra: giới thiệu người
+title: "Kiểm tra: giới thiệu người"
 order: 7
 published: true
 cefr_level: a1
