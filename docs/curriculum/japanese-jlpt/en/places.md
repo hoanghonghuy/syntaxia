@@ -7,6 +7,11 @@ title: Ask where a place is
 order: 6
 published: true
 jlpt_level: n5
+unit_id: ja-n5-location-05
+unit_title: "Ask where a place is"
+unit_order: 5
+unit_can_do: "Ask where a common place is and understand a short location answer based on viewpoint"
+unit_role: lesson
 can_do: "Ask where a common place is and understand ここ・そこ・あそこ in a short answer"
 pattern: "トイレはどこですか。 / ここです。 / あそこです。"
 objectives:
