@@ -8,6 +8,11 @@ order: 10
 published: true
 hsk_band: 1
 hsk_version: "3.0"
+unit_id: zh-hsk-b1-describe-07
+unit_title: "Miêu tả một vật đơn giản"
+unit_order: 7
+unit_can_do: "Miêu tả tự nhiên kích thước hoặc nhiệt độ của một vật và phản hồi một câu hỏi mô tả đơn giản"
+unit_role: lesson
 can_do: "Mô tả một vật lớn/nhỏ hoặc nóng/lạnh bằng câu tự nhiên ở mức cơ bản"
 pattern: "很大 / 很小 / 很热 / 很冷"
 objectives:
