@@ -72,59 +72,12 @@ func gradeHtmlTags(expected map[string]any, rawHTML string) (bool, string, strin
 		if !ok {
 			return false, "invalid_expected", "invalid expected html tags"
 		}
-		tag, _ := spec["tag"].(string)
-		tag = strings.ToLower(strings.TrimSpace(tag))
-		if tag == "" {
-			return false, "invalid_expected", "invalid expected html tags"
+		passed, invalid, message := gradeHTMLTagSpec(spec, elements)
+		if invalid {
+			return false, "invalid_expected", message
 		}
-		minCount := intFromAny(spec["minCount"])
-		if minCount < 1 {
-			minCount = 1
-		}
-		maxCount := intFromAny(spec["maxCount"])
-
-		requiredAttrs := []string{}
-		if rawRequired, exists := spec["requiredAttrs"]; exists {
-			parsed, ok := anyStringSlice(rawRequired)
-			if !ok {
-				return false, "invalid_expected", "invalid required HTML attributes"
-			}
-			for _, attr := range parsed {
-				attr = strings.ToLower(strings.TrimSpace(attr))
-				if attr == "" {
-					return false, "invalid_expected", "invalid required HTML attributes"
-				}
-				requiredAttrs = append(requiredAttrs, attr)
-			}
-		}
-
-		attrEquals := map[string]string{}
-		if rawEquals, exists := spec["attrEquals"]; exists {
-			parsed, ok := anyStringMap(rawEquals)
-			if !ok {
-				return false, "invalid_expected", "invalid expected HTML attribute values"
-			}
-			for key, value := range parsed {
-				key = strings.ToLower(strings.TrimSpace(key))
-				if key == "" {
-					return false, "invalid_expected", "invalid expected HTML attribute values"
-				}
-				attrEquals[key] = value
-			}
-		}
-
-		matching := 0
-		for _, element := range elements {
-			if element.tag != tag || !elementHasAttrs(element, requiredAttrs, attrEquals) {
-				continue
-			}
-			matching++
-		}
-		if matching < minCount {
-			return false, "wrong_result", fmt.Sprintf("expected at least %d matching <%s> element(s)", minCount, tag)
-		}
-		if maxCount > 0 && matching > maxCount {
-			return false, "wrong_result", fmt.Sprintf("expected at most %d matching <%s> element(s)", maxCount, tag)
+		if !passed {
+			return false, "wrong_result", message
 		}
 	}
 
@@ -138,16 +91,9 @@ func gradeHtmlTags(expected map[string]any, rawHTML string) (bool, string, strin
 			if !ok {
 				return false, "invalid_expected", "invalid expected HTML relations"
 			}
-			kind, _ := relation["kind"].(string)
-			var passed bool
-			var message string
-			switch kind {
-			case "attributeReference":
-				passed, message = gradeHTMLAttributeReference(relation, elements)
-			case "sharedAttributeValue":
-				passed, message = gradeHTMLSharedAttributeValue(relation, elements)
-			default:
-				return false, "invalid_expected", "unsupported HTML relation"
+			passed, invalid, message := gradeHTMLRelation(relation, elements)
+			if invalid {
+				return false, "invalid_expected", message
 			}
 			if !passed {
 				return false, "wrong_result", message
@@ -156,6 +102,62 @@ func gradeHtmlTags(expected map[string]any, rawHTML string) (bool, string, strin
 	}
 
 	return true, "", ""
+}
+
+func gradeHTMLTagSpec(spec map[string]any, elements []htmlElementInfo) (passed, invalid bool, message string) {
+	tag := lowerString(spec["tag"])
+	if tag == "" {
+		return false, true, "invalid expected html tags"
+	}
+	minCount := intFromAny(spec["minCount"])
+	if minCount < 1 {
+		minCount = 1
+	}
+	maxCount := intFromAny(spec["maxCount"])
+
+	requiredAttrs := []string{}
+	if rawRequired, exists := spec["requiredAttrs"]; exists {
+		parsed, ok := anyStringSlice(rawRequired)
+		if !ok {
+			return false, true, "invalid required HTML attributes"
+		}
+		for _, attr := range parsed {
+			attr = strings.ToLower(strings.TrimSpace(attr))
+			if attr == "" {
+				return false, true, "invalid required HTML attributes"
+			}
+			requiredAttrs = append(requiredAttrs, attr)
+		}
+	}
+
+	attrEquals := map[string]string{}
+	if rawEquals, exists := spec["attrEquals"]; exists {
+		parsed, ok := anyStringMap(rawEquals)
+		if !ok {
+			return false, true, "invalid expected HTML attribute values"
+		}
+		for key, value := range parsed {
+			key = strings.ToLower(strings.TrimSpace(key))
+			if key == "" {
+				return false, true, "invalid expected HTML attribute values"
+			}
+			attrEquals[key] = value
+		}
+	}
+
+	matching := 0
+	for _, element := range elements {
+		if element.tag == tag && elementHasAttrs(element, requiredAttrs, attrEquals) {
+			matching++
+		}
+	}
+	if matching < minCount {
+		return false, false, fmt.Sprintf("expected at least %d matching <%s> element(s)", minCount, tag)
+	}
+	if maxCount > 0 && matching > maxCount {
+		return false, false, fmt.Sprintf("expected at most %d matching <%s> element(s)", maxCount, tag)
+	}
+	return true, false, ""
 }
 
 func inspectHTMLTags(raw string) ([]htmlElementInfo, error) {
@@ -197,6 +199,20 @@ func elementHasAttrs(element htmlElementInfo, required []string, equals map[stri
 	return true
 }
 
+func gradeHTMLRelation(spec map[string]any, elements []htmlElementInfo) (passed, invalid bool, message string) {
+	kind, _ := spec["kind"].(string)
+	switch kind {
+	case "attributeReference":
+		passed, message := gradeHTMLAttributeReference(spec, elements)
+		return passed, false, message
+	case "sharedAttributeValue":
+		passed, message := gradeHTMLSharedAttributeValue(spec, elements)
+		return passed, false, message
+	default:
+		return false, true, "unsupported HTML relation"
+	}
+}
+
 func gradeHTMLAttributeReference(spec map[string]any, elements []htmlElementInfo) (bool, string) {
 	fromTag := lowerString(spec["fromTag"])
 	fromAttr := lowerString(spec["fromAttr"])
@@ -212,11 +228,10 @@ func gradeHTMLAttributeReference(spec map[string]any, elements []htmlElementInfo
 
 	targetValues := map[string]struct{}{}
 	for _, element := range elements {
-		if element.tag != toTag {
-			continue
-		}
-		if value := strings.TrimSpace(element.attrs[toAttr]); value != "" {
-			targetValues[value] = struct{}{}
+		if element.tag == toTag {
+			if value := strings.TrimSpace(element.attrs[toAttr]); value != "" {
+				targetValues[value] = struct{}{}
+			}
 		}
 	}
 
@@ -226,10 +241,7 @@ func gradeHTMLAttributeReference(spec map[string]any, elements []htmlElementInfo
 			continue
 		}
 		value := strings.TrimSpace(element.attrs[fromAttr])
-		if value == "" {
-			continue
-		}
-		if _, ok := targetValues[value]; ok {
+		if _, ok := targetValues[value]; value != "" && ok {
 			matches++
 		}
 	}
@@ -249,20 +261,20 @@ func gradeHTMLSharedAttributeValue(spec map[string]any, elements []htmlElementIn
 	if minCount < 2 {
 		minCount = 2
 	}
-	attrEquals := map[string]string{}
+	filters := map[string]string{}
 	if rawEquals, exists := spec["attrEquals"]; exists {
 		parsed, ok := anyStringMap(rawEquals)
 		if !ok {
 			return false, "invalid shared HTML attribute filter"
 		}
 		for key, value := range parsed {
-			attrEquals[strings.ToLower(strings.TrimSpace(key))] = value
+			filters[strings.ToLower(strings.TrimSpace(key))] = value
 		}
 	}
 
 	counts := map[string]int{}
 	for _, element := range elements {
-		if element.tag != tag || !elementHasAttrs(element, nil, attrEquals) {
+		if element.tag != tag || !elementHasAttrs(element, nil, filters) {
 			continue
 		}
 		value := strings.TrimSpace(element.attrs[attr])
@@ -298,26 +310,19 @@ func gradeCSSRules(expected map[string]any, rawCSS string) (bool, string, string
 		if !ok {
 			return false, "invalid_expected", "invalid expected CSS rule"
 		}
-		selector, _ := spec["selector"].(string)
-		selector = normalizeCSSSelector(selector)
+		selector := normalizeCSSSelector(stringFromAny(spec["selector"]))
 		if selector == "" {
 			return false, "invalid_expected", "missing expected CSS selector"
 		}
-		expectedDecls, ok := anyStringMap(spec["declarations"])
-		if !ok || len(expectedDecls) == 0 {
+		rawDecls, ok := anyStringMap(spec["declarations"])
+		if !ok || len(rawDecls) == 0 {
 			return false, "invalid_expected", "missing expected CSS declarations"
 		}
-		for property, value := range expectedDecls {
-			delete(expectedDecls, property)
-			expectedDecls[strings.ToLower(strings.TrimSpace(property))] = normalizeCSSValue(value)
-		}
+		expectedDecls := normalizeExpectedCSSDeclarations(rawDecls)
 
 		matched := false
 		for _, rule := range rules {
-			if rule.selector != selector {
-				continue
-			}
-			if cssDeclarationsContain(rule.declarations, expectedDecls) {
+			if rule.selector == selector && cssDeclarationsContain(rule.declarations, expectedDecls) {
 				matched = true
 				break
 			}
@@ -329,8 +334,22 @@ func gradeCSSRules(expected map[string]any, rawCSS string) (bool, string, string
 	return true, "", ""
 }
 
+func normalizeExpectedCSSDeclarations(raw map[string]string) map[string]string {
+	normalized := make(map[string]string, len(raw))
+	for property, value := range raw {
+		property = strings.ToLower(strings.TrimSpace(property))
+		if property != "" {
+			normalized[property] = normalizeCSSValue(value)
+		}
+	}
+	return normalized
+}
+
 func parseCSSRules(raw string) ([]cssRule, error) {
-	css := stripCSSComments(raw)
+	css, err := stripCSSComments(raw)
+	if err != nil {
+		return nil, err
+	}
 	rules := []cssRule{}
 	pos := 0
 	for pos < len(css) {
@@ -356,7 +375,7 @@ func parseCSSRules(raw string) ([]cssRule, error) {
 		if strings.Contains(body, "{") {
 			return nil, fmt.Errorf("nested CSS blocks are not supported in basics grader")
 		}
-		decls, err := parseCSSDeclarations(body)
+		declarations, err := parseCSSDeclarations(body)
 		if err != nil {
 			return nil, err
 		}
@@ -365,7 +384,7 @@ func parseCSSRules(raw string) ([]cssRule, error) {
 			if selector == "" {
 				return nil, fmt.Errorf("empty selector in selector list")
 			}
-			rules = append(rules, cssRule{selector: selector, declarations: decls})
+			rules = append(rules, cssRule{selector: selector, declarations: declarations})
 		}
 		pos = close + 1
 	}
@@ -373,13 +392,13 @@ func parseCSSRules(raw string) ([]cssRule, error) {
 }
 
 func parseCSSDeclarations(body string) (map[string]string, error) {
-	decls := map[string]string{}
-	for _, rawDecl := range strings.Split(body, ";") {
-		rawDecl = strings.TrimSpace(rawDecl)
-		if rawDecl == "" {
+	declarations := map[string]string{}
+	for _, rawDeclaration := range strings.Split(body, ";") {
+		rawDeclaration = strings.TrimSpace(rawDeclaration)
+		if rawDeclaration == "" {
 			continue
 		}
-		parts := strings.SplitN(rawDecl, ":", 2)
+		parts := strings.SplitN(rawDeclaration, ":", 2)
 		if len(parts) != 2 {
 			return nil, fmt.Errorf("invalid CSS declaration")
 		}
@@ -388,21 +407,21 @@ func parseCSSDeclarations(body string) (map[string]string, error) {
 		if property == "" || value == "" {
 			return nil, fmt.Errorf("invalid CSS declaration")
 		}
-		decls[property] = value
+		declarations[property] = value
 	}
-	if len(decls) == 0 {
+	if len(declarations) == 0 {
 		return nil, fmt.Errorf("CSS rule has no declarations")
 	}
-	return decls, nil
+	return declarations, nil
 }
 
-func stripCSSComments(raw string) string {
+func stripCSSComments(raw string) (string, error) {
 	var out strings.Builder
 	for i := 0; i < len(raw); {
 		if i+1 < len(raw) && raw[i] == '/' && raw[i+1] == '*' {
 			end := strings.Index(raw[i+2:], "*/")
 			if end < 0 {
-				break
+				return "", fmt.Errorf("unclosed CSS comment")
 			}
 			i += end + 4
 			continue
@@ -410,7 +429,7 @@ func stripCSSComments(raw string) string {
 		out.WriteByte(raw[i])
 		i++
 	}
-	return out.String()
+	return out.String(), nil
 }
 
 func normalizeCSSSelector(selector string) string {
@@ -425,8 +444,7 @@ func normalizeCSSSelector(selector string) string {
 
 func normalizeCSSValue(value string) string {
 	v := strings.ToLower(strings.Join(strings.Fields(strings.TrimSpace(value)), " "))
-	v = strings.ReplaceAll(v, ", ", ",")
-	return v
+	return strings.ReplaceAll(v, ", ", ",")
 }
 
 func cssDeclarationsContain(actual, expected map[string]string) bool {
@@ -439,9 +457,13 @@ func cssDeclarationsContain(actual, expected map[string]string) bool {
 	return true
 }
 
-func lowerString(v any) string {
+func stringFromAny(v any) string {
 	s, _ := v.(string)
-	return strings.ToLower(strings.TrimSpace(s))
+	return s
+}
+
+func lowerString(v any) string {
+	return strings.ToLower(strings.TrimSpace(stringFromAny(v)))
 }
 
 func anyStringMap(v any) (map[string]string, bool) {
