@@ -2,6 +2,7 @@ export const LANGUAGE_VISUAL_KEYS = [
   'classmates-meeting',
   'student-leaving',
   'student-studying',
+  'shop-counter-request',
 ] as const
 
 export type LanguageVisualKey = (typeof LANGUAGE_VISUAL_KEYS)[number]
@@ -31,6 +32,12 @@ const LANGUAGE_VISUAL_ASSETS: Readonly<Record<LanguageVisualKey, LanguageVisualA
     kind: 'choice',
     provenance: 'syntaxia-original',
     learningSignal: 'One learner studies alone at a desk.',
+  },
+  'shop-counter-request': {
+    key: 'shop-counter-request',
+    kind: 'scene',
+    provenance: 'syntaxia-original',
+    learningSignal: 'A customer points to a chosen item at a small shop counter while speaking to the clerk.',
   },
 }
 
