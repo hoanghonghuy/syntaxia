@@ -18,10 +18,16 @@ const SLUGS = [
   'meeting-checkpoint',
   'meeting-review',
   'people',
-  'numbers',
   'family',
-  'food-drink',
+  'people-checkpoint',
+  'people-review',
+  'numbers',
   'places',
+  'find-way-checkpoint',
+  'find-way-review',
+  'food-drink',
+  'cafe-checkpoint',
+  'cafe-review',
 ]
 
 describe('english-basics curriculum slice', () => {
