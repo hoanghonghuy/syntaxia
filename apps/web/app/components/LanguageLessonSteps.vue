@@ -1,6 +1,13 @@
 <template>
   <section class="lang-steps" :aria-label="t('lesson.languagePath')">
-    <div class="lang-step-progress" role="progressbar" :aria-valuenow="stepIndex + 1" aria-valuemin="1" :aria-valuemax="steps.length">
+    <div
+      class="lang-step-progress"
+      role="progressbar"
+      :aria-valuenow="stepIndex + 1"
+      aria-valuemin="1"
+      :aria-valuemax="steps.length"
+      :aria-valuetext="`${stepIndex + 1} / ${steps.length}`"
+    >
       <span>{{ stepIndex + 1 }} / {{ steps.length }}</span>
       <span class="lang-progress-track" aria-hidden="true">
         <span class="lang-progress-value" :style="{ width: `${progressPercent}%` }" />
@@ -97,7 +104,9 @@
         :track-id="trackId"
         @passed="onCheckpointItemPassed"
       />
-      <p class="lang-checkpoint-meta">{{ checkpointCursor + 1 }} / {{ checkpointItems.length }}</p>
+      <p class="lang-checkpoint-meta" aria-live="polite">
+        {{ checkpointCursor + 1 }} / {{ checkpointItems.length }}
+      </p>
     </div>
 
     <div class="lang-step-nav">
@@ -243,31 +252,57 @@ function next() {
 
 <style scoped>
 .lang-steps { margin: 0; }
-.lang-step-progress { display: grid; gap: .4rem; margin: 0 0 1.2rem; font-size: .8rem; color: var(--color-muted, #5b6b63); }
-.lang-progress-track { display: block; height: 5px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--color-border, #d9e2dd) 75%, transparent); }
-.lang-progress-value { display: block; height: 100%; border-radius: inherit; background: var(--color-accent, #0d9488); transition: width .2s ease; }
+.lang-step-progress { display: grid; gap: .4rem; margin: 0 0 1.2rem; font-size: .8rem; color: var(--color-ink-muted); }
+.lang-progress-track { display: block; height: 5px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--color-hairline) 75%, transparent); }
+.lang-progress-value { display: block; height: 100%; border-radius: inherit; background: var(--color-brand); transition: width .2s ease; }
 .lang-step { padding: 1rem 0 .35rem; }
-.lang-step-label { margin: 0 0 .65rem; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: var(--color-muted, #5b6b63); }
+.lang-step-label { margin: 0 0 .65rem; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: var(--color-ink-muted); }
 .lang-scene-visual, .lang-scene-image { width: 100%; max-height: 22rem; border-radius: 14px; margin-bottom: 1rem; }
 .lang-scene-image { object-fit: cover; }
 .lang-scene-title, .lang-tip-title { margin: 0 0 .45rem; font-size: 1.2rem; }
 .lang-scene-body, .lang-tip-body, .lang-listen-prompt { margin: 0; line-height: 1.6; }
 .lang-dialogue-lines, .lang-teach-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
-.lang-dialogue-row, .lang-teach-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding: .75rem 0; border-bottom: 1px solid var(--color-border, rgba(20,40,30,.1)); }
+.lang-dialogue-row, .lang-teach-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding: .75rem 0; border-bottom: 1px solid var(--color-hairline); }
 .lang-dialogue-main, .lang-teach-main { min-width: 0; flex: 1; }
 .lang-speaker { display: inline-block; min-width: 1.7rem; font-weight: 700; margin-right: .35rem; }
-.lang-line-text { font-size: 1.18rem; }
-.lang-line-reading { display: block; margin-top: .25rem; font-size: .9rem; color: var(--color-muted, #5b6b63); }
+.lang-line-text { font-size: 1.18rem; overflow-wrap: anywhere; }
+.lang-line-reading { display: block; margin-top: .25rem; font-size: .9rem; color: var(--color-ink-muted); overflow-wrap: anywhere; }
 .lang-listen { display: grid; gap: .7rem; }
 .lang-listen-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; }
-.lang-transcript-toggle { min-height: 2.25rem; }
-.lang-listen-transcript { padding: .75rem .85rem; border-radius: 10px; background: color-mix(in srgb, var(--color-surface, #fff) 88%, var(--color-accent, #0d9488) 12%); }
-.lang-listen-text { margin: 0; font-size: 1.35rem; font-weight: 600; }
+.lang-transcript-toggle { min-height: 2.75rem; }
+.lang-listen-transcript { padding: .75rem .85rem; border-radius: 10px; background: color-mix(in srgb, var(--color-surface) 88%, var(--color-brand) 12%); }
+.lang-listen-text { margin: 0; font-size: 1.35rem; font-weight: 600; overflow-wrap: anywhere; }
 .lang-teach-row { padding: .8rem 0; }
-.lang-teach-form { font-size: 1.22rem; margin-right: .45rem; }
-.lang-teach-reading { margin-right: .45rem; color: var(--color-muted, #5b6b63); }
-.lang-teach-example { margin: .3rem 0 0; font-size: 1.03rem; line-height: 1.5; }
+.lang-teach-form { font-size: 1.22rem; margin-right: .45rem; overflow-wrap: anywhere; }
+.lang-teach-reading { margin-right: .45rem; color: var(--color-ink-muted); overflow-wrap: anywhere; }
+.lang-teach-example { margin: .3rem 0 0; font-size: 1.03rem; line-height: 1.5; overflow-wrap: anywhere; }
 .lang-step-nav { margin-top: 1.1rem; display: flex; justify-content: flex-end; }
-.lang-checkpoint-meta { margin: .6rem 0 0; font-size: .85rem; color: var(--color-muted, #5b6b63); }
-@media (prefers-reduced-motion: reduce) { .lang-progress-value { transition: none; } }
+.lang-checkpoint-meta { margin: .6rem 0 0; font-size: .85rem; color: var(--color-ink-muted); }
+
+@media (max-width: 560px) {
+  .lang-dialogue-row,
+  .lang-teach-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .55rem;
+  }
+
+  .lang-listen-actions {
+    align-items: stretch;
+  }
+
+  .lang-transcript-toggle,
+  .lang-step-nav .btn {
+    width: 100%;
+    min-height: 2.75rem;
+  }
+
+  .lang-step-nav {
+    justify-content: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-progress-value { transition: none; }
+}
 </style>
