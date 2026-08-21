@@ -51,6 +51,11 @@ type LessonSummary struct {
 	Title     string `json:"title"`
 	SortOrder int    `json:"sortOrder"`
 	Published bool   `json:"published"`
+	UnitID    string `json:"unitId,omitempty"`
+	UnitTitle string `json:"unitTitle,omitempty"`
+	UnitOrder int    `json:"unitOrder,omitempty"`
+	UnitCanDo string `json:"unitCanDo,omitempty"`
+	UnitRole  string `json:"unitRole,omitempty"`
 }
 
 type Progress struct {
