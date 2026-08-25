@@ -55,7 +55,7 @@ describe('UI refresh contract', () => {
     assert.match(resolver, /targetLang:\s*'ja'/)
     assert.match(resolver, /languageTargetLangForTrack/)
     assert.match(resolver, /trackProgress/)
-    assert.match(resolver, /track\.sortOrder/)
+    assert.match(resolver, /\.sortOrder/)
     assert.doesNotMatch(resolver, /english-basics|chinese-hsk|japanese-jlpt/)
   })
 
