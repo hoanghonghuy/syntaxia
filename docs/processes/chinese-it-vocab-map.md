@@ -1,61 +1,99 @@
-# Chinese IT vocabulary — first lesson map
+# Chinese IT vocabulary — production mini-course map
 
 ## Purpose
 
-Map open **szdict** (CC BY-SA 3.0) Chinese–English tech terms into the first Syntaxia `chinese-it-vocab` lessons. Authors must not invent term lists outside this map for the MVP slice.
+Map the open **szdict** (CC BY-SA 3.0) Chinese–English technology vocabulary into a focused Syntaxia specialty-language mini-course. The source controls **term membership**; Syntaxia supplies original communicative situations, explanations, exercises, visuals, and vi/en learning copy.
+
+This track follows **Language V3**. It is not a glossary dump and must not fall back to generic vocabulary MCQs.
 
 ## When to use
 
-- Before adding or publishing a `docs/curriculum/chinese-it-vocab/` lesson
-- When reviewing OpenSpec `chinese-it-vocab-mvp` content tasks
+- Writing or reviewing `docs/curriculum/chinese-it-vocab/`
+- Checking whether a proposed term belongs in the current six-lesson scope
+- Reviewing semantic visuals, assessed item IDs, or EN/VI parity for the specialty track
 
-## Sources (cited)
+## Sources and license
 
 | Source | License | Role |
 |--------|---------|------|
-| [mhagiwara/szdict](https://github.com/mhagiwara/szdict) `szdict.yml` | CC BY-SA 3.0 | **Primary** membership — every hanzi lemma in MVP `vocab` must appear as a `word:` entry (or listed `var:`) in that file |
-| [EarsEyesMouth/computerese-cross-references](https://github.com/EarsEyesMouth/computerese-cross-references) | MIT | Optional clustering / EN–ZH cross-check (not required for membership) |
-| [dahlia/cjk-compsci-terms](https://github.com/dahlia/cjk-compsci-terms) | CC BY-SA 4.0 | Optional regional-variant notes — do not replace szdict membership |
+| [mhagiwara/szdict](https://github.com/mhagiwara/szdict) `szdict.yml` | CC BY-SA 3.0 | **Primary membership** — every target Hanzi lemma in this mini-course must appear as a `word:` entry (or listed `var:`) in that file |
+| [EarsEyesMouth/computerese-cross-references](https://github.com/EarsEyesMouth/computerese-cross-references) | MIT | Optional EN–ZH cross-check and clustering aid |
+| [dahlia/cjk-compsci-terms](https://github.com/dahlia/cjk-compsci-terms) | CC BY-SA 4.0 | Optional regional-variant notes; never a replacement for szdict membership |
 
-**Rule:** Do **not** redistribute NC/ND lists (e.g. ITEC BY-NC-ND, Synced AI BY-NC-SA) as curriculum dumps.
+Do **not** redistribute NC/ND term lists as curriculum dumps. Pinyin follows the mapped source convention with learner-friendly spacing. Explanations, dialogues, exercises, and semantic visuals are original Syntaxia learning content.
 
-Glosses and explain prose are original Syntaxia copy (en/vi). Pinyin follows szdict romanization (normalized spacing for learner UI).
+**Attribution:** target lemmas are adapted from szdict (CC BY-SA 3.0); share-alike applies to the adapted glossary subset in curriculum frontmatter.
 
-**Attribution:** Term lemmas adapted from szdict (CC BY-SA 3.0). Share-alike applies to adapted glossary subsets in curriculum frontmatter.
+## Locked six-lesson scope
 
-## First slice (6 lessons)
+The source is ML/startup/hardware-heavy, so the syllabus follows the vocabulary actually supported by the source rather than inventing a generic operating-system or security course.
 
-szdict is ML/startup/hardware-leaning — themes follow **what the dictionary contains**, not a generic OS/security syllabus.
+| Order | Slug | Workplace Can-Do | Target lemmas | Semantic visual |
+|------:|------|------------------|---------------|-----------------|
+| 1 | `hardware-software` | Ask whether a simple computer problem is hardware or software and mention the chip | 硬件, 软件, 芯片 | `tech-repair-desk` |
+| 2 | `internet-apps` | Follow a WeChat + QR-code login flow and refer to the Internet connection | 互联网, 微信, 扫码 | `qr-code-login` |
+| 3 | `ai-basics` | Say a project uses AI/ML and identify its algorithm and model | 人工智能, 机器学习, 算法, 模型 | `ai-project-flow` |
+| 4 | `deep-learning` | Report that a model uses deep learning / a neural network and flag overfitting | 深度学习, 神经网络, 训练, 过拟合 | `model-training-monitor` |
+| 5 | `nlp-basics` | Explain an NLP project using language-model, word-vector, and context vocabulary | 自然语言处理, 语言模型, 词向量, 上下文 | `nlp-context-window` |
+| 6 | `tech-hubs` | Distinguish Shenzhen, Huaqiangbei, Zhongguancun, and the company term 独角兽企业 | 深圳, 华强北, 中关村, 独角兽企业 | `china-tech-hubs` |
 
-| Order | Slug | Theme | Target lemmas (szdict `word`) |
-|------:|------|-------|-------------------------------|
-| 1 | `hardware-software` | Hardware & software | 硬件, 软件, 芯片 |
-| 2 | `internet-apps` | Internet & apps | 互联网, 微信, 扫码 |
-| 3 | `ai-basics` | AI basics | 人工智能, 机器学习, 算法, 模型 |
-| 4 | `deep-learning` | Deep learning | 深度学习, 神经网络, 训练, 过拟合 |
-| 5 | `nlp-basics` | Language & NLP | 自然语言处理, 语言模型, 词向量, 上下文 |
-| 6 | `tech-hubs` | China tech hubs | 深圳, 华强北, 中关村, 独角兽企业 |
+Lesson IDs remain `zh-it-{order}-{slug}` and EN/VI files ship together.
 
-Lesson ids: `zh-it-{order}-{slug}` (e.g. `zh-it-01-hardware-software`). Locales: `en` + `vi` paired files.
+## Language V3 authoring contract
 
-Frontmatter: `specialty: it-vocab`, `source: szdict`.
+Every published specialty lesson must provide one complete guided session:
+
+`scene -> dialogue -> listen -> teach -> contextual practice -> listening assessment -> controlled production -> checkpoint -> scheduled review evidence`
+
+Required properties:
+
+- observable `can_do`, plus explicit `unit_id`, `unit_title`, `unit_order`, `unit_can_do`, `unit_role`
+- a semantic `visualKey` with localized `imageAlt`
+- natural Mandarin in a believable technology/work action
+- at least five stable assessed IDs per locale pair
+- at least one `dialogue_choice`, one `audio_choice`, and one `type_answer`
+- progressive hints for controlled production
+- no authored generic `mcq`
+- the same assessed IDs and grading intent in EN and VI
+- no external `imageUrl` hotlinks
+
+The fallback `exercise` remains for compatibility but must use a production-oriented V3 type such as `type_answer`, not legacy `mcq` / `fill_blank` authoring.
 
 ## Do
 
-- Cite this map in PRs that add specialty lessons
-- Keep paired en/vi; language player only (no sandboxes)
-- Prefer lemmas present in `szdict.yml`
-- Lessons use **`steps`** per [`language-learning-pedagogy-v2.md`](./language-learning-pedagogy-v2.md)
+- Keep the target-lemma set traceable to this map and its cited source
+- Put terminology inside realistic actions: inspect, log in, describe, report, compare, or troubleshoot
+- Keep target Mandarin identical across EN/VI while localizing prompts, hints, explanations, and alt text naturally
+- Preserve stable assessed IDs because they are review/persistence contracts
+- Use app-owned semantic visuals only
 
 ## Don't
 
-- Invent hardware/OS/security outlines not covered by cited membership
-- Copy textbook paragraphs
-- Mix HSK Band pacing into this track
-- Add glossary-only lessons without `steps`
+- Add glossary-only lessons
+- Generate a long IT syllabus from terms not supported by the locked source map
+- Teach every item through meaning-selection questions
+- Treat a decorative image as “visual learning”
+- Mix the HSK Band pacing contract into this specialty mini-course
+- Copy source definitions or textbook paragraphs into lesson prose
+
+## Verification
+
+Run:
+
+```bash
+cd apps/web
+npm run test:chinese-it-vocab
+npm run test:language-v3
+npm run test:language-visuals-v3
+```
+
+The Product CI Language V3 gate includes `check-chinese-it-vocab.mjs`, so this specialty track cannot silently regress to legacy quiz authoring.
 
 ## Related
 
+- [`language-content-quality-v3.md`](./language-content-quality-v3.md)
+- [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
 - [`language-specialty-it-vocab.md`](./language-specialty-it-vocab.md)
 - [`languages-tracks.md`](./languages-tracks.md)
-- OpenSpec: `openspec/changes/archive/chinese-it-vocab-mvp/`
+- `apps/web/app/utils/languageVisual.ts`
+- `apps/web/scripts/check-chinese-it-vocab.mjs`

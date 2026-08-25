@@ -4,24 +4,32 @@ Markdown lessons synced to Postgres (and Google Drive when configured).
 
 ## Path pattern
 
-```
+```text
 docs/curriculum/<track>/<locale>/<slug>.md
 ```
 
-## Frontmatter
+## Quality contracts
 
-See [`docs/processes/curriculum-pedagogy.md`](../processes/curriculum-pedagogy.md).  
-SQL Fundamentals outline: [`docs/processes/sql-fundamentals-w3schools-map.md`](../processes/sql-fundamentals-w3schools-map.md).
+- IT / code / web pedagogy: [`docs/processes/curriculum-pedagogy.md`](../processes/curriculum-pedagogy.md)
+- Language V3 pedagogy: [`docs/processes/language-learning-pedagogy-v3.md`](../processes/language-learning-pedagogy-v3.md)
+- Language content quality: [`docs/processes/language-content-quality-v3.md`](../processes/language-content-quality-v3.md)
+- Product-level scope/status: [`docs/processes/curriculum-product-completion.md`](../processes/curriculum-product-completion.md)
+
+“Complete” always means complete **within the declared track scope**. A starter CEFR/HSK/JLPT path is not the same claim as full exam-level coverage.
 
 ## Tracks
 
-| Track | Level | Notes |
-|-------|-------|-------|
-| `sql-fundamentals` | basic | W3Schools-density portable SQL (**42** lessons — **closed**) |
-| `postgresql` | intermediate | PG-specific basic→advanced (**19** lessons) |
-| `html-basics` | basic | MDN Semantic HTML (**12** en+vi) — Phase 1 no sandbox; see `html-css-basics-tracks.md` |
-| `css-basics` | basic | MDN CSS fundamentals + Flexbox (**14** en+vi) — Phase 1 no sandbox |
-| `javascript-basics` | basic | MDN scripting basics (**9** en+vi); JS sandbox **shipped** |
+| Track | Domain / level | Current declared scope |
+|-------|----------------|------------------------|
+| `sql-fundamentals` | IT · basic | Portable SQL fundamentals, **42** lessons — closed |
+| `postgresql` | IT · intermediate | PostgreSQL-specific basic→advanced, **19** lessons |
+| `javascript-basics` | IT · basic | MDN-mapped JavaScript fundamentals, **9** lessons; JS sandbox shipped |
+| `html-basics` | IT · basic | Semantic HTML fundamentals, **12** lessons; HTML/CSS sandbox shipped |
+| `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
+| `chinese-hsk` | Languages · starter | HSK 3.0 Band 1 starter path, **9 units / 30 nodes per locale** |
+| `english-basics` | Languages · starter | CEFR A1 starter path, **4 units / 14 nodes per locale** |
+| `japanese-jlpt` | Languages · starter | JLPT N5 starter path, **5 units / 16 nodes per locale** |
+| `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
 ## SQL Fundamentals (published order)
 
@@ -85,3 +93,7 @@ Full path + polish rules: [`docs/processes/sql-fundamentals-closure.md`](../proc
 | 6 | conditionals |
 | 7 | loops |
 | 8 | functions |
+
+## Verification
+
+IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. Language tracks are enforced by the Language V3 web tests, including the specialty Chinese IT contract. Release E2E then exercises runtime inventories, sandboxes, progress, notes, and FSRS persistence against PostgreSQL.
