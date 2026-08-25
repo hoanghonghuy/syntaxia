@@ -147,6 +147,10 @@ jobs:
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/init.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/002_sandbox_harden.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/014_language_review_fsrs.sql
+          # Simulate a long-lived production DB that was created when only the
+          # first language track existed. API startup must recreate later
+          # app-owned tracks before curriculum sync or their lessons hit the FK.
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "DELETE FROM tracks WHERE id IN ('english-basics','japanese-jlpt','chinese-it-vocab');"
       - name: Start API with local curriculum
         run: |
           cd apps/api
