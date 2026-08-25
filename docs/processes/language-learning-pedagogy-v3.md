@@ -2,28 +2,28 @@
 
 ## Purpose
 
-Define the production learning model for every Syntaxia language track. Language lessons are not IT articles with quizzes attached: they are guided sessions that move from meaningful input to interaction, production, and scheduled retrieval.
+Define the production learning model for every Syntaxia language track. Language lessons are not IT articles with quizzes attached, and a collection of attractive communicative scenes is not by itself a language syllabus.
 
-This document supersedes the lesson-shape and review sections of `language-learning-pedagogy-v2.md`. Existing v2 lessons remain readable through compatibility rules while content is upgraded.
+For a **core foreign-language track**, Syntaxia teaches the language foundation first and then proves that foundation through practical Can-Do use.
 
 ## When to use
 
 - Designing or reviewing any language lesson, unit, exercise, review flow, or player UI
-- Changing English, Chinese, Japanese, or specialty-language curriculum
+- Changing English, Mandarin, Japanese, or specialty-language curriculum
 - Adding a new language track
 - Changing language progress, audio, review, or memory scheduling
 
 ## Standards and research lock
 
-Syntaxia uses standards as constraints, not as copied syllabi:
+Syntaxia uses standards as constraints, not copied syllabi:
 
-- **CEFR / Can-Do** for communicative goals and progression
-- **ACTFL communication modes** as a useful coverage check: interpretive, interpersonal, presentational
-- **HSK** for Mandarin coverage and level membership
-- **JLPT** for Japanese coverage and level membership
+- **CEFR / Can-Do** for communicative goals and capability boundaries
+- **ACTFL communication modes** as a useful interpretive/interpersonal/presentational coverage check
+- **2021 International Chinese Language Education Chinese Proficiency Grading Standards** plus current HSK transition evidence for Mandarin
+- **JLPT official level descriptors** for Japanese ability boundaries; JLPT does not publish an official vocabulary/kanji/grammar syllabus
 - **FSRS v6** for spaced-repetition scheduling
 
-Reference products such as Duolingo, Busuu, HelloChinese, graded readers, and language classrooms may inform interaction patterns. Syntaxia does not clone their UI or copyrighted lesson prose.
+A standard can define what a learner should be able to do without prescribing a complete teaching order. Syntaxia therefore owns an explicit foundation progression.
 
 ## Product model
 
@@ -31,201 +31,180 @@ Reference products such as Duolingo, Busuu, HelloChinese, graded readers, and la
 
 `explain -> example -> code -> sandbox -> reflect`
 
-### Language learning
+### Core language foundation
 
-`scene -> notice/listen -> understand -> manipulate -> respond -> produce -> retrieve later`
+`pronunciation / sound -> high-frequency general vocabulary & chunks -> basic productive grammar / patterns -> listening -> interaction / speaking -> reading & writing -> mixed checkpoint -> delayed retrieval`
 
-The two domains may share authentication, catalog, progress, notes, design tokens, and APIs. They must not share a single lesson presentation model when that harms learning.
+### Communicative application
 
-## Unit model
+`scene -> notice/listen -> understand -> manipulate -> respond -> produce -> checkpoint -> retrieve later`
 
-A language track is organized into communicative **units**. Each unit has one practical Can-Do outcome and contains short lessons that build toward it.
+The second sequence **applies** the first; it does not replace it. `scene -> dialogue -> quiz -> next lesson` is insufficient when the learner has not been given the sound, lexical, grammatical, reading, and writing tools needed to understand and produce the language.
+
+## Required foundation coverage
+
+Every core language curriculum map MUST deliberately account for all eight dimensions:
+
+| Dimension | Requirement |
+|---|---|
+| Pronunciation / sound | Teach the sound system needed for intelligibility and listening discrimination |
+| Vocabulary / chunks | Build high-frequency **general-language** words and reusable chunks in context |
+| Grammar / patterns | Teach the smallest productive structures needed to build new sentences |
+| Listening | Move from sound/form discrimination to extracting meaning from short input |
+| Speaking / interaction | Require appropriate responses and controlled production, not only recognition |
+| Reading | Teach the writing-system support required by the target language and reduce scaffolding gradually |
+| Writing | Require controlled typing/writing or sentence construction where technically supported |
+| Review | Mix vocabulary, grammar, listening and production through checkpoints and FSRS |
+
+A course may distribute these dimensions across prerequisite and communicative units. It must not leave one absent merely because its Can-Do scenes look realistic.
+
+## Core vs specialty tracks
+
+Core tracks teach **general language**. Specialist/domain terminology belongs in a separate optional specialty path.
 
 Examples:
 
-- English A1: "Meet someone and exchange names"
-- Mandarin: "Greet someone and respond politely"
-- Japanese N5: "Introduce yourself with appropriate politeness"
-- Chinese IT: "Describe whether a problem is hardware or software"
+```text
+Languages
+├── Mandarin
+├── English
+├── Japanese
+└── Specialty
+    └── Chinese for IT
+```
 
-Themes such as `food`, `family`, or `devices` are vocabulary domains, not sufficient learning goals by themselves.
+Everyday words such as phone/computer may appear in a core course when the learning objective is ordinary language use. Terms such as algorithm, neural network, overfitting, or NLP do not define core Mandarin progression.
 
-## Lesson contract
+## Unit model
 
-Every new v3 lesson MUST declare:
+Foundation Unit 0/prerequisite nodes may organize sound, writing-system, vocabulary, and grammar progression. Later units use practical Can-Do outcomes to prove that the learner can use those tools.
 
-- a learner-facing `can_do`
-- a short `pattern` when a reusable form is taught
+Themes such as `food`, `family`, `devices`, or `travel` are vocabulary domains, not sufficient goals by themselves.
+
+Every new V3 node MUST declare:
+
+- learner-facing `can_do`
+- a reusable `pattern` when a form is taught
 - ordered `steps`
-- stable IDs on assessed/reviewable steps when authored manually
-- no more new lexical items than the learner can use in the lesson context
-
-A lesson should normally take about 5–12 focused minutes. Length is controlled by meaningful attempts, not prose volume.
+- stable IDs on assessed/reviewable steps
+- a lexical load small enough to use in context
+- explanation copy in the selected explanation locale
 
 ## Step model
-
-Supported instructional steps:
 
 | Step | Purpose |
 |---|---|
 | `scene` | Establish a concrete situation and goal |
 | `dialogue` | Show meaningful target-language interaction |
-| `listen` | Focus attention on audio/input before explanation |
-| `tip` | Give one short explicit grammar, pronunciation, tone, or politeness note |
+| `listen` | Focus attention on target audio/input |
+| `tip` | Give one concise grammar/pronunciation/writing-system/politeness note |
 | `teach` | Introduce a small set of forms in context |
-| `practice` | One retrieval/manipulation task |
-| `checkpoint` | Mixed end-of-lesson retrieval, including prior material |
+| `practice` | Retrieval, manipulation, discrimination, or response task |
+| `checkpoint` | Mixed retrieval of current and earlier material |
 
-Do not require every lesson to use every explanatory step. Practice and checkpoint coverage matters more than a fixed decorative sequence.
+Do not add steps decoratively. The learner must do meaningful work.
 
 ## Exercise ladder
 
-A complete unit MUST include tasks across the following ladder:
+A complete foundation + communicative path reaches:
 
-1. **Recognition** — identify a form or meaning
-2. **Comprehension** — understand a sentence, audio clip, or situation
-3. **Controlled recall** — fill, match, or assemble language
-4. **Interaction** — select or create an appropriate response
-5. **Production** — type or speak a meaningful answer where technically supported
-6. **Delayed retrieval** — encounter the item again through scheduled review
+1. recognition
+2. comprehension
+3. controlled recall
+4. interaction
+5. production
+6. delayed retrieval
 
-Core v3 exercise types:
+Prefer semantic exercise types (`meaning_choice`, `audio_choice`, `dialogue_choice`, `match_pairs`, `order_words`, `type_answer`, `listen_type`, etc.). Legacy generic `mcq` is compatibility-only for new content.
 
-- `meaning_choice`
-- `image_choice`
-- `audio_choice`
-- `dialogue_choice`
-- `match_pairs`
-- `order_words`
-- `fill_blank`
-- `type_answer`
-- `listen_type`
-- legacy `mcq` (compatibility only; new content should use a more specific type)
+## Feedback, review, audio and visuals
 
-Speech recognition and handwriting may be added as additional exercise types; they are not allowed to block the rest of the production-quality learning loop.
+Wrong answers are learning events: keep the learner on the item, reveal help progressively, explain the relevant contrast, and retrieve failed material again.
 
-## Feedback
+Lesson completion and memory are separate. Signed-in learners use server-side FSRS with stable item keys and append-only review history.
 
-Wrong answers are learning events.
+Audio is first-class input. Prefer curated recordings where pronunciation quality matters; TTS is a graceful fallback. Never autoplay on navigation and never hard-code a shared player to one target language.
 
-- Never show only "wrong" and advance.
-- Keep the learner on the current task until it is resolved or intentionally skipped.
-- Reveal hints progressively.
-- Prefer an explanation of the contrast that caused the error.
-- Re-present failed material later in the same session and through scheduled review.
-- Record the result for signed-in learners.
-
-## Review and memory
-
-Lesson completion and memory are separate concepts.
-
-- `lesson_progress` answers: "Did the learner finish this lesson?"
-- language memory state answers: "When should this specific item be retrieved again?"
-
-Signed-in learners use server-side FSRS scheduling. Each reviewable item has a stable key and persistent card state. Review history is append-only. Due review is derived from card state, not from randomly sampling completed lessons.
-
-Guest learners can practice normally but do not receive cross-device scheduled memory persistence.
-
-## Audio
-
-Audio is first-class input, not decoration.
-
-1. Prefer curated/recorded `audioUrl` where pronunciation quality matters.
-2. Browser speech synthesis may be used as a graceful fallback.
-3. Never autoplay lesson audio on navigation.
-4. The language tag/voice must be derived from the target language, never hard-coded to Mandarin.
-5. Text must remain available for accessibility and environments without audio.
-
-## Visual learning
-
-Visuals must carry semantic value.
-
-Good uses:
-
-- image choice for concrete nouns/actions
-- scene illustrations that establish who is speaking and why
-- contrast cards for grammar or politeness
-- word-order/token layouts
-- tone, stress, kana, or character structure cues
-
-Bad uses:
-
-- decorative stock imagery unrelated to the answer
-- forcing abstract words into misleading pictures
-- showing an icon when text contrast would teach the pattern more clearly
+Visuals must carry learning information: scene relationships, concrete meaning, word order, tone/stress, kana/character structure, or other real contrasts. Shared instructional assets must not leak one explanation locale into another.
 
 ## Language-specific adaptation
 
 ### English
 
-- Prefer high-frequency chunks and natural conversational turns.
-- Use IPA as optional support, not the core task.
-- Accept sensible case/spacing variants when grading text.
-- Progress toward listening and sentence production, not vocabulary translation only.
+Foundation order:
+
+`sound ↔ spelling -> high-value vowel/consonant contrasts -> word stress/prosody -> reusable chunks -> small productive grammar core -> listening/interaction -> reading/writing production -> review`
+
+- Target intelligibility, not accent imitation.
+- IPA is reference support, not a prerequisite alphabet.
+- Teach high-frequency general language before specialty terminology.
+- Accept harmless case/spacing/punctuation variants when grading equivalent production.
 
 ### Mandarin Chinese
 
-- Coordinate Hanzi, pinyin, tones, and audio.
-- Early lessons may expose more pinyin; support should reduce as recognition improves.
-- Tone information must be accurate and visible where pronunciation is being taught.
-- Do not overload beginners with dense character-only screens.
+Foundation order:
+
+`Pinyin syllables + initials/finals -> four tones + neutral tone -> relevant connected-speech tone changes -> high-frequency general vocabulary -> sentence order/grammar patterns -> listening/speaking -> gradual Hanzi reading/writing -> review`
+
+- Coordinate Hanzi, tone-marked canonical Pinyin, audio, and meaning.
+- Teach questions, negation, possession, quantity/measure words, time expressions and basic particles/aspect as level-appropriate productive tools.
+- Early Pinyin support may be heavier, but character recognition must grow and scaffolding should reduce deliberately.
+- Do not call the current regular HSK Level 1 150-word boundary the vocabulary boundary of the new 2021 three-band/nine-level standard.
 
 ### Japanese
 
-- Coordinate surface form, kana reading, kanji, particles, and politeness/register.
-- Reading support may reduce over time but must not be removed before the unit has taught it.
-- Sentence examples must preserve natural Japanese word order and register.
+Foundation order:
+
+`kana ↔ sound -> mora timing / long vowels / small っ and other beginner sound-length contrasts -> high-frequency general vocabulary -> basic sentence order + particles + polite forms -> listening/speaking -> kana + gradual basic kanji reading/writing -> review`
+
+- Coordinate surface form, kana reading, basic kanji, particles, and register.
+- Treat hiragana/katakana as a real prerequisite instead of permanent reading decoration.
+- Long-vowel/small-っ distinctions must be taught through listening and reading/typing, not just described.
+- Reading support may reduce only after the relevant forms have been taught.
+- JLPT N5 is an ability boundary, not an official word/kanji/grammar checklist.
 
 ### Specialty language tracks
 
-- Domain terminology must be embedded in realistic tasks (describe, compare, ask, report), not glossary dumps.
+Embed terminology in realistic actions such as ask, identify, describe, compare, report, or troubleshoot. Specialty tracks are optional and never prerequisites for the core language foundation.
 
-## Authoring voice
+## Authoring voice and locale rule
 
 - Write original, natural language.
-- A dialogue must make pragmatic sense even if the vocabulary list is removed from view.
-- Never insert a word merely so every vocabulary item appears once.
-- Explanations are concise and adult-appropriate.
-- Avoid AI filler, fake enthusiasm, emoji clusters, and textbook bureaucracy.
-- `vi` and `en` explanation locales must communicate the same learning intent, but should read naturally in each language rather than mirror word order.
+- Target-language examples, IPA/Pinyin/kana and target forms stay in the target language.
+- Learner-facing instructions, explanations, hints, glosses and accessibility descriptions belong in the selected `vi` or `en` explanation locale.
+- EN/VI variants preserve learning intent and stable assessment identity but should sound natural rather than mirror word order.
+- Avoid AI filler, fake enthusiasm, emoji clusters, glossary dumps and textbook bureaucracy.
 
 ## Compatibility
 
-V2 `dialogue/tip/teach/practice/checkpoint` lessons remain supported.
-
-- Missing practice IDs receive deterministic fallback keys derived from step/checkpoint position.
-- Legacy `mcq` is normalized to the v3 choice renderer.
-- Bare vocab + one-exercise lessons remain readable but MUST NOT be authored as new content.
-
-Compatibility is a migration tool, not the target format.
+V2 lessons remain readable. Missing practice IDs may receive deterministic fallback keys and legacy MCQ can be normalized by the renderer, but compatibility is a migration tool, not the target format.
 
 ## Quality gates
 
-A language feature or curriculum slice is not done until:
+A core-language slice is not done until:
 
-1. pedagogy/schema documented
-2. content has stable reviewable items
-3. target-language text has a naturalness pass
-4. vi/en parity passes where both explanation locales are required
-5. keyboard and screen-reader paths are usable
-6. mobile layout is usable without horizontal overflow
-7. unit/component tests pass
-8. API tests pass when persistence changes
-9. E2E language smoke passes
-10. review state survives reload/device changes for signed-in learners
+1. its public map covers pronunciation, vocabulary, grammar, listening, speaking, reading, writing and review
+2. target-language naturalness has been reviewed
+3. explanation-locale purity and EN/VI identity parity pass
+4. stable reviewable items exist and fallback answers grade correctly
+5. keyboard/screen-reader/mobile paths remain usable
+6. static Language V3 + track-specific gates pass
+7. API/cold parser tests pass where curriculum parsing is involved
+8. PostgreSQL-backed E2E verifies exact live inventory, progress/notes and FSRS persistence on the exact release commit
 
 ## Don't
 
-- Do not reuse SQL lesson-shape rules for language content.
-- Do not call random completed-question sampling "spaced repetition".
-- Do not hard-code `zh-Hans` in shared language controls.
-- Do not ship a new language lesson containing only a word list and one MCQ.
-- Do not mass-generate curriculum before the player and authoring contract are stable.
+- Do not replace language foundations with attractive situation-only sequencing.
+- Do not replace core language with IT/specialty vocabulary.
+- Do not author a new lesson as a word list plus one generic MCQ.
+- Do not call random completed-question sampling spaced repetition.
+- Do not hard-code Mandarin behavior in shared language controls.
+- Do not mass-generate curriculum while the player/content contract has known quality gaps.
 
 ## Related
 
 - `language-content-quality-v3.md`
 - `language-review-session.md`
 - `language-step-audio.md`
+- `languages-tracks.md`
 - `language-learning-pedagogy-v2.md` (historical compatibility)
-- `openspec/changes/language-learning-v3/`
