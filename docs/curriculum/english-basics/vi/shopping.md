@@ -23,6 +23,9 @@ vocab:
   - { word: "big", ipa: "/bɪɡ/", gloss: "lớn" }
   - { word: "please", ipa: "/pliːz/", gloss: "từ dùng để yêu cầu lịch sự" }
   - { word: "thank you", ipa: "/ˈθæŋk juː/", gloss: "cảm ơn" }
+  - { word: "I'd like", ipa: "/aɪd laɪk/", gloss: "cụm lịch sự để chọn hoặc yêu cầu một món" }
+  - { word: "I'll take it", ipa: "/aɪl teɪk ɪt/", gloss: "tôi lấy món này; dùng khi quyết định mua" }
+  - { word: "here you are", ipa: "/hɪr ju ɑːr/", gloss: "câu dùng khi đưa món đồ cho người khác" }
 steps:
   - type: scene
     title: "Mua chiếc túi đã chọn"
