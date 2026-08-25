@@ -26,7 +26,7 @@ $expected = [ordered]@{
   "css-basics"        = 14
   "chinese-hsk"       = 30
   "english-basics"    = 30
-  "japanese-jlpt"     = 16
+  "japanese-jlpt"     = 28
   "chinese-it-vocab"  = 6
 }
 
