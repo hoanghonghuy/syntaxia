@@ -30,7 +30,7 @@ steps:
   - type: scene
     title: "Check the train before boarding"
     body: "At a station platform, you need to confirm that this train goes to the station you want."
-    visualKey: "train-platform"
+    imageUrl: "/language/scenes/train-platform.svg"
     imageAlt: "A train at a platform with a destination sign and a passenger checking before boarding."
   - type: dialogue
     lines:
