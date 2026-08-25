@@ -53,11 +53,18 @@ func (rl *rateLimiter) allow(key string) bool {
 	return true
 }
 
-// RateLimit limits requests per client IP in a sliding window.
+func rateLimitKey(c *gin.Context) string {
+	if claims, ok := ClaimsFromContext(c); ok {
+		return "user:" + claims.UserID.String()
+	}
+	return "ip:" + c.ClientIP()
+}
+
+// RateLimit limits authenticated requests per user and anonymous requests per client IP.
 func RateLimit(max int, window time.Duration) gin.HandlerFunc {
 	rl := newRateLimiter(max, window)
 	return func(c *gin.Context) {
-		if !rl.allow(c.ClientIP()) {
+		if !rl.allow(rateLimitKey(c)) {
 			AbortAppError(c, apperrors.New("RATE_LIMITED", "too many requests", http.StatusTooManyRequests, apperrors.ErrBadRequest))
 			return
 		}
