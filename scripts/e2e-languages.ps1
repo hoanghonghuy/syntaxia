@@ -57,7 +57,7 @@ Ok "auth/me"
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 41 },
-  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 30 },
+  @{ Track = "english-basics"; Slug = "sound-spelling"; ExpectedLessons = 37 },
   @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 28 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
@@ -216,19 +216,19 @@ if ($secondReps -le $firstReps) {
 }
 Ok "Mandarin review state persisted across requests reps=$secondReps"
 
-# English: prove the foundation track produces a real FSRS card from its stable authored IDs.
+# English: prove the new Unit 0 foundation produces a real FSRS card from its stable authored IDs.
 $englishDue = Invoke-SyntaxiaApi -Method GET `
   -Path "/api/v1/language/review/due?track=english-basics&locale=en&limit=50" `
   -Session $session
 $englishCards = @($englishDue.Json)
-$englishItemKey = "greet-response-1"
+$englishItemKey = "en-fnd-sound-hear-meet"
 $englishSeedCard = @($englishCards | Where-Object {
   $_.lessonId -eq $englishLessonId -and $_.itemKey -eq $englishItemKey
 }) | Select-Object -First 1
 if (-not $englishSeedCard) {
   Fail "English review due sync did not create $englishItemKey for $englishLessonId"
 }
-Ok "English review card synced from authored stable item id"
+Ok "English foundation review card synced from authored stable item id"
 
 $englishReviewBody = (@{
   lessonId   = $englishLessonId
@@ -240,9 +240,9 @@ $englishReviewBody = (@{
 $englishReview = Invoke-SyntaxiaApi -Method POST `
   -Path "/api/v1/language/review" -JsonBody $englishReviewBody -Session $session
 if ($englishReview.Json.itemKey -ne $englishItemKey -or [int64]$englishReview.Json.reps -lt 1) {
-  Fail "persisted English review response invalid"
+  Fail "persisted English foundation review response invalid"
 }
-Ok "English review persisted reps=$($englishReview.Json.reps)"
+Ok "English foundation review persisted reps=$($englishReview.Json.reps)"
 
 # Japanese: prove authored Japanese stable IDs are synchronized and persisted by the generic FSRS engine.
 $japaneseDue = Invoke-SyntaxiaApi -Method GET `
