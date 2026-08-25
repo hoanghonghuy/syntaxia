@@ -16,6 +16,13 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (path) => readFileSync(path, 'utf8')
 const englishSlugs = [
+  'sound-spelling',
+  'word-stress',
+  'sentence-melody',
+  'core-sentences',
+  'basic-questions',
+  'foundation-checkpoint',
+  'foundation-review',
   'greetings',
   'meeting-checkpoint',
   'meeting-review',
@@ -48,6 +55,7 @@ describe('language learning v3', () => {
     assert.deepEqual(languageTrackProfile('english-basics'), {
       targetLang: 'en',
       speechLang: 'en-US',
+      homeLabel: 'EN',
     })
     assert.deepEqual(languageTrackProfile('future-language-track'), {
       targetLang: 'und',
