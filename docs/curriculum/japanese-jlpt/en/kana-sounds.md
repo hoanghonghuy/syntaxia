@@ -4,7 +4,7 @@ track: japanese-jlpt
 locale: en
 slug: kana-sounds
 title: Connect kana with Japanese sounds
-order: -5
+order: -7
 published: true
 jlpt_level: n5
 unit_id: ja-n5-foundation-00
@@ -13,59 +13,60 @@ unit_order: 0
 unit_can_do: "Read, hear, and build basic Japanese forms before the communicative units"
 unit_role: lesson
 foundation_focus: pronunciation
-can_do: "Hear a simple Japanese word and type its hiragana reading"
+can_do: "Hear the five basic Japanese vowel sounds and type short readings built from kana already introduced"
 pattern: "あ・い・う・え・お / ア・イ・ウ・エ・オ"
 objectives:
   - Connect the five basic vowel kana with their sounds
-  - Notice that hiragana and katakana represent Japanese sound units
-  - Type a familiar word in hiragana after hearing it
+  - Recognize that hiragana and katakana represent the same Japanese sound units with different shapes
+  - Type short readings only after the kana used in them have been introduced
 vocab:
   - { surface: "朝", reading: "あさ", gloss: "morning" }
   - { surface: "家", reading: "いえ", gloss: "home / house" }
   - { surface: "上", reading: "うえ", gloss: "above / on" }
-  - { surface: "駅", reading: "えき", gloss: "station" }
-  - { surface: "お茶", reading: "おちゃ", gloss: "tea" }
+  - { surface: "会う", reading: "あう", gloss: "meet" }
+  - { surface: "青", reading: "あお", gloss: "blue / green signal color" }
 steps:
   - type: scene
-    title: "Read sounds, not romaji labels"
-    body: "You hear short Japanese words and connect the sounds to kana. Romaji is not the target writing system."
+    title: "Sound before a full kana chart"
+    body: "Start with the five vowel sounds, then build only a few readings from kana you have actually seen. The next lesson expands the hiragana rows."
   - type: dialogue
     lines:
+      - { speaker: "先生", text: "あ。い。う。え。お。", reading: "あ。い。う。え。お。" }
+      - { speaker: "学生", text: "あ。い。う。え。お。", reading: "あ。い。う。え。お。" }
       - { speaker: "先生", text: "あさ。", reading: "あさ。" }
       - { speaker: "学生", text: "あさ。", reading: "あさ。" }
-      - { speaker: "先生", text: "えき。", reading: "えき。" }
-      - { speaker: "学生", text: "えき。", reading: "えき。" }
   - type: listen
-    prompt: "Listen before reading. Which hiragana word do you hear?"
-    text: "あさ"
-    reading: "あさ"
+    prompt: "Listen first. Which vowel kana do you hear?"
+    text: "う"
+    reading: "う"
   - type: tip
-    title: "Kana represent sound units"
-    body: "Start by linking what you hear directly to kana. Use romaji only as temporary input help when necessary."
+    title: "Kana are sound symbols"
+    body: "Link the sound directly to kana. Hiragana あ and katakana ア represent the same vowel sound. Romaji can help with keyboard input temporarily, but it is not the target writing system."
   - type: teach
     items:
-      - { form: "あ い う え お", reading: "あ い う え お", gloss: "basic hiragana vowel row", example: "あさ / いえ / うえ / えき / おちゃ" }
-      - { form: "ア イ ウ エ オ", reading: "あ い う え お", gloss: "matching katakana vowel row", example: "ア / イ / ウ / エ / オ" }
+      - { form: "あ い う え お", reading: "あ い う え お", gloss: "five basic hiragana vowel kana", example: "いえ / うえ / あう / あお" }
+      - { form: "ア イ ウ エ オ", reading: "あ い う え お", gloss: "matching katakana vowel kana", example: "ア / イ / ウ / エ / オ" }
+      - { form: "さ", reading: "さ", gloss: "one consonant-vowel example; the next lesson expands the rows", example: "あ + さ → あさ" }
   - type: practice
     id: ja-fnd-kana-hear-asa
     kind: audio_choice
     prompt: "Listen and choose the matching reading."
     audioText: "あさ"
-    choices: ["あさ", "いえ", "えき"]
+    choices: ["あさ", "いえ", "あお"]
     answer: "あさ"
   - type: practice
-    id: ja-fnd-kana-hear-eki
+    id: ja-fnd-kana-hear-ie
     kind: listen_type
-    prompt: "Listen and type the word in hiragana."
-    audioText: "えき"
-    answer: "えき"
-  - type: practice
-    id: ja-fnd-kana-write-ie
-    kind: type_answer
-    prompt: "Type the hiragana reading of 家."
+    prompt: "Listen and type the vowel-only reading."
+    audioText: "いえ"
     answer: "いえ"
+  - type: practice
+    id: ja-fnd-kana-write-au
+    kind: type_answer
+    prompt: "Type the hiragana reading of 会う."
+    answer: "あう"
     hints:
-      - "It begins with い."
+      - "Both kana come from the vowel row."
   - type: checkpoint
     items:
       - id: ja-fnd-kana-check-vowels
@@ -73,14 +74,14 @@ steps:
         prompt: "Which row contains the five basic hiragana vowel kana?"
         choices: ["あ い う え お", "か き く け こ", "ア カ サ タ ナ"]
         answer: "あ い う え お"
-      - id: ja-fnd-kana-check-ocha
+      - id: ja-fnd-kana-check-ao
         kind: type_answer
-        prompt: "Type the reading of お茶."
-        answer: "おちゃ"
+        prompt: "Type the hiragana reading of 青."
+        answer: "あお"
 exercise:
   type: type_answer
-  prompt: "Type the hiragana reading of 駅."
-  answer: "えき"
+  prompt: "Type the hiragana reading of 上."
+  answer: "うえ"
 ---
 
-The goal is a direct sound-to-kana connection. Later lessons keep readings as support, but kana itself becomes part of what you can read.
+This first node deliberately does not pretend that five vowels equal kana mastery. It establishes the sound-symbol principle; the following hiragana and katakana nodes expand the script before later production tasks depend on it.
