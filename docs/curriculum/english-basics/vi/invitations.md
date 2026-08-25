@@ -23,6 +23,10 @@ vocab:
   - { word: "Saturday", ipa: "/ˈsætərdeɪ/", gloss: "thứ Bảy" }
   - { word: "friend", ipa: "/frend/", gloss: "bạn" }
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "buổi chiều" }
+  - { word: "do you want to", ipa: "/duː ju wɑːnt tə/", gloss: "cụm mở đầu một lời mời đơn giản" }
+  - { word: "let's", ipa: "/lets/", gloss: "dùng để đề nghị cùng làm một việc" }
+  - { word: "meet", ipa: "/miːt/", gloss: "gặp nhau tại thời gian hoặc địa điểm đã thống nhất" }
+  - { word: "see you there", ipa: "/siː ju ðer/", gloss: "hẹn gặp ở đó; dùng để kết thúc kế hoạch" }
 steps:
   - type: scene
     title: "Lên kế hoạch sau giờ học"
