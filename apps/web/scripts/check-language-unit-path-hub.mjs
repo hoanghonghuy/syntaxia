@@ -7,7 +7,11 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { buildLanguageUnits, orderLanguageLessons } from '../app/utils/languageUnits.ts'
+import {
+  buildLanguageUnits,
+  nextLanguageLesson,
+  orderLanguageLessons,
+} from '../app/utils/languageUnits.ts'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '..', '..')
@@ -77,6 +81,52 @@ describe('language communicative unit path', () => {
     assert.equal(units[1]?.nodes[0]?.state, 'locked')
   })
 
+  it('does not rewind a returning learner when earlier curriculum is inserted', () => {
+    const lessons = [
+      lesson('u0-lesson', 'pinyin-syllables', 'Build a syllable', -5, {
+        unitId: 'u0', unitTitle: 'Pronunciation foundation', unitOrder: 0,
+        unitCanDo: 'Hear and reproduce core sounds', unitRole: 'lesson',
+      }),
+      lesson('u0-review', 'pronunciation-review', 'Review sounds', -1, {
+        unitId: 'u0', unitTitle: 'Pronunciation foundation', unitOrder: 0,
+        unitCanDo: 'Hear and reproduce core sounds', unitRole: 'review',
+      }),
+      lesson('u1-lesson', 'greetings', 'Say hello', 1, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start a short meeting', unitRole: 'lesson',
+      }),
+      lesson('u1-checkpoint', 'greetings-checkpoint', 'Greeting checkpoint', 2, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start a short meeting', unitRole: 'checkpoint',
+      }),
+      lesson('u2-lesson', 'people', 'Talk about people', 3, {
+        unitId: 'u2', unitTitle: 'People', unitOrder: 2,
+        unitCanDo: 'Identify a person', unitRole: 'lesson',
+      }),
+    ]
+    const progress = [{ lessonId: 'u1-lesson', locale: 'en', completed: true }]
+
+    assert.equal(nextLanguageLesson(lessons, progress, 'en')?.id, 'u1-checkpoint')
+    const units = buildLanguageUnits(lessons, progress, 'en')
+    assert.deepEqual(units[0]?.nodes.map((node) => node.state), ['available', 'available'])
+    assert.deepEqual(units[1]?.nodes.map((node) => node.state), ['done', 'current'])
+    assert.equal(units[0]?.nodes.every((node) => node.clickable), true)
+    assert.equal(units[2]?.nodes[0]?.state, 'locked')
+  })
+
+  it('returns to an earlier inserted gap after the established frontier is complete', () => {
+    const lessons = [
+      lesson('foundation', 'pinyin-syllables', 'Build a syllable', -5, {
+        unitId: 'u0', unitTitle: 'Pronunciation foundation', unitOrder: 0, unitRole: 'lesson',
+      }),
+      lesson('old-1', 'greetings', 'Say hello', 1, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1, unitRole: 'lesson',
+      }),
+    ]
+    const progress = [{ lessonId: 'old-1', locale: 'en', completed: true }]
+    assert.equal(nextLanguageLesson(lessons, progress, 'en')?.id, 'foundation')
+  })
+
   it('groups explicit summary metadata and preserves lesson/checkpoint/review roles', () => {
     const lessons = [
       lesson('l1', 'hello', 'Say hello', 1, {
@@ -133,10 +183,15 @@ describe('language communicative unit path', () => {
     assert.match(src, /unit\.canDo/)
     assert.match(src, /is-checkpoint/)
     assert.match(src, /is-review/)
+    assert.match(src, /is-available/)
+    assert.match(src, /nodeIndex \+ 1/)
 
     const hub = read(join(webRoot, 'app/pages/tracks/[track]/index.vue'))
     assert.match(hub, /:lessons="hubLessons"/)
     assert.doesNotMatch(hub, /Promise\.all\([^)]*api\.lesson/)
+
+    const catalog = read(join(webRoot, 'app/stores/catalog.ts'))
+    assert.match(catalog, /nextLanguageLesson/)
 
     const types = read(join(webRoot, 'app/types/api.ts'))
     for (const field of ['unitId', 'unitTitle', 'unitOrder', 'unitCanDo', 'unitRole']) {

@@ -1,7 +1,7 @@
 import type { Lesson, LessonSummary, Progress } from '~/types/api'
 
 export type LanguageUnitRole = 'lesson' | 'checkpoint' | 'review'
-export type LanguageUnitNodeState = 'done' | 'current' | 'locked'
+export type LanguageUnitNodeState = 'done' | 'current' | 'available' | 'locked'
 
 export type LanguageUnitLesson = LessonSummary & {
   exercise?: Lesson['exercise']
@@ -63,6 +63,14 @@ function roleRank(role: LanguageUnitRole): number {
   return 0
 }
 
+function completedLessonIds(progress: Progress[], locale: string): Set<string> {
+  return new Set(
+    progress
+      .filter((item) => item.locale === locale && item.completed)
+      .map((item) => item.lessonId),
+  )
+}
+
 export function languageUnitMeta(lesson: LanguageUnitLesson): LanguageUnitMeta {
   const exercise = asRecord(lesson.exercise)
   return {
@@ -119,6 +127,37 @@ export function orderLanguageLessons<T extends LanguageUnitLesson>(lessons: T[])
 }
 
 /**
+ * Pick the learner's continuation point without rewinding established progress.
+ *
+ * If curriculum is inserted before lessons a returning learner has already
+ * completed, continue after their furthest completed node. Earlier inserted
+ * gaps stay available for optional catch-up. Once there is no unfinished node
+ * ahead of the learner's frontier, the earliest remaining gap becomes current.
+ */
+export function nextLanguageLesson<T extends LanguageUnitLesson>(
+  lessons: T[],
+  progress: Progress[],
+  locale: string,
+): T | null {
+  const ordered = orderLanguageLessons(lessons)
+  const completed = completedLessonIds(progress, locale)
+  let furthestCompletedIndex = -1
+
+  ordered.forEach((lesson, index) => {
+    if (completed.has(lesson.id)) furthestCompletedIndex = index
+  })
+
+  if (furthestCompletedIndex >= 0) {
+    for (let index = furthestCompletedIndex + 1; index < ordered.length; index += 1) {
+      const lesson = ordered[index]
+      if (lesson && !completed.has(lesson.id)) return lesson
+    }
+  }
+
+  return ordered.find((lesson) => !completed.has(lesson.id)) || null
+}
+
+/**
  * Build the language path from explicit content-owned unit metadata.
  *
  * Lessons that have not been migrated yet remain visible as singleton units.
@@ -131,15 +170,17 @@ export function buildLanguageUnits(
   locale: string,
 ): LanguageUnit[] {
   const ordered = orderLanguageLessons(lessons)
-  const completed = new Set(
-    progress
-      .filter((item) => item.locale === locale && item.completed)
-      .map((item) => item.lessonId),
-  )
-  const currentId = ordered.find((lesson) => !completed.has(lesson.id))?.id || ''
+  const completed = completedLessonIds(progress, locale)
+  const currentId = nextLanguageLesson(ordered, progress, locale)?.id || ''
+  let furthestCompletedIndex = -1
+
+  ordered.forEach((lesson, index) => {
+    if (completed.has(lesson.id)) furthestCompletedIndex = index
+  })
+
   const units = new Map<string, LanguageUnit>()
 
-  for (const lesson of ordered) {
+  ordered.forEach((lesson, lessonIndex) => {
     const meta = languageUnitMeta(lesson)
     const unitId = meta.id || `lesson:${lesson.id}`
     const unitTitle = meta.title || lesson.title
@@ -160,6 +201,7 @@ export function buildLanguageUnits(
     let state: LanguageUnitNodeState = 'locked'
     if (completed.has(lesson.id)) state = 'done'
     else if (lesson.id === currentId) state = 'current'
+    else if (furthestCompletedIndex >= 0 && lessonIndex < furthestCompletedIndex) state = 'available'
 
     unit.nodes.push({
       id: lesson.id,
@@ -168,10 +210,10 @@ export function buildLanguageUnits(
       sortOrder: lesson.sortOrder,
       role: meta.role,
       state,
-      clickable: state === 'done' || state === 'current',
+      clickable: state !== 'locked',
     })
     units.set(unitId, unit)
-  }
+  })
 
   return [...units.values()].sort((a, b) => a.sortOrder - b.sortOrder)
 }

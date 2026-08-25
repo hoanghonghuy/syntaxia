@@ -8,12 +8,13 @@
 
       <ol class="unit-path-list">
         <li
-          v-for="node in unit.nodes"
+          v-for="(node, nodeIndex) in unit.nodes"
           :key="node.id"
           class="unit-path-item"
           :class="{
             'is-done': node.state === 'done',
             'is-current': node.state === 'current',
+            'is-available': node.state === 'available',
             'is-locked': node.state === 'locked',
             'is-checkpoint': node.role === 'checkpoint',
             'is-review': node.role === 'review',
@@ -28,7 +29,7 @@
               <span v-if="node.state === 'done'">✓</span>
               <span v-else-if="node.role === 'checkpoint'">◆</span>
               <span v-else-if="node.role === 'review'">↻</span>
-              <span v-else>{{ node.sortOrder }}</span>
+              <span v-else>{{ nodeIndex + 1 }}</span>
             </span>
             <span class="unit-path-copy">
               <span class="unit-path-title">{{ node.title }}</span>
@@ -48,7 +49,7 @@
             <span class="unit-path-dot" aria-hidden="true">
               <span v-if="node.role === 'checkpoint'">◆</span>
               <span v-else-if="node.role === 'review'">↻</span>
-              <span v-else>{{ node.sortOrder }}</span>
+              <span v-else>{{ nodeIndex + 1 }}</span>
             </span>
             <span class="unit-path-copy">
               <span class="unit-path-title">{{ node.title }}</span>
@@ -148,7 +149,8 @@ const units = computed(() =>
 }
 
 .unit-path-item.is-done:not(:last-child)::before,
-.unit-path-item.is-current:not(:last-child)::before {
+.unit-path-item.is-current:not(:last-child)::before,
+.unit-path-item.is-available:not(:last-child)::before {
   background: color-mix(in srgb, var(--color-brand) 48%, var(--color-hairline));
 }
 
@@ -210,6 +212,11 @@ const units = computed(() =>
   border-color: var(--color-brand);
   color: var(--color-brand-deep);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 18%, transparent);
+}
+
+.is-available .unit-path-dot {
+  border-color: color-mix(in srgb, var(--color-brand) 58%, var(--color-hairline));
+  color: var(--color-brand-deep);
 }
 
 .unit-path-copy {
