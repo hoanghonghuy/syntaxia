@@ -54,6 +54,30 @@
         <circle class="visual-dot" cx="154" cy="36" r="3" />
       </g>
 
+      <g v-else-if="visualKey === 'home-room'">
+        <rect class="visual-surface" x="34" y="115" width="252" height="18" rx="5" />
+        <rect class="visual-person-a" x="52" y="76" width="92" height="34" rx="8" />
+        <path class="visual-line" d="M52 76v-18h92v52M62 65h72" />
+        <rect class="visual-surface" x="175" y="74" width="80" height="12" rx="4" />
+        <path class="visual-line" d="M185 86v38M245 86v38" />
+        <rect class="visual-bubble" x="192" y="57" width="34" height="17" rx="3" />
+        <path class="visual-line" d="M191 112h34v17h-34zM196 112V97h24v15" />
+        <circle class="visual-dot" cx="209" cy="65" r="3" />
+      </g>
+
+      <g v-else-if="visualKey === 'weekend-plan'">
+        <circle class="visual-person-a" cx="78" cy="76" r="17" />
+        <path class="visual-person-a" d="M52 132c4-27 13-40 26-40s22 13 26 40z" />
+        <circle class="visual-person-b" cx="242" cy="76" r="17" />
+        <path class="visual-person-b" d="M216 132c4-27 13-40 26-40s22 13 26 40z" />
+        <rect class="visual-surface" x="122" y="34" width="76" height="82" rx="9" />
+        <path class="visual-line" d="M136 53h48M136 68h30M136 83h42" />
+        <circle class="visual-bubble" cx="160" cy="101" r="10" />
+        <path class="visual-line" d="M160 101V95M160 101l5 3" />
+        <path class="visual-line visual-arrow" d="M106 86h12m84 0h12" />
+        <path class="visual-line" d="M141 144c8-18 18-27 30-27s22 9 30 27M156 144v-13M186 144v-13" />
+      </g>
+
       <g v-else-if="visualKey === 'tech-repair-desk'">
         <rect class="visual-surface" x="76" y="116" width="168" height="18" rx="6" />
         <rect class="visual-surface" x="116" y="45" width="92" height="60" rx="7" />
