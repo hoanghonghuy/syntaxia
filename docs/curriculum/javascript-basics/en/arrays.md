@@ -3,21 +3,22 @@ id: js-05-arrays
 track: javascript-basics
 locale: en
 slug: arrays
-title: Lists with arrays
+title: Arrays, indexes, and mutation
 order: 5
 published: true
+can_do: "Trace an array before and after mutation while distinguishing a const binding from the mutable array value it references"
 objectives:
-  - Create an array with square brackets
-  - Read one item by index starting at 0
-  - Add an item with push and read length
+  - Read array indexes from zero
+  - Mutate an array with push and observe the new state
+  - Explain why a const array binding can still reference a mutated array
 exercise:
   starter: |
     const fruits = ["apple", "pear", "orange"];
-    // Add "mango" to the end, then return fruits.length
+    // TODO: add "mango" to the end, then return fruits.length
   hints:
-    - "push adds one item to the end of the array."
-    - "length counts how many items are in the list."
-    - "There were 3 fruits, then one more — how many total?"
+    - "push mutates the existing array by appending one item."
+    - "The const binding fruits is not reassigned; the array it references changes."
+    - "Use: fruits.push('mango'); then return fruits.length;"
   solution: |
     const fruits = ["apple", "pear", "orange"];
     fruits.push("mango");
@@ -27,37 +28,74 @@ exercise:
     value: 4
 ---
 
-A shopping list holds many item names in order. An **array** is JavaScript’s ordered list — several values under one variable name.
+An array stores an ordered sequence of values. Learning arrays means tracking both **positions** and **state changes**.
 
-| Idea | Plain meaning | Example |
-| --- | --- | --- |
-| Create | Square brackets with commas | `["apple", "pear"]` |
-| Index | Position, starting at 0 | first item is `[0]` |
-| `.length` | How many items | `list.length` |
-| `.push(item)` | Add to the end | `list.push("banana")` |
+## Execution model
+
+```javascript
+const fruits = ["apple", "pear", "orange"];
+```
+
+| index | 0 | 1 | 2 |
+| ---: | --- | --- | --- |
+| value | apple | pear | orange |
+
+`fruits.length` is `3`; the last valid index is `length - 1`, which is `2`.
+
+The declaration uses `const`, but that protects the **binding** from reassignment. It does not make the referenced array immutable.
+
+## Trace it
+
+```javascript
+const fruits = ["apple", "pear", "orange"];
+fruits.push("mango");
+```
+
+| moment | array state | length |
+| --- | --- | ---: |
+| before `push` | apple, pear, orange | 3 |
+| after `push` | apple, pear, orange, mango | 4 |
+
+`push` mutates the array and returns the new length.
+
+## Predict before you run
+
+Predict two things before executing: `fruits[3]` becomes `"mango"`, and `fruits.length` becomes `4`.
 
 ## Worked example
 
 ```javascript
-const fruits = ["apple", "pear", "orange"];
+const queue = ["A", "B"];
+const newLength = queue.push("C");
 
-console.log(fruits[0]);
-console.log(fruits.length);
-
-fruits.push("mango");
-console.log(fruits[fruits.length - 1]);
+console.log(queue);     // ["A", "B", "C"]
+console.log(newLength); // 3
 ```
 
-- `fruits[0]` is the first item → `"apple"`.
-- `.length` is `3` before the push.
-- `.push("mango")` adds a fourth item; `fruits.length - 1` is the index of the last item.
+The returned number and the mutated array are different values.
+
+## Debug this
+
+```javascript
+const fruits = ["apple", "pear"];
+const result = fruits.push("mango");
+return result[0];
+```
+
+`result` is a number, not the array. The method changed `fruits` and returned its new length. Debug method calls by asking separately: **what state changed? what value was returned?**
 
 ## Common mistakes
 
-- Using index 1 for the first item — arrays start at **0**.
-- Mixing array and object syntax — arrays use `[ ]`, not `{ }`.
-- Expecting `push` to return the whole list — it returns the new length; read the array variable to see items.
+- Treating index `1` as the first array item instead of index `0`.
+- Assuming `const` makes the array contents immutable.
+- Assuming `push()` returns the whole array instead of the new length.
 
 ## Your turn
 
-Push `"mango"` onto `fruits` and **return** the new `.length` in the sandbox. Mark complete when the checker passes.
+Append `"mango"` to the existing array and return its new length.
+
+## Quick check
+
+Why can `fruits.push(...)` work when `fruits` was declared with `const`?
+
+**Answer:** the binding is not reassigned; the same referenced array object is being mutated.

@@ -3,19 +3,21 @@ id: pg-15-distinct
 track: postgresql
 locale: en
 slug: distinct-on
-title: One row per group with DISTINCT ON
+title: Deterministic one-row-per-group with DISTINCT ON
 order: 15
 published: true
+can_do: "Use PostgreSQL DISTINCT ON with a compatible deterministic ORDER BY to select one intended row per group"
 objectives:
-  - Keep one row per key with DISTINCT ON
-  - Pair DISTINCT ON with ORDER BY
+  - Explain why DISTINCT ON keeps the first row in each group
+  - Align DISTINCT ON expressions with the leftmost ORDER BY keys
+  - Add tie-breakers when the winner must be deterministic
 exercise:
   starter: "SELECT director, title, year FROM movies ORDER BY director, year DESC;"
   hints:
-    - "DISTINCT ON (director) keeps the first row for each director."
-    - "ORDER BY must start with the same expression as DISTINCT ON, then the sort that picks the winner."
-    - "Try: SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC;"
-  solution: "SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC;"
+    - "DISTINCT ON (director) keeps the first sorted row for each director."
+    - "ORDER BY must begin with director, then put newest year first."
+    - "Use: SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC, id DESC;"
+  solution: "SELECT DISTINCT ON (director) director, title FROM movies ORDER BY director, year DESC, id DESC;"
   preview:
     columns: ["id", "director", "title", "year"]
     rows:
@@ -34,42 +36,60 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Nolan', 'Inception', 2010), (2, 'Nolan', 'Interstellar', 2014), (3, 'Villeneuve', 'Arrival', 2016), (4, 'Villeneuve', 'Dune', 2021);"
 ---
 
-You may want “the newest film per director” — one row per person, not every film. PostgreSQL’s `DISTINCT ON (column)` keeps the first row for each distinct value of that column, after sorting.
+`DISTINCT ON` is a PostgreSQL-specific shortcut for “choose one row per group”. The critical idea is that it keeps the **first row after ordering**, so ordering defines the winner.
 
-| id | director | title | year |
-| --- | --- | --- | --- |
-| 1 | Nolan | Inception | 2010 |
-| 2 | Nolan | Interstellar | 2014 |
-| 3 | Villeneuve | Arrival | 2016 |
-| 4 | Villeneuve | Dune | 2021 |
+## Mental model
+
+Pipeline:
+
+```text
+sort rows by group + winner criteria -> DISTINCT ON keeps first row of each group
+```
+
+For Nolan, year descending places Interstellar before Inception. For Villeneuve, Dune comes before Arrival.
+
+PostgreSQL requires the `DISTINCT ON` expression(s) to match the leftmost `ORDER BY` expression(s). Extra ORDER BY keys decide precedence within a group.
+
+## Predict before you run
+
+Predict one winner per director: Nolan → Interstellar; Villeneuve → Dune.
 
 ## Worked example
 
 ```sql
 SELECT DISTINCT ON (director) director, title
 FROM movies
-ORDER BY director, year DESC;
+ORDER BY director, year DESC, id DESC;
 ```
-
-- `DISTINCT ON (director)` keeps one row per director.
-- `ORDER BY director, year DESC` must start with `director`, then newest year first so the kept row is the latest film.
-- Without matching `ORDER BY`, which row you keep is not meaningful.
-
-Result:
 
 | director | title |
 | --- | --- |
 | Nolan | Interstellar |
 | Villeneuve | Dune |
 
-This is a PostgreSQL-specific form; portable SQL often uses window functions or subqueries instead.
+The `id DESC` tie-breaker matters if two rows share the same director and year; without enough ordering, “first” can still be ambiguous.
+
+## Debug this
+
+```sql
+SELECT DISTINCT ON (director) director, title
+FROM movies;
+```
+
+This asks PostgreSQL to keep one row per director but never tells it which row is preferred. A query can be syntactically valid yet semantically nondeterministic.
 
 ## Common mistakes
 
-- Forgetting `ORDER BY` that starts with the same columns as `DISTINCT ON`.
-- Sorting only by `year` without `director` first.
-- Expecting every film to appear — `DISTINCT ON` intentionally drops extras.
+- Omitting ORDER BY and assuming a meaningful first row.
+- Failing to start ORDER BY with the DISTINCT ON expressions.
+- Forgetting a tie-breaker when business semantics require exactly one stable winner.
 
 ## Your turn
 
-For each `director`, return `director` and the `title` of their newest movie.
+Return the newest movie for each director using `DISTINCT ON`, with a deterministic tie-breaker.
+
+## Quick check
+
+What decides which row survives inside each DISTINCT ON group?
+
+**Answer:** the row that appears first according to the compatible ORDER BY sequence.

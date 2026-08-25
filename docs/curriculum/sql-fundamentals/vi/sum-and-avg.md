@@ -6,15 +6,17 @@ slug: sum-and-avg
 title: Tổng và trung bình với SUM và AVG
 order: 14
 published: true
+can_do: "Rút gọn nhiều hàng số thành tổng hoặc trung bình cộng bằng SUM và AVG"
 objectives:
-  - Cộng số trong cột bằng SUM
-  - Hiểu AVG là trung bình của cột
+  - Trace cách SUM kết hợp các giá trị số
+  - Giải thích AVG như một tóm tắt trên các giá trị số không NULL
+  - Phân biệt tổng với số lượng
 exercise:
   starter: "SELECT amount FROM sales;"
   hints:
-    - "SUM cộng mọi giá trị trong cột số."
-    - "Đặt tên kết quả bằng AS total để khớp cột mong đợi."
-    - "Thử: SELECT SUM(amount) AS total FROM sales;"
+    - "Đề cần một tổng duy nhất, vì vậy aggregate cột amount thay vì liệt kê nó."
+    - "Dùng SUM(amount) và đặt tên kết quả total."
+    - "Dùng: SELECT SUM(amount) AS total FROM sales;"
   solution: "SELECT SUM(amount) AS total FROM sales;"
   preview:
     columns: ["id", "product", "amount"]
@@ -33,43 +35,72 @@ sandbox_seed:
     - "INSERT INTO sales VALUES (1, 'Ticket', 10), (2, 'Snack', 20), (3, 'Poster', 30), (4, 'Program', 15);"
 ---
 
-Khi cột chứa số tiền, bạn thường muốn tổng hoặc trung bình — như cộng một cột spreadsheet hoặc lấy trung bình.
+Tổng và trung bình trả lời hai câu hỏi khác nhau trên cùng một tập số. Kỹ năng cần có là nhìn yêu cầu và xác định đúng loại tóm tắt.
 
-**sales** (bảng đầy đủ)
+## Mô hình tư duy
 
-| id | product | amount |
-| --- | --- | --- |
-| 1 | Ticket | 10 |
-| 2 | Snack | 20 |
-| 3 | Poster | 30 |
-| 4 | Program | 15 |
+**sales**
 
-Các số: `10 + 20 + 30 + 15` = **75**. Trung bình sẽ là `75 / 4` = **18.75**.
+| product | amount |
+| --- | ---: |
+| Ticket | 10 |
+| Snack | 20 |
+| Poster | 30 |
+| Program | 15 |
+
+Trace hai phép rút gọn:
+
+- `SUM(amount)` -> `10 + 20 + 30 + 15` -> **75**
+- `AVG(amount)` -> `75 / 4` -> **18.75**
+
+Giống các aggregate không GROUP BY khác, mỗi biểu thức trả một giá trị tóm tắt cho toàn bộ đầu vào. Các aggregate SQL như SUM và AVG bỏ qua đầu vào NULL thay vì coi NULL là số 0.
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT SUM(amount) AS total
+FROM sales;
+```
+
+Dự đoán: một cột, một hàng, giá trị **75**. Nếu đổi `SUM` thành `COUNT`, câu hỏi đã khác: có bốn hàng chứ không phải tổng 75.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT SUM(amount) AS total, AVG(amount) AS average FROM sales;
+SELECT SUM(amount) AS total,
+       AVG(amount) AS average
+FROM sales;
 ```
 
-- `SUM(amount)` cộng mọi amount → `75`.
-- `AVG(amount)` chia tổng đó cho số hàng → `18.75`.
-- Mỗi hàm tổng hợp trả một giá trị cho cả bảng (trừ khi sau này dùng `GROUP BY`).
-
-Kết quả:
-
 | total | average |
-| --- | --- |
+| ---: | ---: |
 | 75 | 18.75 |
 
-Bài tập của bạn chỉ yêu cầu `SUM` tên `total`.
+Bài tập chỉ yêu cầu tóm tắt thứ nhất, tên `total`.
+
+## Tìm lỗi
+
+Vì sao câu này không nhất quán về mức dữ liệu nếu chưa GROUP BY?
+
+```sql
+SELECT product, SUM(amount)
+FROM sales;
+```
+
+`product` yêu cầu giá trị cấp hàng, còn `SUM(amount)` yêu cầu một tóm tắt cho cả tập. Bài `GROUP BY` sau này sẽ dạy cách tạo một aggregate cho mỗi nhóm. Hiện tại, aggregate toàn bảng mà không đặt cột hàng thông thường bên cạnh.
 
 ## Lỗi thường gặp
 
-- Chọn `amount` cạnh `SUM(amount)` mà không nhóm — cột thường và hàm tổng hợp không trộn kiểu đó.
-- Nhầm `SUM` (cộng tất cả) với `COUNT` (bao nhiêu hàng).
-- Quên `AS total` khi đề đòi đúng tên cột đó.
+- Dùng COUNT khi đề yêu cầu cộng các giá trị số.
+- Trộn cột cấp hàng với aggregate toàn bảng khi chưa có quy tắc nhóm.
+- Coi giá trị số bị thiếu là 0; aggregate thường bỏ qua đầu vào NULL.
 
 ## Thử ngay
 
-Cộng mọi `amount` trong `sales`. Trả về một cột tên `total`.
+Trả về tổng mọi `amount` dưới một cột tên `total`. Hãy tự cộng trước khi chạy.
+
+## Tự kiểm tra
+
+`SUM(amount)` trả lời câu hỏi gì mà `COUNT(*)` không trả lời?
+
+**Đáp án:** SUM trả lời “các giá trị số cộng lại bằng bao nhiêu?”, còn COUNT trả lời “có bao nhiêu hàng?”.

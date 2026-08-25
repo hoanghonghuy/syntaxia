@@ -3,82 +3,87 @@ id: css-11-lists-links
 track: css-basics
 locale: en
 slug: styling-lists-and-links
-title: Styling lists and links
+title: Styling navigation without losing semantics
 order: 11
 published: true
+can_do: "Restyle semantic list-and-link navigation while keeping recognisable focus behavior and separating list presentation from link presentation"
 objectives:
-  - Change list markers with list-style properties
-  - Style navigation lists without default bullets
-  - Combine link pseudo-classes with list layout
+  - Remove list markers without changing list semantics
+  - Style links through descendant selectors
+  - Preserve an explicit focus indicator
 exercise:
   mode: both
   starterHtml: |
-    <ul class="menu"><li><a href="#">Home</a></li></ul>
+    <ul class="menu"><li><a href="/home">Home</a></li><li><a href="/docs">Docs</a></li></ul>
   starter: |
-    /* Remove bullets and link underline */
-    
+    /* TODO: remove list markers, remove normal underline, and add focus outline */
   hints:
-    - "list-style: none removes bullets."
-    - Target links with .menu a.
-    - "text-decoration: none removes underlines."
+    - Style the list container and its anchors with separate selectors.
+    - Use list-style: none on .menu and text-decoration: none on .menu a.
+    - Add .menu a:focus { outline: 2px solid blue; } so keyboard focus stays visible.
   solution: |
     .menu { list-style: none; }
     .menu a { text-decoration: none; }
+    .menu a:focus { outline: 2px solid blue; }
   expected:
-    type: cssIncludes
-    needles:
-      - list-style
-      - text-decoration
+    type: cssRules
+    rules:
+      - selector: .menu
+        declarations:
+          list-style: none
+      - selector: .menu a
+        declarations:
+          text-decoration: none
+      - selector: .menu a:focus
+        declarations:
+          outline: 2px solid blue
 ---
 
-Lists and links appear on almost every page. CSS lets you change **markers** (bullets and numbers), spacing inside lists, and the look of anchors — especially inside a navigation list where default underlines and bullets often get in the way.
+CSS can radically change navigation appearance without throwing away the underlying list and link semantics.
 
-Think of a printed agenda: you might use dots, numbers, or no markers at all for a horizontal menu. The items are still a list in meaning; only the presentation changes.
+## Mental model
 
-| Property / pattern | Role | Example |
-| --- | --- | --- |
-| `list-style-type` | Marker shape | `disc`, `decimal`, `none` |
-| `list-style-position` | Marker inside or outside the text block | `outside` (default), `inside` |
-| `list-style` | Shorthand | `none` |
-| `padding-left` on `ul`/`ol` | Indent for markers | `1.25rem` |
-| Link + list combo | Nav pattern | `nav ul { list-style: none; }` plus `a:hover` |
+```text
+HTML semantics stay: ul -> li -> a
+CSS presentation changes: markers, decoration, interaction states
+```
+
+Keep styling responsibilities on selectors that match the relevant box or state.
+
+## Predict the rendered result
+
+Removing `list-style` hides bullets but the HTML remains a list. Removing normal text decoration changes the visual link treatment, so a clear hover/focus design becomes even more important.
 
 ## Worked example
 
 ```css
-ul.plain {
-  list-style-type: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-ul.plain li {
-  margin-bottom: 0.5rem;
-}
-
-nav a {
-  color: #0b57d0;
-  text-decoration: none;
-}
-
-nav a:hover,
-nav a:focus {
-  text-decoration: underline;
-}
+.menu { list-style: none; }
+.menu a { text-decoration: none; }
+.menu a:focus { outline: 2px solid blue; }
 ```
 
-- `list-style-type: none` removes bullets. Resetting `padding-left` removes the empty indent the browser kept for those markers.
-- Spacing between items comes from `margin` on `li`, not from inventing extra empty paragraphs.
-- Nav links drop the default underline for a cleaner menu, then restore an underline on `:hover` and `:focus` so interaction stays obvious.
+Presentation should not be used as a reason to replace semantic links with non-link elements.
 
-Keep the HTML as a real `ul`/`ol`/`li` structure for accessibility — style away the bullets; do not replace a list with unrelated `div`s just for looks.
+## Debug this
+
+```css
+.menu { text-decoration: none; }
+```
+
+`text-decoration` needs to affect the anchors in this task. Styling only the list container does not reliably express the intended link rule; target `.menu a` explicitly.
 
 ## Common mistakes
 
-- Setting `list-style: none` but leaving a large default padding — the list looks oddly indented with no markers.
-- Removing underlines from links *and* providing no hover/focus cue — visitors cannot tell what is clickable.
-- Styling only `a:hover` inside nav and forgetting `:focus` — keyboard users get no feedback.
+- Removing every visual link cue without adding useful interaction states.
+- Replacing list/link markup with generic divs just to style navigation.
+- Applying declarations to the wrong box in the structure.
 
 ## Your turn
 
-Use the sandbox below to style the menu list and links. When the checker shows **Correct**, mark this lesson complete.
+Restyle the semantic navigation and preserve a visible focus state.
+
+## Quick check
+
+Does `list-style: none` turn a `ul` into non-list HTML?
+
+**Answer:** no. It changes presentation, not the document semantics.

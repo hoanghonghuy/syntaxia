@@ -146,7 +146,16 @@ func (r *Repository) ListTracks(ctx context.Context) ([]domain.Track, error) {
 
 func (r *Repository) ListLessons(ctx context.Context, trackID, locale string, publishedOnly bool) ([]domain.LessonSummary, error) {
 	q := `
-		SELECT id, locale, track_id, slug, title, sort_order, published
+		SELECT id, locale, track_id, slug, title, sort_order, published,
+		       COALESCE(exercise->>'unitId', ''),
+		       COALESCE(exercise->>'unitTitle', ''),
+		       CASE
+		         WHEN COALESCE(exercise->>'unitOrder', '') ~ '^[0-9]+$'
+		         THEN (exercise->>'unitOrder')::int
+		         ELSE 0
+		       END,
+		       COALESCE(exercise->>'unitCanDo', ''),
+		       COALESCE(exercise->>'unitRole', '')
 		FROM lessons WHERE ($1 = '' OR track_id = $1) AND ($2 = '' OR locale = $2)
 	`
 	if publishedOnly {
@@ -161,7 +170,10 @@ func (r *Repository) ListLessons(ctx context.Context, trackID, locale string, pu
 	var out []domain.LessonSummary
 	for rows.Next() {
 		var l domain.LessonSummary
-		if err := rows.Scan(&l.ID, &l.Locale, &l.TrackID, &l.Slug, &l.Title, &l.SortOrder, &l.Published); err != nil {
+		if err := rows.Scan(
+			&l.ID, &l.Locale, &l.TrackID, &l.Slug, &l.Title, &l.SortOrder, &l.Published,
+			&l.UnitID, &l.UnitTitle, &l.UnitOrder, &l.UnitCanDo, &l.UnitRole,
+		); err != nil {
 			return nil, err
 		}
 		out = append(out, l)

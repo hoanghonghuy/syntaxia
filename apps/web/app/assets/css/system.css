@@ -1,0 +1,63 @@
+/* Stabilized interaction layer shared by all product surfaces. */
+
+:where(.hub-page, .hub-page-wide, .learn-scroll) :where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-brand) 42%, transparent);
+  outline-offset: 2px;
+}
+
+:where(.btn, .category-chip, .nav-link) {
+  min-height: 2.75rem;
+}
+
+:where(.btn, .category-chip) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.hub-empty, .hub-hint) {
+  max-width: 44rem;
+  line-height: 1.55;
+}
+
+.hub-empty {
+  padding: var(--space-5);
+  border: 1px dashed var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-soft);
+  color: var(--color-ink-muted);
+}
+
+:where(.form-error, [role='alert']) {
+  line-height: 1.45;
+}
+
+:where(input, select, textarea) {
+  max-width: 100%;
+}
+
+:where(.card-actions, .hub-footer-links) {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 42rem) {
+  :where(.card-actions, .hub-footer-links) > :where(.btn, a.btn, button.btn) {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  :where(.hub-filter, .hub-filter input) {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

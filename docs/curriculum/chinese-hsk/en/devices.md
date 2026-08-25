@@ -3,72 +3,89 @@ id: zh-hsk-b1-12-devices
 track: chinese-hsk
 locale: en
 slug: devices
-title: Phones and screens
+title: "Identify a device and say how you go online"
 order: 12
 published: true
 hsk_band: 1
 hsk_version: "3.0"
-can_do: "Talk about phone/computer/going online"
-pattern: "手机 / 电脑 / 上网"
+unit_id: zh-hsk-b1-device-09
+unit_title: "Use everyday devices"
+unit_order: 9
+unit_can_do: "Identify a common device and say which device you use to go online"
+unit_role: lesson
+can_do: "Identify a phone/computer and say which device you use to go online"
+pattern: "这是我的手机。/ 我用手机上网。"
 objectives:
-  - Recognize 电话, 手机, 电脑, 电视
-  - Know 上网
+  - "Recognize phone, mobile phone, computer, and television"
+  - "Use 用 + device + 上网"
 vocab:
-  - { hanzi: "电话", pinyin: "diànhuà", gloss: "telephone; phone call" }
-  - { hanzi: "手机", pinyin: "shǒujī", gloss: "mobile phone" }
-  - { hanzi: "电脑", pinyin: "diànnǎo", gloss: "computer" }
-  - { hanzi: "电视", pinyin: "diànshì", gloss: "television" }
-  - { hanzi: "上网", pinyin: "shàng wǎng", gloss: "to go online" }
+  - { hanzi: "电话", pinyin: "diàn huà", gloss: "telephone / phone call" }
+  - { hanzi: "手机", pinyin: "shǒu jī", gloss: "mobile phone" }
+  - { hanzi: "电脑", pinyin: "diàn nǎo", gloss: "computer" }
+  - { hanzi: "电视", pinyin: "diàn shì", gloss: "television" }
+  - { hanzi: "上网", pinyin: "shàng wǎng", gloss: "go online" }
+  - { hanzi: "用", pinyin: "yòng", gloss: "to use" }
 steps:
+  - type: scene
+    title: "Situation"
+    body: "A classmate notices your devices and asks what you use to go online."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "你的手机呢？打电话！", reading: "nǐ de shǒu jī ne? dǎ diàn huà!" }
-      - { speaker: "B", text: "我在电脑上网。你看电视吗？", reading: "wǒ zài diàn nǎo shàng wǎng. nǐ kàn diàn shì ma?" }
-      - { speaker: "A", text: "不看。我用手机学习汉语。", reading: "bú kàn. wǒ yòng shǒu jī xué xí hàn yǔ." }
+      - { speaker: "A", text: "这是你的手机吗？", reading: "zhè shì nǐ de shǒu jī ma" }
+      - { speaker: "B", text: "是，这是我的手机。", reading: "shì, zhè shì wǒ de shǒu jī" }
+      - { speaker: "A", text: "你用手机上网吗？", reading: "nǐ yòng shǒu jī shàng wǎng ma" }
+      - { speaker: "B", text: "是，我用手机上网。", reading: "shì, wǒ yòng shǒu jī shàng wǎng" }
+  - type: listen
+    prompt: "Listen for the device used to go online."
+    text: "我用手机上网。"
+    reading: "wǒ yòng shǒu jī shàng wǎng"
   - type: tip
-    title: "电 = electric"
-    body: "电话 = telephone/call; 手机 = mobile (hand + machine); 电脑 = computer (“electric brain”); 电视 = TV. 上网 = go online (上 + 网)."
+    title: "Use the device inside an action"
+    body: "Do not stop at 手机 = mobile phone. Use 用 + device + 上网 so the term becomes part of a practical sentence."
   - type: teach
     items:
-      - { form: "手机", reading: "shǒu jī", gloss: "mobile phone", example: "我的手机" }
-      - { form: "电脑", reading: "diàn nǎo", gloss: "computer", example: "用电脑" }
-      - { form: "电话", reading: "diàn huà", gloss: "telephone / call", example: "打电话" }
-      - { form: "电视", reading: "diàn shì", gloss: "television", example: "看电视" }
-      - { form: "上网", reading: "shàng wǎng", gloss: "go online", example: "在电脑上网" }
+      - { form: "手机", reading: "shǒu jī", gloss: "mobile phone", example: "这是我的手机。" }
+      - { form: "电脑", reading: "diàn nǎo", gloss: "computer", example: "这是我的电脑。" }
+      - { form: "上网", reading: "shàng wǎng", gloss: "go online", example: "我上网。" }
+      - { form: "用手机上网", reading: "yòng shǒu jī shàng wǎng", gloss: "use a phone to go online", example: "我用手机上网。" }
   - type: practice
-    kind: mcq
-    prompt: "Which means “computer”?"
-    choices: ["电脑", "电视", "手机"]
+    id: zh-device-reply-1
+    kind: dialogue_choice
+    prompt: "Someone asks 这是你的手机吗？ It is yours. Choose a natural answer."
+    choices: ["是，这是我的手机。", "我坐火车。", "我要茶。"]
+    answer: "是，这是我的手机。"
+  - type: practice
+    id: zh-device-listen-1
+    kind: audio_choice
+    prompt: "Listen. Which device is being used?"
+    audioText: "我用电脑上网。"
+    choices: ["电脑", "手机", "电视"]
     answer: "电脑"
-    hints:
-      - "电脑 literally “electric brain”."
   - type: practice
-    kind: mcq
-    prompt: "Which means “to go online”?"
-    choices: ["上网", "电话", "电视"]
-    answer: "上网"
+    id: zh-device-produce-1
+    kind: type_answer
+    prompt: "Type: “I use my phone to go online.”"
+    answer: "我用手机上网"
+    acceptedAnswers: ["我用手机上网。"]
+    hints:
+      - "Use 我用 + 手机 + 上网."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Which means “mobile phone”?"
-        choices: ["手机", "电话", "电脑"]
-        answer: "手机"
-      - kind: mcq
-        prompt: "Which means “television”?"
-        choices: ["电视", "手机", "上网"]
-        answer: "电视"
-      - kind: mcq
-        prompt: "Which means “airplane”?"
-        choices: ["飞机", "电脑", "手机"]
-        answer: "飞机"
+      - id: zh-device-check-1
+        kind: meaning_choice
+        prompt: "Which word means “computer”?"
+        choices: ["电脑", "手机", "电视"]
+        answer: "电脑"
+      - id: zh-device-check-2
+        kind: dialogue_choice
+        prompt: "Review: you are taking the train. What can you say?"
+        choices: ["我坐火车。", "我用手机上网。", "水很冷。"]
+        answer: "我坐火车。"
 exercise:
-  type: mcq
-  prompt: "Which means “computer”?"
-  choices: ["电脑", "电视", "手机"]
-  answer: "电脑"
-  hints:
-    - "电脑 literally “electric brain”."
-    - "电视 is TV; 手机 is phone."
+  type: dialogue_choice
+  prompt: "Which sentence says you use a phone to go online?"
+  choices: ["我用手机上网。", "我坐火车。", "我要水。"]
+  answer: "我用手机上网。"
 ---
 
-Practice phones and screens step by step above. When the checkpoint is done, mark the lesson complete if you are signed in.
+The guided session above is the lesson. Pinyin supports early reading, while listening, characters, interaction, production, and later review remain the learning loop.

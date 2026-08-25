@@ -3,77 +3,84 @@ id: css-04-pseudo
 track: css-basics
 locale: en
 slug: pseudo-classes
-title: Pseudo-classes for links
+title: Styling element states with pseudo-classes
 order: 4
 published: true
+can_do: "Use pseudo-classes to style an existing element in interaction states while preserving a visible keyboard-focus state"
 objectives:
-  - Style link states with :link, :visited, :hover, and :focus
-  - Explain what a pseudo-class represents
-  - Prefer visible focus styles for keyboard users
+  - Read pseudo-classes as state conditions on an element
+  - Style hover and focus separately
+  - Avoid removing focus indication without a replacement
 exercise:
   mode: both
   starterHtml: |
-    <a href="#">Link</a>
+    <a href="/docs">Documentation</a>
   starter: |
-    /* Style the link on hover */
-    
+    /* TODO: make the link orange on hover and add a visible outline on focus */
   hints:
-    - "Pseudo-class attaches with a colon: :hover."
-    - "Write a:hover before the curly braces."
-    - Change color on hover.
+    - Append :hover and :focus to the anchor selector.
+    - The two interaction states should be separate rules.
+    - Use a:hover { color: orange; } and a:focus { outline: 2px solid blue; }.
   solution: |
     a:hover { color: orange; }
+    a:focus { outline: 2px solid blue; }
   expected:
-    type: cssIncludes
-    needles:
-      - ":hover"
+    type: cssRules
+    rules:
+      - selector: a:hover
+        declarations:
+          color: orange
+      - selector: a:focus
+        declarations:
+          outline: 2px solid blue
 ---
 
-A **pseudo-class** styles an element in a special *state*, without adding a new class in HTML. Link styling is the classic beginner use: unvisited, visited, hovered, and focused. The colon (`:`) marks the pseudo-class name.
+A pseudo-class adds a **state condition** to a selector. The element does not become a new element; its current state changes which rules match.
 
-Think of a physical button that looks different when you press it or when it is selected. The button is still the same object; its state changed. Pseudo-classes describe those moments for elements on the page.
+## Mental model
 
-| Pseudo-class | Typical meaning for links |
-| --- | --- |
-| `:link` | Unvisited link |
-| `:visited` | Link the user has already opened |
-| `:hover` | Pointer is over the link |
-| `:focus` | Link is focused (often via keyboard Tab) |
-| `:active` | Link is being activated (mouse down / key press) |
+```text
+anchor + state condition -> matching state rule
+
+a:hover  pointer is over the anchor
+a:focus  anchor currently has focus
+```
+
+Focus is especially important for keyboard users navigating with Tab.
+
+## Predict the rendered result
+
+Before previewing, predict that moving the pointer over the link changes its color, while keyboard focus creates an outline. The two states can occur independently.
 
 ## Worked example
 
 ```css
-a:link {
-  color: #0b57d0;
-}
-
-a:visited {
-  color: #681da8;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-a:focus {
-  outline: 2px solid #0b57d0;
-  outline-offset: 2px;
-}
+a:hover { color: orange; }
+a:focus { outline: 2px solid blue; }
 ```
 
-- `a:link` and `a:visited` set base colors for new and previously visited destinations.
-- `a:hover` adds an underline when the pointer rests on the link — feedback that it is interactive.
-- `a:focus` draws an **outline** so keyboard users can see which link is active. Do not remove focus styles without providing a clear replacement.
+Pseudo-classes such as `:link`, `:visited`, `:hover`, `:focus`, and `:active` represent different link states. Keep focus visibly perceivable.
 
-A common order for link rules is link → visited → hover → focus → active, so later interaction states can override earlier colors when needed.
+## Debug this
+
+```css
+a:focus { outline: none; }
+```
+
+Removing the default focus indicator without providing an alternative makes keyboard position hard to see. If you customize focus, replace it with another visible style.
 
 ## Common mistakes
 
-- Styling only `:hover` and removing `:focus` outlines — keyboard and assistive-tech users lose their place on the page.
-- Expecting `:visited` to reveal private browsing history in detail — browsers limit what visited styles can change for privacy.
-- Writing `a :hover` (with a space) — that looks for a hovered *descendant* inside the link, not the link’s own hover state.
+- Treating `:hover` as a class that must be added to HTML.
+- Designing only pointer hover and forgetting keyboard focus.
+- Removing focus outlines for appearance without an accessible replacement.
 
 ## Your turn
 
-Use the sandbox below to style links on hover. When the checker shows **Correct**, mark this lesson complete.
+Implement both hover and focus styles. The grader verifies each declaration on the corresponding state selector.
+
+## Quick check
+
+Does `:focus` require adding `class="focus"` in HTML?
+
+**Answer:** no. It matches the element's current focus state automatically.

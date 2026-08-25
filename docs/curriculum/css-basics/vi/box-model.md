@@ -3,73 +3,96 @@ id: css-06-box
 track: css-basics
 locale: vi
 slug: box-model
-title: Box model
+title: Box model và sizing dễ dự đoán
 order: 6
 published: true
+can_do: "Theo dõi content, padding, border và margin rồi dùng border-box để width khai báo bao gồm cả padding và border"
 objectives:
-  - Đặt tên bốn lớp: content, padding, border, margin
-  - Phân biệt khoảng trong (padding) và khoảng ngoài (margin)
-  - Biết box-sizing: border-box giúp tính kích thước dễ hơn
+  - Phân biệt bốn layer của box model
+  - Dự đoán total size giữa content-box và border-box
+  - Dùng box-sizing để kích thước component dễ dự đoán
 exercise:
   mode: both
   starterHtml: |
     <div class="box">Box</div>
   starter: |
-    /* Add padding and margin to .box */
-    
+    /* TODO: làm .box rộng 200px tính cả padding 20px và border 2px */
   hints:
-    - padding thêm khoảng trống bên trong viền.
-    - margin thêm khoảng trống bên ngoài viền.
-    - rem là đơn vị phổ biến cho khoảng cách.
+    - Với content-box mặc định, padding và border cộng thêm ra ngoài declared width.
+    - Đặt box-sizing: border-box để width bao gồm content, padding và border.
+    - Dùng width: 200px; padding: 20px; border: 2px solid black; box-sizing: border-box;.
   solution: |
-    .box { padding: 1rem; margin: 1rem; }
+    .box {
+      width: 200px;
+      padding: 20px;
+      border: 2px solid black;
+      box-sizing: border-box;
+    }
   expected:
-    type: cssIncludes
-    needles:
-      - padding
-      - margin
+    type: cssRules
+    rules:
+      - selector: .box
+        declarations:
+          width: 200px
+          padding: 20px
+          border: 2px solid black
+          box-sizing: border-box
 ---
 
-Mọi phần tử trên trang được trình duyệt vẽ như một **box** (hộp). **Box model** gồm bốn lớp từ trong ra ngoài: nội dung (content), đệm trong (padding), viền (border), và khoảng ngoài (margin).
+Mọi element khi render đều tham gia box model. Kỹ năng quan trọng là dự đoán dimension nào nằm **bên trong** declared size và dimension nào cộng thêm ra ngoài.
 
-Hiểu box model giúp bạn đoán vì sao khối “to hơn” số `width` bạn gõ — trừ khi dùng `box-sizing: border-box`.
+## Mô hình tư duy
 
-| Lớp | Vai trò |
-| --- | --- |
-| Content | Chữ, ảnh, hoặc nội dung bên trong |
-| Padding | Khoảng trống *trong* viền, quanh content |
-| Border | Đường viền quanh padding |
-| Margin | Khoảng trống *ngoài* viền, đẩy các hộp khác ra |
+```text
+margin
+  border
+    padding
+      content
+```
+
+`box-sizing: content-box` mặc định làm `width` chỉ mô tả content width. `border-box` làm declared width bao gồm content + padding + border.
+
+## Dự đoán kết quả hiển thị
+
+Với `width: 200px; padding: 20px; border: 2px solid`, content-box tạo outer border-box rộng `244px` (200 + 40 padding + 4 border). Với `border-box`, outer border-box giữ ở `200px`.
 
 ## Ví dụ mẫu
 
-```html
-<div class="card">Ghi chú ngắn</div>
-```
-
 ```css
 .card {
-  width: 200px;
-  padding: 16px;
-  border: 2px solid teal;
-  margin: 12px;
+  width: 20rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
   box-sizing: border-box;
 }
 ```
 
-- `width: 200px` với `box-sizing: border-box` nghĩa là **tổng** chiều ngang kể cả padding và border khoảng 200px (content co lại cho vừa).
-- `padding: 16px` tạo khoảng thở bên trong viền.
-- `border: 2px solid teal` vẽ viền xanh ngọc.
-- `margin: 12px` đẩy hộp ra xa các phần tử xung quanh.
+Margin vẫn nằm ngoài ở cả hai sizing model; nó tách box này khỏi box lân cận.
 
-Không có `border-box`, nhiều trình duyệt mặc định cộng padding/border *ngoài* `width` — hộp thực tế rộng hơn 200px.
+## Tìm lỗi
+
+```css
+.box {
+  width: 200px;
+  padding: 20px;
+  border: 2px solid black;
+}
+```
+
+Nếu design yêu cầu visible border box giữ đúng 200px, content-box mặc định làm nó rộng quá. Hãy đổi sizing model thay vì tự trừ padding thủ công ở mọi nơi.
 
 ## Lỗi thường gặp
 
-- Nhầm padding với margin — padding nằm trong viền; margin nằm ngoài.
-- Quên `box-sizing` rồi bất ngờ layout “tràn” — thử `border-box` khi đặt `width` cố định.
-- Đặt `margin` lớn để “đệm chữ trong hộp” — đệm trong hộp là `padding`.
+- Gọi margin là “khoảng trống bên trong box”.
+- Quên rằng hai phía padding ngang và hai border đều cộng vào outer width của content-box.
+- Hard-code width bù trừ thay vì chọn đúng box-sizing model.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để thêm padding và margin cho .box. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Tạo border box rộng 200px với padding và border nằm trong width đó.
+
+## Tự kiểm tra
+
+Margin có trở thành một phần của declared width khi dùng `border-box` không?
+
+**Đáp án:** không. Margin vẫn nằm ngoài border box.

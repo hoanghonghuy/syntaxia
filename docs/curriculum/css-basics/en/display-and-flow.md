@@ -3,74 +3,86 @@ id: css-10-display
 track: css-basics
 locale: en
 slug: display-and-flow
-title: Display and flow
+title: Display and normal flow
 order: 10
 published: true
+can_do: "Predict how block, inline, inline-block, and none participate in normal flow and choose inline-block when inline placement still needs box sizing"
 objectives:
-  - Contrast block and inline layout in normal flow
-  - Use inline-block when you need both width and side-by-side placement
-  - Hide elements with display: none
+  - Contrast block and inline outer behavior
+  - Use inline-block for an inline-level box that accepts dimensions
+  - Understand that display none removes the box from layout
 exercise:
   mode: both
   starterHtml: |
-    <span class="box">A</span>
+    <span class="badge">A</span>
+    <span>following text</span>
   starter: |
-    /* Change how .box flows in the line */
-    
+    /* TODO: keep .badge in the line but give it a box width and padding */
   hints:
-    - display changes layout behavior.
-    - inline-block keeps items in a line but allows box sizing.
-    - "Write display: inline-block; inside the rule."
+    - Plain inline boxes do not use width in the same way as inline-block.
+    - Use display: inline-block so the badge stays in inline flow and accepts box dimensions.
+    - Set display: inline-block; width: 3rem; padding: 0.5rem;.
   solution: |
-    .box { display: inline-block; }
+    .badge { display: inline-block; width: 3rem; padding: 0.5rem; }
   expected:
-    type: cssIncludes
-    needles:
-      - display
+    type: cssRules
+    rules:
+      - selector: .badge
+        declarations:
+          display: inline-block
+          width: 3rem
+          padding: 0.5rem
 ---
 
-The `display` property controls how a box participates in **normal flow** — the default top-to-bottom, left-to-right arrangement of content. The most important beginner values are `block`, `inline`, `inline-block`, and `none`.
+`display` changes how a box participates in layout. Start from **normal flow** before reaching for complex layout systems.
 
-Think of paragraphs as full-width shelves (block) and a bold word inside a sentence as a bead on a string (inline). A small badge that needs a set width but still sits in the sentence is closer to `inline-block`.
+## Mental model
 
-| Value | Behavior (simplified) | Common elements |
-| --- | --- | --- |
-| `block` | Starts on a new line; can take `width`/`height`; stretches toward full available width by default | `div`, `p`, `h1`–`h6`, `section` |
-| `inline` | Sits in the text line; `width`/`height` do not apply the same way | `span`, `a`, `em`, `strong` |
-| `inline-block` | Flows with text like inline, but accepts width, height, and vertical padding more like a block | Buttons, badges, icons with labels |
-| `none` | Removes the box from layout — as if it were not there | Hidden panels, toggled UI |
+| Value | Simplified behavior |
+| --- | --- |
+| `block` | new line, block-level outer flow |
+| `inline` | participates in a text line |
+| `inline-block` | inline outer flow + box-like dimensions |
+| `none` | no generated box in layout |
+
+The inner content formatting and outer participation are related but distinct concepts.
+
+## Predict the rendered result
+
+A `span` is inline by default. Setting a width alone may not create the badge geometry you expect. Changing it to `inline-block` lets it stay beside text while accepting the declared box width.
 
 ## Worked example
 
 ```css
-.label {
+.badge {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: #e8f5e9;
-}
-
-.sr-only-demo {
-  display: none;
-}
-
-aside.note {
-  display: block;
-  width: 16rem;
+  width: 3rem;
+  padding: 0.5rem;
 }
 ```
 
-- `.label` uses `inline-block` so several labels can sit on one line *and* keep padding and a background that looks like a chip.
-- `display: none` hides `.sr-only-demo` completely from layout (also generally hides it from visual display). Use it for things that should not take space — not for temporary visual dimming alone if you still need the space reserved.
-- `aside.note` as `block` with a width sits on its own flow line and respects the width you set.
+`display: none` is different from visually transparent content: it removes the box from layout rather than merely making it invisible.
 
-Changing `display` does not change the HTML meaning — a `span` is still a span even if you make it `block`.
+## Debug this
+
+```css
+.badge { width: 3rem; }
+```
+
+If the element remains an inline box, the requested width is not applied as a normal block dimension. Inspect display behavior before assuming width is broken.
 
 ## Common mistakes
 
-- Trying to set `width` or vertical margins on a pure `inline` element and wondering why nothing happens — switch to `block` or `inline-block` when you need those controls.
-- Using `display: none` when you only wanted invisible text for screen readers — that pattern needs a different technique; `none` removes the box from the accessibility tree in typical cases.
-- Forcing everything to `inline-block` for page layout — for rows and alignment, Flexbox (later lesson) is clearer.
+- Treating block/inline as merely visual labels.
+- Using `display: none` when content must remain available to assistive interaction.
+- Adding width to inline content and assuming normal block sizing rules apply unchanged.
 
 ## Your turn
 
-Use the sandbox below to set display on .box. When the checker shows **Correct**, mark this lesson complete.
+Turn the badge into an inline-block with the requested dimensions.
+
+## Quick check
+
+What is the key advantage of `inline-block` in this example?
+
+**Answer:** it stays in inline flow while accepting box dimensions such as width.

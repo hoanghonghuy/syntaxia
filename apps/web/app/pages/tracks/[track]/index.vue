@@ -153,7 +153,7 @@ const hubLessons = computed(() => {
   const list =
     catalog.lessonsByTrack[trackId.value] ||
     (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
-  return [...list].sort((a, b) => a.sortOrder - b.sortOrder)
+  return isLanguageHub.value ? [...list] : [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
 
 const showLanguagePath = computed(

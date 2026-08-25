@@ -23,6 +23,11 @@ export type LessonSummary = {
   title: string
   sortOrder: number
   published: boolean
+  unitId?: string
+  unitTitle?: string
+  unitOrder?: number
+  unitCanDo?: string
+  unitRole?: 'lesson' | 'checkpoint' | 'review'
 }
 
 export type Lesson = LessonSummary & {
@@ -62,4 +67,20 @@ export type Progress = {
   locale: string
   completed: boolean
   completedAt?: string
+}
+
+export type LanguageReviewCard = {
+  trackId: string
+  lessonId: string
+  locale: string
+  itemKey: string
+  dueAt: string
+  stability: number
+  difficulty: number
+  scheduledDays: number
+  reps: number
+  lapses: number
+  state: number
+  lastReviewAt?: string
+  remainingSteps: number
 }

@@ -6,16 +6,17 @@ slug: foreign-key
 title: Khóa ngoại
 order: 33
 published: true
+can_do: "Trace tham chiếu khóa ngoại từ bảng con tới bảng cha và chỉ chèn tham chiếu giữ đúng toàn vẹn quan hệ"
 objectives:
-  - Giải thích FOREIGN KEY nối bảng thế nào
-  - Insert dòng con tham chiếu parent hợp lệ
-  - Thấy vì sao id parent lạ bị từ chối
+  - Phân biệt danh tính của hàng con với tham chiếu tới hàng cha
+  - Trace director_id tới directors.id
+  - Dự đoán INSERT hợp lệ và vi phạm foreign key
 exercise:
   starter: "INSERT INTO movies (id, title, director_id) VALUES "
   hints:
-    - "Khóa ngoại trỏ tới khóa chính ở bảng khác."
-    - "directors đã có id = 1 ('Nolan') — dùng director_id đó."
-    - "Thử: INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);"
+    - "director_id phải tham chiếu một id đã tồn tại trong directors."
+    - "Bảng cha đang có Nolan tại directors.id = 1."
+    - "Dùng: INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);"
   solution: "INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);"
   preview:
     columns: ["id", "name"]
@@ -34,58 +35,65 @@ sandbox_seed:
     - "CREATE TEMP TABLE movies (id INT PRIMARY KEY, title TEXT, director_id INT REFERENCES directors(id));"
 ---
 
-**Khóa ngoại** (foreign key) là cột trỏ tới khóa chính ở bảng khác — như ghi mã nhân viên trên timesheet để mỗi dòng gắn với một người.
+Foreign key bảo vệ quan hệ giữa các bảng. Nó nói rằng tham chiếu lưu trong hàng con phải trỏ tới một key hợp lệ ở bảng cha.
 
-**directors** (parent — đã có dữ liệu)
+## Mô hình tư duy
 
-| id | name |
-| --- | --- |
-| 1 | Nolan |
+Quan hệ:
 
-**movies** (child — trống; `director_id` phải khớp một `directors.id`)
-
-| id | title | director_id |
-| --- | --- | --- |
-|  |  |  |
-
-```sql
-CREATE TABLE movies (
-  id INT PRIMARY KEY,
-  title TEXT,
-  director_id INT REFERENCES directors(id)
-);
+```text
+movies.director_id  ----tham chiếu---->  directors.id
 ```
 
-| `director_id` | Được phép? |
-| --- | --- |
-| 1 | có — Nolan tồn tại |
-| 99 | không — không có đạo diễn đó |
-| NULL | tùy nullability cột (bài này không dùng) |
+Dữ liệu cha:
 
-Cả hai bảng đã có trong sandbox; `directors` đã có Nolan.
+| directors.id | name |
+| ---: | --- |
+| 1 | Nolan |
+
+Đánh giá hàng con muốn chèn:
+
+| movie id | director_id | hợp lệ? | lý do |
+| ---: | ---: | --- | --- |
+| 1 | 1 | có | parent key 1 tồn tại |
+| 2 | 99 | không | không có director 99 |
+
+`movies.id` là danh tính của chính movie. `movies.director_id` là tham chiếu tới danh tính ở bảng khác.
+
+## Dự đoán trước khi chạy
+
+Dự đoán một hàng Inception với `director_id = 1` có qua hợp đồng quan hệ không; sau đó thử suy luận nếu đổi thành `99`.
 
 ## Ví dụ mẫu
 
 ```sql
-INSERT INTO movies (id, title, director_id) VALUES (1, 'Inception', 1);
+INSERT INTO movies (id, title, director_id)
+VALUES (1, 'Inception', 1);
 ```
 
-- `id = 1` là khóa chính của chính phim này.
-- `director_id = 1` khớp Nolan trong `directors`.
-- Khóa ngoại chấp nhận dòng vì khóa parent tồn tại.
+Foreign key chấp nhận hàng vì parent key `directors.id = 1` đã tồn tại.
 
-Kết quả trong `movies`:
+## Tìm lỗi
 
-| id | title | director_id |
-| --- | --- | --- |
-| 1 | Inception | 1 |
+```sql
+INSERT INTO movies (id, title, director_id)
+VALUES (1, 'Inception', 99);
+```
+
+Hình dạng SQL hợp lệ nhưng toàn vẹn tham chiếu thất bại. Khi debug foreign key, hãy trace tham chiếu của hàng con tới đúng parent key mà nó cho rằng đang tồn tại.
 
 ## Lỗi thường gặp
 
-- Dùng `director_id` không có trong `directors` — khóa ngoại từ chối.
-- Nhầm `id` của phim với `director_id` — đó là hai cột khác nhau.
-- Insert vào `directors` thay vì `movies`.
+- Nhầm primary key của chính hàng với foreign key tham chiếu hàng khác.
+- Tham chiếu parent id chưa tồn tại.
+- Nghĩ foreign key sao chép dữ liệu cha; thực tế nó lưu quan hệ bằng key.
 
 ## Thử ngay
 
-Insert phim `id = 1`, `title = 'Inception'`, `director_id = 1`.
+Chèn Inception với movie `id = 1` và `director_id = 1`. Trace tham chiếu tới Nolan trước khi chạy.
+
+## Tự kiểm tra
+
+Bảng nào phải có key `1` trước khi movie với `director_id = 1` được chèn?
+
+**Đáp án:** bảng `directors`, cụ thể là `directors.id = 1`.

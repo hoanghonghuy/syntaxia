@@ -6,15 +6,17 @@ slug: sql-syntax
 title: SQL syntax basics
 order: 1
 published: true
+can_do: "Recognize the basic shape of a SELECT statement and identify its output columns and source table"
 objectives:
-  - Recognize the shape of a simple SELECT statement
-  - Run a query that returns one column from a table
+  - Read a basic SELECT statement from left to right
+  - Distinguish SQL keywords from table and column identifiers
+  - Return one column from a table
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "A basic query names columns after SELECT, then the table after FROM."
-    - "You only need the title column — not every column."
-    - "Run: SELECT title FROM movies ORDER BY title;"
+    - "A basic query names the output column after SELECT and the source after FROM."
+    - "The requested output is only title; keep movies as the source table."
+    - "Use: SELECT title FROM movies ORDER BY title;"
   solution: "SELECT title FROM movies ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -36,9 +38,20 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'The Matrix', 1999, 'Wachowski'), (3, 'Dune', 2021, 'Villeneuve'), (4, 'Interstellar', 2014, 'Nolan');"
 ---
 
-SQL is a language for asking questions of tables. A short query reads like a sentence: **which columns**, **from which table**.
+SQL syntax is easier to remember when every part has a job. Do not memorize a long grammar yet; learn the shape of one small request.
 
-**movies** (full practice table)
+## Mental model
+
+A basic table query has two essential decisions:
+
+| Question | SQL part | Example |
+| --- | --- | --- |
+| What should appear in the result? | `SELECT ...` | `SELECT title` |
+| Where does that data come from? | `FROM ...` | `FROM movies` |
+
+SQL keywords such as `SELECT` and `FROM` describe operations. Names such as `title` and `movies` refer to objects in your data.
+
+**movies**
 
 | id | title | year | director |
 | --- | --- | --- | --- |
@@ -47,24 +60,31 @@ SQL is a language for asking questions of tables. A short query reads like a sen
 | 3 | Dune | 2021 | Villeneuve |
 | 4 | Interstellar | 2014 | Nolan |
 
-The table has four columns. Today you will ask for only one of them: `title`.
+## Predict before you run
+
+Consider:
+
+```sql
+SELECT title
+FROM movies;
+```
+
+Before running it, predict the **shape**, not the exact display order.
+
+- The result has **1 column** because only `title` is selected.
+- It has **4 rows** because no row filter has been added.
+
+That separation — output columns versus source rows — will stay useful throughout SQL.
 
 ## Worked example
+
+The exercise uses this version so the grader receives a stable row order:
 
 ```sql
 SELECT title
 FROM movies
 ORDER BY title;
 ```
-
-| Piece | Meaning |
-| --- | --- |
-| `SELECT` | Start of the request — “show me these columns” |
-| `title` | The column you want |
-| `FROM movies` | Look in the table named `movies` |
-| `ORDER BY title` | Sort titles A→Z so the result is stable |
-
-Result:
 
 | title |
 | --- |
@@ -73,14 +93,33 @@ Result:
 | Interstellar |
 | The Matrix |
 
-Every SQL statement ends with a semicolon (`;`). Keywords are usually written in uppercase so they stand out from table and column names.
+For now, focus on `SELECT title FROM movies`. `ORDER BY title` only makes the displayed order predictable; sorting gets its own lesson later.
+
+SQL keywords are commonly written in uppercase for readability, but uppercase is a convention rather than the reason the query works. A semicolon marks the end of a statement and is a good habit, especially when several statements are sent together.
+
+## Debug this
+
+What is wrong with this order?
+
+```sql
+FROM movies
+SELECT title;
+```
+
+SQL's grammar expects the `SELECT` list before the `FROM` source. The database cannot rearrange arbitrary clause order for you.
 
 ## Common mistakes
 
-- Forgetting `FROM` — `SELECT title` alone does not say which table to use.
-- Misspelling the table or column name (`movie` vs `movies`) — names must match exactly.
-- Leaving out the semicolon when the tool expects a complete statement.
+- Reversing clause order because natural language says “from movies, show title”. SQL syntax starts with `SELECT`.
+- Confusing the column `title` with the table `movies`.
+- Thinking uppercase keywords are mandatory. Consistent casing improves readability, but the clause structure is what matters.
 
 ## Your turn
 
-Return only the `title` column from `movies`, sorted by `title`.
+Return only the `title` column from `movies`, ordered by `title`. Before running it, predict the result dimensions.
+
+## Quick check
+
+In `SELECT title FROM movies`, which token is the column and which token is the table?
+
+**Answer:** `title` is the selected column; `movies` is the source table.

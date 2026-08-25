@@ -3,22 +3,22 @@ id: html-11-entities
 track: html-basics
 locale: en
 slug: html-entities
-title: Entities and small text helpers
+title: Character references and text helpers
 order: 11
 published: true
+can_do: "Represent reserved markup characters safely in text and distinguish text-level helpers such as br, hr, abbr, and time from ordinary paragraph structure"
 objectives:
-  - Write reserved characters with HTML entities
-  - Use br and hr for a line break and a thematic break
-  - Recognize light helpers such as abbr and time
+  - Use character references when literal source characters would be ambiguous with markup
+  - Use br and hr only for their actual text/thematic roles
+  - Recognize machine-readable meaning in abbr and time
 exercise:
   mode: html
   starter: |
-    <!-- Show AT&amp;T using an entity for & -->
-    
+    <!-- TODO: show AT&T in a paragraph using &amp; for the ampersand -->
   hints:
-    - Ampersand in text needs an entity.
-    - "Write &amp; to show & safely."
-    - Wrap the company name in a paragraph.
+    - The exercise checks the HTML source, not only the final visible text.
+    - Write the ampersand character reference as &amp;.
+    - Put the company name inside a p element: AT&amp;T.
   solution: |
     <p>AT&amp;T</p>
   expected:
@@ -27,49 +27,58 @@ exercise:
       - "&amp;"
 ---
 
-Some characters are special in HTML source. The less-than sign starts a tag, so you cannot type raw `<` inside ordinary text and expect it to show as a symbol. **Character entities** (and numeric character references) let you include those symbols safely. A few small elements — `br`, `hr`, `abbr`, `time` — help with line breaks, breaks in topic, abbreviations, and dates.
+HTML source uses characters such as `<` and `&` as part of its own syntax. When you need those characters as literal text, **character references** make the intent unambiguous.
 
-When the keyboard character would be read as markup, use an entity instead.
+## Mental model
 
-| Need | Common writing | Resulting idea |
-| --- | --- | --- |
-| Less-than | `&lt;` | `<` |
-| Greater-than | `&gt;` | `>` |
-| Ampersand | `&amp;` | `&` |
-| Non-breaking space | `&nbsp;` | Space that should not wrap |
-| Line break | `<br />` | Force a new line inside text |
-| Thematic break | `<hr />` | A break between topics |
-| Abbreviation | `<abbr title="...">` | Short form with expansion |
-| Date/time | `<time datetime="...">` | Human text + machine value |
+```text
+source syntax character     literal text representation
+<                            &lt;
+>                            &gt;
+&                            &amp;
+```
+
+Small text elements solve different problems: `br` is a line break inside content; `hr` is a thematic break; `abbr` can expose an expansion; `time` can pair readable text with a machine-readable datetime.
+
+## Predict the rendered structure
+
+```html
+<p>Write <code>&lt;p&gt;</code> to discuss the paragraph tag.</p>
+```
+
+Predict what is text and what is markup: `code` is a real element, while `&lt;p&gt;` becomes the visible characters `<p>` instead of creating another paragraph.
 
 ## Worked example
 
 ```html
-<p>Write a tag like <code>&lt;p&gt;</code> in documentation.</p>
 <p>Sugar &amp; flour go in first.</p>
-<p>Line one<br />Line two</p>
-<hr />
-<p>
-  We meet on
-  <time datetime="2026-07-16">16 July 2026</time>.
-  The club is run by the
-  <abbr title="HyperText Markup Language">HTML</abbr> study group.
-</p>
+<p>Line one<br>Line two</p>
+<hr>
+<p>Meet <time datetime="2026-08-21">21 August 2026</time>.</p>
 ```
 
-- `&lt;p&gt;` displays the characters `<p>` instead of starting a real paragraph tag.
-- `&amp;` is required when you need a literal `&` in text.
-- `br` breaks the line without starting a new paragraph; `hr` marks a thematic split.
-- `time` keeps a machine-readable `datetime` beside readable text; `abbr` stores the full expansion in `title`.
+Use real paragraphs for separate prose blocks; do not stack `br` tags just to create visual spacing.
 
-Prefer new paragraphs (`p`) over many `br` breaks for ordinary prose.
+## Debug this
+
+```html
+<p>Use <p> for paragraphs.</p>
+```
+
+The inner `<p>` is parsed as markup, not shown as literal documentation text. Write `&lt;p&gt;` when the angle brackets themselves are content.
 
 ## Common mistakes
 
-- Pasting raw `<` or `&` into page text — the browser may treat them as markup and break the page.
-- Using `br` to create fake paragraphs or spacing — structure with `p` (and CSS later) instead.
-- Omitting `datetime` on `time` when you care about sorting or calendars — visible text alone is ambiguous for machines.
+- Typing literal markup syntax into documentation text and expecting it to stay text.
+- Using repeated `br` elements as a layout-spacing system.
+- Treating `time` or `abbr` as decorative styling hooks instead of meaning-bearing elements.
 
 ## Your turn
 
-Use the sandbox below to show AT&T with an HTML entity. When the checker shows **Correct**, mark this lesson complete.
+Render `AT&T` from source that uses `&amp;`. The exercise deliberately checks the encoded source form.
+
+## Quick check
+
+Why write `&lt;p&gt;` in an HTML tutorial instead of raw `<p>` when you want readers to see the tag characters?
+
+**Answer:** raw angle brackets are markup syntax; character references make them literal text.

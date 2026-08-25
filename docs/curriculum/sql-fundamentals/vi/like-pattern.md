@@ -3,18 +3,20 @@ id: sql-15-like
 track: sql-fundamentals
 locale: vi
 slug: like-pattern
-title: Khớp chữ với LIKE
+title: Khớp mẫu chữ với LIKE
 order: 15
 published: true
+can_do: "Chuyển yêu cầu khớp mẫu text thành LIKE với wildcard đặt đúng vị trí"
 objectives:
-  - Lọc chữ theo mẫu
-  - Dùng % làm ký tự đại diện
+  - Phân biệt so sánh chính xác với khớp mẫu
+  - Trace chuỗi nào khớp một LIKE pattern
+  - Dùng % cho một chuỗi ký tự có độ dài bất kỳ
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "LIKE so sánh chữ với một mẫu; % nghĩa là “bất kỳ ký tự nào ở đây”."
-    - "Tiêu đề bắt đầu bằng In khớp mẫu 'In%'."
-    - "Thử: SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
+    - "Yêu cầu nói bắt đầu bằng chứ không phải bằng chính xác, vì vậy dùng LIKE."
+    - "Đặt % sau In vì phần đuôi có thể là bất kỳ chuỗi ký tự nào."
+    - "Dùng: SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
   solution: "SELECT title FROM movies WHERE title LIKE 'In%' ORDER BY title;"
   preview:
     columns: ["id", "title", "year", "director"]
@@ -34,23 +36,36 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 'Nolan'), (2, 'Interstellar', 2014, 'Nolan'), (3, 'The Matrix', 1999, 'Wachowski'), (4, 'Dune', 2021, 'Villeneuve');"
 ---
 
-So sánh bằng (`=`) cần đúng cả chuỗi. `LIKE` cho phép khớp theo mẫu — ví dụ “tiêu đề bắt đầu bằng In”, giống bộ lọc “begins with” trong Excel.
+Yêu cầu về text không phải lúc nào cũng là so sánh bằng chính xác. “Bắt đầu bằng In” mô tả một **mẫu**, nên truy vấn phải thể hiện phần nào cố định và phần nào được phép thay đổi.
 
-**movies** (bảng đầy đủ)
+## Mô hình tư duy
 
-| id | title | year | director |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | Nolan |
-| 2 | Interstellar | 2014 | Nolan |
-| 3 | The Matrix | 1999 | Wachowski |
-| 4 | Dune | 2021 | Villeneuve |
+Trong LIKE pattern, `%` nghĩa là “có thể có từ 0 ký tự trở lên ở đây”. Vị trí của nó làm thay đổi ý nghĩa.
 
-| title | Bắt đầu bằng `In`? |
+| Pattern | Cách đọc |
+| --- | --- |
+| `'In%'` | bắt đầu bằng `In` |
+| `'%In'` | kết thúc bằng `In` |
+| `'%In%'` | chứa `In` ở đâu đó |
+
+Áp `'In%'` lên dữ liệu:
+
+| title | khớp? |
 | --- | --- |
 | Inception | có |
 | Interstellar | có |
 | The Matrix | không |
 | Dune | không |
+
+## Dự đoán trước khi chạy
+
+```sql
+SELECT title
+FROM movies
+WHERE title LIKE 'In%';
+```
+
+Hãy dự đoán hai hàng được giữ trước khi chạy. Đồng thời chú ý pattern nằm trong dấu nháy vì nó là text literal.
 
 ## Ví dụ mẫu
 
@@ -61,25 +76,35 @@ WHERE title LIKE 'In%'
 ORDER BY title;
 ```
 
-- `'In%'` nghĩa là: bắt đầu bằng `In`, rồi bất kỳ ký tự nào (hoặc không có). `%` là ký tự đại diện.
-- Inception và Interstellar khớp; The Matrix và Dune thì không.
-- `ORDER BY title` sắp tiêu đề khớp theo A→Z.
-
-Kết quả:
-
 | title |
 | --- |
 | Inception |
 | Interstellar |
 
-Ký tự đại diện `_` (đúng một ký tự) được học ở bài sau `sql-wildcards`.
+Trong PostgreSQL, `LIKE` thông thường phân biệt hoa/thường với các giá trị text này; không nên ngầm cho rằng `'in%'` sẽ khớp giống hệt. `ILIKE` là đặc trưng PostgreSQL nên để ở track PostgreSQL.
+
+## Tìm lỗi
+
+Yêu cầu là “bắt đầu bằng In”, nhưng truy vấn viết:
+
+```sql
+WHERE title LIKE '%In'
+```
+
+Wildcard nằm sai phía. Pattern này cho phép phần đầu tùy ý và bắt chuỗi phải **kết thúc** bằng `In`.
 
 ## Lỗi thường gặp
 
-- Dùng `=` với mẫu — `=` cần khớp đúng; mẫu cần `LIKE`.
-- Quên `%` — chỉ `'In'` thì chỉ khớp đúng chữ `In`.
-- Đặt `%` sai chỗ — `'%In'` nghĩa là “kết thúc bằng In”, không phải “bắt đầu bằng In”.
+- Dùng `=` với text có wildcard rồi mong pattern matching.
+- Đặt `%` sai vị trí khiến “bắt đầu bằng” thành “kết thúc bằng” hoặc “chứa”.
+- Giả định mọi hệ SQL đều khớp chữ không phân biệt hoa/thường.
 
 ## Thử ngay
 
-Liệt kê các `title` bắt đầu bằng `In`. Sắp xếp bằng `ORDER BY title`.
+Trả về title bắt đầu bằng `In`, sắp theo title. Trước khi chạy, tự thử pattern trên cả bốn chuỗi.
+
+## Tự kiểm tra
+
+Pattern nào diễn đạt “chứa `Matrix` ở bất kỳ vị trí nào”?
+
+**Đáp án:** `'%Matrix%'`.

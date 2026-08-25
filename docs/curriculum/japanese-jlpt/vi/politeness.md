@@ -3,66 +3,90 @@ id: ja-n5-01-politeness
 track: japanese-jlpt
 locale: vi
 slug: politeness
-title: Từ lịch sự
+title: Yêu cầu một món đồ một cách lịch sự
 order: 1
 published: true
 jlpt_level: n5
-can_do: "Dùng はい / いいえ và ください / どうも lịch sự"
-pattern: "はい / いいえ / ください / どうも"
+unit_id: ja-n5-shop-request-01
+unit_title: "Yêu cầu một món đồ"
+unit_order: 1
+unit_can_do: "Yêu cầu món đồ đã chọn và kết thúc một lượt mua hàng ngắn một cách lịch sự"
+unit_role: lesson
+can_do: "Yêu cầu một món đồ một cách lịch sự và dùng câu đáp cơ bản có/không/cảm ơn"
+pattern: "これをください。 / はい。 / いいえ。 / ありがとうございます。"
 objectives:
-  - Dùng hai / iie
-  - Nói please và cảm ơn
+  - Dùng これをください như một câu yêu cầu hoàn chỉnh
+  - Nhận ra はい và いいえ trong câu đáp ngắn
+  - Cảm ơn lịch sự bằng ありがとうございます
 vocab:
+  - { surface: "これ", reading: "これ", gloss: "cái này" }
+  - { surface: "ください", reading: "ください", gloss: "xin hãy cho / vui lòng" }
   - { surface: "はい", reading: "はい", gloss: "vâng / có" }
   - { surface: "いいえ", reading: "いいえ", gloss: "không" }
-  - { surface: "ください", reading: "ください", gloss: "làm ơn / xin cho" }
-  - { surface: "どうも", reading: "どうも", gloss: "cảm ơn (thân mật)" }
+  - { surface: "ありがとうございます", reading: "ありがとうございます", gloss: "cảm ơn (lịch sự)" }
 steps:
+  - type: scene
+    title: "Ở một cửa hàng nhỏ"
+    body: "Bạn đã chọn một món đồ. Hãy yêu cầu món đó rồi kết thúc lượt giao tiếp một cách lịch sự."
+    visualKey: "shop-counter-request"
+    imageAlt: "Một khách hàng đứng trước quầy cửa hàng nhỏ, chỉ vào món đồ và nói với nhân viên."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "これをください。", reading: "これをください。" }
-      - { speaker: "B", text: "はい。", reading: "はい。" }
-      - { speaker: "A", text: "どうも。", reading: "どうも。" }
-      - { speaker: "B", text: "いいえ。", reading: "いいえ。" }
+      - { speaker: "客", text: "これをください。", reading: "これをください。" }
+      - { speaker: "店員", text: "はい。", reading: "はい。" }
+      - { speaker: "客", text: "ありがとうございます。", reading: "ありがとうございます。" }
+  - type: listen
+    prompt: "Nghe trước. Khách dùng cả cụm nào để yêu cầu món đồ?"
+    text: "これをください。"
+    reading: "これをください。"
   - type: tip
-    title: "Từ lịch sự là cụm cố định"
-    body: "はい và いいえ trả lời có/không. ください làm mềm yêu cầu (xin cho). どうも là cảm ơn thân mật. Học cả cụm, không tách âm tiết."
+    title: "Học ください trong cả cụm yêu cầu"
+    body: "Không nên học ください như bản dịch một-một của từ “please”. Trong tình huống này, hãy học cả cụm これをください, nghĩa gần với “Cho tôi cái này / Cái này nhé”."
   - type: teach
     items:
-      - { form: "はい", reading: "はい", gloss: "vâng / có", example: "はい。" }
-      - { form: "いいえ", reading: "いいえ", gloss: "không", example: "いいえ。" }
-      - { form: "ください", reading: "ください", gloss: "làm ơn", example: "これをください。" }
-      - { form: "どうも", reading: "どうも", gloss: "cảm ơn", example: "どうも。" }
+      - { form: "これをください。", reading: "これをください。", gloss: "Cho tôi cái này / Cái này nhé.", example: "これをください。" }
+      - { form: "はい。", reading: "はい。", gloss: "Vâng / Có.", example: "はい。" }
+      - { form: "いいえ。", reading: "いいえ。", gloss: "Không.", example: "いいえ。" }
+      - { form: "ありがとうございます。", reading: "ありがとうございます。", gloss: "Cảm ơn. (lịch sự)", example: "ありがとうございます。" }
   - type: practice
-    kind: mcq
-    prompt: "Trong hội thoại, từ nào nghĩa là “vâng”?"
-    choices: ["はい", "いいえ", "どうも"]
+    id: ja-pol-dialogue-1
+    kind: dialogue_choice
+    prompt: "Bạn muốn món đồ đang chỉ vào. Câu nào phù hợp tình huống?"
+    choices: ["これをください。", "いいえ。", "ありがとうございます。"]
+    answer: "これをください。"
+    explanation: "これをください là câu yêu cầu hoàn chỉnh; ありがとうございます dùng để cảm ơn sau khi được phục vụ."
+  - type: practice
+    id: ja-pol-listen-1
+    kind: listen_type
+    prompt: "Nghe rồi nhập câu đáp ngắn bạn vừa nghe."
+    audioText: "はい"
     answer: "はい"
-    hints:
-      - "B đồng ý trước khi A cảm ơn."
+    acceptedAnswers: ["はい。"]
   - type: practice
-    kind: mcq
-    prompt: "Từ nào làm mềm yêu cầu (làm ơn)?"
-    choices: ["ください", "いいえ", "どうも"]
-    answer: "ください"
+    id: ja-pol-produce-1
+    kind: type_answer
+    prompt: "Bạn chỉ vào một món đồ và muốn lấy món đó. Hãy nhập câu yêu cầu bằng tiếng Nhật."
+    answer: "これをください"
+    acceptedAnswers: ["これをください。"]
+    hints:
+      - "Bắt đầu bằng これ."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào nghĩa là “không”?"
-        choices: ["いいえ", "はい", "ください"]
-        answer: "いいえ"
-      - kind: mcq
-        prompt: "Từ nào là cảm ơn thân mật?"
-        choices: ["どうも", "いいえ", "はい"]
-        answer: "どうも"
+      - id: ja-pol-check-1
+        kind: meaning_choice
+        prompt: "Cụm nào là lời cảm ơn lịch sự?"
+        choices: ["ありがとうございます。", "これをください。", "いいえ。"]
+        answer: "ありがとうございます。"
+      - id: ja-pol-check-2
+        kind: meaning_choice
+        prompt: "Câu đáp ngắn nào nghĩa là “không”?"
+        choices: ["いいえ。", "はい。", "これ。"]
+        answer: "いいえ。"
 exercise:
-  type: mcq
-  prompt: "Từ nào nghĩa là vâng?"
-  choices: ["はい", "いいえ", "どうも"]
-  answer: "はい"
-  hints:
-    - "いいえ nghĩa là không."
-    - "はい nghĩa là vâng."
+  type: dialogue_choice
+  prompt: "Chọn câu yêu cầu lịch sự hoàn chỉnh."
+  choices: ["これをください。", "ください。", "ありがとうございます。"]
+  answer: "これをください。"
 ---
 
-Luyện đoạn lịch sự theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Bài học đặt các biểu đạt ngắn vào hành động giao tiếp thật, thay vì ghép từng từ tiếng Nhật với một từ tiếng Việt rồi học thuộc.

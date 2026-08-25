@@ -18,12 +18,22 @@ const props = defineProps<{
   trackId: string
   audioUrl?: string
 }>()
+const emit = defineEmits<{
+  activated: [mode: 'audio' | 'tts' | 'none']
+}>()
 
 const { t } = useI18n()
 
 async function onListen() {
   if (!import.meta.client) return
-  await playLanguageAudio(props.audioUrl, props.text, speechLangForTrack(props.trackId))
+  const mode = await playLanguageAudio(
+    props.audioUrl,
+    props.text,
+    speechLangForTrack(props.trackId),
+  )
+  // A click also unlocks the transcript when playback is unavailable, so the
+  // listening-first interaction never becomes an accessibility dead end.
+  emit('activated', mode)
 }
 </script>
 
@@ -44,5 +54,9 @@ async function onListen() {
 .lang-listen:hover {
   border-color: var(--color-accent, #0d9488);
   color: var(--color-accent, #0d9488);
+}
+.lang-listen:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-accent, #0d9488) 35%, transparent);
+  outline-offset: 2px;
 }
 </style>

@@ -51,6 +51,13 @@ type LessonSummary struct {
 	Title     string `json:"title"`
 	SortOrder int    `json:"sortOrder"`
 	Published bool   `json:"published"`
+	UnitID    string `json:"unitId,omitempty"`
+	UnitTitle string `json:"unitTitle,omitempty"`
+	// UnitOrder intentionally serializes zero: unit 0 is a valid authored
+	// pronunciation/foundation unit, not the absence of ordering metadata.
+	UnitOrder int    `json:"unitOrder"`
+	UnitCanDo string `json:"unitCanDo,omitempty"`
+	UnitRole  string `json:"unitRole,omitempty"`
 }
 
 type Progress struct {

@@ -3,19 +3,21 @@ id: pg-13-array
 track: postgresql
 locale: en
 slug: array-basics
-title: Filtering with arrays
+title: Array membership with ANY
 order: 13
 published: true
+can_do: "Model a small same-type list with a PostgreSQL array and test element membership with operator ANY(array)"
 objectives:
-  - Store a list of values in an ARRAY column
-  - Test membership with ANY
+  - Read TEXT[] as an array of text values
+  - Evaluate scalar = ANY(array) membership
+  - Recognize when a related table is better than an array column
 exercise:
   starter: "SELECT title, tags FROM courses;"
   hints:
-    - "ANY checks whether a value appears in an array."
-    - "Put the search value on the left: 'sql' = ANY(tags)."
-    - "Try: SELECT title FROM courses WHERE 'sql' = ANY(tags);"
-  solution: "SELECT title FROM courses WHERE 'sql' = ANY(tags);"
+    - "The question is whether one scalar value sql equals any element of tags."
+    - "Put the scalar on the left and ANY(tags) on the right."
+    - "Use: SELECT title FROM courses WHERE 'sql' = ANY(tags) ORDER BY title;"
+  solution: "SELECT title FROM courses WHERE 'sql' = ANY(tags) ORDER BY title;"
   preview:
     columns: ["id", "title", "tags"]
     rows:
@@ -25,45 +27,76 @@ exercise:
   expected:
     columns: ["title"]
     rows:
-      - ["SQL Basics"]
       - ["Postgres Tips"]
+      - ["SQL Basics"]
 sandbox_seed:
   ddl:
     - "CREATE TEMP TABLE courses (id INTEGER, title TEXT, tags TEXT[]);"
     - "INSERT INTO courses VALUES (1, 'SQL Basics', ARRAY['sql','beginner']), (2, 'Vue Intro', ARRAY['vue','frontend']), (3, 'Postgres Tips', ARRAY['sql','postgres']);"
 ---
 
-A tag list is often several labels on one row. PostgreSQL can store that as an **array** column (`TEXT[]`). To ask “does this list contain `sql`?”, use `= ANY(tags)`.
+PostgreSQL arrays can model a small ordered collection of values of the same type inside one row. For membership, the scalar-versus-array form of `ANY` compares the scalar to each element.
 
-| id | title | tags |
+## Mental model
+
+```sql
+'sql' = ANY(tags)
+```
+
+means conceptually:
+
+```text
+'sql' = tags[1] OR 'sql' = tags[2] OR ...
+```
+
+Trace the rows:
+
+| course | tags | contains sql? |
 | --- | --- | --- |
-| 1 | SQL Basics | sql, beginner |
-| 2 | Vue Intro | vue, frontend |
-| 3 | Postgres Tips | sql, postgres |
+| SQL Basics | `{sql,beginner}` | yes |
+| Vue Intro | `{vue,frontend}` | no |
+| Postgres Tips | `{sql,postgres}` | yes |
+
+Arrays are useful, but a many-to-many entity with its own attributes, constraints, ownership, or frequent independent queries usually deserves a related table rather than an ever-growing array column.
+
+## Predict before you run
+
+Predict two matching titles, then order them alphabetically: Postgres Tips, SQL Basics.
 
 ## Worked example
 
 ```sql
-SELECT title FROM courses WHERE 'sql' = ANY(tags);
+SELECT title
+FROM courses
+WHERE 'sql' = ANY(tags)
+ORDER BY title;
 ```
-
-- `tags` is a `TEXT[]` array column.
-- `'sql' = ANY(tags)` is true when `sql` appears somewhere in the array.
-- Vue Intro is excluded because its tags do not include `sql`.
-
-Result:
 
 | title |
 | --- |
-| SQL Basics |
 | Postgres Tips |
+| SQL Basics |
+
+## Debug this
+
+```sql
+WHERE tags = 'sql'
+```
+
+The left side is an array while the right side is one text scalar. The requirement is membership, not whole-array equality.
 
 ## Common mistakes
 
-- Writing `tags = 'sql'` — that compares the whole array to one string.
-- Putting `ANY` on the wrong side of the comparison.
-- Using comma-separated text instead of a real array type.
+- Confusing whole-array equality with element membership.
+- Storing comma-separated text and losing array semantics.
+- Using an array where normalized related rows need their own keys, metadata, or constraints.
 
 ## Your turn
 
-Return the `title` of every course whose `tags` array contains `'sql'`.
+Return course titles whose tags array contains `sql`, ordered by title.
+
+## Quick check
+
+What question does `'sql' = ANY(tags)` answer?
+
+**Answer:** whether at least one element of `tags` equals the text value `sql`.

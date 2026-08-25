@@ -6,16 +6,17 @@ slug: primary-key
 title: Khóa chính
 order: 32
 published: true
+can_do: "Suy luận về danh tính hàng và chèn dữ liệu thỏa tính duy nhất, khác NULL của PRIMARY KEY"
 objectives:
-  - Giải thích PRIMARY KEY làm gì
-  - Insert một dòng tôn trọng khóa chính
-  - Thấy vì sao id trùng bị từ chối
+  - Xem primary key như danh tính ổn định của hàng
+  - Dự đoán lỗi key trùng và NULL
+  - Chèn một hàng thỏa hợp đồng khóa chính
 exercise:
   starter: "INSERT INTO actors (id, name) VALUES "
   hints:
-    - "Khóa chính định danh duy nhất mỗi dòng — thường là id."
-    - "Insert một dòng với id duy nhất và một name."
-    - "Thử: INSERT INTO actors (id, name) VALUES (1, 'Ada');"
+    - "Cột id là danh tính hàng và phải duy nhất, không NULL."
+    - "Bảng đang rỗng nên id 1 có thể được dùng đúng một lần."
+    - "Dùng: INSERT INTO actors (id, name) VALUES (1, 'Ada');"
   solution: "INSERT INTO actors (id, name) VALUES (1, 'Ada');"
   preview:
     columns: ["id", "name"]
@@ -31,7 +32,9 @@ sandbox_seed:
     - "CREATE TEMP TABLE actors (id INT PRIMARY KEY, name TEXT);"
 ---
 
-**Khóa chính** (primary key) là cột (hoặc tập cột) định danh duy nhất mỗi dòng — như mã nhân viên không được trùng.
+Primary key không chỉ là “một cột có index”. Vai trò chính của nó là **danh tính hàng**: mỗi hàng phải được nhận diện bằng một giá trị có mặt và duy nhất.
+
+## Mô hình tư duy
 
 ```sql
 CREATE TABLE actors (
@@ -40,43 +43,53 @@ CREATE TABLE actors (
 );
 ```
 
-| Quy tắc | Ý nghĩa |
-| --- | --- |
-| Unique | hai dòng không chung một `id` |
-| Not null | mọi dòng cần có `id` |
-| Lookup | database dùng khóa để tìm dòng nhanh và nối bảng sau này |
+| Hàng muốn chèn | Hợp lệ? | Lý do |
+| --- | --- | --- |
+| `(1, 'Ada')` | có | lần đầu dùng key 1 |
+| `(1, 'Grace')` sau Ada | không | trùng danh tính |
+| `(NULL, 'Linus')` | không | primary key không được NULL |
 
-Bảng `actors` trống trong sandbox (đã tạo với khóa chính trên `id`):
+Key đại diện cho danh tính hàng; các thuộc tính mô tả như `name` có thể đổi mà không làm hàng đó trở thành một hàng khác.
 
-| id | name |
-| --- | --- |
-|  |  |
+## Dự đoán trước khi chạy
 
-Sau insert hợp lệ:
-
-| id | name |
-| --- | --- |
-| 1 | Ada |
-
-Nhiệm vụ không phải tạo khóa — khóa đã có. Hãy insert một dòng hợp lệ.
+Bảng đang rỗng. Hãy dự đoán `id = 1` có thể chèn lần đầu không, rồi chuyện gì xảy ra nếu dùng lại cùng id.
 
 ## Ví dụ mẫu
 
 ```sql
-INSERT INTO actors (id, name) VALUES (1, 'Ada');
+INSERT INTO actors (id, name)
+VALUES (1, 'Ada');
 ```
 
-- `id = 1` thỏa khóa chính (duy nhất và không null).
-- Insert lần hai với `id = 1` sẽ thất bại — trùng khóa.
-- `name` là chữ thường; không phải khóa chính ở đây.
+| id | name |
+| ---: | --- |
+| 1 | Ada |
+
+Schema đã enforce key; câu INSERT chỉ cần thỏa ràng buộc, không cần khai báo lại `PRIMARY KEY`.
+
+## Tìm lỗi
+
+Nếu bảng đã có `id = 1`, câu này sẽ lỗi:
+
+```sql
+INSERT INTO actors (id, name) VALUES (1, 'Grace');
+```
+
+Vấn đề không phải tên Grace bị trùng; giá trị danh tính `1` đã thuộc về một hàng khác.
 
 ## Lỗi thường gặp
 
-- Insert cùng `id` hai lần — khóa chính từ chối trùng.
-- Bỏ `id` hoặc đặt `NULL` — khóa chính cần giá trị.
-- Thử `ALTER` hoặc tạo lại bảng — sandbox đã định nghĩa khóa.
-- Các quy tắc cột khác (UNIQUE, CHECK, DEFAULT) nằm ở bài `table-constraints`.
+- Nghĩ hai hàng có thể chung primary key nếu các cột khác nhau.
+- Coi cột mô tả có thể NULL như tương đương với danh tính hàng.
+- Cố khai báo lại constraint trong INSERT thay vì thỏa schema đã enforce nó.
 
 ## Thử ngay
 
-Insert actor `id = 1`, `name = 'Ada'` vào `actors`.
+Chèn actor `id = 1`, `name = 'Ada'`. Giải thích vì sao id này hợp lệ trong bảng đang rỗng.
+
+## Tự kiểm tra
+
+Hai hàng có thể dùng cùng một giá trị primary key không?
+
+**Đáp án:** không. Primary key nhận diện duy nhất từng hàng và không được NULL.

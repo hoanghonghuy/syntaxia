@@ -3,68 +3,87 @@ id: ja-n5-02-people
 track: japanese-jlpt
 locale: vi
 slug: people
-title: Người và danh xưng
+title: Nói tên và hỏi tên
 order: 2
 published: true
 jlpt_level: n5
-can_do: "Nói về 私 / あなた / 名前 trong đoạn ngắn"
-pattern: "私 / あなた / 名前 / 友達"
+unit_id: ja-n5-people-02
+unit_title: "Tự giới thiệu và nói về người thân"
+unit_order: 2
+unit_can_do: "Tự giới thiệu, hỏi tên và xác định một người thân trong đoạn trao đổi lịch sự ngắn"
+unit_role: lesson
+can_do: "Nói tên của mình với です và hỏi tên người khác một cách lịch sự"
+pattern: "わたしは … です。 / お名前は何ですか。"
 objectives:
-  - Gọi người với watashi / anata
-  - Nói người, tên, bạn
+  - Tự giới thiệu bằng わたしは … です
+  - Hỏi お名前は何ですか
+  - Nhận ra です tạo phong cách lịch sự, trung tính cho câu
 vocab:
-  - { surface: "私", reading: "わたくし", gloss: "tôi (dạng khiêm trong OpenJLPT)" }
-  - { surface: "あなた", reading: "あなた", gloss: "bạn" }
-  - { surface: "人", reading: "ひと", gloss: "người" }
+  - { surface: "わたし", reading: "わたし", gloss: "tôi" }
   - { surface: "名前", reading: "なまえ", gloss: "tên" }
-  - { surface: "友達", reading: "ともだち", gloss: "bạn bè" }
+  - { surface: "何", reading: "なん", gloss: "gì" }
+  - { surface: "です", reading: "です", gloss: "đuôi câu lịch sự / hệ từ" }
+  - { surface: "はじめまして", reading: "はじめまして", gloss: "lời chào khi gặp lần đầu" }
 steps:
+  - type: scene
+    title: "Gặp bạn cùng lớp"
+    body: "Đây là buổi học tiếng Nhật đầu tiên. Hãy tự giới thiệu rồi hỏi tên người ngồi cạnh."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "私の名前はミキです。", reading: "わたしのなまえはミキです。" }
-      - { speaker: "B", text: "あなたは友達ですか？", reading: "あなたはともだちですか？" }
-      - { speaker: "A", text: "はい、友達です。", reading: "はい、ともだちです。" }
-      - { speaker: "B", text: "いい人ですね。", reading: "いいひとですね。" }
+      - { speaker: "A", text: "はじめまして。わたしはリンです。", reading: "はじめまして。わたしはリンです。" }
+      - { speaker: "B", text: "はじめまして。わたしはゆきです。", reading: "はじめまして。わたしはゆきです。" }
+      - { speaker: "A", text: "お名前は何ですか。", reading: "おなまえはなんですか。" }
+      - { speaker: "B", text: "ゆきです。", reading: "ゆきです。" }
+  - type: listen
+    prompt: "Nghe trước. Sau tên người nói có đuôi câu nào?"
+    text: "わたしはゆきです。"
+    reading: "わたしはゆきです。"
   - type: tip
-    title: "私 và あなた chỉ người nói"
-    body: "私 là tôi; あなた là bạn. 名前 là tên; 友達 là bạn bè; 人 là người. Dùng trong giới thiệu ngắn — không học từ rời."
+    title: "Giữ nguyên cả khung câu lịch sự"
+    body: "Ở giai đoạn mở đầu, hãy học わたしは + tên + です như một khung tự giới thiệu ổn định. お名前は何ですか là cách lịch sự để hỏi tên người khác."
   - type: teach
     items:
-      - { form: "私", reading: "わたくし", gloss: "tôi", example: "私の名前はミキです。" }
-      - { form: "あなた", reading: "あなた", gloss: "bạn", example: "あなたは友達ですか？" }
-      - { form: "名前", reading: "なまえ", gloss: "tên", example: "名前はミキです。" }
-      - { form: "友達", reading: "ともだち", gloss: "bạn bè", example: "友達です。" }
-      - { form: "人", reading: "ひと", gloss: "người", example: "いい人ですね。" }
+      - { form: "わたしはリンです。", reading: "わたしはリンです。", gloss: "Tôi là Linh.", example: "わたしはリンです。" }
+      - { form: "お名前は何ですか。", reading: "おなまえはなんですか。", gloss: "Bạn tên là gì?", example: "お名前は何ですか。" }
+      - { form: "はじめまして。", reading: "はじめまして。", gloss: "Rất vui được gặp bạn / lời chào lần đầu.", example: "はじめまして。" }
   - type: practice
-    kind: mcq
-    prompt: "Từ nào nghĩa là bạn bè?"
-    choices: ["友達", "名前", "人"]
-    answer: "友達"
+    id: ja-people-dialogue-1
+    kind: dialogue_choice
+    prompt: "Bạn gặp Yuki lần đầu. Câu tự giới thiệu nào tự nhiên ở trình độ này?"
+    choices: ["はじめまして。わたしはリンです。", "これをください。", "いいえ、リン。"]
+    answer: "はじめまして。わたしはリンです。"
+  - type: practice
+    id: ja-people-listen-1
+    kind: listen_type
+    prompt: "Nghe rồi nhập câu bạn vừa nghe."
+    audioText: "ゆきです"
+    answer: "ゆきです"
+    acceptedAnswers: ["ゆきです。"]
+  - type: practice
+    id: ja-people-produce-1
+    kind: type_answer
+    prompt: "Tên bạn là リン. Hãy nhập câu “Tôi là Linh” theo khung của bài."
+    answer: "わたしはリンです"
+    acceptedAnswers: ["わたしはリンです。"]
     hints:
-      - "A xác nhận 友達 trong hội thoại."
-  - type: practice
-    kind: mcq
-    prompt: "Từ nào nghĩa là tên?"
-    choices: ["名前", "友達", "あなた"]
-    answer: "名前"
+      - "Dùng わたしは + リン + です."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào nghĩa là tôi?"
-        choices: ["私", "あなた", "人"]
-        answer: "私"
-      - kind: mcq
-        prompt: "Từ nào nghĩa là người?"
-        choices: ["人", "名前", "友達"]
-        answer: "人"
+      - id: ja-people-check-1
+        kind: meaning_choice
+        prompt: "Câu nào dùng để hỏi tên người khác?"
+        choices: ["お名前は何ですか。", "これをください。", "ありがとうございます。"]
+        answer: "お名前は何ですか。"
+      - id: ja-people-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: bạn chỉ vào món đồ muốn mua. Có thể nói gì?"
+        choices: ["これをください。", "わたしはこれです。", "お名前は？"]
+        answer: "これをください。"
 exercise:
-  type: mcq
-  prompt: "Từ nào nghĩa là bạn bè?"
-  choices: ["友達", "名前", "人"]
-  answer: "友達"
-  hints:
-    - "名前 là tên."
-    - "友達 là bạn bè."
+  type: dialogue_choice
+  prompt: "Chọn câu hỏi tên lịch sự."
+  choices: ["お名前は何ですか。", "名前ください。", "何これですか。"]
+  answer: "お名前は何ですか。"
 ---
 
-Luyện đoạn giới thiệu theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Bài học giữ phần cách đọc kana sát với tiếng Nhật và dạy một khung câu lịch sự hoàn chỉnh, thay vì học riêng lẻ わたし hay 名前 như mục từ điển.

@@ -6,16 +6,17 @@ slug: alter-table
 title: Changing a table with ALTER TABLE
 order: 30
 published: true
+can_do: "Evolve an existing table schema with ALTER TABLE while predicting the new structure"
 objectives:
-  - Add a column with ALTER TABLE … ADD COLUMN
-  - Choose a type for the new column
-  - Confirm the new column exists on the table
+  - Distinguish schema evolution from row mutation
+  - Add a typed column with ALTER TABLE
+  - Verify the resulting table structure
 exercise:
   starter: "ALTER TABLE movies ADD COLUMN "
   hints:
-    - "ALTER TABLE changes an existing table without rebuilding it."
-    - "ADD COLUMN names the new column and its type."
-    - "Try: ALTER TABLE movies ADD COLUMN year INT;"
+    - "The table already exists; change its schema rather than recreating it."
+    - "ADD COLUMN needs both the column name and its type."
+    - "Use: ALTER TABLE movies ADD COLUMN year INT;"
   solution: "ALTER TABLE movies ADD COLUMN year INT;"
   preview:
     columns: ["id", "title"]
@@ -31,37 +32,66 @@ sandbox_seed:
     - "CREATE TEMP TABLE movies (id INT, title TEXT);"
 ---
 
-Tables change over time. `ALTER TABLE` adds (or adjusts) columns on a table that already exists — like inserting a new header into a spreadsheet without starting over.
+Applications evolve, so schemas do too. `ALTER TABLE` changes the contract of a table that already exists without pretending it is a brand-new table.
 
-**movies** (starting shape)
+## Mental model
 
-| id | title |
+Before:
+
+| column | type |
 | --- | --- |
-|  |  |
+| id | INT |
+| title | TEXT |
 
-| Step | Shape |
+Transformation:
+
+```text
+existing schema + ADD COLUMN year INT -> evolved schema
+```
+
+After:
+
+| column | type |
 | --- | --- |
-| Before | `id`, `title` |
-| After `ADD COLUMN year INT` | `id`, `title`, `year` |
+| id | INT |
+| title | TEXT |
+| year | INT |
 
-Existing rows would get `NULL` in `year` until you fill them. This sandbox starts empty and checks that the column named `year` exists.
+On a table that already has rows, a newly added nullable column begins as `NULL` for those rows until values are supplied.
+
+## Predict before you run
+
+`ALTER TABLE movies ADD COLUMN year INT;` should change **structure**, not add or remove movie rows. The verifier asks the database catalog whether exactly one `year` column exists.
 
 ## Worked example
 
 ```sql
-ALTER TABLE movies ADD COLUMN year INT;
+ALTER TABLE movies
+ADD COLUMN year INT;
 ```
 
-- `ALTER TABLE movies` names the table to change.
-- `ADD COLUMN year INT` creates a new column called `year` that holds whole numbers.
-- You are not rebuilding the table with `CREATE TABLE` — you are extending it.
+The command names the existing table, the structural operation, the new column, and its type.
+
+## Debug this
+
+```sql
+CREATE TABLE movies (year INT);
+```
+
+This is not “add a column”. It attempts to create another table named `movies` and conflicts with the existing table. Use `ALTER TABLE` when the object already exists and its schema must evolve.
 
 ## Common mistakes
 
-- Writing `CREATE TABLE` again instead of `ALTER TABLE` — the table already exists.
-- Forgetting the type (`ADD COLUMN year` without `INT`).
-- Using the wrong table name (`actors` instead of `movies`).
+- Recreating an existing table instead of altering it.
+- Omitting the type of the new column.
+- Confusing a schema change with an `UPDATE` of row values.
 
 ## Your turn
 
-Add an integer column named `year` to `movies`.
+Add an integer column named `year` to `movies`. Predict the column list after the change before running it.
+
+## Quick check
+
+Which changes structure: `UPDATE movies SET ...` or `ALTER TABLE movies ...`?
+
+**Answer:** `ALTER TABLE` changes structure; `UPDATE` changes values in existing rows.

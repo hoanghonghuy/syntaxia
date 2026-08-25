@@ -3,74 +3,87 @@ id: css-12-sizing
 track: css-basics
 locale: vi
 slug: sizing-and-overflow
-title: Kích thước và overflow
+title: Constraint và overflow
 order: 12
 published: true
+can_do: "Giới hạn box bằng maximum dimension và chọn overflow behavior thay vì vô tình giấu content khi nó vượt không gian có sẵn"
 objectives:
-  - Đặt width, height và giới hạn min/max
-  - Giải thích overflow khi nội dung lớn hơn hộp
-  - Chọn visible, hidden hoặc auto/scroll ở mức cơ bản
+  - Phân biệt preferred size với min/max constraint
+  - Dự đoán khi content vượt box constraint
+  - Dùng overflow auto để scroll chỉ khi cần
 exercise:
   mode: both
   starterHtml: |
-    <div class="panel">Long text here</div>
+    <div class="panel">A long block of content that can exceed a compact panel when space is constrained.</div>
   starter: |
-    /* Limit width and handle overflow */
-    
+    /* TODO: giới hạn panel 12rem rộng và 4rem cao, chỉ scroll khi cần */
   hints:
-    - max-width giới hạn chiều rộng tối đa.
-    - "overflow: auto thêm thanh cuộn khi cần."
-    - rem phù hợp cho max-width.
+    - max-width và max-height đặt ceiling chứ không ép fixed size trong mọi trường hợp.
+    - overflow: auto tạo khả năng scroll khi content thực sự overflow.
+    - Dùng max-width: 12rem; max-height: 4rem; overflow: auto;.
   solution: |
-    .panel { max-width: 12rem; overflow: auto; }
+    .panel { max-width: 12rem; max-height: 4rem; overflow: auto; }
   expected:
-    type: cssIncludes
-    needles:
-      - max-width
-      - overflow
+    type: cssRules
+    rules:
+      - selector: .panel
+        declarations:
+          max-width: 12rem
+          max-height: 4rem
+          overflow: auto
 ---
 
-Đôi khi bạn cần kiểm soát **kích thước** hộp: rộng bao nhiêu, cao tối thiểu bao nhiêu. Khi nội dung *nhiều hơn* chỗ chứa, **overflow** quyết định phần tràn bị cắt, cuộn, hay vẫn tràn ra ngoài.
+Content và available space đều có thể thay đổi. Sizing constraint mô tả boundary; overflow mô tả điều xảy ra khi content vượt boundary đó.
 
-| Property | Vai trò đơn giản |
-| --- | --- |
-| `width` / `height` | Chiều ngang / chiều cao mong muốn |
-| `min-width` / `max-width` | Sàn và trần chiều ngang |
-| `min-height` / `max-height` | Sàn và trần chiều cao |
-| `overflow` | Xử lý nội dung tràn: `visible`, `hidden`, `auto`, `scroll` |
+## Mô hình tư duy
+
+```text
+intrinsic size của content
+       ↓
+min / preferred / max constraints
+       ↓
+fit? -> paint bình thường
+không -> overflow policy
+```
+
+`overflow: auto` khác `scroll`: scrollbar xuất hiện khi overflow thực sự cần thay vì luôn dành chỗ.
+
+## Dự đoán kết quả hiển thị
+
+Panel có ít content có thể nhỏ hơn maximum dimension. Khi content vượt height ceiling, `overflow: auto` giúp người dùng tiếp cận phần vượt qua scrolling thay vì clip im lặng.
 
 ## Ví dụ mẫu
 
-```html
-<div class="preview">
-  <p>Đoạn văn khá dài sẽ nằm trong hộp có chiều cao giới hạn. Nếu chữ vượt quá, hộp cho phép cuộn.</p>
-</div>
-```
-
 ```css
-.preview {
-  width: 100%;
-  max-width: 320px;
-  max-height: 80px;
+.panel {
+  max-width: 12rem;
+  max-height: 4rem;
   overflow: auto;
-  border: 1px solid #ccc;
-  padding: 8px;
-  box-sizing: border-box;
 }
 ```
 
-- `width: 100%` co giãn theo cha, nhưng `max-width: 320px` không để hộp quá rộng.
-- `max-height: 80px` giới hạn chiều cao.
-- `overflow: auto` hiện thanh cuộn *khi cần* — khác `scroll` (thường luôn chừa chỗ cuộn) và `hidden` (cắt, không cuộn).
+Ưu tiên constraint khi design goal là “không được vượt quá mức này” thay vì “luôn luôn đúng fixed size này”.
 
-`overflow: visible` (mặc định) cho phép nội dung tràn ra ngoài biên hộp.
+## Tìm lỗi
+
+```css
+.panel { height: 4rem; overflow: hidden; }
+```
+
+Đoạn này ép height và clip phần vượt. Nếu người dùng vẫn phải đọc được variable text thì đây gần giống một presentation bug làm mất dữ liệu.
 
 ## Lỗi thường gặp
 
-- Chỉ đặt `height` cố định rồi chữ bị cắt mà không nghĩ `overflow` — thêm `auto` hoặc nới `max-height`.
-- Dùng `overflow: hidden` để “dọn layout” mà cắt mất nội dung quan trọng.
-- Quên `box-sizing: border-box` khi có `padding` + `width: 100%` — hộp dễ tràn khỏi cha.
+- Nhầm `max-width` với fixed width bắt buộc.
+- Dùng `overflow: hidden` để che layout problem mà không kiểm tra content bị mất.
+- Quên overflow có thể xảy ra độc lập theo trục ngang và dọc.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để giới hạn chiều rộng và đặt overflow cho .panel. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Áp dụng cả maximum constraint lẫn conditional scrolling.
+
+## Tự kiểm tra
+
+Khi nào `overflow: auto` phù hợp hơn `hidden` với text content?
+
+**Đáp án:** khi phần content vượt vẫn cần truy cập được thay vì bị cắt mất.

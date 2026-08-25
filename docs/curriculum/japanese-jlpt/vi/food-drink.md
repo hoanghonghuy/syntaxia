@@ -3,66 +3,89 @@ id: ja-n5-05-food-drink
 track: japanese-jlpt
 locale: vi
 slug: food-drink
-title: Đồ ăn và đồ uống
+title: Gọi một món đơn giản
 order: 5
 published: true
 jlpt_level: n5
-can_do: "Nói về nước và đồ ăn"
-pattern: "水 / 御飯 / 食べる / 飲む"
+unit_id: ja-n5-cafe-04
+unit_title: "Gọi món tại quầy"
+unit_order: 4
+unit_can_do: "Yêu cầu một món ăn hoặc đồ uống và kết thúc một lượt giao tiếp ngắn tại quầy một cách lịch sự"
+unit_role: lesson
+can_do: "Yêu cầu một món ăn hoặc đồ uống đơn giản bằng N をください"
+pattern: "お茶をください。 / 水をください。"
 objectives:
-  - Nói nước và cơm
-  - Dùng ăn và uống
+  - Gọi tên một số món ăn, đồ uống quen thuộc
+  - Đặt をください sau món mình muốn
+  - Hoàn thành một lượt giao tiếp dịch vụ rất ngắn một cách lịch sự
 vocab:
   - { surface: "水", reading: "みず", gloss: "nước" }
-  - { surface: "食べる", reading: "たべる", gloss: "ăn" }
-  - { surface: "飲む", reading: "のむ", gloss: "uống" }
-  - { surface: "御飯", reading: "ごはん", gloss: "cơm / bữa ăn" }
+  - { surface: "お茶", reading: "おちゃ", gloss: "trà" }
+  - { surface: "コーヒー", reading: "コーヒー", gloss: "cà phê" }
+  - { surface: "パン", reading: "パン", gloss: "bánh mì" }
+  - { surface: "を", reading: "を", gloss: "trợ từ đánh dấu tân ngữ" }
+  - { surface: "ください", reading: "ください", gloss: "xin hãy cho / vui lòng" }
 steps:
+  - type: scene
+    title: "Gọi món tại quầy"
+    body: "Bạn đứng ở quầy một quán nhỏ. Hãy chọn một đồ uống và yêu cầu món đó bằng tiếng Nhật."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "水を飲みます。", reading: "みずをのみます。" }
-      - { speaker: "B", text: "御飯を食べますか？", reading: "ごはんをたべますか？" }
-      - { speaker: "A", text: "はい、食べます。", reading: "はい、たべます。" }
-      - { speaker: "B", text: "水も飲みます。", reading: "みずものみます。" }
+      - { speaker: "店員", text: "はい、どうぞ。", reading: "はい、どうぞ。" }
+      - { speaker: "客", text: "お茶をください。", reading: "おちゃをください。" }
+      - { speaker: "店員", text: "はい。", reading: "はい。" }
+      - { speaker: "客", text: "ありがとうございます。", reading: "ありがとうございます。" }
+  - type: listen
+    prompt: "Nghe và chú ý món đứng trước をください."
+    text: "水をください。"
+    reading: "みずをください。"
   - type: tip
-    title: "Ghép danh từ với động từ ăn/uống"
-    body: "水 là nước. 御飯 là cơm/bữa. 食べる là ăn; 飲む là uống. Ghép đúng: 水を飲む, 御飯を食べる."
+    title: "Đặt món cần lấy trước をください"
+    body: "Mẫu hữu ích là món + をください. Chỉ cần thay món, giữ nguyên khung yêu cầu: 水をください, お茶をください."
   - type: teach
     items:
-      - { form: "水", reading: "みず", gloss: "nước", example: "水を飲みます。" }
-      - { form: "御飯", reading: "ごはん", gloss: "cơm / bữa", example: "御飯を食べます。" }
-      - { form: "食べる", reading: "たべる", gloss: "ăn", example: "食べます。" }
-      - { form: "飲む", reading: "のむ", gloss: "uống", example: "飲みます。" }
+      - { form: "水をください。", reading: "みずをください。", gloss: "Cho tôi nước / Nước nhé.", example: "水をください。" }
+      - { form: "お茶をください。", reading: "おちゃをください。", gloss: "Cho tôi trà / Trà nhé.", example: "お茶をください。" }
+      - { form: "コーヒーをください。", reading: "コーヒーをください。", gloss: "Cho tôi cà phê.", example: "コーヒーをください。" }
+      - { form: "パンをください。", reading: "パンをください。", gloss: "Cho tôi bánh mì.", example: "パンをください。" }
   - type: practice
-    kind: mcq
-    prompt: "Động từ nào nghĩa là uống?"
-    choices: ["飲む", "食べる", "水"]
-    answer: "飲む"
-    hints:
-      - "A nói 水を飲みます."
+    id: ja-food-dialogue-1
+    kind: dialogue_choice
+    prompt: "Bạn muốn trà. Câu nào phù hợp tình huống gọi tại quầy?"
+    choices: ["お茶をください。", "お茶はだれですか。", "お茶ですか。"]
+    answer: "お茶をください。"
   - type: practice
-    kind: mcq
-    prompt: "Danh từ nào nghĩa là nước?"
-    choices: ["水", "御飯", "食べる"]
+    id: ja-food-listen-1
+    kind: audio_choice
+    prompt: "Nghe. Khách yêu cầu món gì?"
+    audioText: "水をください"
+    choices: ["水", "お茶", "パン"]
     answer: "水"
+  - type: practice
+    id: ja-food-produce-1
+    kind: type_answer
+    prompt: "Bạn muốn cà phê. Hãy nhập câu yêu cầu tiếng Nhật hoàn chỉnh."
+    answer: "コーヒーをください"
+    acceptedAnswers: ["コーヒーをください。"]
+    hints:
+      - "Dùng món + をください."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Động từ nào nghĩa là ăn?"
-        choices: ["食べる", "飲む", "水"]
-        answer: "食べる"
-      - kind: mcq
-        prompt: "Từ nào nghĩa cơm / bữa ăn?"
-        choices: ["御飯", "水", "飲む"]
-        answer: "御飯"
+      - id: ja-food-check-1
+        kind: meaning_choice
+        prompt: "Câu nào dùng để xin bánh mì?"
+        choices: ["パンをください。", "水をください。", "パンです。"]
+        answer: "パンをください。"
+      - id: ja-food-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: bạn cùng lớp chỉ vào bố bạn trong ảnh gia đình. Câu trả lời ngắn nào phù hợp?"
+        choices: ["父です。", "水です。", "何番ですか。"]
+        answer: "父です。"
 exercise:
-  type: mcq
-  prompt: "Động từ nào nghĩa là uống?"
-  choices: ["飲む", "食べる", "水"]
-  answer: "飲む"
-  hints:
-    - "食べる nghĩa là ăn."
-    - "飲む nghĩa là uống."
+  type: dialogue_choice
+  prompt: "Chọn câu dùng để xin nước."
+  choices: ["水をください。", "水は何ですか。", "水の名前です。"]
+  answer: "水をください。"
 ---
 
-Luyện đoạn ăn uống theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Tên món được học bên trong một khung yêu cầu có thể tái sử dụng, để người học thay danh từ và thực hiện ngay một hành động giao tiếp thật.

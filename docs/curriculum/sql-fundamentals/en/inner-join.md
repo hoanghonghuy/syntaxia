@@ -6,16 +6,17 @@ slug: inner-join
 title: Combining tables with INNER JOIN
 order: 19
 published: true
+can_do: "Match related rows from two tables with an ON condition and predict the combined result"
 objectives:
-  - Join two related tables on a shared key
-  - Select columns from both tables in one result
-  - See that INNER JOIN drops rows with no match
+  - Identify the foreign-key-like column that points to the other table
+  - Trace row pairs that satisfy a join condition
+  - Select columns from both matched rows
 exercise:
   starter: "SELECT movies.title FROM movies;"
   hints:
-    - "movies.director_id matches directors.id — that link is the JOIN key."
-    - "Use INNER JOIN … ON to connect the two tables."
-    - "Try: SELECT movies.title, directors.name FROM movies INNER JOIN directors ON movies.director_id = directors.id ORDER BY movies.title;"
+    - "The relationship is movies.director_id -> directors.id."
+    - "Use INNER JOIN directors ON movies.director_id = directors.id."
+    - "Use: SELECT movies.title, directors.name FROM movies INNER JOIN directors ON movies.director_id = directors.id ORDER BY movies.title;"
   solution: "SELECT movies.title, directors.name FROM movies INNER JOIN directors ON movies.director_id = directors.id ORDER BY movies.title;"
   preview:
     columns: ["id", "title", "director_id"]
@@ -37,44 +38,61 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 1), (2, 'The Matrix', 1999, 2), (3, 'Interstellar', 2014, 1);"
 ---
 
-Real data is often split across sheets. One table lists movies; another lists directors. A shared id links them — like a VLOOKUP in a spreadsheet.
+Relational data is often split so the same director name is not copied into every movie row. A join reconstructs a useful view by matching related rows at query time.
 
-**directors** (full table)
+## Mental model
+
+Do not think “merge two tables blindly”. Think **find valid row pairs using the `ON` rule**.
+
+**movies**
+
+| title | director_id |
+| --- | ---: |
+| Inception | 1 |
+| The Matrix | 2 |
+| Interstellar | 1 |
+
+**directors**
 
 | id | name |
-| --- | --- |
+| ---: | --- |
 | 1 | Nolan |
 | 2 | Wachowski |
 
-**movies** (full table)
+The join condition is:
 
-| id | title | year | director_id |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | 1 |
-| 2 | The Matrix | 1999 | 2 |
-| 3 | Interstellar | 2014 | 1 |
+```sql
+movies.director_id = directors.id
+```
 
-| title | director_id | Matches director? |
-| --- | --- | --- |
-| Inception | 1 | Nolan |
-| The Matrix | 2 | Wachowski |
-| Interstellar | 1 | Nolan |
+Trace the pairs:
+
+| movie | director_id | matching directors.id | combined name |
+| --- | ---: | ---: | --- |
+| Inception | 1 | 1 | Nolan |
+| The Matrix | 2 | 2 | Wachowski |
+| Interstellar | 1 | 1 | Nolan |
+
+## Predict before you run
+
+```sql
+SELECT movies.title, directors.name
+FROM movies
+INNER JOIN directors
+  ON movies.director_id = directors.id;
+```
+
+Predict the result shape: **2 columns, 3 rows**. Every movie in this dataset finds a matching director. With INNER JOIN, a source row that finds no valid pair is absent from the result.
 
 ## Worked example
 
 ```sql
 SELECT movies.title, directors.name
 FROM movies
-INNER JOIN directors ON movies.director_id = directors.id
+INNER JOIN directors
+  ON movies.director_id = directors.id
 ORDER BY movies.title;
 ```
-
-- `INNER JOIN directors` brings in the second table.
-- `ON movies.director_id = directors.id` is the matching rule (the **key**).
-- `INNER JOIN` keeps only rows where the link matches on both sides.
-- If a movie had `director_id` with no director row, that movie would **disappear** from the result (see the next lesson, `left-join`).
-
-Result:
 
 | title | name |
 | --- | --- |
@@ -82,12 +100,30 @@ Result:
 | Interstellar | Nolan |
 | The Matrix | Wachowski |
 
+Notice two separate jobs: `ON` decides which rows relate; `SELECT` decides which columns from those matched rows appear.
+
+## Debug this
+
+Why is this relationship wrong?
+
+```sql
+ON movies.id = directors.id
+```
+
+`movies.id` identifies a movie. It does not store the director reference. The relationship lives in `movies.director_id`, so matching the two independent primary IDs would create accidental, semantically wrong pairs.
+
 ## Common mistakes
 
-- Joining on the wrong columns (`movies.id = directors.id`) — here the link is `director_id`, not the movie’s own `id`.
-- Selecting only from one table when the task asks for both `title` and `name`.
-- Forgetting `ON …` after `JOIN` — SQL needs an explicit match condition for this pattern.
+- Joining columns because their values happen to look similar instead of following the real relationship.
+- Forgetting table qualification when the same column name exists on both sides.
+- Expecting unmatched rows to survive INNER JOIN.
 
 ## Your turn
 
-Return each movie `title` with its director `name`, ordered by `movies.title`.
+Return each movie title with its director name, ordered by movie title. Before running, trace all three `director_id -> id` matches by hand.
+
+## Quick check
+
+What does the `ON` clause primarily define in a join?
+
+**Answer:** the rule that decides which row from one input can pair with which row from the other input.

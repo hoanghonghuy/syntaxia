@@ -11,15 +11,16 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [research-and-decisions.md](./research-and-decisions.md) | `/opsx-research` gate and how to lock decisions |
 | [product-baseline.md](./product-baseline.md) | Locked product/stack/design/curriculum baseline |
 | [monorepo-dev.md](./monorepo-dev.md) | Local dev: Docker, API, web, curriculum sync |
+| [branch-release-policy.md](./branch-release-policy.md) | Canonical `feature → develop → main` workflow and merge gates |
 | [mvp-completion-checklist.md](./mvp-completion-checklist.md) | Historical MVP (complete) |
-| [product-perfection-checklist.md](./product-perfection-checklist.md) | Ordered perfection work (active) |
+| [product-perfection-checklist.md](./product-perfection-checklist.md) | Ordered product-quality work (active) |
 | [product-quality-lock.md](./product-quality-lock.md) | Owner quality bar + IA locks |
 | [learning-path-progress.md](./learning-path-progress.md) | Category/level catalog + Continue/progress |
 | [google-drive-curriculum.md](./google-drive-curriculum.md) | Drive vs local curriculum sync |
 | [admin-content-crud.md](./admin-content-crud.md) | Admin lesson CRUD UI/API |
 | [sql-sandbox.md](./sql-sandbox.md) | Isolated Postgres sandbox runner |
 | [sandbox-feedback.md](./sandbox-feedback.md) | Fail copy, hints, solution reveal |
-| [curriculum-pedagogy.md](./curriculum-pedagogy.md) | Lesson depth, voice, mistakes/hints/solution |
+| [curriculum-pedagogy.md](./curriculum-pedagogy.md) | IT lesson depth, voice, mistakes/hints/solution |
 | [sql-fundamentals-w3schools-map.md](./sql-fundamentals-w3schools-map.md) | W3Schools-density SQL Fundamentals outline |
 | [sql-fundamentals-closure.md](./sql-fundamentals-closure.md) | Full path 42 lessons + polish pass (**closed**) |
 | [lesson-reader.md](./lesson-reader.md) | TOC from headings, mobile nav, prose typography |
@@ -46,24 +47,26 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [e2e-smoke.md](./e2e-smoke.md) | API/E2E smoke gates (SQL + languages + catalog orchestrator) |
 | [release-hardening.md](./release-hardening.md) | Ordered release smoke + light a11y/env gate |
 | [postgresql-track.md](./postgresql-track.md) | PostgreSQL track levels + scaffold lessons |
-| [javascript-track.md](./javascript-track.md) | JS Basics (MDN map) + code sandbox (row #24) |
-| [javascript-basics-w3schools-map.md](./javascript-basics-w3schools-map.md) | JS Basics: one exercise per lesson (W3Schools map) |
+| [javascript-track.md](./javascript-track.md) | JS Basics (MDN map) + code sandbox |
+| [javascript-basics-w3schools-map.md](./javascript-basics-w3schools-map.md) | JS Basics: one exercise per lesson |
 | [javascript-sandbox.md](./javascript-sandbox.md) | JS Web Worker runner + server-side grade |
-| [html-css-basics-tracks.md](./html-css-basics-tracks.md) | HTML/CSS tracks (**locked**) — category `web`, Phase 1 no sandbox |
-| [html-css-sandbox.md](./html-css-sandbox.md) | HTML/CSS iframe preview + server grade (**done** #27) |
+| [html-css-basics-tracks.md](./html-css-basics-tracks.md) | HTML/CSS tracks (**locked**) |
+| [html-css-sandbox.md](./html-css-sandbox.md) | HTML/CSS iframe preview + server grade |
 | [catalog-architecture.md](./catalog-architecture.md) | Category → Level → Track → Lessons; add a track |
 | [openspec-skills-only.md](./openspec-skills-only.md) | OpenSpec via skill checklists — **no** Synapse runtime/MCP |
 | [multi-domain-roadmap.md](./multi-domain-roadmap.md) | IT + Languages (+ later) phased plan |
-| [learning-domains.md](./learning-domains.md) | Domain IA (home /tracks filters, last-domain storage) |
-| [english-basics-pedagogy.md](./english-basics-pedagogy.md) | CEFR A1 English track pedagogy lock (before lessons) |
-| [japanese-jlpt-pedagogy.md](./japanese-jlpt-pedagogy.md) | JLPT N5 Japanese track pedagogy lock (placeholder before map) |
-| [language-learning-pedagogy-v2.md](./language-learning-pedagogy-v2.md) | **Locked** sentence-step path (supersedes v1 lesson shape) |
-| [language-unit-path-hub.md](./language-unit-path-hub.md) | Linear unit path on language track hubs |
-| [language-step-audio.md](./language-step-audio.md) | Listen button: audioUrl or TTS |
-| [language-review-session.md](./language-review-session.md) | Review practice from completed units |
-| [chinese-it-vocab-map.md](./chinese-it-vocab-map.md) | szdict-mapped specialty lesson themes |
-| [japanese-jlpt-n5-map.md](./japanese-jlpt-n5-map.md) | First 6 N5 lessons mapped from OpenJLPT vocab-n5 |
-| [chinese-hsk-mvp.md](./chinese-hsk-mvp.md) | Language player + Band 1 curriculum wiring |
+| [learning-domains.md](./learning-domains.md) | Domain IA |
+| [english-basics-pedagogy.md](./english-basics-pedagogy.md) | CEFR A1 English track-specific pedagogy |
+| [japanese-jlpt-pedagogy.md](./japanese-jlpt-pedagogy.md) | JLPT N5 Japanese track-specific pedagogy |
+| [language-learning-pedagogy-v3.md](./language-learning-pedagogy-v3.md) | **Active** production language-learning model |
+| [language-content-quality-v3.md](./language-content-quality-v3.md) | **Active** language authoring QA |
+| [language-learning-pedagogy-v2.md](./language-learning-pedagogy-v2.md) | Historical compatibility |
+| [language-unit-path-hub.md](./language-unit-path-hub.md) | Historical linear path notes |
+| [language-step-audio.md](./language-step-audio.md) | Listen/TTS + audio-first transcript behavior |
+| [language-review-session.md](./language-review-session.md) | FSRS-backed review behavior and persistence |
+| [chinese-it-vocab-map.md](./chinese-it-vocab-map.md) | Specialty vocabulary themes |
+| [japanese-jlpt-n5-map.md](./japanese-jlpt-n5-map.md) | Initial N5 map |
+| [chinese-hsk-mvp.md](./chinese-hsk-mvp.md) | Historical Band 1 MVP wiring |
 
 Add a row here whenever you create a new process file.
 

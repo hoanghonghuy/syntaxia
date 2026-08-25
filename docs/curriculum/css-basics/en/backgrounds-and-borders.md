@@ -3,76 +3,87 @@ id: css-09-backgrounds
 track: css-basics
 locale: en
 slug: backgrounds-and-borders
-title: Backgrounds and borders
+title: Surfaces, borders, and corners
 order: 9
 published: true
+can_do: "Build a card surface by predicting which box layers receive background, border, and corner rounding"
 objectives:
-  - Set background-color and simple background images
-  - Draw borders with width, style, and color
-  - Round corners with border-radius
+  - Distinguish background fill from border edge
+  - Use border shorthand as width-style-color
+  - Round the border box with border-radius
 exercise:
   mode: both
   starterHtml: |
-    <div class="card">Card</div>
+    <div class="card">Card content</div>
   starter: |
-    /* Style .card background and corners */
-    
+    /* TODO: give .card a light background, 1px border, and 8px rounded corners */
   hints:
-    - background fills the box behind content.
-    - border-radius rounds corners.
-    - "Hex colors like #eef work for backgrounds."
+    - background-color fills behind content and padding.
+    - Border shorthand can combine width, style, and color.
+    - Use background-color: #eef; border: 1px solid #ccd; border-radius: 8px;.
   solution: |
-    .card { background: #eef; border-radius: 8px; }
+    .card {
+      background-color: #eef;
+      border: 1px solid #ccd;
+      border-radius: 8px;
+    }
   expected:
-    type: cssIncludes
-    needles:
-      - border-radius
-      - background
+    type: cssRules
+    rules:
+      - selector: .card
+        declarations:
+          background-color: "#eef"
+          border: "1px solid #ccd"
+          border-radius: 8px
 ---
 
-**Backgrounds** fill the area behind content (and padding). **Borders** draw an edge around the box. Together they define surfaces: cards, callouts, buttons, and page sections. `border-radius` softens sharp corners.
+Background and border occupy different parts of the box. Understanding the layer prevents random “try another property” styling.
 
-Think of a corkboard: the board color is the background, the tape edge around a note is the border, and rounded sticky notes use a curved corner — `border-radius`.
+## Mental model
 
-| Property | Role | Example |
-| --- | --- | --- |
-| `background-color` | Solid fill | `#f5f5f5` |
-| `background-image` | Image or gradient fill | `url("hero.jpg")` |
-| `background-size` / `position` | How the image sits | `cover`, `center` |
-| `border` | Shorthand for width, style, color | `1px solid #ccc` |
-| `border-radius` | Corner rounding | `8px` or `50%` (circle-ish) |
+```text
+border edge
+└─ background paints behind content + padding (and beneath border area depending on clipping)
+```
+
+`border-radius` changes the geometry of the rounded border box and clips backgrounds to the rounded shape according to background clipping rules.
+
+## Predict the rendered result
+
+A card with a background but no border still has a filled surface. Adding a `1px solid` border creates a visible edge. Adding radius rounds the corners of that edge.
 
 ## Worked example
 
 ```css
 .card {
-  background-color: #ffffff;
-  border: 1px solid #d0d7de;
+  background-color: #eef;
+  border: 1px solid #ccd;
   border-radius: 8px;
-  padding: 1rem;
-}
-
-.hero {
-  background-color: #0b3d2e;
-  background-image: url("leaves.jpg");
-  background-size: cover;
-  background-position: center;
-  color: #fff;
 }
 ```
 
-- `.card` uses a light fill, a thin gray border, and `8px` rounded corners — a common pattern for grouped content.
-- `.hero` layers a dark fallback `background-color` under an image. If the image fails, the solid color still shows. `cover` scales the image to fill the box; `center` keeps the focal area in the middle.
-- Text on a busy image needs enough contrast — here the text color is white on a dark green fallback.
+Shorthands are useful when all components are intentionally set together; longhands are clearer when changing only one part.
 
-You can set each border side separately (`border-top`, and so on) when only one edge should show.
+## Debug this
+
+```css
+.card { border: #ccd; }
+```
+
+A useful visible border needs a style such as `solid`; shorthand components are not just a color value.
 
 ## Common mistakes
 
-- Putting important text on a busy `background-image` without a solid fallback or overlay — contrast collapses and text becomes unreadable.
-- Using only `border: 1px` without a style — borders need a style such as `solid`, or nothing visible appears.
-- Making every box a large `border-radius` “pill” — reserve strong rounding for controls that need it; content cards often use modest radii.
+- Expecting background color to create a border edge.
+- Forgetting a border style in shorthand.
+- Using huge radius values without understanding the box geometry being rounded.
 
 ## Your turn
 
-Use the sandbox below to add background and border-radius to .card. When the checker shows **Correct**, mark this lesson complete.
+Build the three-layer card surface exactly as specified.
+
+## Quick check
+
+Which property creates space inside the border: background, padding, or margin?
+
+**Answer:** padding.

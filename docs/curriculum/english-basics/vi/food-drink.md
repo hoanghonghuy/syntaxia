@@ -3,69 +3,89 @@ id: en-a1-05-food-drink
 track: english-basics
 locale: vi
 slug: food-drink
-title: Đồ ăn và đồ uống
+title: Gọi một món ăn hoặc đồ uống đơn giản
 order: 5
 published: true
 cefr_level: a1
-can_do: "Nói về nước/đồ ăn và việc ăn"
-pattern: "I eat… / I drink… / I am hungry"
+unit_id: en-a1-cafe-04
+unit_title: "Gọi món ở quán cà phê"
+unit_order: 4
+unit_can_do: "Gọi một món lịch sự và kết thúc một lượt gọi món đơn giản"
+unit_role: lesson
+can_do: "Gọi một món ăn hoặc đồ uống đơn giản một cách lịch sự và hiểu câu xác nhận cơ bản"
+pattern: "I'd like …, please. / Anything else? / That's all, thank you."
 objectives:
-  - Gọi tên đồ ăn uống cơ bản
-  - Dùng eat / drink / hungry
+  - Gọi một món ăn hoặc đồ uống đơn giản một cách lịch sự
+  - Hiểu câu hỏi tiếp theo Anything else?
+  - Kết thúc một lượt gọi món tự nhiên
 vocab:
   - { word: "water", ipa: "/ˈwɔːtər/", gloss: "nước" }
-  - { word: "milk", ipa: "/mɪlk/", gloss: "sữa" }
-  - { word: "apple", ipa: "/ˈæpəl/", gloss: "táo" }
+  - { word: "tea", ipa: "/tiː/", gloss: "trà" }
+  - { word: "coffee", ipa: "/ˈkɔːfi/", gloss: "cà phê" }
   - { word: "bread", ipa: "/bred/", gloss: "bánh mì" }
-  - { word: "eat", ipa: "/iːt/", gloss: "ăn" }
-  - { word: "drink", ipa: "/drɪŋk/", gloss: "uống" }
-  - { word: "hungry", ipa: "/ˈhʌŋɡri/", gloss: "đói" }
+  - { word: "I'd like", ipa: "/aɪd laɪk/", gloss: "cách lịch sự để yêu cầu một món" }
+  - { word: "anything else", ipa: "/ˈeniθɪŋ els/", gloss: "hỏi có muốn thêm món nào không" }
 steps:
+  - type: scene
+    title: "Gọi món ở một quán nhỏ"
+    body: "Bạn ghé quán trước giờ học. Hãy gọi một đồ uống rồi đáp lại khi nhân viên hỏi có muốn thêm gì không."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "I am hungry." }
-      - { speaker: "B", text: "I eat bread. I drink water." }
-      - { speaker: "A", text: "Milk and apple, please. Thank you!" }
+      - { speaker: "Server", text: "Hi. What would you like?" }
+      - { speaker: "You", text: "I'd like a tea, please." }
+      - { speaker: "Server", text: "Anything else?" }
+      - { speaker: "You", text: "No, that's all. Thank you." }
+      - { speaker: "Server", text: "Sure." }
+  - type: listen
+    prompt: "Nghe và xác định món khách gọi."
+    text: "I'd like a coffee, please."
   - type: tip
-    title: "eat và drink"
-    body: "Dùng eat với đồ ăn (bread, apple) và drink với chất lỏng (water, milk). I am hungry nghĩa là bạn cần ăn."
+    title: "Học cả cụm dùng để gọi món"
+    body: "Chỉ nói coffee đôi khi vẫn hiểu được, nhưng I'd like a coffee, please rõ ràng và lịch sự hơn. Hãy ghi nhớ cả cụm như một đơn vị có thể dùng ngay."
   - type: teach
     items:
-      - { form: "water", reading: "/ˈwɔːtər/", gloss: "nước", example: "I drink water." }
-      - { form: "bread", reading: "/bred/", gloss: "bánh mì", example: "I eat bread." }
-      - { form: "apple", reading: "/ˈæpəl/", gloss: "táo", example: "An apple, please." }
-      - { form: "eat", reading: "/iːt/", gloss: "ăn", example: "I eat bread." }
-      - { form: "hungry", reading: "/ˈhʌŋɡri/", gloss: "đói", example: "I am hungry." }
+      - { form: "I'd like …, please.", reading: "/aɪd laɪk ... pliːz/", gloss: "gọi món lịch sự", example: "I'd like a tea, please." }
+      - { form: "Anything else?", reading: "/ˈeniθɪŋ els/", gloss: "hỏi có cần thêm món không", example: "Anything else?" }
+      - { form: "That's all, thank you.", reading: "/ðæts ɔːl θæŋk juː/", gloss: "kết thúc lượt gọi món", example: "That's all, thank you." }
   - type: practice
-    kind: mcq
-    prompt: "Từ nào là một loại quả?"
-    choices: ["apple", "water", "bread"]
-    answer: "apple"
+    id: food-dialogue-1
+    kind: dialogue_choice
+    prompt: "Nhân viên hỏi “What would you like?” Bạn muốn trà. Câu nào tự nhiên?"
+    choices: ["I'd like a tea, please.", "Tea is my friend.", "Who's the tea?"]
+    answer: "I'd like a tea, please."
+    explanation: "Câu trả lời nêu đúng món và dùng một cụm gọi món lịch sự."
+  - type: practice
+    id: food-listen-1
+    kind: audio_choice
+    prompt: "Nghe. Khách gọi món gì?"
+    audioText: "I'd like water, please."
+    choices: ["water", "coffee", "bread"]
+    answer: "water"
+  - type: practice
+    id: food-produce-1
+    kind: type_answer
+    prompt: "Bạn muốn cà phê. Viết một câu gọi món lịch sự bắt đầu bằng “I'd like”."
+    answer: "I'd like a coffee, please"
+    acceptedAnswers: ["I'd like a coffee, please.", "I'd like coffee, please", "I'd like coffee, please."]
     hints:
-      - "water là đồ uống."
-  - type: practice
-    kind: mcq
-    prompt: "Động từ nào đi với water?"
-    choices: ["drink", "eat", "hungry"]
-    answer: "drink"
+      - "Dùng I'd like + món + please."
   - type: checkpoint
     items:
-      - kind: mcq
-        prompt: "Từ nào nghĩa “đói”?"
-        choices: ["hungry", "drink", "milk"]
-        answer: "hungry"
-      - kind: mcq
-        prompt: "Ôn: từ nào nghĩa “mẹ”?"
-        choices: ["mother", "apple", "water"]
-        answer: "mother"
+      - id: food-check-1
+        kind: dialogue_choice
+        prompt: "Nhân viên hỏi “Anything else?” Bạn không muốn gọi thêm. Có thể nói gì?"
+        choices: ["No, that's all. Thank you.", "This is my brother.", "Room eight?"]
+        answer: "No, that's all. Thank you."
+      - id: food-check-2
+        kind: dialogue_choice
+        prompt: "Ôn lại: có người hỏi người phụ nữ trong ảnh là ai. Đó là mẹ của bạn. Bạn nói gì?"
+        choices: ["This is my mother.", "I'd like my mother.", "Room mother?"]
+        answer: "This is my mother."
 exercise:
-  type: mcq
-  prompt: "Từ nào là một loại quả?"
-  choices: ["apple", "water", "bread"]
-  answer: "apple"
-  hints:
-    - "water là đồ uống."
-    - "apple là táo."
+  type: dialogue_choice
+  prompt: "Chọn câu gọi món lịch sự ở quán."
+  choices: ["I'd like water, please.", "Water who?", "This is water friend."]
+  answer: "I'd like water, please."
 ---
 
-Luyện đồ ăn uống theo từng bước phía trên. Khi xong checkpoint, đánh dấu hoàn thành nếu đã đăng nhập.
+Bài học tập trung vào việc hoàn thành một lượt giao tiếp dịch vụ rất ngắn. Từ về đồ ăn, đồ uống chỉ xuất hiện khi chúng giúp người học gọi và kết thúc một đơn hàng.

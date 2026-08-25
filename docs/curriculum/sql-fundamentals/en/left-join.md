@@ -6,16 +6,17 @@ slug: left-join
 title: Keeping unmatched rows with LEFT JOIN
 order: 20
 published: true
+can_do: "Preserve every left-table row with LEFT JOIN and detect rows that found no right-side match"
 objectives:
-  - Keep every row from the left table even when the right side has no match
-  - Read NULL on the right side as “no match”
-  - Find orphan rows with LEFT JOIN and IS NULL
+  - Contrast LEFT JOIN with INNER JOIN
+  - Read NULL-filled right-side columns as an unmatched join result
+  - Use LEFT JOIN plus IS NULL as an anti-join pattern
 exercise:
   starter: "SELECT title FROM movies;"
   hints:
-    - "LEFT JOIN keeps every movie, even when director_id has no matching director."
-    - "After the join, rows with no director have directors.id as NULL."
-    - "Try: SELECT movies.title FROM movies LEFT JOIN directors ON movies.director_id = directors.id WHERE directors.id IS NULL;"
+    - "Start from movies and preserve every movie with LEFT JOIN."
+    - "A movie with no director match has directors.id = NULL in the joined result."
+    - "Use: SELECT movies.title FROM movies LEFT JOIN directors ON movies.director_id = directors.id WHERE directors.id IS NULL;"
   solution: "SELECT movies.title FROM movies LEFT JOIN directors ON movies.director_id = directors.id WHERE directors.id IS NULL;"
   preview:
     columns: ["id", "title", "director_id"]
@@ -35,62 +36,74 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'Inception', 2010, 1), (2, 'The Matrix', 1999, 2), (3, 'Orphan', 2020, NULL);"
 ---
 
-Sometimes a movie has no director listed yet — like a blank lookup cell in a spreadsheet. `INNER JOIN` would drop that row. `LEFT JOIN` keeps every row from the **left** table and fills the right side with `NULL` when there is no match.
+INNER JOIN answers “show me matches”. LEFT JOIN answers a broader question: “start with every row on the left, attach a match when one exists, and still keep the row when it does not.”
 
-**directors** (full table)
+## Mental model
 
-| id | name |
-| --- | --- |
-| 1 | Nolan |
-| 2 | Wachowski |
+The word **LEFT** is a preservation rule.
 
-**movies** (full table)
+```sql
+FROM movies
+LEFT JOIN directors ...
+```
 
-| id | title | year | director_id |
-| --- | --- | --- | --- |
-| 1 | Inception | 2010 | 1 |
-| 2 | The Matrix | 1999 | 2 |
-| 3 | Orphan | 2020 |  |
+means every `movies` row must survive the join stage.
 
-| title | Match on LEFT JOIN? |
-| --- | --- |
-| Inception | Nolan |
-| The Matrix | Wachowski |
-| Orphan | none → `NULL` |
+| movie | director match | joined right side |
+| --- | --- | --- |
+| Inception | Nolan | director columns filled |
+| The Matrix | Wachowski | director columns filled |
+| Orphan | none | director columns become NULL |
 
-## Worked example
+That NULL is not a stored fake director. It is the join result saying “no right-side row matched”.
+
+## Predict before you run
+
+Before filtering, this LEFT JOIN should return **3 rows**, including Orphan:
 
 ```sql
 SELECT movies.title, directors.name
 FROM movies
-LEFT JOIN directors ON movies.director_id = directors.id
-ORDER BY movies.title;
+LEFT JOIN directors
+  ON movies.director_id = directors.id;
 ```
 
-- `LEFT JOIN directors` starts from `movies` and adds matching directors.
-- Orphan has no `director_id`, so `directors.name` is `NULL`.
-- Filtering with `WHERE directors.id IS NULL` keeps only movies that failed to match.
+Then ask what `WHERE directors.id IS NULL` does: it removes the matched rows and leaves only the failed match.
 
-Result of the full join (before the orphan filter):
+## Worked example
 
-| title | name |
-| --- | --- |
-| Inception | Nolan |
-| Orphan |  |
-| The Matrix | Wachowski |
-
-Orphan-only filter result:
+```sql
+SELECT movies.title
+FROM movies
+LEFT JOIN directors
+  ON movies.director_id = directors.id
+WHERE directors.id IS NULL;
+```
 
 | title |
 | --- |
 | Orphan |
 
+This is a common **anti-join** pattern: preserve the left side, then keep rows where the right side failed to appear.
+
+## Debug this
+
+Why does replacing LEFT JOIN with INNER JOIN make the final query incapable of finding Orphan?
+
+INNER JOIN discards the unmatched movie during the join stage. By the time `WHERE directors.id IS NULL` runs, the orphan row is already gone.
+
 ## Common mistakes
 
-- Using `INNER JOIN` when you need unmatched left rows — orphans disappear.
-- Writing `WHERE directors.id = NULL` instead of `IS NULL`.
-- Joining on `movies.id = directors.id` instead of `movies.director_id = directors.id`.
+- Using INNER JOIN and then trying to search for missing right-side matches.
+- Testing `directors.id = NULL` instead of `IS NULL`.
+- Forgetting which table is on the preserved left side.
 
 ## Your turn
 
-List the `title` of every movie that has no matching director (`directors.id IS NULL`).
+Return the title of every movie with no matching director. Trace the full LEFT JOIN result first, then apply the NULL filter mentally.
+
+## Quick check
+
+In `movies LEFT JOIN directors`, which input is guaranteed to keep its unmatched rows?
+
+**Answer:** `movies`, the left input.

@@ -6,62 +6,81 @@ slug: links
 title: Tạo liên kết
 order: 5
 published: true
+can_do: "Tạo hyperlink thật với destination rõ ràng và link text có nghĩa, đồng thời chọn href absolute hoặc relative phù hợp"
 objectives:
-  - Tạo liên kết bằng thẻ a và thuộc tính href
-  - Phân biệt URL tuyệt đối và đường dẫn tương đối
-  - Viết chữ liên kết rõ ràng (không chỉ “bấm vào đây”)
+  - Tạo anchor có thuộc tính href thật
+  - Phân biệt absolute URL, relative path và fragment
+  - Viết link text vẫn có nghĩa khi tách khỏi đoạn văn xung quanh
 exercise:
   mode: html
   starter: |
-    <!-- Add a link to https://example.com -->
-    
+    <!-- TODO: thêm link có mô tả rõ tới https://example.com -->
   hints:
-    - Dùng phần tử a cho liên kết.
-    - Đặt href là URL đầy đủ.
-    - Đặt chữ hiển thị giữa hai thẻ anchor.
+    - Hyperlink thật dùng phần tử a có thuộc tính href.
+    - Bài này dùng full URL https://example.com.
+    - Đặt text mô tả destination giữa <a ...> và </a>.
   solution: |
-    <a href="https://example.com">Example</a>
+    <a href="https://example.com">Visit Example</a>
   expected:
-    type: htmlIncludes
-    needles:
-      - href=
+    type: htmlTags
+    tags:
+      - tag: a
+        minCount: 1
+        requiredAttrs: [href]
 ---
 
-Liên kết (link) đưa người đọc sang trang khác hoặc vị trí khác. Trong HTML, thẻ `a` (anchor) cùng thuộc tính `href` tạo liên kết.
+Link vừa là nội dung vừa là cơ chế điều hướng. Phần tử `a` tạo link semantics; `href` xác định destination; link text nói cho người dùng biết destination đó là gì.
 
-| Thành phần | Vai trò | Ví dụ |
-| --- | --- | --- |
-| `<a>` … `</a>` | Phần tử liên kết | chữ người dùng bấm |
-| `href` | Đích đến | URL hoặc đường dẫn tệp |
-| Tuyệt đối | Địa chỉ đầy đủ | `https://example.com` |
-| Tương đối | Đường dẫn trong cùng site | `about.html`, `../index.html` |
+## Mô hình tư duy
+
+```text
+<a href="destination">nhãn có ý nghĩa</a>
+         |                   |
+     đích điều hướng       mục đích người dùng đọc
+```
+
+Absolute URL ghi đầy đủ địa chỉ web; relative path được resolve dựa trên site/document hiện tại; fragment trỏ tới một `id` trong cùng tài liệu.
+
+## Dự đoán cấu trúc khi render
+
+```html
+<a href="/guides/forms">Hướng dẫn HTML form</a>
+```
+
+Trước khi preview, hãy dự đoán hai điều: đây là navigation có thể focus bằng bàn phím, và `/guides/forms` được resolve theo origin hiện tại. Nhãn link vẫn nên dễ hiểu khi screen reader liệt kê link riêng lẻ.
 
 ## Ví dụ mẫu
 
 ```html
 <p>
   Đọc
-  <a href="https://developer.mozilla.org/">tài liệu MDN</a>
-  để học thêm.
-</p>
-<p>
-  Xem thêm trang
-  <a href="about.html">Giới thiệu</a>
-  trong cùng thư mục.
+  <a href="https://developer.mozilla.org/">MDN Web Docs</a>
+  để tra cứu.
 </p>
 ```
 
-- `href` chứa đích; chữ giữa `<a>` và `</a>` là phần người dùng nhìn và kích hoạt.
-- Liên kết MDN dùng URL tuyệt đối (bắt đầu bằng `https://`).
-- `about.html` là đường dẫn tương đối — trình duyệt tìm tệp gần trang hiện tại.
-- Chữ liên kết nên mô tả đích (“tài liệu MDN”), không nên chỉ viết “bấm vào đây”.
+Phần tử `a` tạo vai trò link; `href` absolute trỏ sang site khác; text gọi tên destination thay vì chỉ ghi “bấm vào đây”.
+
+## Tìm lỗi
+
+```html
+<a>Tài liệu</a>
+```
+
+Không có `href`, anchor này không phải hyperlink thông thường tới một destination. Không nên giả lập navigation chỉ bằng style; nếu đây là link thì cần destination thật.
 
 ## Lỗi thường gặp
 
-- Quên `href` hoặc viết sai tên thuộc tính (`hrf`) — liên kết không đi được.
-- Để trống chữ trong `<a></a>` — người dùng không thấy gì để bấm.
-- Dùng URL tuyệt đối cho mọi trang nội bộ khi đang học cấu trúc thư mục — hãy luyện cả đường dẫn tương đối.
+- Dùng nhãn mơ hồ như “bấm vào đây” mà không nói destination.
+- Nhầm relative path của site với absolute URL đầy đủ.
+- Gắn text `href` lên sai element thay vì dùng anchor.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để thêm liên kết có href. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Tạo anchor có mô tả rõ tới `https://example.com`. Grader giờ parse HTML và yêu cầu `href` nằm trên một phần tử `a` thật.
+
+## Tự kiểm tra
+
+Khác nhau giữa `<a>Docs</a>` và `<a href="/docs">Docs</a>` là gì?
+
+**Đáp án:** đoạn thứ hai là hyperlink có destination; đoạn đầu không có `href` để điều hướng.

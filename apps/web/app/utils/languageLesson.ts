@@ -1,16 +1,16 @@
-/** Language-track lesson helpers (HSK / English / Japanese / non-IT sandboxes). */
+import { languageTargetLangForTrack } from './languageTrackProfile.ts'
+
+/** Language-track lesson helpers for the production language player. */
+
+export type LanguageTargetLang = 'en' | 'zh-Hans' | 'ja' | 'und'
 
 export type LanguageVocabItem = {
-  /** Display form: hanzi, English lemma, or Japanese surface */
   form: string
-  /** Reading aid: pinyin, IPA, or kana (may be empty) */
   reading: string
   gloss: string
-  /** BCP 47-ish tag for the form column */
   lang: string
 }
 
-/** @deprecated Prefer LanguageVocabItem.form — kept for call-site clarity in tests */
 export type LanguageVocabItemLegacy = {
   hanzi?: string
   pinyin?: string
@@ -23,16 +23,52 @@ export type LanguageVocabItemLegacy = {
   gloss?: string
 }
 
+export type LanguageExerciseType =
+  | 'mcq'
+  | 'meaning_choice'
+  | 'image_choice'
+  | 'audio_choice'
+  | 'dialogue_choice'
+  | 'match_pairs'
+  | 'order_words'
+  | 'fill_blank'
+  | 'type_answer'
+  | 'listen_type'
+
+export type LanguageChoiceMedia = {
+  value: string
+  visualKey?: string
+  imageUrl?: string
+  alt?: string
+}
+
+export type LanguageMatchPair = {
+  left: string
+  right: string
+}
+
 export type LanguageExercise = {
-  type: 'mcq' | 'fill_blank'
+  id?: string
+  type: LanguageExerciseType
   prompt: string
   answer: string
+  acceptedAnswers?: string[]
   choices?: string[]
+  choiceMedia?: LanguageChoiceMedia[]
+  tokens?: string[]
+  pairs?: LanguageMatchPair[]
   hints?: string[]
+  explanation?: string
+  audioText?: string
+  audioUrl?: string
   vocab?: LanguageVocabItem[]
   hskBand?: number
   cefrLevel?: string
   jlptLevel?: string
+}
+
+export function languageTargetLang(trackId: string): LanguageTargetLang {
+  return languageTargetLangForTrack(trackId) as LanguageTargetLang
 }
 
 export function isLanguageTrack(
@@ -53,6 +89,29 @@ function asRecord(value: unknown): Record<string, unknown> | null {
     return value as Record<string, unknown>
   }
   return null
+}
+
+function stringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined
+  const out = value.filter((item): item is string => typeof item === 'string')
+  return out.length ? out : undefined
+}
+
+function normalizeExerciseType(value: unknown): LanguageExerciseType {
+  switch (value) {
+    case 'meaning_choice':
+    case 'image_choice':
+    case 'audio_choice':
+    case 'dialogue_choice':
+    case 'match_pairs':
+    case 'order_words':
+    case 'fill_blank':
+    case 'type_answer':
+    case 'listen_type':
+      return value
+    default:
+      return 'mcq'
+  }
 }
 
 export function languageVocabFromLesson(lesson: {
@@ -97,47 +156,115 @@ export function languageExerciseFromLesson(lesson: {
 }): LanguageExercise | null {
   const ex = asRecord(lesson.exercise)
   if (!ex) return null
-  const type = ex.type
-  if (type !== 'mcq' && type !== 'fill_blank') return null
   const prompt = typeof ex.prompt === 'string' ? ex.prompt : ''
-  const answer = typeof ex.answer === 'string' ? ex.answer : ''
+  const type = normalizeExerciseType(ex.type)
+  let answer = typeof ex.answer === 'string' ? ex.answer : ''
+  if (!answer && type === 'match_pairs' && Array.isArray(ex.pairs)) {
+    answer = canonicalPairAnswer(ex.pairs)
+  }
   if (!prompt || !answer) return null
-  const choices = Array.isArray(ex.choices)
-    ? ex.choices.filter((c): c is string => typeof c === 'string')
+  return exerciseFromRecord(ex, type, prompt, answer)
+}
+
+function canonicalPairAnswer(rawPairs: unknown[]): string {
+  return rawPairs.flatMap((raw) => {
+    const row = asRecord(raw)
+    if (!row || typeof row.left !== 'string' || typeof row.right !== 'string') return []
+    return [`${row.left}=${row.right}`]
+  }).sort().join('|')
+}
+
+function exerciseFromRecord(
+  rec: Record<string, unknown>,
+  type: LanguageExerciseType,
+  prompt: string,
+  answer: string,
+): LanguageExercise {
+  const choiceMedia = Array.isArray(rec.choiceMedia)
+    ? rec.choiceMedia.flatMap((raw) => {
+        const row = asRecord(raw)
+        if (!row || typeof row.value !== 'string') return []
+        return [{
+          value: row.value,
+          visualKey: typeof row.visualKey === 'string' ? row.visualKey : undefined,
+          imageUrl: typeof row.imageUrl === 'string' ? row.imageUrl : undefined,
+          alt: typeof row.alt === 'string' ? row.alt : undefined,
+        }]
+      })
     : undefined
-  const hints = Array.isArray(ex.hints)
-    ? ex.hints.filter((h): h is string => typeof h === 'string')
+  const pairs = Array.isArray(rec.pairs)
+    ? rec.pairs.flatMap((raw) => {
+        const row = asRecord(raw)
+        if (!row || typeof row.left !== 'string' || typeof row.right !== 'string') return []
+        return [{ left: row.left, right: row.right }]
+      })
     : undefined
-  const hskBand = typeof ex.hskBand === 'number' ? ex.hskBand : undefined
-  const cefrLevel = typeof ex.cefrLevel === 'string' ? ex.cefrLevel : undefined
-  const jlptLevel = typeof ex.jlptLevel === 'string' ? ex.jlptLevel : undefined
   return {
+    id: typeof rec.id === 'string' ? rec.id : undefined,
     type,
     prompt,
     answer,
-    choices,
-    hints,
-    vocab: languageVocabFromLesson(lesson),
-    hskBand,
-    cefrLevel,
-    jlptLevel,
+    acceptedAnswers: stringArray(rec.acceptedAnswers),
+    choices: stringArray(rec.choices),
+    choiceMedia: choiceMedia?.length ? choiceMedia : undefined,
+    tokens: stringArray(rec.tokens),
+    pairs: pairs?.length ? pairs : undefined,
+    hints: stringArray(rec.hints),
+    explanation: typeof rec.explanation === 'string' ? rec.explanation : undefined,
+    audioText: typeof rec.audioText === 'string' ? rec.audioText : undefined,
+    audioUrl: typeof rec.audioUrl === 'string' ? rec.audioUrl : undefined,
   }
 }
 
+export function normalizeLanguageAnswer(
+  value: string,
+  targetLang: LanguageTargetLang = 'zh-Hans',
+): string {
+  let normalized = value
+    .normalize('NFKC')
+    .trim()
+    .replace(/\s+/g, ' ')
+  if (targetLang === 'en') {
+    normalized = normalized
+      .toLocaleLowerCase('en-US')
+      .replace(/[.!?]+$/g, '')
+      .trim()
+  }
+  return normalized
+}
+
 export function gradeLanguageExercise(
-  exercise: { type?: string; answer?: string } | null | undefined,
+  exercise: Pick<LanguageExercise, 'answer' | 'acceptedAnswers'> | null | undefined,
   submission: string,
+  targetLang: LanguageTargetLang = 'zh-Hans',
 ): boolean {
   if (!exercise || typeof exercise.answer !== 'string') return false
-  const expected = exercise.answer.trim()
-  const got = submission.trim()
-  if (!expected || !got) return false
-  return expected === got
+  const got = normalizeLanguageAnswer(submission, targetLang)
+  if (!got) return false
+  const accepted = [exercise.answer, ...(exercise.acceptedAnswers || [])]
+  return accepted.some((value) => normalizeLanguageAnswer(value, targetLang) === got)
+}
+
+export type LanguageStepScene = {
+  type: 'scene'
+  title?: string
+  body?: string
+  visualKey?: string
+  imageUrl?: string
+  imageAlt?: string
 }
 
 export type LanguageStepDialogue = {
   type: 'dialogue'
-  lines: { speaker?: string; text: string; reading?: string }[]
+  lines: { speaker?: string; text: string; reading?: string; audioUrl?: string }[]
+}
+
+export type LanguageStepListen = {
+  type: 'listen'
+  text: string
+  reading?: string
+  prompt?: string
+  audioUrl?: string
 }
 
 export type LanguageStepTip = {
@@ -148,26 +275,41 @@ export type LanguageStepTip = {
 
 export type LanguageStepTeach = {
   type: 'teach'
-  items: { form: string; reading?: string; gloss?: string; example?: string }[]
+  items: {
+    form: string
+    reading?: string
+    gloss?: string
+    example?: string
+    audioUrl?: string
+  }[]
 }
 
 export type LanguageStepPractice = {
   type: 'practice' | 'checkpoint'
-  kind?: 'mcq' | 'fill_blank'
+  id?: string
+  kind?: LanguageExerciseType
   prompt?: string
   answer?: string
+  acceptedAnswers?: string[]
   choices?: string[]
+  choiceMedia?: LanguageChoiceMedia[]
+  tokens?: string[]
+  pairs?: LanguageMatchPair[]
   hints?: string[]
-  /** checkpoint may nest items */
+  explanation?: string
+  audioText?: string
+  audioUrl?: string
   items?: LanguageStepPractice[]
 }
 
 export type LanguageStep =
+  | LanguageStepScene
   | LanguageStepDialogue
+  | LanguageStepListen
   | LanguageStepTip
   | LanguageStepTeach
   | LanguageStepPractice
-  | { type: string }
+  | { type: string; [key: string]: unknown }
 
 export function languageStepsFromLesson(lesson: {
   exercise?: Record<string, unknown> | null
@@ -193,22 +335,30 @@ export function languageHasSteps(lesson: {
 export function practiceFromStep(step: LanguageStep): LanguageExercise | null {
   const rec = step as LanguageStepPractice
   if (rec.type !== 'practice' && rec.type !== 'checkpoint') return null
-  if (rec.type === 'checkpoint' && Array.isArray(rec.items) && rec.items.length) {
-    return null
-  }
-  const kind = rec.kind === 'fill_blank' ? 'fill_blank' : 'mcq'
+  if (rec.type === 'checkpoint' && Array.isArray(rec.items) && rec.items.length) return null
   const prompt = typeof rec.prompt === 'string' ? rec.prompt : ''
-  const answer = typeof rec.answer === 'string' ? rec.answer : ''
+  const kind = normalizeExerciseType(rec.kind)
+  let answer = typeof rec.answer === 'string' ? rec.answer : ''
+  if (!answer && kind === 'match_pairs' && Array.isArray(rec.pairs)) {
+    answer = [...rec.pairs].map((pair) => `${pair.left}=${pair.right}`).sort().join('|')
+  }
   if (!prompt || !answer) return null
-  return {
-    type: kind,
+  return exerciseFromRecord(
+    rec as unknown as Record<string, unknown>,
+    kind,
     prompt,
     answer,
-    choices: Array.isArray(rec.choices)
-      ? rec.choices.filter((c): c is string => typeof c === 'string')
-      : undefined,
-    hints: Array.isArray(rec.hints)
-      ? rec.hints.filter((h): h is string => typeof h === 'string')
-      : undefined,
+  )
+}
+
+export function reviewKeyForStep(
+  step: LanguageStepPractice,
+  stepIndex: number,
+  checkpointIndex?: number,
+): string {
+  if (typeof step.id === 'string' && step.id.trim()) return step.id.trim()
+  if (typeof checkpointIndex === 'number') {
+    return `step-${stepIndex + 1}-item-${checkpointIndex + 1}`
   }
+  return `step-${stepIndex + 1}`
 }

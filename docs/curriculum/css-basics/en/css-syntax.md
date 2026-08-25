@@ -3,71 +3,96 @@ id: css-01-syntax
 track: css-basics
 locale: en
 slug: css-syntax
-title: CSS rules and stylesheets
+title: Rules, selectors, and declarations
 order: 1
 published: true
+can_do: "Write a complete CSS rule with a selector and multiple property-value declarations and diagnose malformed declaration syntax"
 objectives:
-  - Read a CSS rule as selector plus declarations
-  - Recognize property–value pairs and the semicolon
-  - Compare external and internal stylesheets
+  - Read the boundary between selector and declaration block
+  - Write property-value pairs with colons and semicolons
+  - Distinguish CSS source from HTML markup
 exercise:
   mode: both
   starterHtml: |
-    <p class="note">Hi</p>
+    <p class="note">Read me</p>
   starter: |
-    /* Style .note text */
-    
+    /* TODO: make .note blue and bold */
   hints:
-    - Class selectors start with a dot.
-    - "Put declarations inside { }."
-    - Use color to change text color.
+    - A class selector starts with a dot: .note.
+    - Put both declarations inside one pair of braces.
+    - Use color: blue; and font-weight: bold;.
   solution: |
-    .note { color: blue; }
+    .note {
+      color: blue;
+      font-weight: bold;
+    }
   expected:
-    type: cssIncludes
-    needles:
-      - .note
-      - "{"
-      - color
+    type: cssRules
+    rules:
+      - selector: .note
+        declarations:
+          color: blue
+          font-weight: bold
 ---
 
-A **CSS rule** always has the same shape: a selector, then curly braces, then one or more declarations. A **stylesheet** is simply a file (or a block) that holds many rules. Browsers read those rules and apply them to matching HTML.
+CSS syntax is small, but punctuation defines the structure the parser reads.
 
-Compare it to a recipe card: the title names the dish (selector), and each step lists an ingredient and amount (property and value). Miss a punctuation mark and the instructions become unclear.
+## Mental model
 
-| Piece | Role | Example |
-| --- | --- | --- |
-| Selector | What to style | `p` |
-| Property | Which trait | `color` |
-| Value | The setting | `navy` |
-| Declaration | Property + value | `color: navy;` |
-| Stylesheet kinds | Where rules live | External `.css` file, or `<style>` in the HTML `head` |
+```text
+selector {
+  property: value;
+  property: value;
+}
+```
 
-## Worked example
+The selector chooses targets; braces contain a declaration block; a colon separates a property from its value; semicolons separate declarations.
+
+## Predict the rendered result
 
 ```css
-p {
-  color: navy;
-  line-height: 1.5;
-}
-
 .note {
+  color: blue;
   font-weight: bold;
 }
 ```
 
-- The first rule styles every `p`. Two declarations sit inside the braces; each ends with a **semicolon**.
-- The second rule styles elements with `class="note"`. Class selectors start with a **dot** (covered next lesson).
-- An **external** stylesheet is a separate `.css` file linked from HTML. An **internal** stylesheet is a `<style>` element in the document `head`. Both use the same rule syntax.
+Predict two independent computed traits on the matching paragraph: blue text and bold weight.
 
-Keep one declaration per line when you are learning — it is easier to spot missing colons or semicolons.
+## Worked example
+
+```css
+.note {
+  color: navy;
+  line-height: 1.5;
+}
+```
+
+An external stylesheet and an internal `<style>` element use the same CSS rule syntax; only the location differs.
+
+## Debug this
+
+```css
+.note {
+  color = blue
+  font-weight: bold;
+}
+```
+
+`color = blue` is not a CSS declaration. Use a colon. Missing separators can also cause following declarations to be ignored.
 
 ## Common mistakes
 
-- Forgetting the semicolon after a declaration — later properties in the same rule may be ignored.
-- Writing `color = navy` instead of `color: navy` — CSS uses a colon between property and value.
-- Mixing HTML tags into the stylesheet (`<p>color: navy</p>`) — a `.css` file contains only CSS, not HTML tags.
+- Using `=` instead of `:`.
+- Mixing HTML tags into a `.css` file.
+- Assuming a declaration is enough without a selector and rule block.
 
 ## Your turn
 
-Use the sandbox below to write a CSS rule for .note. When the checker shows **Correct**, mark this lesson complete.
+Write one `.note` rule that sets both required properties. The structured grader checks both declarations on that selector.
+
+## Quick check
+
+What does the selector decide, and what do declarations decide?
+
+**Answer:** the selector decides which elements match; declarations decide which style properties those matches receive.

@@ -3,76 +3,95 @@ id: css-13-flexbox
 track: css-basics
 locale: vi
 slug: flexbox-basics
-title: Flexbox cơ bản
+title: Flexbox như hệ layout một chiều
 order: 13
 published: true
+can_do: "Biến container thành flex formatting context và suy luận main-axis distribution, cross-axis alignment và gap trong một toolbar tích hợp"
 objectives:
-  - Bật Flexbox bằng display: flex trên phần tử cha
-  - Đổi hướng hàng/cột bằng flex-direction và khoảng cách bằng gap
-  - Căn item bằng justify-content và align-items ở mức giới thiệu
+  - Xác định flex container và direct flex item
+  - Phân biệt main axis với cross axis
+  - Kết hợp gap, justify-content và align-items có chủ đích
 exercise:
   mode: both
   starterHtml: |
-    <div class="row"><span>A</span><span>B</span></div>
+    <div class="toolbar"><span>Menu</span><button>Save</button><button>Publish</button></div>
   starter: |
-    /* Lay out .row with flex */
-    
+    /* TODO: biến .toolbar thành flex row có gap 1rem, phân bố space-between và center theo cross axis */
   hints:
-    - "display: flex bật bố cục flex."
-    - gap thêm khoảng cách giữa các item.
-    - Áp dụng cả hai lên container .row.
+    - Flex property nằm trên container; direct child trở thành flex item.
+    - Với row mặc định, main axis nằm ngang và cross axis nằm dọc.
+    - Dùng display: flex; gap: 1rem; justify-content: space-between; align-items: center;.
   solution: |
-    .row { display: flex; gap: 1rem; }
+    .toolbar {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
+    }
   expected:
-    type: cssIncludes
-    needles:
-      - "display: flex"
-      - gap
+    type: cssRules
+    rules:
+      - selector: .toolbar
+        declarations:
+          display: flex
+          gap: 1rem
+          justify-content: space-between
+          align-items: center
 ---
 
-**Flexbox** là mô hình bố cục một chiều: xếp các phần tử con thành hàng hoặc cột, rồi căn và phân khoảng cách một cách có kiểm soát. Bạn đặt `display: flex` trên **container** (cha); các **flex item** (con trực tiếp) tuân theo quy tắc flex.
+Flexbox là layout model **một chiều**: nó reasoning chủ yếu theo main axis và alignment theo cross axis vuông góc.
 
-| Property (trên cha) | Vai trò đơn giản |
-| --- | --- |
-| `display: flex` | Bật ngữ cảnh flex |
-| `flex-direction` | `row` (hàng) hoặc `column` (cột) |
-| `gap` | Khoảng cách giữa các item |
-| `justify-content` | Căn theo trục chính (dọc theo direction) |
-| `align-items` | Căn theo trục phụ |
+## Mô hình tư duy
+
+```text
+flex container
+main axis  ------------------>
+items:        A      B      C
+cross axis             ↓
+```
+
+`display: flex` tạo flex formatting context trên container. Direct child của nó trở thành flex item.
+
+## Dự đoán kết quả hiển thị
+
+Với `flex-direction: row` mặc định, `justify-content` tác động theo chiều ngang và `align-items` theo chiều dọc. Nếu direction đổi thành column, vai trò trục cũng xoay theo.
 
 ## Ví dụ mẫu
-
-```html
-<div class="toolbar">
-  <button type="button">Lưu</button>
-  <button type="button">Hủy</button>
-  <button type="button">Xóa</button>
-</div>
-```
 
 ```css
 .toolbar {
   display: flex;
-  flex-direction: row;
-  gap: 12px;
-  justify-content: flex-start;
+  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
 }
 ```
 
-- `display: flex` biến `.toolbar` thành flex container; các `button` là flex item.
-- `flex-direction: row` xếp nút theo hàng ngang (thường là mặc định).
-- `gap: 12px` tạo khoảng đều giữa các nút — không cần margin thủ công trên từng nút.
-- `justify-content: flex-start` dồn item về đầu trục chính; `align-items: center` căn giữa theo chiều cao.
+`gap` tạo khoảng cách giữa item mà không biến outer margin thành trách nhiệm mặc định của từng component.
 
-Thử `justify-content: space-between` để đẩy item ra hai đầu khi thanh công cụ rộng.
+## Tìm lỗi
+
+```css
+.toolbar button {
+  display: flex;
+  justify-content: space-between;
+}
+```
+
+Đoạn này tạo flex formatting bên trong từng button, không phải giữa các direct child của toolbar. Layout property cần đặt trên container mà bạn muốn sắp xếp children.
 
 ## Lỗi thường gặp
 
-- Đặt `display: flex` trên từng nút thay vì trên cha — flex điều khiển *con trực tiếp* của container.
-- Nhầm `justify-content` với `align-items` — một cái theo trục chính (direction), một cái theo trục phụ.
-- Dùng Flexbox cho mọi thứ khi chỉ cần một `margin` — với vài khối đơn giản, luồng block đôi khi đủ.
+- Đặt container alignment property lên item.
+- Học thuộc “justify = ngang” thay vì bám theo main axis hiện tại.
+- Dùng flexbox như thể nó là hệ layout grid hai chiều.
 
 ## Thử ngay
 
-Dùng sandbox bên dưới để bố cục .row bằng flexbox. Khi bộ kiểm tra báo **Correct**, đánh dấu hoàn thành bài.
+Hoàn thiện toolbar rule với đủ bốn declaration và dự đoán cả hai axis trước khi preview.
+
+## Tự kiểm tra
+
+Nếu `flex-direction` đổi thành `column`, `justify-content` còn là control căn ngang không?
+
+**Đáp án:** không. Nó đi theo main axis, lúc này là chiều dọc.

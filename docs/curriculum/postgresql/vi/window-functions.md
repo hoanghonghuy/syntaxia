@@ -3,19 +3,21 @@ id: pg-20-window
 track: postgresql
 locale: vi
 slug: window-functions
-title: Xếp hạng hàng với hàm cửa sổ
+title: Ngữ cảnh hàng với window function
 order: 20
 published: true
+can_do: "Dùng window function để tính trên các hàng liên quan mà không collapse từng input row thành group summary"
 objectives:
-  - Đánh số hàng bằng ROW_NUMBER()
-  - Dùng OVER (ORDER BY …) mà không gộp nhóm
+  - Đối chiếu window calculation với aggregate GROUP BY
+  - Định nghĩa window ordering độc lập với thứ tự output cuối
+  - Thêm tie-breaker xác định cho ROW_NUMBER
 exercise:
-  starter: "SELECT title, year FROM movies ORDER BY year;"
+  starter: "SELECT title, year FROM movies;"
   hints:
-    - "ROW_NUMBER() gán 1, 2, 3… theo thứ tự các hàng."
-    - "Đặt quy tắc đánh số trong OVER (ORDER BY year)."
-    - "Thử: SELECT title, year, ROW_NUMBER() OVER (ORDER BY year) AS rn FROM movies;"
-  solution: "SELECT title, year, ROW_NUMBER() OVER (ORDER BY year) AS rn FROM movies;"
+    - "ROW_NUMBER giữ mọi movie row và thêm một số được tính."
+    - "Đặt year và id trong OVER (ORDER BY ...) để numbering xác định."
+    - "Dùng: SELECT title, year, ROW_NUMBER() OVER (ORDER BY year, id) AS rn FROM movies ORDER BY rn;"
+  solution: "SELECT title, year, ROW_NUMBER() OVER (ORDER BY year, id) AS rn FROM movies ORDER BY rn;"
   preview:
     columns: ["id", "title", "year"]
     rows:
@@ -34,41 +36,64 @@ sandbox_seed:
     - "INSERT INTO movies VALUES (1, 'The Matrix', 1999), (2, 'Inception', 2010), (3, 'Arrival', 2016);"
 ---
 
-Đôi khi bạn muốn xếp hạng cạnh mỗi hàng — nhất, nhì, ba — mà không gộp bảng thành một dòng tổng. **Hàm cửa sổ** (window function) làm việc đó: nhìn qua các hàng liên quan nhưng vẫn trả về một hàng kết quả cho mỗi hàng đầu vào.
+Window function tính toán với ngữ cảnh các hàng khác nhưng vẫn giữ danh tính của từng hàng hiện tại. Đây là khác biệt cốt lõi với aggregate thông thường đi kèm `GROUP BY`.
 
-| id | title | year |
-| --- | --- | --- |
-| 1 | The Matrix | 1999 |
-| 2 | Inception | 2010 |
-| 3 | Arrival | 2016 |
+## Mô hình tư duy
+
+So sánh hình dạng output:
+
+| ý tưởng query | input rows | output rows |
+| --- | ---: | ---: |
+| `COUNT(*)` cả bảng | 3 | 1 |
+| `GROUP BY year` | 3 | một hàng mỗi group |
+| `ROW_NUMBER() OVER (...)` | 3 | 3 |
+
+`OVER (...)` định nghĩa window context. `ORDER BY` bên trong điều khiển cách window function tính; `ORDER BY` ngoài cùng điều khiển cách hiển thị result row.
+
+## Dự đoán trước khi chạy
+
+Sort theo year rồi id: Matrix → 1, Inception → 2, Arrival → 3. Không source row nào biến mất.
 
 ## Ví dụ mẫu
 
 ```sql
-SELECT title, year, ROW_NUMBER() OVER (ORDER BY year) AS rn
-FROM movies;
+SELECT
+  title,
+  year,
+  ROW_NUMBER() OVER (ORDER BY year, id) AS rn
+FROM movies
+ORDER BY rn;
 ```
 
-- `ROW_NUMBER()` gán 1, 2, 3… theo thứ tự.
-- `OVER (ORDER BY year)` đặt thứ tự đánh số (cũ nhất trước ở đây).
-- Khác `GROUP BY`, mọi hàng phim vẫn xuất hiện.
-
-Kết quả:
-
 | title | year | rn |
-| --- | --- | --- |
+| --- | ---: | ---: |
 | The Matrix | 1999 | 1 |
 | Inception | 2010 | 2 |
 | Arrival | 2016 | 3 |
 
-Các hàm liên quan gồm `RANK()`, `LAG()`, và `LEAD()` — cùng ý `OVER`, phép tính khác.
+Muốn ranking theo nhóm, thêm `PARTITION BY`; `RANK`, `LAG`, `LEAD` và window aggregate đều dùng cùng mental model `OVER`.
+
+## Tìm lỗi
+
+```sql
+SELECT title, ROW_NUMBER() OVER () AS rn
+FROM movies;
+```
+
+Query hợp lệ nhưng numbering không có tiêu chí order. Nếu row number đại diện ranking, cần order xác định thay vì phụ thuộc row order tình cờ.
 
 ## Lỗi thường gặp
 
-- Dùng `GROUP BY` khi vẫn cần mọi hàng.
-- Quên `OVER (…)` — hàm cửa sổ bắt buộc có.
-- Bỏ alias `rn` khi cột kỳ vọng có nó.
+- Thay yêu cầu window bằng GROUP BY rồi làm mất individual rows.
+- Nghĩ window `ORDER BY` tự đảm bảo thứ tự hiển thị cuối.
+- Rank các giá trị tie mà không có tie-breaker khi numbering ổn định là quan trọng.
 
 ## Thử ngay
 
-Trả về `title`, `year`, và số thứ tự `rn` theo `year` tăng dần.
+Trả từng movie với `rn` theo year và id, rồi hiển thị theo row number đó.
+
+## Tự kiểm tra
+
+Thêm `ROW_NUMBER() OVER (...)` vào SELECT đơn giản làm row count thay đổi thế nào?
+
+**Đáp án:** row count giữ nguyên; window function thêm context tính toán cho từng hàng thay vì collapse các hàng.
