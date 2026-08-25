@@ -1,20 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
-  <title id="title">English sentence melody</title>
-  <desc id="desc">A simple statement, yes-no question, and wh-question show typical beginner intonation shapes.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
   <rect width="720" height="420" rx="32" fill="#f8fafc"/>
-  <text x="360" y="62" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="#334155">Listen to the shape of the whole phrase</text>
   <g font-family="system-ui,sans-serif" fill="#1f2937">
-    <text x="78" y="132" font-size="26" font-weight="700">I'm Mai.</text>
-    <path d="M235 126 C300 124 330 132 405 150" fill="none" stroke="#6366f1" stroke-width="6" stroke-linecap="round"/>
-    <text x="500" y="148" font-size="22" fill="#64748b">settles</text>
+    <text x="72" y="112" font-size="28" font-weight="700">I'm Mai.</text>
+    <path d="M235 106 C310 104 350 114 455 146" fill="none" stroke="#6366f1" stroke-width="7" stroke-linecap="round"/>
+    <path d="m440 130 20 18-27 4" fill="none" stroke="#6366f1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <text x="78" y="226" font-size="26" font-weight="700">Are you Mai?</text>
-    <path d="M245 220 C310 220 350 212 420 174" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
-    <text x="500" y="184" font-size="22" fill="#64748b">often rises</text>
+    <text x="72" y="220" font-size="28" font-weight="700">Are you Mai?</text>
+    <path d="M250 214 C330 214 372 204 465 154" fill="none" stroke="#10b981" stroke-width="7" stroke-linecap="round"/>
+    <path d="m447 155 22-4-6 25" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <text x="78" y="320" font-size="26" font-weight="700">Where are you from?</text>
-    <path d="M305 314 C360 306 405 312 472 335" fill="none" stroke="#f97316" stroke-width="6" stroke-linecap="round"/>
-    <text x="525" y="336" font-size="22" fill="#64748b">often falls</text>
+    <text x="72" y="328" font-size="28" font-weight="700">Where are you from?</text>
+    <path d="M315 322 C385 310 430 318 505 350" fill="none" stroke="#f97316" stroke-width="7" stroke-linecap="round"/>
+    <path d="m492 332 18 20-27 1" fill="none" stroke="#f97316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <text x="360" y="382" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#64748b">These are useful listening patterns, not rigid rules for every speaker or context.</text>
 </svg>
