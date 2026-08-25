@@ -4,7 +4,7 @@ track: english-basics
 locale: en
 slug: sound-spelling
 title: "Hear the word, then read the spelling"
-order: -7
+order: -9
 published: true
 cefr_level: a1
 foundation_focus: pronunciation
