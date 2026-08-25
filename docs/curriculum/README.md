@@ -27,7 +27,7 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `html-basics` | IT · basic | Semantic HTML fundamentals, **12** lessons; HTML/CSS sandbox shipped |
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
 | `chinese-hsk` | Languages · foundation | Practical Mandarin Level 1, **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** |
-| `english-basics` | Languages · foundation | CEFR A1 language foundation, **Foundation Unit 0 + 8 communicative units / 37 nodes per locale** |
+| `english-basics` | Languages · foundation | CEFR A1 language foundation, **Foundation Unit 0 + 8 communicative units / 39 nodes per locale** |
 | `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **9 units / 28 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
@@ -115,10 +115,12 @@ These nodes use `unit_order: 0` and internal sort orders `-5..-1` without renumb
 
 ## English foundation entry
 
-The English track now begins with a seven-node language foundation before communicative Unit 1:
+The English track now begins with a nine-node language foundation before communicative Unit 1:
 
 ```text
 sound-spelling
+→ vowel-contrasts
+→ consonant-clarity
 → word-stress
 → sentence-melody
 → core-sentences
@@ -128,14 +130,14 @@ sound-spelling
 → communicative Unit 1
 ```
 
-The first three nodes prioritize intelligible pronunciation awareness; the next two establish the minimal productive grammar used by later A1 units (`be`, subject pronouns, simple `be`/wh/`do` question frames). Vocabulary is learned as sound + meaning + spelling + usable chunk rather than as a standalone glossary.
+The first five nodes build bounded intelligibility foundations: sound↔spelling, high-value vowel/consonant contrasts, word stress, and sentence melody. The next two establish the minimal productive grammar used by later A1 units (`be`, subject pronouns, simple `be`/wh/`do` question frames). Vocabulary is learned as sound + meaning + spelling + usable chunk rather than as a standalone glossary. Pronunciation diagrams keep explanatory copy out of shared assets so the VI learning experience cannot leak English instructions through SVG text.
 
-These nodes use `unit_order: 0` and internal sort orders `-7..-1` without renumbering existing published Units 1–8. The generic language frontier logic keeps returning learners on their established continuation path while the inserted foundation remains available for catch-up.
+These nodes use `unit_order: 0` and internal sort orders `-9..-1` without renumbering existing published Units 1–8. The generic language frontier logic keeps returning learners on their established continuation path while the inserted foundation remains available for catch-up.
 
 ## Verification
 
 IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. These gates require the relevant mental/execution model, prediction, worked example, debugging, common mistakes, learner task, recall, exercise/hints/solution, and EN/VI parity for every declared IT lesson.
 
-Language tracks are enforced by Language V3 web tests, including exact Mandarin/English/Japanese inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, and FSRS review identity.
+Language tracks are enforced by Language V3 web tests, including exact Mandarin/English/Japanese inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, locale quality, and FSRS review identity.
 
-Release E2E then exercises exact runtime inventories, SQL/JavaScript/HTML/CSS sandboxes, progress, notes, and FSRS persistence against PostgreSQL. Go curriculum-backed smoke tests are run cold with `go test -count=1` so external curriculum changes cannot be hidden by the Go package test cache.
+Release E2E then exercises exact runtime inventories, built-in track reconciliation for long-lived databases, SQL/JavaScript/HTML/CSS sandboxes, progress, notes, and FSRS persistence against PostgreSQL. Go curriculum-backed smoke tests are run cold with `go test -count=1` so external curriculum changes cannot be hidden by the Go package test cache.
