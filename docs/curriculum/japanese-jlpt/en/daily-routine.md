@@ -28,7 +28,7 @@ steps:
   - type: scene
     title: "Compare morning schedules"
     body: "A classmate asks when your day starts. Listen for the time, then answer about your own routine."
-    visualKey: "daily-clock"
+    imageUrl: "/language/scenes/daily-clock.svg"
     imageAlt: "A simple clock and morning-to-evening routine timeline."
   - type: dialogue
     lines:
