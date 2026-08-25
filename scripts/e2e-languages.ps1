@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review for Mandarin, English, and Chinese IT specialty.
+  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review for Mandarin, English, Japanese, and Chinese IT specialty.
 
 .PARAMETER BaseUrl
   API base URL. Default http://127.0.0.1:8082
@@ -52,18 +52,19 @@ if ($me.Json.email -ne $email) {
 }
 Ok "auth/me"
 
-# Exact EN-locale inventories after the Language V3 foundation/starter/specialty migrations.
+# Exact EN-locale inventories after the Language V3 foundation/specialty migrations.
 # Static curriculum tests lock file parity; this live API check verifies the
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 30 },
   @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 30 },
-  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 16 },
+  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 28 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
 
 $reviewLessonId = $null
 $englishLessonId = $null
+$japaneseLessonId = $null
 $specialtyLessonId = $null
 foreach ($flow in $flows) {
   $track = $flow.Track
@@ -121,6 +122,9 @@ foreach ($flow in $flows) {
   if ($track -eq "english-basics") {
     $englishLessonId = $lessonId
   }
+  if ($track -eq "japanese-jlpt") {
+    $japaneseLessonId = $lessonId
+  }
   if ($track -eq "chinese-it-vocab") {
     $specialtyLessonId = $lessonId
   }
@@ -160,6 +164,9 @@ if (-not $reviewLessonId) {
 }
 if (-not $englishLessonId) {
   Fail "missing completed English lesson for review smoke"
+}
+if (-not $japaneseLessonId) {
+  Fail "missing completed Japanese lesson for review smoke"
 }
 if (-not $specialtyLessonId) {
   Fail "missing completed Chinese IT specialty lesson for review smoke"
@@ -236,6 +243,34 @@ if ($englishReview.Json.itemKey -ne $englishItemKey -or [int64]$englishReview.Js
   Fail "persisted English review response invalid"
 }
 Ok "English review persisted reps=$($englishReview.Json.reps)"
+
+# Japanese: prove authored Japanese stable IDs are synchronized and persisted by the generic FSRS engine.
+$japaneseDue = Invoke-SyntaxiaApi -Method GET `
+  -Path "/api/v1/language/review/due?track=japanese-jlpt&locale=en&limit=50" `
+  -Session $session
+$japaneseCards = @($japaneseDue.Json)
+$japaneseItemKey = "ja-pol-dialogue-1"
+$japaneseSeedCard = @($japaneseCards | Where-Object {
+  $_.lessonId -eq $japaneseLessonId -and $_.itemKey -eq $japaneseItemKey
+}) | Select-Object -First 1
+if (-not $japaneseSeedCard) {
+  Fail "Japanese review due sync did not create $japaneseItemKey for $japaneseLessonId"
+}
+Ok "Japanese review card synced from authored stable item id"
+
+$japaneseReviewBody = (@{
+  lessonId   = $japaneseLessonId
+  locale     = "en"
+  itemKey    = $japaneseItemKey
+  rating     = 3
+  responseMs = 1050
+} | ConvertTo-Json -Compress)
+$japaneseReview = Invoke-SyntaxiaApi -Method POST `
+  -Path "/api/v1/language/review" -JsonBody $japaneseReviewBody -Session $session
+if ($japaneseReview.Json.itemKey -ne $japaneseItemKey -or [int64]$japaneseReview.Json.reps -lt 1) {
+  Fail "persisted Japanese review response invalid"
+}
+Ok "Japanese review persisted reps=$($japaneseReview.Json.reps)"
 
 # Specialty Chinese IT: prove the same generic review engine respects specialty stable IDs.
 $specialtyDue = Invoke-SyntaxiaApi -Method GET `
