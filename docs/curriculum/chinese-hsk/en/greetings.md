@@ -17,8 +17,11 @@ can_do: "Greet someone, thank them, and close a short exchange naturally"
 pattern: "你好 / 谢谢 / 不客气 / 再见"
 objectives:
   - "Open and close a short greeting exchange"
+  - "Recognize 你 and 好 inside 你好 while using 你好 as a complete greeting chunk"
   - "Reply naturally to 谢谢"
 vocab:
+  - { hanzi: "你", pinyin: "nǐ", gloss: "you" }
+  - { hanzi: "好", pinyin: "hǎo", gloss: "good; well" }
   - { hanzi: "你好", pinyin: "nǐ hǎo", gloss: "hello" }
   - { hanzi: "谢谢", pinyin: "xiè xie", gloss: "thank you" }
   - { hanzi: "不客气", pinyin: "bú kè qi", gloss: "you're welcome" }
@@ -42,11 +45,11 @@ steps:
     text: "谢谢你。"
     reading: "xiè xie nǐ"
   - type: tip
-    title: "Learn the whole exchange"
-    body: "Treat 你好, 谢谢, 不客气, and 再见 as ready-to-use chunks. Pinyin supports pronunciation; the characters remain the target form."
+    title: "Understand the parts, then use the whole chunk"
+    body: "你 means “you” and 好 means “good/well”; together, learn 你好 as one ready-to-use greeting. Treat 谢谢, 不客气, and 再见 as parts of complete exchanges too, not isolated glossary entries."
   - type: teach
     items:
-      - { form: "你好", reading: "nǐ hǎo", gloss: "hello", example: "你好！" }
+      - { form: "你 + 好 → 你好", reading: "nǐ + hǎo → nǐ hǎo", gloss: "you + good/well → the greeting hello", example: "你好！" }
       - { form: "谢谢", reading: "xiè xie", gloss: "thank you", example: "谢谢你。" }
       - { form: "不客气", reading: "bú kè qi", gloss: "you're welcome", example: "不客气。" }
       - { form: "再见", reading: "zài jiàn", gloss: "goodbye", example: "再见！" }
