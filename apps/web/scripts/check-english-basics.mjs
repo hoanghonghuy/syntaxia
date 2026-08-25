@@ -15,6 +15,8 @@ const read = (abs) => readFileSync(abs, 'utf8')
 
 const SLUGS = [
   'sound-spelling',
+  'vowel-contrasts',
+  'consonant-clarity',
   'word-stress',
   'sentence-melody',
   'core-sentences',
@@ -67,6 +69,8 @@ const FOUNDATION_UNITS = new Map([
 
 const FOUNDATION_SLUGS = [
   'sound-spelling',
+  'vowel-contrasts',
+  'consonant-clarity',
   'word-stress',
   'sentence-melody',
   'core-sentences',
@@ -95,15 +99,17 @@ describe('english-basics A1 language foundation curriculum', () => {
     assert.match(body, /core grammar/i)
     assert.match(body, /Vocabulary/i)
     assert.match(body, /9 units/i)
-    assert.match(body, /37 nodes/i)
+    assert.match(body, /39 nodes/i)
     assert.match(body, /sound.*spelling/i)
+    assert.match(body, /vowel/i)
+    assert.match(body, /consonant/i)
     assert.match(body, /word stress/i)
     assert.match(body, /subject pronouns/i)
     assert.match(body, /Do you like/i)
     assert.match(body, /ozbonus\/yle-vocabulary-dataset/)
   })
 
-  it('ships exactly 37 paired EN/VI V3 nodes', () => {
+  it('ships exactly 39 paired EN/VI V3 nodes', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
@@ -141,7 +147,9 @@ describe('english-basics A1 language foundation curriculum', () => {
 
   it('locks Unit 0 as pronunciation -> grammar -> checkpoint -> review', () => {
     const expected = new Map([
-      ['sound-spelling', ['pronunciation', 'lesson', '-7']],
+      ['sound-spelling', ['pronunciation', 'lesson', '-9']],
+      ['vowel-contrasts', ['pronunciation', 'lesson', '-8']],
+      ['consonant-clarity', ['pronunciation', 'lesson', '-7']],
       ['word-stress', ['pronunciation', 'lesson', '-6']],
       ['sentence-melody', ['pronunciation', 'lesson', '-5']],
       ['core-sentences', ['grammar', 'lesson', '-4']],
@@ -166,6 +174,8 @@ describe('english-basics A1 language foundation curriculum', () => {
   it('ships app-owned pronunciation diagrams and no external image hotlinks in Unit 0', () => {
     for (const asset of [
       'english-sound-spelling.svg',
+      'english-core-vowels.svg',
+      'english-core-consonants.svg',
       'english-word-stress.svg',
       'english-sentence-melody.svg',
     ]) {
