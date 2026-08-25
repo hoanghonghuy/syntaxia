@@ -23,6 +23,9 @@ vocab:
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "buổi chiều" }
   - { word: "clock", ipa: "/klɑːk/", gloss: "đồng hồ chỉ giờ" }
   - { word: "today", ipa: "/təˈdeɪ/", gloss: "hôm nay" }
+  - { word: "what time", ipa: "/wʌt taɪm/", gloss: "dùng để hỏi một việc diễn ra lúc mấy giờ" }
+  - { word: "o'clock", ipa: "/əˈklɑːk/", gloss: "dùng sau số giờ khi nói giờ tròn" }
+  - { word: "at", ipa: "/æt/", gloss: "dùng trước một mốc giờ cụ thể" }
 steps:
   - type: scene
     title: "Xem lịch hôm nay"
