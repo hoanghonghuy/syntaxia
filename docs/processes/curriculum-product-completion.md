@@ -39,17 +39,19 @@ The release promotion candidate passed canonical Product CI before merge. Exact 
 
 ## Active expansion branch
 
-`feature/home-learning-map-english-foundation` starts from the production release baseline and contains two related product improvements:
+`feature/home-learning-map-english-foundation` starts from the production release baseline and contains related product-hardening work:
 
-1. **Interactive homepage learning map** — preserve the existing `SQL / Web / JS / EN / 中文 / 日本語` visual language while deriving available chips, navigation targets, positions, and progress from live catalog data instead of hard-coded template spans.
+1. **Interactive homepage learning map** — preserve the familiar `SQL / Web / JS / EN / 中文 / 日本語` visual language while deriving available chips, navigation targets, positions, and progress from live catalog data instead of hard-coded template spans.
 2. **English foundation-first A1 progression** — insert a backward-compatible Unit 0 before the existing eight English communicative units.
+3. **Language catalog recovery** — reconcile all application-owned tracks at API startup so long-lived production databases created before English/Japanese/specialty tracks existed cannot silently expose only Mandarin or fail curriculum sync on the track FK.
+4. **Locale/content quality hardening** — keep explanation-language copy out of shared pronunciation assets, detect English instructional leakage in Vietnamese Mandarin content, and require enough lexical material in normal communicative lessons.
 
-The active branch changes the declared English product to **9 units / 37 nodes per locale**:
+The active branch changes the declared English product to **9 units / 39 nodes per locale**:
 
-- Unit 0: 7 pronunciation/grammar/checkpoint/review nodes;
+- Unit 0: **9** pronunciation/grammar/checkpoint/review nodes;
 - Units 1–8: existing 30 communicative nodes, with all published IDs/orders preserved.
 
-Until canonical Product CI and DB-backed release E2E are green on the exact active-branch head, the **37-node English scope is content-authored and statically quality-locked but not yet promoted production-ready**.
+Until canonical Product CI and DB-backed release E2E are green on the exact active-branch head, the **39-node English scope is content-authored and statically quality-locked but not yet promoted production-ready**.
 
 ## Domain-specific quality bars
 
@@ -77,9 +79,9 @@ A pronunciation-focused node may instead use:
 
 `visual sound model -> listen -> discriminate -> recall/type -> checkpoint -> delayed retrieval`
 
-Target-language naturalness, listening behavior, semantic visuals, stable assessed IDs, feedback/remediation, EN/VI intent parity, and FSRS review identity are product requirements rather than optional polish.
+Target-language naturalness, listening behavior, semantic visuals, stable assessed IDs, feedback/remediation, EN/VI intent parity, locale-pure explanatory copy, and FSRS review identity are product requirements rather than optional polish.
 
-The exact order is language-specific: Mandarin needs Pinyin/tone foundations; English needs sound-spelling/stress plus a minimal sentence grammar core; Japanese should eventually harden kana/sound and basic grammar prerequisites without renumbering its published N5 units.
+The exact order is language-specific: Mandarin needs Pinyin/tone foundations; English needs sound↔spelling, high-value vowel/consonant contrasts, stress/prosody and a minimal sentence grammar core; Japanese should eventually harden kana/sound and basic grammar prerequisites without renumbering its published N5 units.
 
 ### Specialty language
 
@@ -91,7 +93,7 @@ Specialty tracks are optional additions after or alongside a core language path.
 - `postgresql` is a bounded **19-lesson PostgreSQL-specific basic→advanced** product.
 - `javascript-basics` ending at functions is a complete **Basics** product; DOM/events/fetch/async require a separately mapped continuation product.
 - `html-basics` and `css-basics` are bounded web-foundation products with executable HTML/CSS sandbox exercises; broader web application work belongs in a future separately mapped product.
-- `english-basics` on the active branch declares a **9-unit / 37-node CEFR A1 language foundation** with Unit 0 for pronunciation and core sentence grammar; it does not claim exhaustive CEFR A1, a complete grammar/phonology syllabus, or exam preparation.
+- `english-basics` on the active branch declares a **9-unit / 39-node CEFR A1 language foundation** with Unit 0 for pronunciation and core sentence grammar; it does not claim exhaustive CEFR A1, a complete grammar/phonology syllabus, or exam preparation.
 - `chinese-hsk` declares a **practical Mandarin Level 1 foundation** with an explicit pronunciation Unit 0 plus 11 communicative units; it does not claim exhaustive HSK exam preparation or complete HSK-system coverage.
 - `japanese-jlpt` declares a **9-unit practical N5 foundation**; it does not claim exhaustive JLPT N5 exam preparation, all N5 vocabulary, kanji, or grammar.
 - `chinese-it-vocab` is a six-lesson **optional specialty mini-course** constrained by its cited term map.
@@ -102,19 +104,23 @@ Expansion begins by creating/updating a public-reference curriculum map and defi
 
 ### English — active branch target
 
-Exactly **9 units / 37 nodes per locale**.
+Exactly **9 units / 39 nodes per locale**.
 
-Unit 0 (`en-a1-foundation-00`) uses `unit_order: 0` and sort orders `-7..-1`:
+Unit 0 (`en-a1-foundation-00`) uses `unit_order: 0` and sort orders `-9..-1`:
 
 1. `sound-spelling` — sound ↔ meaning ↔ spelling, with IPA as reference support;
-2. `word-stress` — strong syllable in familiar beginner words;
-3. `sentence-melody` — useful beginner intonation cues for intelligibility;
-4. `core-sentences` — subject pronouns, `am/is/are`, contractions, basic one-clause `be` sentences;
-5. `basic-questions` — `be` inversion, wh + `be`, and `Do you like …?`;
-6. `foundation-checkpoint`;
-7. `foundation-review`.
+2. `vowel-contrasts` — audio-first discrimination of `/ɪ/ ↔ /iː/` and `/æ/ ↔ /ʌ/` in familiar words;
+3. `consonant-clarity` — physical/articulation cues for `/θ/ ↔ /ð/`, `/r/ ↔ /l/`, and `/v/ ↔ /f/`;
+4. `word-stress` — strong syllable in familiar beginner words;
+5. `sentence-melody` — useful beginner statement/question intonation cues for intelligibility;
+6. `core-sentences` — subject pronouns, `am/is/are`, contractions, basic one-clause `be` sentences;
+7. `basic-questions` — `be` inversion, wh + `be`, and `Do you like …?`;
+8. `foundation-checkpoint`;
+9. `foundation-review`.
 
 The existing Units 1–8 remain meeting, people, navigation/numbers, café ordering, routine/time, shopping, home/location, and free-time planning. Existing IDs/orders are unchanged. Stable assessed IDs from Unit 0 must enter the same generic FSRS engine as later units.
+
+Pronunciation visuals must either be explanation-locale neutral or explicitly locale-specific. Shared assets may retain target English, IPA, Pinyin, Hanzi, or sound symbols, but must not inject English instructional prose into a Vietnamese lesson.
 
 ### Japanese
 
@@ -127,7 +133,7 @@ Exactly **41 nodes per locale**:
 - Unit 0 pronunciation foundation: `pinyin-syllables`, `tones`, `tone-changes`, `pronunciation-checkpoint`, `pronunciation-review`;
 - Units 1–11: the existing practical communicative foundation.
 
-Unit 0 uses `unit_order: 0` and sort orders `-5..-1` without renumbering published Unit 1+ identities. The API/parser/web contract preserves zero as a real unit order. App-owned diagrams visualize syllable structure, tone contours, and canonical spelling versus connected speech.
+Unit 0 uses `unit_order: 0` and sort orders `-5..-1` without renumbering published Unit 1+ identities. The API/parser/web contract preserves zero as a real unit order. App-owned diagrams visualize syllable structure, tone contours, and canonical spelling versus connected speech. Normal communicative lesson nodes are quality-gated for a reusable pattern and sufficient lexical/chunk material; focused pronunciation nodes are evaluated by sound coverage instead of arbitrary vocabulary count.
 
 ## Backward-compatible language expansion
 
@@ -139,6 +145,12 @@ Inserting an earlier language foundation must not fabricate progress or rewind a
 - if the forward frontier is exhausted, remaining gaps become available/current normally.
 
 This behavior is generic and must not be hard-coded to Mandarin or English.
+
+## Runtime catalog compatibility
+
+The bundled curriculum depends on application-owned track metadata. API startup must reconcile the built-in catalog **before** lesson sync. This is intentionally idempotent and supports long-lived databases that predate later tracks.
+
+The release DB-backed gate simulates this history by deleting `english-basics`, `japanese-jlpt`, and `chinese-it-vocab` after schema initialization and before API startup. The API must recreate them and expose all required tracks through `/api/v1/tracks` before exact lesson inventory checks can pass.
 
 ## Verification ownership
 
@@ -161,6 +173,7 @@ npm run test:english-basics
 npm run test:japanese-jlpt
 npm run test:chinese-it-vocab
 npm run test:language-v3
+npm run test:language-locale-quality
 npm run test:language-audio
 npm run test:language-review
 ```
@@ -172,8 +185,9 @@ Canonical Product CI verifies:
 - Go module graph, cold `go test -count=1`, and vet;
 - Nuxt production build and product/UI regressions;
 - exact curriculum structure and EN/VI parity;
-- Language V3 unit/path/audio/review contracts;
+- Language V3 unit/path/audio/review/locale-quality contracts;
 - PostgreSQL-backed exact live inventories;
+- built-in track reconciliation against a simulated long-lived/stale database;
 - SQL, JavaScript and HTML/CSS sandbox execution;
 - progress and notes persistence;
 - FSRS review synchronization and persisted cards/logs across Mandarin, English, Japanese and Chinese IT.
@@ -182,7 +196,7 @@ The cold Go-test requirement is intentional: drive-package smoke tests may read 
 
 For the active English branch, release E2E must additionally prove:
 
-- `english-basics = 37` live nodes per locale;
+- `english-basics = 39` live nodes per locale;
 - Unit 0 exposes `unitOrder: 0` through the API;
 - `en-fnd-sound-hear-meet` synchronizes into and persists through the FSRS review engine;
 - homepage learning-map changes pass build/UI/a11y regressions.
