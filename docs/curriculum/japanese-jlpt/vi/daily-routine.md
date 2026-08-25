@@ -28,7 +28,7 @@ steps:
   - type: scene
     title: "So sánh lịch buổi sáng"
     body: "Một bạn cùng lớp hỏi ngày của bạn bắt đầu lúc nào. Nghe mốc giờ rồi trả lời về lịch của mình."
-    visualKey: "daily-clock"
+    imageUrl: "/language/scenes/daily-clock.svg"
     imageAlt: "Đồng hồ đơn giản và dòng thời gian từ buổi sáng tới buổi tối."
   - type: dialogue
     lines:
