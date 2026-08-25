@@ -84,7 +84,8 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     assert.match(body, /kana ↔ sound/i)
     assert.match(body, /mora\/length/i)
     assert.match(body, /basic sentence order \+ particles \+ polite forms/i)
-    assert.doesNotMatch(body, /official JLPT word list/i)
+    assert.match(body, /does not publish an official vocabulary\/kanji\/grammar syllabus/i)
+    assert.match(body, /not official JLPT authority/i)
   })
 
   it('ships exactly 33 paired EN/VI V3 nodes across ten units', () => {
