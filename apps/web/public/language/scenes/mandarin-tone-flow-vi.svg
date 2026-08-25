@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-labelledby="title desc">
+  <title id="title">Cách viết thanh chuẩn và biến điệu khi nói</title>
+  <desc id="desc">Pinyin chuẩn nǐ hǎo và bù shì giữ nguyên, trong khi mũi tên thể hiện biến điệu thường gặp khi nói liền mạch.</desc>
+  <rect width="640" height="320" rx="28" fill="#f5f7f6"/>
+  <g font-family="system-ui,sans-serif" fill="#17201c">
+    <text x="320" y="44" text-anchor="middle" font-size="24" font-weight="700">Giữ cách viết chuẩn · nghe biến điệu</text>
+    <rect x="44" y="82" width="222" height="84" rx="18" fill="#e1efeb"/>
+    <text x="155" y="117" text-anchor="middle" font-size="18" fill="#56645e">Pinyin chuẩn</text>
+    <text x="155" y="150" text-anchor="middle" font-size="30" font-weight="700">nǐ hǎo</text>
+    <path d="M284 124h74" stroke="#147d6f" stroke-width="5" stroke-linecap="round"/><path d="m346 111 18 13-18 13" fill="none" stroke="#147d6f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="378" y="82" width="218" height="84" rx="18" fill="#e5eaf3"/>
+    <text x="487" y="117" text-anchor="middle" font-size="18" fill="#56645e">luồng 3 + 3 tự nhiên</text>
+    <path d="M432 144q28-35 55 0q28 31 55-8" fill="none" stroke="#516d9a" stroke-width="6" stroke-linecap="round"/>
+
+    <rect x="44" y="194" width="222" height="74" rx="18" fill="#eee8e5"/>
+    <text x="155" y="223" text-anchor="middle" font-size="18" fill="#56645e">Pinyin chuẩn</text>
+    <text x="155" y="253" text-anchor="middle" font-size="28" font-weight="700">bù shì</text>
+    <path d="M284 231h74" stroke="#147d6f" stroke-width="5" stroke-linecap="round"/><path d="m346 218 18 13-18 13" fill="none" stroke="#147d6f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="378" y="194" width="218" height="74" rx="18" fill="#e8ecea"/>
+    <text x="487" y="223" text-anchor="middle" font-size="18" fill="#56645e">khi đứng trước thanh 4</text>
+    <path d="M438 252l40-25 48 27" fill="none" stroke="#506b62" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
