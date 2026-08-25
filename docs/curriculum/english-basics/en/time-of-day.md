@@ -23,6 +23,9 @@ vocab:
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "middle and later part of the day" }
   - { word: "clock", ipa: "/klɑːk/", gloss: "shows the time" }
   - { word: "today", ipa: "/təˈdeɪ/", gloss: "this day" }
+  - { word: "what time", ipa: "/wʌt taɪm/", gloss: "asks when something happens" }
+  - { word: "o'clock", ipa: "/əˈklɑːk/", gloss: "used after a whole-hour number" }
+  - { word: "at", ipa: "/æt/", gloss: "used before a specific clock time" }
 steps:
   - type: scene
     title: "Check today's schedule"
