@@ -23,6 +23,9 @@ vocab:
   - { word: "bed", ipa: "/bed/", gloss: "furniture for sleeping" }
   - { word: "table", ipa: "/ˈteɪbəl/", gloss: "flat furniture surface" }
   - { word: "chair", ipa: "/tʃer/", gloss: "seat for one person" }
+  - { word: "book", ipa: "/bʊk/", gloss: "something you read" }
+  - { word: "wall", ipa: "/wɔːl/", gloss: "vertical side of a room" }
+  - { word: "there's", ipa: "/ðerz/", gloss: "short for there is; points out one thing that is present" }
 steps:
   - type: scene
     title: "Show someone your room"
