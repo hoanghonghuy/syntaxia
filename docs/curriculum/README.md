@@ -28,7 +28,7 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
 | `chinese-hsk` | Languages · starter | HSK 3.0 Band 1 starter path, **9 units / 30 nodes per locale** |
 | `english-basics` | Languages · foundation | CEFR A1 foundation course, **8 units / 30 nodes per locale** |
-| `japanese-jlpt` | Languages · starter | JLPT N5 starter path, **5 units / 16 nodes per locale** |
+| `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **9 units / 28 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
 ## SQL Fundamentals (published order)
@@ -96,4 +96,4 @@ Full path + polish rules: [`docs/processes/sql-fundamentals-closure.md`](../proc
 
 ## Verification
 
-IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. Language tracks are enforced by the Language V3 web tests, including the English 8-unit foundation and specialty Chinese IT contract. Release E2E then exercises exact runtime inventories, sandboxes, progress, notes, and FSRS persistence against PostgreSQL.
+IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. Language tracks are enforced by the Language V3 web tests, including exact English and Japanese foundation inventories plus the specialty Chinese IT contract. Release E2E then exercises exact runtime inventories, sandboxes, progress, notes, and FSRS persistence against PostgreSQL.
