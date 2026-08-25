@@ -23,6 +23,9 @@ vocab:
   - { word: "school", ipa: "/skuːl/", gloss: "place for learning" }
   - { word: "work", ipa: "/wɜːrk/", gloss: "job activity" }
   - { word: "home", ipa: "/hoʊm/", gloss: "place where you live" }
+  - { word: "have breakfast", ipa: "/hæv ˈbrekfəst/", gloss: "eat the first meal of the day" }
+  - { word: "go to school", ipa: "/ɡoʊ tə skuːl/", gloss: "travel to school" }
+  - { word: "then", ipa: "/ðen/", gloss: "introduces the next action in a sequence" }
 steps:
   - type: scene
     title: "Compare two mornings"
