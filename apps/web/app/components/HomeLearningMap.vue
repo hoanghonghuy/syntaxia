@@ -163,7 +163,7 @@ function slotStyle(index: number, total: number) {
   inset: 50% auto auto 50%;
   width: 0;
   height: 0;
-  transform: rotate(var(--map-angle)) translateY(calc(var(--orbit-radius) * -1)) rotate(var(--map-inverse-angle));
+  transform: rotate(var(--map-angle)) translateY(calc(0px - var(--orbit-radius))) rotate(var(--map-inverse-angle));
 }
 
 .home-learning-chip {
