@@ -1,83 +1,85 @@
-# Japanese (JLPT) pedagogy (locked for Syntaxia placeholder → N5 slice)
+# Japanese (JLPT) pedagogy — production N5 foundation
 
 ## Purpose
 
-Locked decisions for **how** Syntaxia teaches **Japanese as the target language** on track `japanese-jlpt`, before any lesson Markdown. Completes research gate for Phase 4.3 of [`multi-domain-roadmap.md`](./multi-domain-roadmap.md).
+Define how Syntaxia teaches Japanese as the target language on `japanese-jlpt`. This replaces the old placeholder/MVP-era decisions: the track is now a real Language V3 + FSRS product and must follow a foundation-first progression rather than a thematic vocabulary slice alone.
 
-## When to use
+## Standards and sources
 
-- Before `/syn-propose` / OpenSpec for `japanese-jlpt-mvp`
-- When mapping N5 vocab into thematic lessons
-- When tempted to dump full N5–N1 lists as empty stubs
+- [JLPT official level summary](https://www.jlpt.jp/e/about/levelsummary.html): N5 means understanding some basic Japanese; reading includes typical expressions/sentences in hiragana, katakana and basic kanji, while listening requires necessary information from short, slowly spoken daily-life/classroom conversations.
+- [JLPT FAQ](https://www.jlpt.jp/e/faq/): vocabulary and grammar knowledge are required, but JLPT does not publish official vocabulary/kanji/grammar lists as a test-content syllabus.
+- [Japan Foundation Irodori Starter](https://www.irodori.jpf.go.jp/starter/pdf.html): beginner materials explicitly teach kana plus long-vowel and small-っ/long-consonant distinctions.
+- [evanclan/OpenJLPT](https://github.com/evanclan/OpenJLPT) (CC BY-SA 4.0): open vocabulary/readings provenance used by the authored N5 scope; it is not presented as an official JLPT list.
 
-## Research inputs (2026-08-02)
+## Core progression
 
-| Source | Takeaway |
-|--------|----------|
-| JLPT (official) | Levels N5→N1; **no official public word/kanji lists** — community lists are the practical standard |
-| [Jonathan Waller / tanos JLPT lists](https://www.tanos.co.uk/jlpt/) (CC BY) | Widely used community N5–N1 vocab/kanji assignments |
-| [evanclan/OpenJLPT](https://github.com/evanclan/OpenJLPT) (CC BY-SA 4.0) | Machine-readable N5–N1 vocab + kanji + examples; attributes Waller + KANJIDIC2 / Tatoeba — **primary open dataset for Syntaxia mapping** |
-| [jkindrix/japanese-language-data](https://github.com/jkindrix/japanese-language-data) (CC BY-SA 4.0) | Broader aggregated JA data; optional cross-check, heavier than needed for N5 starter |
-| Talkory (spec reference) | Dual-lang heritage; Syntaxia reuses language player only — no FSRS/stroke/CMS merge |
-| Syntaxia today | Language player (`text` + `vocab` + `exercise`); explain locales = app `vi`/`en`; track placeholder via migration `010` |
+Japanese core learning follows:
 
-## Locked approach (chốt)
+`kana ↔ sound -> mora timing / long vowels / small っ -> high-frequency general vocabulary -> basic sentence order / particles / polite forms -> listening + speaking -> kana + gradual basic-kanji reading/writing -> checkpoint -> FSRS review`
 
-### 1. Standard
+Communicative units then prove that foundation in practical tasks. Can-Do scenes do not replace kana, sound, vocabulary or grammar prerequisites.
 
-- Content target: **JLPT N5** thematic starter slice (UI label: “JLPT N5”).
-- Do **not** invent word lists — map from **cited open lists** (primary: OpenJLPT N5 / Waller via OpenJLPT NOTICE). Document URLs + licenses in a future `japanese-jlpt-n5-map.md`.
-- Author **original** explain prose in vi/en; do not paste commercial textbook chapters.
-- Out of first slice: N4+, full N5 dump as stubs, FSRS, stroke-order canvas, speech, AI tutor, Talkory CMS merge.
+## Foundation Unit 0
 
-### 2. Target × explain languages
+A backward-compatible Unit 0 precedes the published N5 communicative units without renumbering them:
+
+1. `kana-sounds` — connect common hiragana/katakana forms to Japanese sounds and type/read them without relying on romaji as the final representation;
+2. `mora-length` — hear/read length contrasts, especially long vowels and small `っ`;
+3. `core-sentences` — build a small productive grammar core with `です / ます` plus beginner particles in concrete sentence patterns;
+4. `foundation-checkpoint` — mixed sound, kana and sentence-form retrieval;
+5. `foundation-review` — delayed retrieval before communicative Unit 1.
+
+Unit 0 focuses on prerequisites; Units 1+ remain the practical N5 application path.
+
+## Target × explanation languages
 
 | Role | Languages |
-|------|-----------|
-| **Target** (what you learn) | `ja` (modern standard Japanese; lemmas as commonly written for N5 — kanji when expected at N5, else kana) |
-| **Explain** (UI + lesson prose) | `vi` and `en` (same as app i18n) |
+|---|---|
+| Target | `ja` — modern standard Japanese |
+| Explanation | `en` and `vi` |
 
-### 3. Lesson shape (player)
+Target Japanese, kana readings and examples remain Japanese. Instructions, explanations, hints, glosses and alt text must be natural in the selected explanation locale.
 
-Reuse existing language player (no IT sandboxes). Category `languages` already gates via `isLanguageTrack`.
+## Authoring contract
 
-| Block | Japanese adaptation |
-|-------|---------------------|
-| `text` | Explain grammar / dialogue notes in explain locale |
-| `vocab` | Prefer `surface` (kanji or kana lemma) · `reading` (hiragana) · `gloss` — may also accept `kanji`/`kana` aliases when implementing; IPA unused |
-| `exercise` | MCQ / fill-blank (client-side), same as Chinese/English |
+- Prefer `surface` + hiragana `reading` + localized `gloss` for vocabulary.
+- Every assessed node has stable IDs shared between EN/VI.
+- Every node includes listening and reaches controlled recall/production (`type_answer`, `listen_type`, `order_words`, or another semantic production type).
+- New content does not use generic authored `mcq` where a specific Language V3 task fits.
+- Readings are support, not a permanent substitute for learning kana/kanji.
+- Natural Japanese word order, particles, politeness and register must be reviewed explicitly.
+- Semantic visuals are app-owned; external image hotlinks are not allowed.
+- FSRS is part of the current production product; it is not an out-of-scope future feature.
 
-**Flow:** short scroll lessons (5–8), same as HSK/English starters.
+## Kana and pronunciation rules
 
-### 4. Curriculum slice size
+- Teach kana as sound-bearing writing, not as a chart to memorize before any real words.
+- Use audio/listening discrimination for long vowels and small `っ`; these contrasts affect word form and cannot be reduced to typography notes.
+- Do not over-promise one fixed pitch-accent pattern as necessary for beginner intelligibility; lexical/phrase audio may model natural pronunciation without turning N5 foundation into a pitch-accent course.
+- Romaji may appear as temporary input help only when technically necessary; learner-facing Japanese identity remains kana/kanji.
 
-- First ship (later OpenSpec): **5–8 lessons**, thematic clusters after sorting open N5 list (e.g. greetings, people, numbers, food, places, daily verbs — exact themes only in map doc).
-- Path when ready: `docs/curriculum/japanese-jlpt/{en,vi}/*.md`
-- Until map + lessons exist: hub shows under-development / coming soon (0 lessons).
+## Grammar rules
 
-### 5. Content pipeline
+Teach grammar as productive sentence building:
 
-- MD v1 under `docs/curriculum/` + local/Drive sync (same as other tracks).
-- Pass `?track=japanese-jlpt` on lesson fetch (shared thematic slugs across language tracks).
+- `です` for basic nominal/adjectival identification where appropriate;
+- common polite `ます` verb forms as they enter the curriculum;
+- particles such as `は`, `を`, `に`, `で` through concrete roles and reusable patterns;
+- questions and response patterns inside meaningful exchanges.
 
-### 6. What not to do
+Do not dump a particle table without listening and production.
 
-- Do not invent N5 outlines without the map doc.
-- Do not mount SQL/JS/HTML sandboxes on this track.
-- Do not merge Talkory SRS/stroke/AI.
+## Product boundary
 
-## Comparison (research)
+The declared course is a **practical N5 foundation**, not exhaustive JLPT N5 exam preparation, not every N5 word/kanji/grammar point, and not a certification claim. JLPT itself does not publish a complete official vocabulary/kanji/grammar syllabus, so community datasets remain provenance/cross-check inputs rather than official authority.
 
-| Option | Pros | Cons |
-|--------|------|------|
-| A. Full Talkory JP merge | Feature-rich | Scope/risk; violates Talkory-as-reference rule |
-| B. Full N5 stub dump | Fast catalog fill | Empty spam; invents pacing |
-| **C. Placeholder + N5 map later + language player** | Matches Chinese/English path | Content delayed |
+## Verification
 
-**Chốt: Option C.**
+The Japanese checker must lock exact EN/VI inventory, Unit 0 order/roles, V3 steps, readings, stable assessed IDs, no generic authored MCQ, self-grading fallback answers and EN/VI identity parity. Canonical Product CI must also verify exact runtime inventory and PostgreSQL-backed progress/notes/FSRS persistence.
 
 ## Related
 
+- [`japanese-jlpt-n5-map.md`](./japanese-jlpt-n5-map.md)
+- [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
+- [`language-content-quality-v3.md`](./language-content-quality-v3.md)
 - [`languages-tracks.md`](./languages-tracks.md)
-- [`multi-domain-roadmap.md`](./multi-domain-roadmap.md) Phase 4.3
-- OpenSpec: `openspec/changes/archive/japanese-jlpt-mvp/`; main spec `openspec/specs/japanese-lessons/`.
