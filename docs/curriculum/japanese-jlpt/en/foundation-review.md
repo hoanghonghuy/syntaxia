@@ -13,14 +13,16 @@ unit_order: 0
 unit_can_do: "Read, hear, and build basic Japanese forms before the communicative units"
 unit_role: review
 foundation_focus: review
-can_do: "Retrieve kana, sound length, and core sentence patterns after a delay"
-pattern: "hear -> read/write -> build -> retrieve later"
+can_do: "Retrieve hiragana, katakana, sound timing, and core sentence patterns after a delay"
+pattern: "hear -> read/write both kana -> build -> retrieve later"
 objectives:
-  - Retrieve a kana reading from sound
+  - Retrieve a hiragana or katakana form from sound
   - Preserve small っ or long-vowel spelling
   - Rebuild a basic polite sentence
+  - Recall a high-value particle pronunciation contrast
 vocab:
   - { surface: "朝", reading: "あさ", gloss: "morning" }
+  - { surface: "カメラ", reading: "カメラ", gloss: "camera" }
   - { surface: "切符", reading: "きっぷ", gloss: "ticket" }
   - { surface: "学校", reading: "がっこう", gloss: "school" }
   - { surface: "学生", reading: "がくせい", gloss: "student" }
@@ -28,7 +30,7 @@ vocab:
 steps:
   - type: scene
     title: "Recall before Unit 1"
-    body: "Retrieve the foundations from memory so later dialogues do not depend on constant scaffolding."
+    body: "Retrieve both writing systems, timing, and sentence foundations from memory so later dialogues do not depend on constant scaffolding."
   - type: dialogue
     lines:
       - { speaker: "A", text: "私は学生です。", reading: "わたしは がくせいです。" }
@@ -40,9 +42,15 @@ steps:
   - type: practice
     id: ja-fnd-review-hear-school
     kind: listen_type
-    prompt: "Listen and type the word."
+    prompt: "Listen and type the hiragana reading."
     audioText: "がっこう"
     answer: "がっこう"
+  - type: practice
+    id: ja-fnd-review-katakana-camera
+    kind: listen_type
+    prompt: "Listen and type the word in katakana."
+    audioText: "カメラ"
+    answer: "カメラ"
   - type: practice
     id: ja-fnd-review-read-ticket
     kind: type_answer
@@ -62,6 +70,11 @@ steps:
         prompt: "Choose the destination particle: 学校＿行きます。"
         choices: ["に", "を", "で"]
         answer: "に"
+      - id: ja-fnd-review-topic-sound
+        kind: meaning_choice
+        prompt: "How is topic-particle は pronounced in 私は学生です?"
+        choices: ["わ", "は", "が"]
+        answer: "わ"
       - id: ja-fnd-review-kana-morning
         kind: type_answer
         prompt: "Type the reading of 朝."
@@ -72,4 +85,4 @@ exercise:
   answer: "がっこう"
 ---
 
-These stable review items seed the same FSRS memory system as the later N5 units.
+These stable review items seed the same FSRS memory system as the later N5 units, including both kana scripts rather than treating script work as a disposable introduction.
