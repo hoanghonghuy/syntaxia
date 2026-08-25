@@ -52,15 +52,15 @@ steps:
     audioText: "meet"
     choices: ["meet", "met", "mate"]
     answer: "meet"
-    explanation: "The target word is meet /miːt/."
+    explanation: "The target word is meet /miːt/. All three choices are real words, so listen to the vowel rather than looking for an obviously invalid spelling."
   - type: practice
     id: en-fnd-sound-hear-name
     kind: audio_choice
     prompt: "Listen. Which word do you hear?"
     audioText: "name"
-    choices: ["name", "namee", "nem"]
+    choices: ["name", "same", "game"]
     answer: "name"
-    explanation: "Learn the standard spelling together with the spoken word."
+    explanation: "All three choices are real words. Listen to the initial consonant and keep the standard spelling together with the spoken word."
   - type: practice
     id: en-fnd-sound-type-hi
     kind: type_answer
@@ -77,7 +77,7 @@ steps:
         kind: audio_choice
         prompt: "Listen and choose the word."
         audioText: "this"
-        choices: ["this", "these", "dis"]
+        choices: ["this", "these", "thus"]
         answer: "this"
       - id: en-fnd-sound-check-meet
         kind: type_answer
