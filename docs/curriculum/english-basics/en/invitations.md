@@ -23,6 +23,10 @@ vocab:
   - { word: "Saturday", ipa: "/ˈsætərdeɪ/", gloss: "day of the week" }
   - { word: "friend", ipa: "/frend/", gloss: "person you know and like" }
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "later part of the day" }
+  - { word: "do you want to", ipa: "/duː ju wɑːnt tə/", gloss: "starts a simple invitation" }
+  - { word: "let's", ipa: "/lets/", gloss: "suggests doing something together" }
+  - { word: "meet", ipa: "/miːt/", gloss: "come together at an agreed time or place" }
+  - { word: "see you there", ipa: "/siː ju ðer/", gloss: "closes a plan after the place is agreed" }
 steps:
   - type: scene
     title: "Make a plan after class"
