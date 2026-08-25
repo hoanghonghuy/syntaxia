@@ -22,7 +22,7 @@ type MapSlot = {
   targetLang?: string
 }
 
-// Labels/positions are part of the homepage visual design. The catalog matches,
+// Labels/positions are part of the homepage visual design. Catalog matches,
 // track IDs and progress values are resolved from live data rather than fixed routes.
 const MAP_SLOTS: readonly MapSlot[] = [
   { key: 'sql', label: 'SQL', domain: 'it', category: 'sql' },
@@ -40,11 +40,15 @@ function sortedTracks(tracks: Track[]): Track[] {
 function tracksForSlot(tracks: Track[], slot: MapSlot): Track[] {
   const sorted = sortedTracks(tracks)
   if (slot.domain === 'languages' && slot.targetLang) {
-    return sorted.filter(
+    const core = sorted.find(
       (track) =>
         track.category === 'languages' &&
         languageTargetLangForTrack(track.id) === slot.targetLang,
     )
+    // The earliest catalog track for a target language is the core path. This
+    // intentionally keeps later specialty tracks (for example Chinese IT) out
+    // of the homepage language chip without hard-coding a track ID.
+    return core ? [core] : []
   }
   return sorted.filter((track) => (track.category || 'sql') === slot.category)
 }
