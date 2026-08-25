@@ -166,8 +166,8 @@ jobs:
           logs=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_logs")
           echo "language_review_cards=$cards"
           echo "language_review_logs=$logs"
-          test "$cards" -ge 2
-          test "$logs" -ge 3
+          test "$cards" -ge 3
+          test "$logs" -ge 4
       - name: Show API log on failure
         if: failure()
         run: cat "$RUNNER_TEMP/syntaxia-api.log" || true
