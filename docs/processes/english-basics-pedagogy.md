@@ -1,108 +1,76 @@
-# English Basics pedagogy (locked for Syntaxia v1 slice)
+# English Basics pedagogy — historical v1 note
 
-## Purpose
+## Status
 
-Locked decisions for **how** Syntaxia teaches **English as the target language** on track `english-basics`, before any lesson Markdown. Completes research gate for Phase 4.2 of [`multi-domain-roadmap.md`](./multi-domain-roadmap.md).
+**Historical / superseded. Do not use this file as the active authoring contract.**
 
-## When to use
+This document records the original English MVP research cut from 2026-08-02. Decisions such as “5–8 lessons”, “audio later”, “no FSRS”, and generic MCQ/fill-blank exercises have since been replaced by the production Language V3 system.
 
-- Before `/syn-propose` / OpenSpec for `english-basics-mvp`
-- When mapping word lists into thematic lessons
-- When tempted to dump Oxford 3000 / full A1–B2 into empty stubs
+Active source-of-truth files are:
 
-## Research inputs (2026-08-02)
+1. [`english-basics-a1-map.md`](./english-basics-a1-map.md) — current English A1 scope and foundation-first sequence;
+2. [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md) — current language learning model;
+3. [`language-content-quality-v3.md`](./language-content-quality-v3.md) — current content-quality contract;
+4. [`languages-tracks.md`](./languages-tracks.md) — current cross-language architecture and inventories;
+5. [`curriculum-product-completion.md`](./curriculum-product-completion.md) — current completion/release state.
 
-| Source | Takeaway |
-|--------|----------|
-| CEFR (Council of Europe) | A1 = breakthrough: familiar everyday expressions, introduce self, simple interaction |
-| [Cambridge YLE wordlists](https://www.cambridgeenglish.org/Images/wordlists-pre-a1-starters-a1-movers-and-a2-flyers.pdf) (Pre-A1 Starters / A1 Movers) | Thematic + alphabetic lists; **child-exam oriented (ages 6–12)** — useful as *membership check*, not as primary adult syllabus voice |
-| [ozbonus/yle-vocabulary-dataset](https://github.com/ozbonus/yle-vocabulary-dataset) (CC BY-SA) | Machine-readable YLE themes (food, school, places…) for clustering |
-| [Books4Languages English A1](https://open.books4languages.com/english-a1-vocabulary/) | CEFR-aligned unit themes for adults — **do not copy book prose** (site asserts rights reserved / educator limited rights); use only as theme inspiration |
-| Community CEFR-tagged open datasets (e.g. CEFR-J tags) | Extra membership / frequency checks — cite in map doc when used |
-| Syntaxia today | Same language player as Chinese (`text` + `vocab` + `exercise`); track placeholder `english-basics` (`008`); explain locales = app `vi`/`en` |
+## What remains valid from the original research
 
-## Locked approach (chốt)
+The original research still contributes several durable constraints:
 
-### 1. Standard
+- target level is **CEFR A1** for `english-basics`;
+- explanations ship in both `en` and `vi`;
+- the course is for general/adult learners rather than copying child-exam scenarios;
+- Cambridge YLE-derived open vocabulary data is a **membership/theme support source**, not the product syllabus or prose source;
+- learner-facing explanations and examples are original Syntaxia content;
+- English remains a `languages` track and does not use IT sandboxes.
 
-- Content target: **CEFR A1** thematic starter slice (label in UI: “CEFR A1”).
-- Do **not** invent word lists — map from **cited open lists** (primary: [ozbonus/yle-vocabulary-dataset](https://github.com/ozbonus/yle-vocabulary-dataset) CC BY-SA thematic clusters; optional CEFR-J tagged open sets). Document URLs + licenses in `english-basics-a1-map.md`.
-- Author **original** explain prose in vi/en; do not paste Cambridge PDFs or Books4Languages chapter text.
-- Out of first slice: full A1 dump, A2+, IELTS/TOEIC tracks, FSRS, speech recognition, AI tutor.
+## Current pedagogy
 
-### 2. Target × explain languages
+The current course no longer starts from situations alone. Core English follows:
 
-| Role | Languages |
-|------|-----------|
-| **Target** (what you learn) | `en` (general American or British spelling — pick **one** per track version; v1: **American** spelling in lemmas, note British variants in gloss when needed) |
-| **Explain** (UI + lesson prose) | `vi` and `en` (same as app i18n) |
+`pronunciation awareness -> reusable vocabulary/chunks -> minimal productive grammar -> listening -> interaction/speaking -> reading/writing production -> checkpoint -> spaced retrieval`
 
-Optional later: explain `zh` for Chinese-first learners — new locale files, not a new track.
+The active branch expands English to **9 units / 37 nodes per locale**:
 
-### 3. Lesson shape (player)
+- **Unit 0 — English foundation (7 nodes):** sound↔spelling, word stress, sentence melody, core `be` sentences, basic questions, checkpoint, review;
+- **Units 1–8 (30 existing nodes):** practical CEFR A1 communicative outcomes.
 
-Reuse existing language player (no SQL/JS sandboxes). Category `languages` already gates via `isLanguageTrack`.
+All earlier published Unit 1–8 identities/order remain stable so inserting Unit 0 does not invalidate learner progress or FSRS identity.
 
-| Block | English adaptation |
-|-------|-------------------|
-| `text` | Explain grammar / dialogue notes in explain locale |
-| `vocab` | `word` · optional `ipa` · `gloss` (vi/en) — extend frontmatter/UI when implementing (hanzi/pinyin fields unused) |
-| `exercise` | MCQ / fill-blank (client-side), same as Chinese |
+## Current lesson contract
 
-**Flow:** short scroll lessons (5–8), same as HSK starter — not Duolingo infinite tree.
+A production English node uses the Language V3 player and must include appropriate combinations of:
 
-### 4. Curriculum slice size
+- semantic/app-owned scene or learning visual;
+- target-language listening;
+- dialogue/context;
+- teaching/notice step;
+- semantic practice rather than generic authored MCQ as the default;
+- controlled recall or production;
+- checkpoint;
+- stable assessed IDs for FSRS;
+- EN/VI intent and identity parity.
 
-- First ship: **5–8 lessons**, thematic clusters after sorting open A1 list (e.g. greetings, people, numbers, food, places, daily verbs — exact themes only in map doc).
-- Path: `docs/curriculum/english-basics/{en,vi}/*.md`
-- Track hub stays “coming soon” until those lessons exist.
+Audio/TTS, delayed review, FSRS persistence, semantic visuals, structured feedback, and unit paths are now shipped product capabilities rather than deferred ideas.
 
-### 5. Content pipeline
+## Standards lineage
 
-| Choice | Decision |
-|--------|----------|
-| **v1** | Markdown + frontmatter (same sync as Chinese/IT) |
-| **Later** | CMS only if volume requires |
+Current standards treatment is documented in [`english-basics-a1-map.md`](./english-basics-a1-map.md). In particular:
 
-Frontmatter: `track: english-basics`, `locale`, `order`, `objectives`, `cefr_level: a1`, `vocab`, language `exercise`.
+- Council of Europe CEFR/Companion Volume sets the A1 ability and phonological/linguistic competence boundary;
+- CEFR is not treated as a ready-made grammar/vocabulary syllabus;
+- open YLE vocabulary sources constrain/support beginner lexical choices;
+- Syntaxia authors the sequencing, explanations, examples, and assessments for the declared product scope.
 
-### 6. SRS / audio / writing
+## Historical context
 
-- **v1:** no FSRS; progress = existing APIs.
-- Audio: optional later (same rule as Chinese).
-- Writing: typed answers OK; no speech/handwriting.
-
-## Comparison (why this cut)
-
-| Option | Verdict |
-|--------|---------|
-| A. Full Oxford 3000 / commercial lists | License risk; too large |
-| B. YLE-only child syllabus as product voice | Wrong audience for Syntaxia |
-| C. **CEFR A1 thematic MD slice + language player, open cited lists** | **Chosen** — mirrors Chinese HSK cut |
-| D. Duolingo-clone gamification only | Weak grammar notes for adult IT learners |
-
-## Do
-
-- Research → this lock → map doc → OpenSpec `english-basics-mvp` → apply
-- Ship explain `en`+`vi` together
-- Keep `category = languages`, `sort_order` 110
-
-## Don't
-
-- Copy copyrighted textbook paragraphs
-- Publish empty stubs for entire A1 lists
-- Mount IT sandboxes on English lessons
-- Start JLPT before English slice or more HSK by owner priority
-
-## Next OpenSpec
-
-Change: **`openspec/changes/archive/english-basics-mvp/`** — archived; main spec `openspec/specs/english-lessons/`.
-
-Map: [`english-basics-a1-map.md`](./english-basics-a1-map.md).
+The original archived implementation change remains under `openspec/changes/archive/english-basics-mvp/`. It explains how the first English slice entered the product, but it must not override the current Language V3 map or quality gates.
 
 ## Related
 
+- [`english-basics-a1-map.md`](./english-basics-a1-map.md)
+- [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
+- [`language-content-quality-v3.md`](./language-content-quality-v3.md)
 - [`languages-tracks.md`](./languages-tracks.md)
-- [`chinese-hsk-pedagogy.md`](./chinese-hsk-pedagogy.md) — parallel pattern
-- [`multi-domain-roadmap.md`](./multi-domain-roadmap.md) Phase 4.2
-- Track seed: `apps/api/migrations/008_english_basics_track.sql`
+- [`curriculum-product-completion.md`](./curriculum-product-completion.md)
