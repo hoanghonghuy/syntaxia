@@ -30,7 +30,7 @@ steps:
   - type: scene
     title: "Kiểm tra tàu trước khi lên"
     body: "Ở sân ga, bạn cần xác nhận tàu này có đi tới ga mình muốn hay không."
-    visualKey: "train-platform"
+    imageUrl: "/language/scenes/train-platform.svg"
     imageAlt: "Một đoàn tàu ở sân ga, có bảng điểm đến và hành khách đang kiểm tra trước khi lên."
   - type: dialogue
     lines:
