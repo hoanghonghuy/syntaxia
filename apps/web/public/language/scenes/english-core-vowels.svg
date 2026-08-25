@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+  <g font-family="system-ui,sans-serif" text-anchor="middle" fill="#1f2937">
+    <rect x="54" y="64" width="286" height="126" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
+    <text x="126" y="116" font-size="34" font-weight="750">sit</text>
+    <text x="126" y="158" font-size="24" fill="#64748b">/sɪt/</text>
+    <text x="268" y="116" font-size="34" font-weight="750">seat</text>
+    <text x="268" y="158" font-size="24" fill="#64748b">/siːt/</text>
+    <path d="M170 126h54" stroke="#6366f1" stroke-width="5" stroke-linecap="round"/>
+
+    <rect x="380" y="64" width="286" height="126" rx="24" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+    <text x="452" y="116" font-size="34" font-weight="750">ship</text>
+    <text x="452" y="158" font-size="24" fill="#64748b">/ʃɪp/</text>
+    <text x="594" y="116" font-size="34" font-weight="750">sheep</text>
+    <text x="594" y="158" font-size="24" fill="#64748b">/ʃiːp/</text>
+    <path d="M496 126h54" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
+
+    <rect x="217" y="232" width="286" height="126" rx="24" fill="#fff7ed" stroke="#f97316" stroke-width="3"/>
+    <text x="289" y="284" font-size="34" font-weight="750">cat</text>
+    <text x="289" y="326" font-size="24" fill="#64748b">/kæt/</text>
+    <text x="431" y="284" font-size="34" font-weight="750">cut</text>
+    <text x="431" y="326" font-size="24" fill="#64748b">/kʌt/</text>
+    <path d="M333 294h54" stroke="#f97316" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
