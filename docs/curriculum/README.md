@@ -26,10 +26,12 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `javascript-basics` | IT · basic | MDN-mapped JavaScript fundamentals, **9** lessons; JS sandbox shipped |
 | `html-basics` | IT · basic | Semantic HTML fundamentals, **12** lessons; HTML/CSS sandbox shipped |
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
-| `chinese-hsk` | Languages · starter | HSK 3.0 Band 1 starter path, **9 units / 30 nodes per locale** |
+| `chinese-hsk` | Languages · foundation | Practical Mandarin Level 1, **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** |
 | `english-basics` | Languages · foundation | CEFR A1 foundation course, **8 units / 30 nodes per locale** |
 | `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **9 units / 28 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
+
+The exact branch inventories above are locked by static curriculum/language tests and by the PostgreSQL-backed release E2E. Product CI #88 is green at `8610a2b0435ae502863836d32716adf58ece9c44`.
 
 ## SQL Fundamentals (published order)
 
@@ -94,6 +96,27 @@ Full path + polish rules: [`docs/processes/sql-fundamentals-closure.md`](../proc
 | 7 | loops |
 | 8 | functions |
 
+`javascript-basics` deliberately ends at functions. DOM/events/fetch/async belong to a separately researched continuation product rather than silently widening this Basics scope.
+
+## Mandarin foundation entry
+
+The Mandarin track begins with five pronunciation nodes before communicative Unit 1:
+
+```text
+pinyin-syllables
+→ tones
+→ tone-changes
+→ pronunciation-checkpoint
+→ pronunciation-review
+→ communicative Unit 1
+```
+
+These nodes use `unit_order: 0` and internal sort orders `-5..-1` without renumbering existing published units. Returning learners keep their established continuation frontier; earlier newly inserted foundation nodes remain available for catch-up.
+
 ## Verification
 
-IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. Language tracks are enforced by the Language V3 web tests, including exact English and Japanese foundation inventories plus the specialty Chinese IT contract. Release E2E then exercises exact runtime inventories, sandboxes, progress, notes, and FSRS persistence against PostgreSQL.
+IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. These gates require the relevant mental/execution model, prediction, worked example, debugging, common mistakes, learner task, recall, exercise/hints/solution, and EN/VI parity for every declared IT lesson.
+
+Language tracks are enforced by Language V3 web tests, including exact Mandarin/English/Japanese inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, and FSRS review identity.
+
+Release E2E then exercises exact runtime inventories, SQL/JavaScript/HTML/CSS sandboxes, progress, notes, and FSRS persistence against PostgreSQL. Go curriculum-backed smoke tests are run cold with `go test -count=1` so external curriculum changes cannot be hidden by the Go package test cache.
