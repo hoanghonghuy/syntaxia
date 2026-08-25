@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review for ZH/EN/JA.
+  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review for Mandarin, English, Japanese, and Chinese IT specialty.
 
 .PARAMETER BaseUrl
   API base URL. Default http://127.0.0.1:8082
@@ -52,17 +52,20 @@ if ($me.Json.email -ne $email) {
 }
 Ok "auth/me"
 
-# Exact EN-locale inventories after the Language V3 starter migration.
+# Exact EN-locale inventories after the Language V3 foundation/specialty migrations.
 # Static curriculum tests lock file parity; this live API check verifies the
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
-  @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 30 },
-  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 14 },
-  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 16 },
+  @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 41 },
+  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 30 },
+  @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 28 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
 
 $reviewLessonId = $null
+$englishLessonId = $null
+$japaneseLessonId = $null
+$specialtyLessonId = $null
 foreach ($flow in $flows) {
   $track = $flow.Track
   $slug = $flow.Slug
@@ -75,12 +78,21 @@ foreach ($flow in $flows) {
   }
   Ok "$track exact lesson inventory=$($lessons.Count)"
 
-  if ($track -ne "chinese-it-vocab") {
-    $unitRows = @($lessons | Where-Object { $_.unitId })
-    if ($unitRows.Count -ne $lessons.Count) {
-      Fail "$track has $($lessons.Count - $unitRows.Count) lesson summaries without unitId"
+  $unitRows = @($lessons | Where-Object { $_.unitId })
+  if ($unitRows.Count -ne $lessons.Count) {
+    Fail "$track has $($lessons.Count - $unitRows.Count) lesson summaries without unitId"
+  }
+  $roles = @($lessons | ForEach-Object { $_.unitRole } | Where-Object { $_ })
+  if ($roles.Count -ne $lessons.Count) {
+    Fail "$track has $($lessons.Count - $roles.Count) lesson summaries without unitRole"
+  }
+  if ($track -eq "chinese-it-vocab") {
+    $unexpectedRoles = @($roles | Where-Object { $_ -ne "lesson" })
+    if ($unexpectedRoles.Count -gt 0) {
+      Fail "$track specialty summaries contain non-lesson unit roles: $($unexpectedRoles -join ', ')"
     }
-    $roles = @($lessons | ForEach-Object { $_.unitRole } | Where-Object { $_ })
+    Ok "$track specialty-unit summary metadata"
+  } else {
     if (-not ($roles -contains "checkpoint") -or -not ($roles -contains "review")) {
       Fail "$track summary is missing checkpoint/review unit roles"
     }
@@ -106,6 +118,15 @@ foreach ($flow in $flows) {
 
   if ($track -eq "chinese-hsk") {
     $reviewLessonId = $lessonId
+  }
+  if ($track -eq "english-basics") {
+    $englishLessonId = $lessonId
+  }
+  if ($track -eq "japanese-jlpt") {
+    $japaneseLessonId = $lessonId
+  }
+  if ($track -eq "chinese-it-vocab") {
+    $specialtyLessonId = $lessonId
   }
 
   $noteBody = (@{
@@ -133,16 +154,25 @@ foreach ($flow in $flows) {
 
 $allProg = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/progress" -Session $session
 $progRows = @($allProg.Json)
-if ($progRows.Count -lt 3) {
-  Fail "expected >= 3 progress rows, got $($progRows.Count)"
+if ($progRows.Count -lt 4) {
+  Fail "expected >= 4 progress rows, got $($progRows.Count)"
 }
 Ok "progress rows=$($progRows.Count)"
 
 if (-not $reviewLessonId) {
   Fail "missing completed Mandarin lesson for review smoke"
 }
+if (-not $englishLessonId) {
+  Fail "missing completed English lesson for review smoke"
+}
+if (-not $japaneseLessonId) {
+  Fail "missing completed Japanese lesson for review smoke"
+}
+if (-not $specialtyLessonId) {
+  Fail "missing completed Chinese IT specialty lesson for review smoke"
+}
 
-# GET /due creates missing cards from the completed lesson's authored stable item IDs.
+# Mandarin: sync one authored card and prove repeated FSRS state persists across requests.
 $due = Invoke-SyntaxiaApi -Method GET `
   -Path "/api/v1/language/review/due?track=chinese-hsk&locale=en&limit=50" `
   -Session $session
@@ -154,7 +184,7 @@ $seedCard = @($dueCards | Where-Object {
 if (-not $seedCard) {
   Fail "review due sync did not create $reviewItemKey for $reviewLessonId"
 }
-Ok "review card synced from authored item id"
+Ok "Mandarin review card synced from authored item id"
 
 $reviewBody = (@{
   lessonId   = $reviewLessonId
@@ -166,10 +196,10 @@ $reviewBody = (@{
 $firstReview = Invoke-SyntaxiaApi -Method POST `
   -Path "/api/v1/language/review" -JsonBody $reviewBody -Session $session
 if ($firstReview.Json.itemKey -ne $reviewItemKey -or [int64]$firstReview.Json.reps -lt 1) {
-  Fail "first persisted review response invalid"
+  Fail "first persisted Mandarin review response invalid"
 }
 $firstReps = [int64]$firstReview.Json.reps
-Ok "review persisted reps=$firstReps"
+Ok "Mandarin review persisted reps=$firstReps"
 
 $reviewBody2 = (@{
   lessonId   = $reviewLessonId
@@ -182,9 +212,93 @@ $secondReview = Invoke-SyntaxiaApi -Method POST `
   -Path "/api/v1/language/review" -JsonBody $reviewBody2 -Session $session
 $secondReps = [int64]$secondReview.Json.reps
 if ($secondReps -le $firstReps) {
-  Fail "review state was not loaded/persisted across requests: $firstReps -> $secondReps"
+  Fail "Mandarin review state was not loaded/persisted across requests: $firstReps -> $secondReps"
 }
-Ok "review state persisted across requests reps=$secondReps"
+Ok "Mandarin review state persisted across requests reps=$secondReps"
+
+# English: prove the foundation track produces a real FSRS card from its stable authored IDs.
+$englishDue = Invoke-SyntaxiaApi -Method GET `
+  -Path "/api/v1/language/review/due?track=english-basics&locale=en&limit=50" `
+  -Session $session
+$englishCards = @($englishDue.Json)
+$englishItemKey = "greet-response-1"
+$englishSeedCard = @($englishCards | Where-Object {
+  $_.lessonId -eq $englishLessonId -and $_.itemKey -eq $englishItemKey
+}) | Select-Object -First 1
+if (-not $englishSeedCard) {
+  Fail "English review due sync did not create $englishItemKey for $englishLessonId"
+}
+Ok "English review card synced from authored stable item id"
+
+$englishReviewBody = (@{
+  lessonId   = $englishLessonId
+  locale     = "en"
+  itemKey    = $englishItemKey
+  rating     = 3
+  responseMs = 1000
+} | ConvertTo-Json -Compress)
+$englishReview = Invoke-SyntaxiaApi -Method POST `
+  -Path "/api/v1/language/review" -JsonBody $englishReviewBody -Session $session
+if ($englishReview.Json.itemKey -ne $englishItemKey -or [int64]$englishReview.Json.reps -lt 1) {
+  Fail "persisted English review response invalid"
+}
+Ok "English review persisted reps=$($englishReview.Json.reps)"
+
+# Japanese: prove authored Japanese stable IDs are synchronized and persisted by the generic FSRS engine.
+$japaneseDue = Invoke-SyntaxiaApi -Method GET `
+  -Path "/api/v1/language/review/due?track=japanese-jlpt&locale=en&limit=50" `
+  -Session $session
+$japaneseCards = @($japaneseDue.Json)
+$japaneseItemKey = "ja-pol-dialogue-1"
+$japaneseSeedCard = @($japaneseCards | Where-Object {
+  $_.lessonId -eq $japaneseLessonId -and $_.itemKey -eq $japaneseItemKey
+}) | Select-Object -First 1
+if (-not $japaneseSeedCard) {
+  Fail "Japanese review due sync did not create $japaneseItemKey for $japaneseLessonId"
+}
+Ok "Japanese review card synced from authored stable item id"
+
+$japaneseReviewBody = (@{
+  lessonId   = $japaneseLessonId
+  locale     = "en"
+  itemKey    = $japaneseItemKey
+  rating     = 3
+  responseMs = 1050
+} | ConvertTo-Json -Compress)
+$japaneseReview = Invoke-SyntaxiaApi -Method POST `
+  -Path "/api/v1/language/review" -JsonBody $japaneseReviewBody -Session $session
+if ($japaneseReview.Json.itemKey -ne $japaneseItemKey -or [int64]$japaneseReview.Json.reps -lt 1) {
+  Fail "persisted Japanese review response invalid"
+}
+Ok "Japanese review persisted reps=$($japaneseReview.Json.reps)"
+
+# Specialty Chinese IT: prove the same generic review engine respects specialty stable IDs.
+$specialtyDue = Invoke-SyntaxiaApi -Method GET `
+  -Path "/api/v1/language/review/due?track=chinese-it-vocab&locale=en&limit=50" `
+  -Session $session
+$specialtyCards = @($specialtyDue.Json)
+$specialtyItemKey = "zh-it-hw-context-1"
+$specialtySeedCard = @($specialtyCards | Where-Object {
+  $_.lessonId -eq $specialtyLessonId -and $_.itemKey -eq $specialtyItemKey
+}) | Select-Object -First 1
+if (-not $specialtySeedCard) {
+  Fail "Chinese IT review due sync did not create $specialtyItemKey for $specialtyLessonId"
+}
+Ok "Chinese IT review card synced from authored stable item id"
+
+$specialtyReviewBody = (@{
+  lessonId   = $specialtyLessonId
+  locale     = "en"
+  itemKey    = $specialtyItemKey
+  rating     = 3
+  responseMs = 1100
+} | ConvertTo-Json -Compress)
+$specialtyReview = Invoke-SyntaxiaApi -Method POST `
+  -Path "/api/v1/language/review" -JsonBody $specialtyReviewBody -Session $session
+if ($specialtyReview.Json.itemKey -ne $specialtyItemKey -or [int64]$specialtyReview.Json.reps -lt 1) {
+  Fail "persisted Chinese IT review response invalid"
+}
+Ok "Chinese IT review persisted reps=$($specialtyReview.Json.reps)"
 
 Invoke-SyntaxiaApi -Method POST -Path "/api/v1/auth/logout" -Session $session -ExpectStatus @(200, 204) | Out-Null
 Ok "logout"

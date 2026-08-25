@@ -75,6 +75,50 @@ const migratedUnits = [
     ],
   },
   {
+    track: 'english-basics',
+    unitId: 'en-a1-routine-05',
+    unitOrder: '5',
+    nodes: [
+      ['time-of-day', 'lesson'],
+      ['daily-routine', 'lesson'],
+      ['routine-checkpoint', 'checkpoint'],
+      ['routine-review', 'review'],
+    ],
+  },
+  {
+    track: 'english-basics',
+    unitId: 'en-a1-shopping-06',
+    unitOrder: '6',
+    nodes: [
+      ['prices', 'lesson'],
+      ['shopping', 'lesson'],
+      ['shopping-checkpoint', 'checkpoint'],
+      ['shopping-review', 'review'],
+    ],
+  },
+  {
+    track: 'english-basics',
+    unitId: 'en-a1-home-07',
+    unitOrder: '7',
+    nodes: [
+      ['home-things', 'lesson'],
+      ['where-things', 'lesson'],
+      ['home-checkpoint', 'checkpoint'],
+      ['home-review', 'review'],
+    ],
+  },
+  {
+    track: 'english-basics',
+    unitId: 'en-a1-free-time-08',
+    unitOrder: '8',
+    nodes: [
+      ['hobbies', 'lesson'],
+      ['invitations', 'lesson'],
+      ['free-time-checkpoint', 'checkpoint'],
+      ['free-time-review', 'review'],
+    ],
+  },
+  {
     track: 'chinese-hsk',
     unitId: 'zh-hsk-b1-people-02',
     unitOrder: '2',

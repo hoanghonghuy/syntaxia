@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { LessonSummary, Progress, Track } from '~/types/api'
 import { formatCatalogLoadError } from '~/utils/catalogLoad'
 import { isLanguageTrack } from '~/utils/languageLesson'
-import { orderLanguageLessons } from '~/utils/languageUnits'
+import { nextLanguageLesson, orderLanguageLessons } from '~/utils/languageUnits'
 import { nextIncompleteLesson, trackProgress } from '~/utils/learningPath'
 
 export const useCatalogStore = defineStore('catalog', () => {
@@ -59,6 +59,9 @@ export const useCatalogStore = defineStore('catalog', () => {
 
   function nextForTrack(trackId: string, locale: string) {
     const list = lessonsByTrack.value[trackId] || (lessons.value[0]?.trackId === trackId ? lessons.value : [])
+    if (isLanguageTrack(trackId)) {
+      return nextLanguageLesson(list, progress.value, locale)
+    }
     return nextIncompleteLesson(list, progress.value, locale)
   }
 

@@ -62,7 +62,10 @@ jobs:
       - name: Verify module checksums
         run: go mod verify
       - name: Unit tests
-        run: go test -mod=readonly ./...
+        # Some drive package smoke tests intentionally read docs/curriculum,
+        # which is outside the Go package cache key. Run tests cold so content
+        # changes can never reuse a stale cached result.
+        run: go test -count=1 -mod=readonly ./...
       - name: Vet
         run: go vet -mod=readonly ./...
 
@@ -166,8 +169,8 @@ jobs:
           logs=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_logs")
           echo "language_review_cards=$cards"
           echo "language_review_logs=$logs"
-          test "$cards" -ge 1
-          test "$logs" -ge 2
+          test "$cards" -ge 4
+          test "$logs" -ge 5
       - name: Show API log on failure
         if: failure()
         run: cat "$RUNNER_TEMP/syntaxia-api.log" || true
