@@ -1,5 +1,5 @@
 /**
- * English Basics CEFR A1 foundation curriculum + map.
+ * English Basics CEFR A1 language foundation curriculum + map.
  * Run: node --experimental-strip-types --test scripts/check-english-basics.mjs
  */
 import assert from 'node:assert/strict'
@@ -14,6 +14,13 @@ const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
 const SLUGS = [
+  'sound-spelling',
+  'word-stress',
+  'sentence-melody',
+  'core-sentences',
+  'basic-questions',
+  'foundation-checkpoint',
+  'foundation-review',
   'greetings',
   'meeting-checkpoint',
   'meeting-review',
@@ -47,6 +54,7 @@ const SLUGS = [
 ]
 
 const FOUNDATION_UNITS = new Map([
+  ['en-a1-foundation-00', 0],
   ['en-a1-meeting-01', 1],
   ['en-a1-people-02', 2],
   ['en-a1-find-way-03', 3],
@@ -57,6 +65,16 @@ const FOUNDATION_UNITS = new Map([
   ['en-a1-free-time-08', 8],
 ])
 
+const FOUNDATION_SLUGS = [
+  'sound-spelling',
+  'word-stress',
+  'sentence-melody',
+  'core-sentences',
+  'basic-questions',
+  'foundation-checkpoint',
+  'foundation-review',
+]
+
 function scalar(body, key) {
   const match = body.match(new RegExp(`^${key}:\\s*(?:"([^"]+)"|([^\\n#]+))`, 'm'))
   return (match?.[1] || match?.[2] || '').trim()
@@ -66,18 +84,26 @@ function assessedIds(body) {
   return [...body.matchAll(/^\s+(?:-\s+)?id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
 }
 
-describe('english-basics A1 foundation curriculum', () => {
-  it('ships the A1 foundation map process doc', () => {
+describe('english-basics A1 language foundation curriculum', () => {
+  it('ships a foundation-first CEFR A1 source map', () => {
     const map = join(repoRoot, 'docs/processes/english-basics-a1-map.md')
     assert.equal(existsSync(map), true)
     const body = read(map)
     assert.match(body, /Council of Europe/i)
+    assert.match(body, /CEFR Companion Volume 2020/i)
+    assert.match(body, /phonological/i)
+    assert.match(body, /core grammar/i)
+    assert.match(body, /Vocabulary/i)
+    assert.match(body, /9 units/i)
+    assert.match(body, /37 nodes/i)
+    assert.match(body, /sound.*spelling/i)
+    assert.match(body, /word stress/i)
+    assert.match(body, /subject pronouns/i)
+    assert.match(body, /Do you like/i)
     assert.match(body, /ozbonus\/yle-vocabulary-dataset/)
-    assert.match(body, /8 units/i)
-    assert.match(body, /30 nodes/i)
   })
 
-  it('ships exactly 30 paired EN/VI V3 nodes', () => {
+  it('ships exactly 37 paired EN/VI V3 nodes', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
@@ -98,12 +124,58 @@ describe('english-basics A1 foundation curriculum', () => {
         assert.match(raw, /^\s+- type:\s*listen\s*$/m)
         assert.match(raw, /^\s+- type:\s*practice\s*$/m)
         assert.match(raw, /^\s+- type:\s*checkpoint\s*$/m)
+        assert.match(
+          raw,
+          /^\s+kind:\s*(?:type_answer|order_words|listen_type)\s*$/m,
+          `${loc}/${slug} missing controlled recall/production`,
+        )
         assert.doesNotMatch(raw, /^\s+kind:\s*mcq\s*$/m, `${loc}/${slug} still authors generic mcq`)
         assert.ok(assessedIds(raw).length >= 5, `${loc}/${slug} needs >=5 stable assessed ids`)
 
         const unitId = scalar(raw, 'unit_id')
         assert.equal(FOUNDATION_UNITS.has(unitId), true, `${loc}/${slug}: unknown unit ${unitId}`)
         assert.equal(Number(scalar(raw, 'unit_order')), FOUNDATION_UNITS.get(unitId), `${loc}/${slug}: bad unit order`)
+      }
+    }
+  })
+
+  it('locks Unit 0 as pronunciation -> grammar -> checkpoint -> review', () => {
+    const expected = new Map([
+      ['sound-spelling', ['pronunciation', 'lesson', '-7']],
+      ['word-stress', ['pronunciation', 'lesson', '-6']],
+      ['sentence-melody', ['pronunciation', 'lesson', '-5']],
+      ['core-sentences', ['grammar', 'lesson', '-4']],
+      ['basic-questions', ['grammar', 'lesson', '-3']],
+      ['foundation-checkpoint', ['integrated', 'checkpoint', '-2']],
+      ['foundation-review', ['integrated', 'review', '-1']],
+    ])
+
+    for (const loc of ['en', 'vi']) {
+      for (const slug of FOUNDATION_SLUGS) {
+        const raw = read(join(repoRoot, `docs/curriculum/english-basics/${loc}/${slug}.md`))
+        const [focus, role, order] = expected.get(slug)
+        assert.equal(scalar(raw, 'unit_id'), 'en-a1-foundation-00')
+        assert.equal(scalar(raw, 'unit_order'), '0')
+        assert.equal(scalar(raw, 'foundation_focus'), focus)
+        assert.equal(scalar(raw, 'unit_role'), role)
+        assert.equal(scalar(raw, 'order'), order)
+      }
+    }
+  })
+
+  it('ships app-owned pronunciation diagrams and no external image hotlinks in Unit 0', () => {
+    for (const asset of [
+      'english-sound-spelling.svg',
+      'english-word-stress.svg',
+      'english-sentence-melody.svg',
+    ]) {
+      assert.equal(existsSync(join(webRoot, `public/language/scenes/${asset}`)), true, `missing ${asset}`)
+    }
+
+    for (const loc of ['en', 'vi']) {
+      for (const slug of FOUNDATION_SLUGS) {
+        const raw = read(join(repoRoot, `docs/curriculum/english-basics/${loc}/${slug}.md`))
+        assert.doesNotMatch(raw, /imageUrl:\s*"https?:\/\//i, `${loc}/${slug} hotlinks an image`)
       }
     }
   })
