@@ -38,11 +38,13 @@ describe('UI refresh contract', () => {
     assert.match(component, /:to="localePath\('\/tracks'\)"/)
     assert.match(component, /prefers-reduced-motion:\s*reduce/)
 
-    assert.match(utility, /tracks\.filter\(\(track\) => track\.category === config\.category\)/)
+    assert.match(utility, /filter\(\(track\) => track\.category === config\.category\)/)
     assert.match(utility, /item\.category === 'code'/)
     assert.match(utility, /item\.category === 'languages'/)
     assert.match(utility, /languageTrackProfile\(track\.id\)/)
     assert.match(utility, /profile\.specialty/)
+    assert.match(utility, /trackIds:\s*matches\.map/)
+    assert.match(utility, /target:\s*\{ kind: 'track', trackId: track\.id \}/)
 
     assert.match(profiles, /'english-basics':[^{]*\{[^}]*homeLabel:\s*'EN'/)
     assert.match(profiles, /'chinese-hsk':[^{]*\{[^}]*homeLabel:\s*'中文'/)
