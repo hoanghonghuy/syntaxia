@@ -23,6 +23,11 @@ vocab:
   - { word: "computer", ipa: "/kəmˈpjuːtər/", gloss: "computer" }
   - { word: "door", ipa: "/dɔːr/", gloss: "room entrance" }
   - { word: "room", ipa: "/ruːm/", gloss: "part of a home or building" }
+  - { word: "on", ipa: "/ɑːn/", gloss: "supported by or touching a surface" }
+  - { word: "under", ipa: "/ˈʌndər/", gloss: "below something" }
+  - { word: "in", ipa: "/ɪn/", gloss: "inside something" }
+  - { word: "next to", ipa: "/nekst tə/", gloss: "beside something" }
+  - { word: "where's", ipa: "/werz/", gloss: "short for where is; asks for a location" }
 steps:
   - type: scene
     title: "Find the missing book"
