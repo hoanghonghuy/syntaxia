@@ -25,7 +25,13 @@ function explanatoryLines(body) {
     .join('\n')
 }
 
-const englishLeak = /\b(?:listen first|listen and|choose (?:the|a)|which (?:word|chunk|phrase|pinyin)|type (?:the|a)|someone says|standard pinyin|mandarin tones|natural speech|speech before|correct answer|try again)\b/i
+const mandarinViEnglishLeak = /\b(?:listen first|listen and|choose (?:the|a)|which (?:word|chunk|phrase|pinyin)|type (?:the|a)|someone says|standard pinyin|mandarin tones|natural speech|speech before|correct answer|try again)\b/i
+
+// English target forms are intentionally present in the Vietnamese English course,
+// so this guard only rejects unmistakable English *instructional prose* that should
+// have been localized. Target phrases such as “I like …”, “Do you want to …?”, IPA,
+// and example sentences are allowed.
+const englishTrackViProseLeak = /\b(?:things|works for|instead of|the target|target (?:word|phrase)|listen first|listen and choose|choose the|which (?:word|phrase|sentence|answer)|type the|someone says|start with|use the)\b/i
 
 const localeNeutralVisuals = [
   'pinyin-syllable-anatomy.svg',
@@ -52,8 +58,20 @@ describe('language locale and content quality', () => {
       const body = read(join(dir, file))
       assert.doesNotMatch(
         explanatoryLines(body),
-        englishLeak,
+        mandarinViEnglishLeak,
         `chinese-hsk/vi/${file} leaks English instructional copy`,
+      )
+    }
+  })
+
+  it('keeps Vietnamese English-track explanations localized while allowing target English', () => {
+    const dir = join(repoRoot, 'docs/curriculum/english-basics/vi')
+    for (const file of readdirSync(dir).filter((name) => name.endsWith('.md'))) {
+      const body = read(join(dir, file))
+      assert.doesNotMatch(
+        explanatoryLines(body),
+        englishTrackViProseLeak,
+        `english-basics/vi/${file} leaks English instructional prose`,
       )
     }
   })
