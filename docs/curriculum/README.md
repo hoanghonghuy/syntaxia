@@ -27,11 +27,11 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `html-basics` | IT · basic | Semantic HTML fundamentals, **12** lessons; HTML/CSS sandbox shipped |
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
 | `chinese-hsk` | Languages · foundation | Practical Mandarin Level 1, **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** |
-| `english-basics` | Languages · foundation | CEFR A1 foundation course, **8 units / 30 nodes per locale** |
+| `english-basics` | Languages · foundation | CEFR A1 language foundation, **Foundation Unit 0 + 8 communicative units / 37 nodes per locale** |
 | `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **9 units / 28 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
-The exact branch inventories above are locked by static curriculum/language tests and by the PostgreSQL-backed release E2E. Product CI #88 is green at `8610a2b0435ae502863836d32716adf58ece9c44`.
+The exact inventories above are locked by static curriculum/language tests and by the PostgreSQL-backed release E2E.
 
 ## SQL Fundamentals (published order)
 
@@ -112,6 +112,25 @@ pinyin-syllables
 ```
 
 These nodes use `unit_order: 0` and internal sort orders `-5..-1` without renumbering existing published units. Returning learners keep their established continuation frontier; earlier newly inserted foundation nodes remain available for catch-up.
+
+## English foundation entry
+
+The English track now begins with a seven-node language foundation before communicative Unit 1:
+
+```text
+sound-spelling
+→ word-stress
+→ sentence-melody
+→ core-sentences
+→ basic-questions
+→ foundation-checkpoint
+→ foundation-review
+→ communicative Unit 1
+```
+
+The first three nodes prioritize intelligible pronunciation awareness; the next two establish the minimal productive grammar used by later A1 units (`be`, subject pronouns, simple `be`/wh/`do` question frames). Vocabulary is learned as sound + meaning + spelling + usable chunk rather than as a standalone glossary.
+
+These nodes use `unit_order: 0` and internal sort orders `-7..-1` without renumbering existing published Units 1–8. The generic language frontier logic keeps returning learners on their established continuation path while the inserted foundation remains available for catch-up.
 
 ## Verification
 
