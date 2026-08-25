@@ -2,14 +2,14 @@
 
 ## Purpose
 
-Define the current **languages** catalog in Syntaxia and the actual production scope of each track. “Production-ready” here means the declared starter/mini-course scope is complete and quality-gated; it does **not** mean Syntaxia already covers an entire CEFR, HSK, or JLPT certification level.
+Define the current **languages** catalog in Syntaxia and the actual product scope of each track. “Production-ready” always refers to the declared product boundary; it does **not** mean Syntaxia covers an entire CEFR, HSK, or JLPT certification system.
 
 ## Current tracks
 
 | Track | Declared scope | Current authored inventory | Learning model |
 |-------|----------------|----------------------------|----------------|
 | `chinese-hsk` | HSK 3.0 Band 1 starter path | **9 communicative units / 30 nodes per locale** | Language V3 units with lesson/checkpoint/review roles + FSRS |
-| `english-basics` | CEFR A1 starter path | **4 communicative units / 14 nodes per locale** | Language V3 units with lesson/checkpoint/review roles + FSRS |
+| `english-basics` | CEFR A1 foundation course | **8 communicative units / 30 nodes per locale** | Language V3 Can-Do units with lesson/checkpoint/review roles + FSRS |
 | `japanese-jlpt` | JLPT N5 starter path | **5 communicative units / 16 nodes per locale** | Language V3 units with lesson/checkpoint/review roles + FSRS |
 | `chinese-it-vocab` | Chinese IT specialty mini-course | **6 guided lessons per locale** | Language V3 specialty sessions with inline checkpoints + FSRS-assessed items |
 
@@ -27,6 +27,22 @@ All four tracks ship paired `en` and `vi` explanation locales.
 4. **Track-scoped lookup is mandatory.** Database uniqueness is `(track_id, slug, locale)`, so lesson, notes, and solution requests must include the track when slugs can overlap.
 5. **EN/VI parity is a grading contract, not literal translation.** Stable assessed IDs and learning intent stay aligned; learner-facing explanations must sound natural in their locale.
 6. **Semantic visuals and listening are first-class inputs.** App-owned visual keys and correct speech-language profiles replace decorative hotlinks and hard-coded Mandarin behavior.
+7. **Can-Do outcomes own English sequencing.** The A1 foundation is organized around observable interaction (meet, introduce, find, order, schedule, buy, locate, invite), not a grammar-table progression.
+
+## English A1 foundation outcomes
+
+The current English foundation has eight product outcomes:
+
+1. meet someone;
+2. introduce people close to you;
+3. use numbers/place language to find your way;
+4. order one item politely at a café;
+5. ask/tell simple times and describe a short daily routine;
+6. ask a price and buy one simple item;
+7. describe a familiar room and locate a common object;
+8. state a preference and make a simple free-time plan.
+
+This is a bounded foundation product, not exhaustive CEFR A1 coverage or exam preparation.
 
 ## What counts as a complete language lesson
 
@@ -55,7 +71,7 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 
 ## Don't
 
-- Call the current starter scope “full HSK”, “full CEFR A1”, or “full JLPT N5”
+- Call the current scopes “full HSK”, “exhaustive CEFR A1”, or “full JLPT N5”
 - Fall back to generic `mcq` authoring when a semantic exercise type fits
 - Force SQL/JS/HTML sandbox UX into language tracks
 - Publish glossary-only specialty lessons
@@ -64,7 +80,7 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 
 ## Verification
 
-The canonical web regression runs Language V3 contracts for all current language tracks, including the Chinese IT specialty track. The DB-backed release E2E additionally verifies persisted progress, notes, repeated review actions, and FSRS rows.
+The canonical web regression runs Language V3 contracts for all current language tracks. English additionally locks the exact **8-unit / 30-node** inventory and EN/VI assessed-ID parity. The DB-backed release E2E verifies exact live inventories, persisted progress, notes, repeated review actions, and FSRS rows.
 
 ## Related
 
@@ -72,5 +88,6 @@ The canonical web regression runs Language V3 contracts for all current language
 - [`language-content-quality-v3.md`](./language-content-quality-v3.md)
 - [`language-review-session.md`](./language-review-session.md)
 - [`language-step-audio.md`](./language-step-audio.md)
+- [`english-basics-a1-map.md`](./english-basics-a1-map.md)
 - [`chinese-it-vocab-map.md`](./chinese-it-vocab-map.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md)
