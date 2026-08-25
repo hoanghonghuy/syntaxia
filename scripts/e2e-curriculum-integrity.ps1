@@ -34,6 +34,19 @@ $unitTracks = @("chinese-hsk", "english-basics", "japanese-jlpt")
 
 Write-Host "=== Curriculum runtime integrity ===" -ForegroundColor Cyan
 
+$trackResponse = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/tracks"
+$runtimeTracks = @($trackResponse.Json)
+$runtimeTrackIds = @($runtimeTracks | ForEach-Object { $_.id })
+foreach ($track in $expected.Keys) {
+  if ($runtimeTrackIds -notcontains $track) {
+    Fail "runtime catalog is missing track $track"
+  }
+}
+if ($runtimeTrackIds.Count -lt $expected.Keys.Count) {
+  Fail "runtime catalog exposes only $($runtimeTrackIds.Count) tracks; expected at least $($expected.Keys.Count)"
+}
+Ok "runtime catalog contains all required tracks"
+
 foreach ($track in $expected.Keys) {
   $expectedCount = [int]$expected[$track]
   $byLocale = @{}
