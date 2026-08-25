@@ -52,12 +52,12 @@ if ($me.Json.email -ne $email) {
 }
 Ok "auth/me"
 
-# Exact EN-locale inventories after the Language V3 starter/specialty migration.
+# Exact EN-locale inventories after the Language V3 foundation/starter/specialty migrations.
 # Static curriculum tests lock file parity; this live API check verifies the
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 30 },
-  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 14 },
+  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 30 },
   @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 16 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
