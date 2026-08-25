@@ -1,23 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
-  <title id="title">English word stress</title>
-  <desc id="desc">The words hello, teacher, and coffee show one syllable as stronger than the other.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
   <rect width="720" height="420" rx="32" fill="#f8fafc"/>
-  <text x="360" y="74" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="#334155">One syllable carries the beat</text>
   <g font-family="system-ui,sans-serif" text-anchor="middle">
-    <rect x="75" y="125" width="170" height="150" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
-    <text x="160" y="184" font-size="34" fill="#475569">he</text>
-    <text x="160" y="232" font-size="48" font-weight="800" fill="#1f2937">LLO</text>
-    <text x="160" y="318" font-size="22" fill="#64748b">hello</text>
+    <rect x="75" y="105" width="170" height="190" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
+    <text x="160" y="174" font-size="34" fill="#475569">he</text>
+    <text x="160" y="228" font-size="48" font-weight="800" fill="#1f2937">LLO</text>
+    <circle cx="160" cy="258" r="9" fill="#6366f1"/>
+    <text x="160" y="340" font-size="24" fill="#64748b">hello</text>
 
-    <rect x="275" y="125" width="170" height="150" rx="24" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
-    <text x="360" y="186" font-size="48" font-weight="800" fill="#1f2937">TEA</text>
-    <text x="360" y="232" font-size="34" fill="#475569">cher</text>
-    <text x="360" y="318" font-size="22" fill="#64748b">teacher</text>
+    <rect x="275" y="105" width="170" height="190" rx="24" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+    <text x="360" y="176" font-size="48" font-weight="800" fill="#1f2937">TEA</text>
+    <text x="360" y="228" font-size="34" fill="#475569">cher</text>
+    <circle cx="360" cy="258" r="9" fill="#10b981"/>
+    <text x="360" y="340" font-size="24" fill="#64748b">teacher</text>
 
-    <rect x="475" y="125" width="170" height="150" rx="24" fill="#fff7ed" stroke="#f97316" stroke-width="3"/>
-    <text x="560" y="186" font-size="48" font-weight="800" fill="#1f2937">COF</text>
-    <text x="560" y="232" font-size="34" fill="#475569">fee</text>
-    <text x="560" y="318" font-size="22" fill="#64748b">coffee</text>
+    <rect x="475" y="105" width="170" height="190" rx="24" fill="#fff7ed" stroke="#f97316" stroke-width="3"/>
+    <text x="560" y="176" font-size="48" font-weight="800" fill="#1f2937">COF</text>
+    <text x="560" y="228" font-size="34" fill="#475569">fee</text>
+    <circle cx="560" cy="258" r="9" fill="#f97316"/>
+    <text x="560" y="340" font-size="24" fill="#64748b">coffee</text>
   </g>
-  <text x="360" y="372" text-anchor="middle" font-family="system-ui,sans-serif" font-size="22" fill="#64748b">Listen for the stronger syllable; do not make every syllable equally strong.</text>
 </svg>
