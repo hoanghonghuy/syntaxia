@@ -13,14 +13,16 @@ unit_order: 0
 unit_can_do: "Read, hear, and build basic Japanese forms before the communicative units"
 unit_role: checkpoint
 foundation_focus: checkpoint
-can_do: "Combine kana, sound length, and basic sentence roles without step-by-step support"
-pattern: "kana/sound + length + particle + polite ending"
+can_do: "Combine hiragana, katakana, sound timing, and basic sentence roles without step-by-step support"
+pattern: "hear -> kana -> timing -> particle/polite form -> produce"
 objectives:
-  - Retrieve kana from sound
+  - Retrieve hiragana and katakana from sound
   - Preserve small っ and long-vowel spelling
   - Choose and produce a basic particle pattern
+  - Recognize the spoken reading of the topic particle は
 vocab:
   - { surface: "駅", reading: "えき", gloss: "station" }
+  - { surface: "カメラ", reading: "カメラ", gloss: "camera" }
   - { surface: "切符", reading: "きっぷ", gloss: "ticket" }
   - { surface: "学校", reading: "がっこう", gloss: "school" }
   - { surface: "学生", reading: "がくせい", gloss: "student" }
@@ -28,7 +30,7 @@ vocab:
 steps:
   - type: scene
     title: "Use the foundation without a chart"
-    body: "This checkpoint mixes sound, writing, and sentence building before Unit 1."
+    body: "This checkpoint mixes both kana scripts, sound timing, and sentence building before Unit 1."
   - type: dialogue
     lines:
       - { speaker: "A", text: "学校に行きます。", reading: "がっこうに いきます。" }
@@ -40,7 +42,7 @@ steps:
   - type: practice
     id: ja-fnd-check-hear-ticket
     kind: listen_type
-    prompt: "Listen and type the word."
+    prompt: "Listen and type the hiragana word."
     audioText: "きっぷ"
     answer: "きっぷ"
   - type: practice
@@ -48,6 +50,12 @@ steps:
     kind: type_answer
     prompt: "Type the reading of 駅."
     answer: "えき"
+  - type: practice
+    id: ja-fnd-check-katakana-camera
+    kind: listen_type
+    prompt: "Listen and type the word in katakana."
+    audioText: "カメラ"
+    answer: "カメラ"
   - type: practice
     id: ja-fnd-check-build-school
     kind: order_words
@@ -59,9 +67,14 @@ steps:
     items:
       - id: ja-fnd-check-particle-object
         kind: meaning_choice
-        prompt: "Choose the missing particle: 水＿飲みます。"
+        prompt: "Choose the missing object particle: 水＿飲みます。"
         choices: ["を", "に", "で"]
         answer: "を"
+      - id: ja-fnd-check-topic-sound
+        kind: meaning_choice
+        prompt: "In 私は学生です, how is the topic particle は pronounced?"
+        choices: ["わ", "は", "が"]
+        answer: "わ"
       - id: ja-fnd-check-write-school
         kind: type_answer
         prompt: "Type the reading of 学校."
@@ -73,4 +86,4 @@ exercise:
   acceptedAnswers: ["私は学生です。"]
 ---
 
-Pass this by retrieving the forms, not by rereading a kana or particle table.
+Pass this by retrieving the forms, not by rereading a kana or particle table. Both scripts now participate in the same foundation checkpoint before communicative Unit 1.
