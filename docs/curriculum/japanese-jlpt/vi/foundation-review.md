@@ -13,14 +13,16 @@ unit_order: 0
 unit_can_do: "Đọc, nghe và tạo các dạng tiếng Nhật cơ bản trước các unit giao tiếp"
 unit_role: review
 foundation_focus: review
-can_do: "Gợi lại kana, độ dài âm và mẫu câu cốt lõi sau một khoảng trễ"
-pattern: "nghe -> đọc/gõ -> xây câu -> gợi lại sau"
+can_do: "Gợi lại hiragana, katakana, nhịp âm và mẫu câu cốt lõi sau một khoảng trễ"
+pattern: "nghe -> đọc/gõ cả hai hệ kana -> xây câu -> gợi lại sau"
 objectives:
-  - Gợi lại cách đọc kana từ âm
-  - Giữ small っ hoặc cách viết âm dài
+  - Gợi lại dạng hiragana hoặc katakana từ âm
+  - Giữ small っ hoặc cách viết nguyên âm dài
   - Xây lại một câu lịch sự cơ bản
+  - Nhớ lại một tương phản phát âm trợ từ quan trọng
 vocab:
   - { surface: "朝", reading: "あさ", gloss: "buổi sáng" }
+  - { surface: "カメラ", reading: "カメラ", gloss: "máy ảnh" }
   - { surface: "切符", reading: "きっぷ", gloss: "vé" }
   - { surface: "学校", reading: "がっこう", gloss: "trường học" }
   - { surface: "学生", reading: "がくせい", gloss: "học sinh / sinh viên" }
@@ -28,7 +30,7 @@ vocab:
 steps:
   - type: scene
     title: "Gợi lại trước Unit 1"
-    body: "Tự gợi lại nền tảng để các hội thoại sau không phụ thuộc liên tục vào phần hỗ trợ."
+    body: "Tự gợi lại cả hai hệ chữ, nhịp âm và nền tảng câu để các hội thoại sau không phụ thuộc liên tục vào phần hỗ trợ."
   - type: dialogue
     lines:
       - { speaker: "A", text: "私は学生です。", reading: "わたしは がくせいです。" }
@@ -40,9 +42,15 @@ steps:
   - type: practice
     id: ja-fnd-review-hear-school
     kind: listen_type
-    prompt: "Nghe rồi gõ từ."
+    prompt: "Nghe rồi gõ cách đọc hiragana."
     audioText: "がっこう"
     answer: "がっこう"
+  - type: practice
+    id: ja-fnd-review-katakana-camera
+    kind: listen_type
+    prompt: "Nghe và gõ từ bằng katakana."
+    audioText: "カメラ"
+    answer: "カメラ"
   - type: practice
     id: ja-fnd-review-read-ticket
     kind: type_answer
@@ -62,6 +70,11 @@ steps:
         prompt: "Chọn trợ từ chỉ đích đến: 学校＿行きます。"
         choices: ["に", "を", "で"]
         answer: "に"
+      - id: ja-fnd-review-topic-sound
+        kind: meaning_choice
+        prompt: "Trợ từ chủ đề は trong 私は学生です được phát âm thế nào?"
+        choices: ["わ", "は", "が"]
+        answer: "わ"
       - id: ja-fnd-review-kana-morning
         kind: type_answer
         prompt: "Gõ cách đọc của 朝."
@@ -72,4 +85,4 @@ exercise:
   answer: "がっこう"
 ---
 
-Các item ổn định này đi vào cùng hệ thống FSRS như các unit N5 phía sau.
+Các item ổn định này đi vào cùng hệ thống FSRS như các unit N5 phía sau, bao gồm cả hai hệ kana thay vì coi phần chữ viết là một đoạn giới thiệu dùng xong rồi bỏ.
