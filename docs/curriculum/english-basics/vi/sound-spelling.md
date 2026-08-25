@@ -4,7 +4,7 @@ track: english-basics
 locale: vi
 slug: sound-spelling
 title: "Nghe từ trước, rồi nối với cách viết"
-order: -7
+order: -9
 published: true
 cefr_level: a1
 foundation_focus: pronunciation
