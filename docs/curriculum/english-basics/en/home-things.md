@@ -34,8 +34,7 @@ steps:
       - { speaker: "A", text: "Is this your bedroom?" }
       - { speaker: "B", text: "Yes. There's a bed by the wall." }
       - { speaker: "A", text: "And there's a table." }
-      - { speaker: "B", text: "Yes, and a chair."
-        }
+      - { speaker: "B", text: "Yes, and a chair." }
   - type: listen
     prompt: "Listen. Which piece of furniture do you hear first?"
     text: "There's a bed by the wall."
