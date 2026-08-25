@@ -25,7 +25,7 @@ $expected = [ordered]@{
   "html-basics"       = 12
   "css-basics"        = 14
   "chinese-hsk"       = 41
-  "english-basics"    = 30
+  "english-basics"    = 35
   "japanese-jlpt"     = 28
   "chinese-it-vocab"  = 6
 }
@@ -57,9 +57,9 @@ foreach ($track in $expected.Keys) {
     }
 
     if ($unitTracks -contains $track) {
-      $withoutUnit = @($lessons | Where-Object { -not $_.unitId -or -not $_.unitRole })
+      $withoutUnit = @($lessons | Where-Object { -not $_.unitId -or $null -eq $_.unitOrder -or -not $_.unitRole })
       if ($withoutUnit.Count -gt 0) {
-        Fail "$track/$locale has $($withoutUnit.Count) runtime lessons without unit metadata"
+        Fail "$track/$locale has $($withoutUnit.Count) runtime lessons without complete unit metadata"
       }
     }
 
