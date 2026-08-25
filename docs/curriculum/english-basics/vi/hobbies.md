@@ -23,6 +23,10 @@ vocab:
   - { word: "read", ipa: "/riːd/", gloss: "đọc" }
   - { word: "music", ipa: "/ˈmjuːzɪk/", gloss: "âm nhạc" }
   - { word: "game", ipa: "/ɡeɪm/", gloss: "trò chơi" }
+  - { word: "like", ipa: "/laɪk/", gloss: "thích" }
+  - { word: "do you like", ipa: "/duː ju laɪk/", gloss: "dùng để hỏi sở thích của người khác" }
+  - { word: "yes, I do", ipa: "/jes aɪ duː/", gloss: "câu trả lời khẳng định ngắn cho câu hỏi với do" }
+  - { word: "no, I don't", ipa: "/noʊ aɪ doʊnt/", gloss: "câu trả lời phủ định ngắn cho câu hỏi với do" }
 steps:
   - type: scene
     title: "Tìm một việc cả hai cùng thích"
@@ -40,7 +44,7 @@ steps:
     text: "I like to read."
   - type: tip
     title: "Dùng cụm sở thích ngắn"
-    body: "I like + danh từ phù hợp với things như music hoặc games. I like to + động từ phù hợp với hoạt động như read hoặc play. Ở A1, một sở thích rõ là đủ."
+    body: "I like + danh từ phù hợp với các từ như music hoặc games. I like to + động từ phù hợp với hoạt động như read hoặc play. Ở A1, một sở thích rõ ràng là đủ."
   - type: teach
     items:
       - { form: "I like music.", gloss: "nêu sở thích về một thứ", example: "I like music." }
