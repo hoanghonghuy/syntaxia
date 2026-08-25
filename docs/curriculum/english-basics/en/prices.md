@@ -23,6 +23,10 @@ vocab:
   - { word: "shop", ipa: "/ʃɑːp/", gloss: "place where you buy things" }
   - { word: "bag", ipa: "/bæɡ/", gloss: "container you can carry" }
   - { word: "buy", ipa: "/baɪ/", gloss: "pay to get something" }
+  - { word: "how much", ipa: "/haʊ mʌtʃ/", gloss: "asks about a price" }
+  - { word: "this", ipa: "/ðɪs/", gloss: "points to an item near you" }
+  - { word: "that", ipa: "/ðæt/", gloss: "points to an item farther away" }
+  - { word: "dollar", ipa: "/ˈdɑːlər/", gloss: "a currency unit used in the sample prices" }
 steps:
   - type: scene
     title: "Check a price before buying"
