@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">English sentence melody</title>
+  <desc id="desc">A simple statement, yes-no question, and wh-question show typical beginner intonation shapes.</desc>
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+  <text x="360" y="62" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="#334155">Listen to the shape of the whole phrase</text>
+  <g font-family="system-ui,sans-serif" fill="#1f2937">
+    <text x="78" y="132" font-size="26" font-weight="700">I'm Mai.</text>
+    <path d="M235 126 C300 124 330 132 405 150" fill="none" stroke="#6366f1" stroke-width="6" stroke-linecap="round"/>
+    <text x="500" y="148" font-size="22" fill="#64748b">settles</text>
+
+    <text x="78" y="226" font-size="26" font-weight="700">Are you Mai?</text>
+    <path d="M245 220 C310 220 350 212 420 174" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
+    <text x="500" y="184" font-size="22" fill="#64748b">often rises</text>
+
+    <text x="78" y="320" font-size="26" font-weight="700">Where are you from?</text>
+    <path d="M305 314 C360 306 405 312 472 335" fill="none" stroke="#f97316" stroke-width="6" stroke-linecap="round"/>
+    <text x="525" y="336" font-size="22" fill="#64748b">often falls</text>
+  </g>
+  <text x="360" y="382" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#64748b">These are useful listening patterns, not rigid rules for every speaker or context.</text>
+</svg>
