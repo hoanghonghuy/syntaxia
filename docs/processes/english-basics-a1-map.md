@@ -4,11 +4,11 @@
 
 Define a coherent **English A1 foundation course** for Syntaxia. The course still ends in practical communicative Can-Do outcomes, but it no longer assumes those outcomes alone are enough to sequence a beginner language course.
 
-The learning order is now explicit:
+The learning order is explicit:
 
-`pronunciation awareness -> core vocabulary/chunks -> basic sentence grammar -> listening/interaction -> controlled speaking/writing -> checkpoint -> delayed retrieval`
+`pronunciation -> core vocabulary/chunks -> basic sentence grammar -> listening/interaction -> controlled speaking/writing -> checkpoint -> delayed retrieval`
 
-This product is deliberately bounded: it is a practical A1 foundation, not a claim that every CEFR A1 descriptor, every English grammar point, or every beginner vocabulary item is exhausted.
+This product is deliberately bounded: it is a practical A1 foundation, not a claim that every CEFR A1 descriptor, every English grammar point, every English sound, or every beginner vocabulary item is exhausted.
 
 ## Standards and sources
 
@@ -19,17 +19,17 @@ This product is deliberately bounded: it is a practical A1 foundation, not a cla
 | [ozbonus/yle-vocabulary-dataset](https://github.com/ozbonus/yle-vocabulary-dataset) (CC BY-SA 4.0) | Open vocabulary membership/theme support for beginner lexical choices. |
 | [Cambridge YLE wordlists](https://www.cambridgeenglish.org/Images/wordlists-pre-a1-starters-a1-movers-and-a2-flyers.pdf) | Official lineage for the YLE-derived vocabulary dataset; do not copy textbook/exam prose. |
 
-**Standards rule:** CEFR defines the A1 ability boundary; it is not itself a complete English grammar or vocabulary syllabus. Syntaxia therefore adds an explicit prerequisite progression for sound, lexical chunks, and a very small grammar core before the communicative units.
+**Standards rule:** CEFR defines the A1 ability boundary; it is not itself a complete English grammar, vocabulary, or phoneme syllabus. Syntaxia therefore defines an explicit starter progression for pronunciation, lexical chunks, and a small grammar core before communicative units.
 
 **Audience rule:** explanation prose and situations are original Syntaxia copy for general/adult learners. Child-exam contexts from YLE are not copied into the course.
 
 ## Declared foundation product
 
-The course contains **9 units / 37 nodes per locale** (`en` + `vi`). Unit 0 establishes pronunciation and sentence-building foundations; Units 1–8 then apply them to familiar A1 situations. Every unit ends in an explicit checkpoint and delayed-retrieval review.
+The course contains **9 units / 39 nodes per locale** (`en` + `vi`). Unit 0 establishes pronunciation and sentence-building foundations; Units 1–8 then apply them to familiar A1 situations. Every unit ends in an explicit checkpoint and delayed-retrieval review.
 
 | Unit | Product outcome | Nodes |
 |-----:|-----------------|-------|
-| 0 | Build the language foundation: sound↔spelling, word stress, sentence melody, `be`, and basic questions | `sound-spelling` → `word-stress` → `sentence-melody` → `core-sentences` → `basic-questions` → `foundation-checkpoint` → `foundation-review` |
+| 0 | Build the language foundation: sound↔spelling, core vowel/consonant contrasts, word stress, sentence melody, `be`, and basic questions | `sound-spelling` → `vowel-contrasts` → `consonant-clarity` → `word-stress` → `sentence-melody` → `core-sentences` → `basic-questions` → `foundation-checkpoint` → `foundation-review` |
 | 1 | Meet someone: greet, introduce yourself, close a first meeting | `greetings` → `meeting-checkpoint` → `meeting-review` |
 | 2 | Introduce people close to you | `people` → `family` → `people-checkpoint` → `people-review` |
 | 3 | Use numbers and simple place language to find your way | `numbers` → `places` → `find-way-checkpoint` → `find-way-review` |
@@ -39,19 +39,21 @@ The course contains **9 units / 37 nodes per locale** (`en` + `vi`). Unit 0 esta
 | 7 | Find things at home: describe a room and locate a familiar object | `home-things` → `where-things` → `home-checkpoint` → `home-review` |
 | 8 | Make a free-time plan: state a preference, invite, agree on time/place | `hobbies` → `invitations` → `free-time-checkpoint` → `free-time-review` |
 
-Total nodes: `7 + 3 + 4 + 4 + 3 + 4 + 4 + 4 + 4 = 37` per locale.
+Total nodes: `9 + 3 + 4 + 4 + 3 + 4 + 4 + 4 + 4 = 39` per locale.
 
 ## Unit 0 — language foundation
 
 ### Pronunciation
 
-The first three nodes implement the CEFR A1 phonological boundary without pretending to teach a complete English phonology course:
+The first five nodes implement a bounded CEFR A1 intelligibility foundation without pretending to teach the complete English sound system:
 
-1. **Sound ↔ spelling** — hear a familiar word first, then connect pronunciation, meaning and written form. IPA is optional reference support, not a prerequisite alphabet.
-2. **Word stress** — reproduce the stronger syllable in a tiny set of familiar words such as `hello`, `teacher`, and `coffee`.
-3. **Sentence melody** — notice useful beginner statement / yes-no question / wh-question intonation shapes while explicitly avoiding claims that one contour is a rigid rule for every accent/context.
+1. **Sound ↔ spelling** — hear a familiar word first, then connect pronunciation, meaning and written form. IPA is reference support, not a prerequisite alphabet.
+2. **Core vowel contrasts** — discriminate a small set of high-value contrasts in familiar words: `/ɪ/ ↔ /iː/` and `/æ/ ↔ /ʌ/`.
+3. **Core consonant clarity** — use simple physical cues to keep `/θ/ ↔ /ð/`, `/r/ ↔ /l/`, and `/v/ ↔ /f/` sufficiently distinct in familiar words.
+4. **Word stress** — reproduce the stronger syllable in familiar words such as `hello`, `teacher`, and `coffee`.
+5. **Sentence melody** — notice useful beginner statement / yes-no question / wh-question intonation shapes while explicitly avoiding claims that one contour is a rigid rule for every accent/context.
 
-The product targets **intelligibility**, not accent imitation.
+The product targets **intelligibility**, not accent imitation. Pronunciation nodes are audio-first: the learner listens, discriminates, then recalls/types or produces. Diagrams contain target-language forms/sound symbols only; explanatory copy stays in the selected explanation locale so Vietnamese lessons do not leak English UI prose through an image.
 
 ### Core grammar
 
@@ -68,7 +70,7 @@ This is intentionally a **small productive grammar core**, not a grammar referen
 
 ### Vocabulary
 
-Foundation vocabulary is deliberately small and reusable: personal pronouns, `name`, `student`, `teacher`, `from`, `where`, `like`, `music`, plus words already needed by Unit 1. New words are learned as **sound + meaning + spelling + usable chunk**, not glossary-only entries.
+Foundation vocabulary is deliberately reusable. A word is learned as **sound + meaning + spelling + usable chunk**, not as a glossary entry. Pronunciation examples add familiar words only when they carry a real sound contrast; communicative Units 1–8 require enough lexical material to perform their declared Can-Do rather than passing with token word lists.
 
 ## A1 capability coverage in this product
 
@@ -97,7 +99,8 @@ Every published node must:
 6. use stable authored assessment IDs so FSRS review identity survives copy/UI changes;
 7. keep EN/VI variants aligned in intent, IDs, unit membership and grading answers;
 8. avoid generic authored `mcq` as the core learning mechanic;
-9. avoid hotlinked images; semantic visuals must come from the app-owned registry/assets.
+9. avoid hotlinked images; semantic visuals must come from app-owned assets;
+10. keep explanatory copy in the explanation locale, while target English, IPA, and example sentences remain English.
 
 The canonical session arc remains:
 
@@ -109,12 +112,13 @@ The canonical session arc remains:
 - Reuse already-learned vocabulary rather than introducing unnecessary synonyms.
 - Treat pronunciation/stress and useful chunks as part of knowing a word.
 - Functional chunks such as `How much is this?`, `I'll take it`, `Where's …?`, and `Do you want to …?` are communicative language, not isolated glossary lemmas.
+- Each normal communicative lesson must carry enough lexical material to accomplish its Can-Do; the current quality gate requires at least five authored vocab/chunk entries, while focused pronunciation nodes may use smaller sound sets.
 - Do not copy Cambridge example sentences, exam tasks, or textbook paragraphs.
 - Vocabulary membership is a guardrail; naturalness and communicative usefulness still require product review.
 
 ## Product boundary
 
-Calling this course `content-complete` or `production-ready` means **the declared 9-unit / 37-node Syntaxia A1 foundation** is complete. It does **not** mean:
+Calling this course `content-complete` or `production-ready` means **the declared 9-unit / 39-node Syntaxia A1 foundation** is complete. It does **not** mean:
 
 - exhaustive CEFR A1 descriptor coverage;
 - Cambridge A1 Movers exam preparation;
@@ -133,17 +137,19 @@ Static/product gates:
 cd apps/web
 npm run test:english-basics
 npm run test:language-v3
+npm run test:language-locale-quality
 npm run test:language-audio
 npm run test:language-review
 ```
 
 Release gate:
 
-- exact **37-node** EN inventory exposed through the API;
+- exact **39-node** EN inventory exposed through the API;
 - EN/VI parity locked statically;
 - Unit 0 stable assessed IDs participate in the normal review path;
+- all app-owned pronunciation diagrams are explanation-locale neutral;
 - progress and notes persist;
-- returning learners with progress in Units 1–8 are not rewound by the inserted Unit 0;
+- returning learners with progress in Units 1–8 are not rewound by inserted Unit 0 content;
 - canonical Product CI including PostgreSQL-backed E2E is green for the promoted commit.
 
 ## Related
