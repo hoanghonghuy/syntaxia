@@ -27,11 +27,11 @@ Do not use `done`, `complete`, or `production-ready` without naming the scope wh
 | HTML Basics | 12 semantic-HTML fundamentals lessons | ready | complete | reviewed by `verify-html-v2.mjs` | green on stabilization baseline |
 | CSS Basics | 14 fundamentals-through-Flexbox lessons | ready | complete | reviewed by `verify-css-v2.mjs` | green on stabilization baseline |
 | Mandarin starter | HSK 3.0 Band 1 starter, 9 units / 30 nodes per locale | ready | complete | Language V3 reviewed | green on stabilization baseline |
-| English starter | CEFR A1 starter, 4 units / 14 nodes per locale | ready | complete | Language V3 reviewed | green on stabilization baseline |
+| English A1 foundation | 8 Can-Do units / 30 nodes per locale | ready | complete on `feature/curriculum-product-completion` | locked by English + Language V3 + golden-unit gates | **pending Product CI for expanded English head** |
 | Japanese starter | JLPT N5 starter, 5 units / 16 nodes per locale | ready | complete | Language V3 reviewed | green on stabilization baseline |
-| Chinese IT specialty | 6 mapped workplace-technology lessons per locale | ready | complete | Language V3 specialty gate added on `feature/curriculum-product-completion` | **pending Product CI for this branch** |
+| Chinese IT specialty | 6 mapped workplace-technology lessons per locale | ready | complete | Language V3 specialty reviewed | **green in Product CI #15 at `05437da8f223b3589ddbee1894374ef5c4434d7a`** |
 
-The baseline referenced above is commit `d677c898d49f01fcaa9e79e4c6bcfaf010f3020d`, whose Product CI was green before this curriculum-completion branch began.
+The stabilization baseline is `d677c898d49f01fcaa9e79e4c6bcfaf010f3020d`. Chinese IT specialty was subsequently proven through the full Product CI/DB-backed release path at `05437da8f223b3589ddbee1894374ef5c4434d7a` before the English foundation expansion began.
 
 ## Domain-specific quality bars
 
@@ -58,12 +58,23 @@ Specialty tracks add a second rule: terminology must be embedded in a realistic 
 ## Course-scope rules
 
 - `javascript-basics` ending at functions is a complete **Basics** product; DOM/events/fetch/async require a separately mapped continuation product.
-- `english-basics` is currently a complete **starter A1 slice**, not full CEFR A1 coverage.
+- `english-basics` now declares an **8-unit CEFR A1 foundation product**. It covers core simple interactions (meet, introduce, find, order, schedule, buy, locate, invite) but does not claim exhaustive CEFR A1 or exam preparation.
 - `chinese-hsk` is currently a complete **Band 1 starter path**, not the whole HSK system.
 - `japanese-jlpt` is currently a complete **N5 starter path**, not full JLPT N5 exam preparation.
 - `chinese-it-vocab` is a six-lesson **specialty mini-course** constrained by its cited term map.
 
 Expansion begins by creating/updating a public-reference curriculum map and defining a new declared scope. Do not silently change what an existing “complete” label means.
+
+## English foundation quality lock
+
+The current English product contains exactly **8 units / 30 nodes per locale**. The first four units are preserved; four new units extend the product without changing existing IDs/order:
+
+5. `en-a1-routine-05` — ask/tell times and describe a short routine;
+6. `en-a1-shopping-06` — ask price, choose, buy, close politely;
+7. `en-a1-home-07` — describe a familiar room and locate an object;
+8. `en-a1-free-time-08` — state a preference and make a simple plan.
+
+Each new unit uses lesson → checkpoint → review structure, semantic scenes, listening, controlled production, stable assessed IDs, and EN/VI parity. The live release gate requires the API to expose exactly 30 English nodes after curriculum sync.
 
 ## Verification ownership
 
@@ -81,6 +92,7 @@ node scripts/verify-css-v2.mjs
 
 ```bash
 cd apps/web
+npm run test:english-basics
 npm run test:language-v3
 npm run test:language-audio
 npm run test:language-review
@@ -88,17 +100,23 @@ npm run test:language-review
 
 ### Release
 
-The canonical Product CI must then pass API tests/vet, web build/regression, curriculum gates, and PostgreSQL-backed E2E including sandboxes and FSRS persistence.
+The canonical Product CI must then pass API tests/vet, web build/regression, curriculum gates, and PostgreSQL-backed E2E including exact live inventories, sandboxes and FSRS persistence.
 
 ## Current branch objective
 
-`feature/curriculum-product-completion` exists to close product-level curriculum gaps without mixing them into the stabilization PR. The first concrete gap is the legacy `chinese-it-vocab` authoring model; all six lessons are being migrated to the Language V3 specialty contract and included in the canonical V3 test command.
+`feature/curriculum-product-completion` closes product-level curriculum gaps without mixing them into the stabilization PR. Work completed on the branch so far:
+
+1. Chinese IT specialty: migrated all six EN/VI lessons from glossary/MCQ-style authoring to the Language V3 specialty contract, added semantic technology visuals, stable review IDs, and DB-backed FSRS evidence.
+2. English Basics: expanded the old 4-unit/14-node starter into an 8-unit/30-node A1 foundation mapped to communicative Can-Do outcomes, with new semantic home/free-time visuals and exact inventory/parity gates.
+
+The branch remains draft until the exact expanded English head passes the full Product CI release path.
 
 ## Related
 
 - [`curriculum-pedagogy.md`](./curriculum-pedagogy.md)
 - [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
 - [`language-content-quality-v3.md`](./language-content-quality-v3.md)
+- [`english-basics-a1-map.md`](./english-basics-a1-map.md)
 - [`chinese-it-vocab-map.md`](./chinese-it-vocab-map.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md)
 - [`release-hardening.md`](./release-hardening.md)
