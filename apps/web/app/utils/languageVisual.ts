@@ -3,6 +3,8 @@ export const LANGUAGE_VISUAL_KEYS = [
   'student-leaving',
   'student-studying',
   'shop-counter-request',
+  'home-room',
+  'weekend-plan',
   'tech-repair-desk',
   'qr-code-login',
   'ai-project-flow',
@@ -44,6 +46,18 @@ const LANGUAGE_VISUAL_ASSETS: Readonly<Record<LanguageVisualKey, LanguageVisualA
     kind: 'scene',
     provenance: 'syntaxia-original',
     learningSignal: 'A customer points to a chosen item at a small shop counter while speaking to the clerk.',
+  },
+  'home-room': {
+    key: 'home-room',
+    kind: 'scene',
+    provenance: 'syntaxia-original',
+    learningSignal: 'A simple bedroom places a bed, table, chair, and book in clear spatial relationships for existence and location language.',
+  },
+  'weekend-plan': {
+    key: 'weekend-plan',
+    kind: 'scene',
+    provenance: 'syntaxia-original',
+    learningSignal: 'Two friends connect a familiar free-time activity with a park and clock cue to form a concrete shared plan.',
   },
   'tech-repair-desk': {
     key: 'tech-repair-desk',
