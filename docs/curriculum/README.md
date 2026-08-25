@@ -15,7 +15,7 @@ docs/curriculum/<track>/<locale>/<slug>.md
 - Language content quality: [`docs/processes/language-content-quality-v3.md`](../processes/language-content-quality-v3.md)
 - Product-level scope/status: [`docs/processes/curriculum-product-completion.md`](../processes/curriculum-product-completion.md)
 
-“Complete” always means complete **within the declared track scope**. A starter CEFR/HSK/JLPT path is not the same claim as full exam-level coverage.
+“Complete” always means complete **within the declared track scope**. A foundation/starter CEFR/HSK/JLPT path is not the same claim as full certification-level coverage.
 
 ## Tracks
 
@@ -27,7 +27,7 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `html-basics` | IT · basic | Semantic HTML fundamentals, **12** lessons; HTML/CSS sandbox shipped |
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
 | `chinese-hsk` | Languages · starter | HSK 3.0 Band 1 starter path, **9 units / 30 nodes per locale** |
-| `english-basics` | Languages · starter | CEFR A1 starter path, **4 units / 14 nodes per locale** |
+| `english-basics` | Languages · foundation | CEFR A1 foundation course, **8 units / 30 nodes per locale** |
 | `japanese-jlpt` | Languages · starter | JLPT N5 starter path, **5 units / 16 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
@@ -96,4 +96,4 @@ Full path + polish rules: [`docs/processes/sql-fundamentals-closure.md`](../proc
 
 ## Verification
 
-IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. Language tracks are enforced by the Language V3 web tests, including the specialty Chinese IT contract. Release E2E then exercises runtime inventories, sandboxes, progress, notes, and FSRS persistence against PostgreSQL.
+IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. Language tracks are enforced by the Language V3 web tests, including the English 8-unit foundation and specialty Chinese IT contract. Release E2E then exercises exact runtime inventories, sandboxes, progress, notes, and FSRS persistence against PostgreSQL.
