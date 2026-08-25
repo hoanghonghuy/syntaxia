@@ -29,12 +29,14 @@ The original research still contributes several durable constraints:
 
 The current course no longer starts from situations alone. Core English follows:
 
-`pronunciation awareness -> reusable vocabulary/chunks -> minimal productive grammar -> listening -> interaction/speaking -> reading/writing production -> checkpoint -> spaced retrieval`
+`pronunciation / sound -> reusable vocabulary/chunks -> minimal productive grammar -> listening -> interaction/speaking -> reading/writing production -> checkpoint -> spaced retrieval`
 
-The active branch expands English to **9 units / 37 nodes per locale**:
+The active branch expands English to **9 units / 39 nodes per locale**:
 
-- **Unit 0 — English foundation (7 nodes):** sound↔spelling, word stress, sentence melody, core `be` sentences, basic questions, checkpoint, review;
+- **Unit 0 — English foundation (9 nodes):** sound↔spelling, vowel contrasts, consonant clarity, word stress, sentence melody, core `be` sentences, basic questions, checkpoint, review;
 - **Units 1–8 (30 existing nodes):** practical CEFR A1 communicative outcomes.
+
+The pronunciation slice is audio-first and targets intelligibility rather than accent imitation. IPA is support, not a prerequisite alphabet. Shared pronunciation visuals must not contain explanation-locale prose; Vietnamese explanations remain Vietnamese while target English, IPA, and example sentences remain English.
 
 All earlier published Unit 1–8 identities/order remain stable so inserting Unit 0 does not invalidate learner progress or FSRS identity.
 
@@ -50,7 +52,10 @@ A production English node uses the Language V3 player and must include appropria
 - controlled recall or production;
 - checkpoint;
 - stable assessed IDs for FSRS;
-- EN/VI intent and identity parity.
+- EN/VI intent and identity parity;
+- locale-pure learner-facing explanation copy.
+
+Normal communicative lesson nodes must contain enough lexical/chunk material to accomplish their Can-Do. Focused pronunciation nodes are judged by meaningful sound coverage and listening/production evidence instead of arbitrary vocabulary quotas.
 
 Audio/TTS, delayed review, FSRS persistence, semantic visuals, structured feedback, and unit paths are now shipped product capabilities rather than deferred ideas.
 
