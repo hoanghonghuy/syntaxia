@@ -83,7 +83,7 @@
     "it": "IT",
     "languages": "Languages",
     "itLead": "SQL, web, and programming — interactive sandboxes.",
-    "languagesLead": "Chinese first — HSK 3.0 Band 1 starter lessons (greetings through school life).",
+    "languagesLead": "Mandarin, English, and Japanese — each core track builds pronunciation, vocabulary, grammar, skills, and review foundations.",
     "browse": "Browse tracks",
     "underDevelopment": "Under development"
   },
@@ -100,7 +100,7 @@
       "advanced": "Advanced"
     },
     "comingSoon": "Coming soon — lessons for this track are on the way.",
-    "hskBand1": "HSK 3.0 · Band 1",
+    "hskBand1": "Mandarin · Foundation",
     "cefrA1": "CEFR A1",
     "jlptN5": "JLPT N5",
     "itVocab": "IT vocabulary",
