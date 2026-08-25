@@ -23,6 +23,9 @@ vocab:
   - { word: "big", ipa: "/bɪɡ/", gloss: "large" }
   - { word: "please", ipa: "/pliːz/", gloss: "polite request word" }
   - { word: "thank you", ipa: "/ˈθæŋk juː/", gloss: "polite thanks" }
+  - { word: "I'd like", ipa: "/aɪd laɪk/", gloss: "polite phrase for choosing or requesting an item" }
+  - { word: "I'll take it", ipa: "/aɪl teɪk ɪt/", gloss: "says you have decided to buy the item" }
+  - { word: "here you are", ipa: "/hɪr ju ɑːr/", gloss: "said when handing something to someone" }
 steps:
   - type: scene
     title: "Buy the bag you chose"
