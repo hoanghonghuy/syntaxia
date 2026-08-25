@@ -11,7 +11,7 @@ describe('UI refresh contract', () => {
   it('keeps the home page domain-first, concise, and motion-safe', () => {
     const home = read('app/pages/index.vue')
     assert.match(home, /class="hero home-hero"/)
-    assert.match(home, /home-learning-map/)
+    assert.match(home, /<HomeLearningMap\s*\/>/)
     assert.match(home, /domain-card--it/)
     assert.match(home, /domain-card--languages/)
     assert.match(home, /domain:\s*'it'/)
@@ -22,6 +22,32 @@ describe('UI refresh contract', () => {
     assert.doesNotMatch(home, /domain\.underDevelopment/)
     assert.doesNotMatch(home, /home\.subtitle/)
     assert.doesNotMatch(home, /track\.description/)
+    assert.doesNotMatch(home, /chip-(?:sql|web|js|en|zh|ja)/)
+  })
+
+  it('derives the learning orbit from catalog data and keeps it accessible', () => {
+    const component = read('app/components/HomeLearningMap.vue')
+    const utility = read('app/utils/homeLearningMap.ts')
+    const profiles = read('app/utils/languageTrackProfile.ts')
+
+    assert.match(component, /v-for="\(item, index\) in items"/)
+    assert.match(component, /buildHomeLearningMapItems\(catalog\.tracks\)/)
+    assert.match(component, /<NuxtLink[\s\S]*class="home-learning-chip"/)
+    assert.match(component, /itemProgress\(item\)/)
+    assert.match(component, /:aria-label="itemAriaLabel\(item\)"/)
+    assert.match(component, /:to="localePath\('\/tracks'\)"/)
+    assert.match(component, /prefers-reduced-motion:\s*reduce/)
+
+    assert.match(utility, /tracks\.filter\(\(track\) => track\.category === config\.category\)/)
+    assert.match(utility, /item\.category === 'code'/)
+    assert.match(utility, /item\.category === 'languages'/)
+    assert.match(utility, /languageTrackProfile\(track\.id\)/)
+    assert.match(utility, /profile\.specialty/)
+
+    assert.match(profiles, /'english-basics':[^{]*\{[^}]*homeLabel:\s*'EN'/)
+    assert.match(profiles, /'chinese-hsk':[^{]*\{[^}]*homeLabel:\s*'中文'/)
+    assert.match(profiles, /'japanese-jlpt':[^{]*\{[^}]*homeLabel:\s*'日本語'/)
+    assert.match(profiles, /'chinese-it-vocab':[^{]*\{[^}]*specialty:\s*true/)
   })
 
   it('keeps the loading skeleton structurally aligned with the new home', () => {
