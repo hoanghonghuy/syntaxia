@@ -37,6 +37,12 @@ describe('language v3 semantic visuals', () => {
       'student-leaving',
       'student-studying',
       'shop-counter-request',
+      'tech-repair-desk',
+      'qr-code-login',
+      'ai-project-flow',
+      'model-training-monitor',
+      'nlp-context-window',
+      'china-tech-hubs',
     ])
     for (const key of LANGUAGE_VISUAL_KEYS) {
       assert.equal(isLanguageVisualKey(key), true)
@@ -86,11 +92,17 @@ describe('language v3 semantic visuals', () => {
     assert.match(exercise, /isAppOwnedLanguageImageUrl/)
   })
 
-  it('ships semantic scenes for the English, Mandarin, and Japanese golden seeds', () => {
+  it('ships semantic scenes for the English, Mandarin, Japanese, and specialty Chinese seeds', () => {
     const expected = [
       ['english-basics', 'greetings', 'classmates-meeting'],
       ['chinese-hsk', 'greetings', 'classmates-meeting'],
       ['japanese-jlpt', 'politeness', 'shop-counter-request'],
+      ['chinese-it-vocab', 'hardware-software', 'tech-repair-desk'],
+      ['chinese-it-vocab', 'internet-apps', 'qr-code-login'],
+      ['chinese-it-vocab', 'ai-basics', 'ai-project-flow'],
+      ['chinese-it-vocab', 'deep-learning', 'model-training-monitor'],
+      ['chinese-it-vocab', 'nlp-basics', 'nlp-context-window'],
+      ['chinese-it-vocab', 'tech-hubs', 'china-tech-hubs'],
     ]
     for (const locale of ['en', 'vi']) {
       for (const [track, slug, visualKey] of expected) {
