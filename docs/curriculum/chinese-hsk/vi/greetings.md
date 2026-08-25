@@ -17,8 +17,11 @@ can_do: "Chào một người, cảm ơn và kết thúc một lượt giao ti�
 pattern: "你好 / 谢谢 / 不客气 / 再见"
 objectives:
   - "Mở và kết thúc một lượt chào hỏi ngắn"
+  - "Hiểu 你 và 好 bên trong 你好 nhưng dùng 你好 như một cụm chào hỏi hoàn chỉnh"
   - "Đáp lại 谢谢 một cách tự nhiên"
 vocab:
+  - { hanzi: "你", pinyin: "nǐ", gloss: "bạn" }
+  - { hanzi: "好", pinyin: "hǎo", gloss: "tốt; ổn" }
   - { hanzi: "你好", pinyin: "nǐ hǎo", gloss: "xin chào" }
   - { hanzi: "谢谢", pinyin: "xiè xie", gloss: "cảm ơn" }
   - { hanzi: "不客气", pinyin: "bú kè qi", gloss: "không có gì" }
@@ -42,11 +45,11 @@ steps:
     text: "谢谢你。"
     reading: "xiè xie nǐ"
   - type: tip
-    title: "Học theo cả cụm giao tiếp"
-    body: "Hãy học 你好, 谢谢, 不客气 và 再见 như các cụm dùng ngay trong giao tiếp. Pinyin hỗ trợ phát âm; chữ Hán vẫn là dạng đích cần nhận biết."
+    title: "Hiểu thành phần, nhưng dùng cả cụm"
+    body: "你 là “bạn”, 好 là “tốt/ổn”; ghép thành 你好 thì hãy học như một lời chào hoàn chỉnh. Tương tự, 谢谢, 不客气 và 再见 nên được nhớ theo cả lượt giao tiếp chứ không chỉ như mục từ rời."
   - type: teach
     items:
-      - { form: "你好", reading: "nǐ hǎo", gloss: "xin chào", example: "你好！" }
+      - { form: "你 + 好 → 你好", reading: "nǐ + hǎo → nǐ hǎo", gloss: "bạn + tốt/ổn → lời chào xin chào", example: "你好！" }
       - { form: "谢谢", reading: "xiè xie", gloss: "cảm ơn", example: "谢谢你。" }
       - { form: "不客气", reading: "bú kè qi", gloss: "không có gì", example: "不客气。" }
       - { form: "再见", reading: "zài jiàn", gloss: "tạm biệt", example: "再见！" }
