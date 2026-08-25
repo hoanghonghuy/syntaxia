@@ -23,6 +23,11 @@ vocab:
   - { word: "computer", ipa: "/kəmˈpjuːtər/", gloss: "máy tính" }
   - { word: "door", ipa: "/dɔːr/", gloss: "cửa" }
   - { word: "room", ipa: "/ruːm/", gloss: "phòng" }
+  - { word: "on", ipa: "/ɑːn/", gloss: "ở trên và tiếp xúc với một bề mặt" }
+  - { word: "under", ipa: "/ˈʌndər/", gloss: "ở phía dưới" }
+  - { word: "in", ipa: "/ɪn/", gloss: "ở bên trong" }
+  - { word: "next to", ipa: "/nekst tə/", gloss: "ở ngay bên cạnh" }
+  - { word: "where's", ipa: "/werz/", gloss: "viết tắt của where is; dùng để hỏi vị trí" }
 steps:
   - type: scene
     title: "Tìm cuốn sách bị thất lạc"
