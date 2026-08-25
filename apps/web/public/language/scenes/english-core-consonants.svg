@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+  <g font-family="system-ui,sans-serif" text-anchor="middle" fill="#1f2937">
+    <rect x="58" y="64" width="286" height="126" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
+    <text x="130" y="116" font-size="32" font-weight="750">three</text>
+    <text x="130" y="158" font-size="23" fill="#64748b">/θriː/</text>
+    <text x="272" y="116" font-size="32" font-weight="750">this</text>
+    <text x="272" y="158" font-size="23" fill="#64748b">/ðɪs/</text>
+    <path d="M174 126h54" stroke="#6366f1" stroke-width="5" stroke-linecap="round"/>
+
+    <rect x="376" y="64" width="286" height="126" rx="24" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+    <text x="448" y="116" font-size="32" font-weight="750">right</text>
+    <text x="448" y="158" font-size="23" fill="#64748b">/raɪt/</text>
+    <text x="590" y="116" font-size="32" font-weight="750">light</text>
+    <text x="590" y="158" font-size="23" fill="#64748b">/laɪt/</text>
+    <path d="M492 126h54" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
+
+    <rect x="217" y="232" width="286" height="126" rx="24" fill="#fff7ed" stroke="#f97316" stroke-width="3"/>
+    <text x="289" y="284" font-size="32" font-weight="750">very</text>
+    <text x="289" y="326" font-size="23" fill="#64748b">/ˈveri/</text>
+    <text x="431" y="284" font-size="32" font-weight="750">five</text>
+    <text x="431" y="326" font-size="23" fill="#64748b">/faɪv/</text>
+    <path d="M333 294h54" stroke="#f97316" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>
