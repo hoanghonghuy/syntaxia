@@ -13,27 +13,43 @@ A track is not complete merely because files exist, the parser accepts them, or 
 | **engine-ready** | The player/sandbox, parser, persistence, and rendering needed by the track exist and have regression coverage. |
 | **content-complete** | Every item in the declared curriculum map is authored in EN/VI with no placeholder/stub nodes. |
 | **quality-reviewed** | Content passes the domain pedagogy contract: explanations, mental models/visuals, interactions, feedback, recall/production, parity, accessibility-oriented authoring, and stable grading identity. |
-| **production-ready** | All previous states are true **and** the canonical Product CI + DB-backed release gate are green for the exact commit being promoted. |
+| **production-ready** | All previous states are true **and** the canonical Product CI + DB-backed release gate are green for the exact commit promoted to `main`. |
 
 Do not use `done`, `complete`, or `production-ready` without naming the scope when a track name could imply a larger curriculum.
 
-## Current declared products
+## Production baseline
 
-All products below are green on the exact curriculum branch head `8610a2b0435ae502863836d32716adf58ece9c44` through Product CI #88.
+PRs #4, #5 and #6 have been merged. The production `main` baseline is the release merge commit `a91d9c8c4e4bc14ee3ad92e13ab5c75fe5ecbcf2`, which contains the stabilization and curriculum-completion work previously developed on the feature branches.
 
-| Product | Declared scope | Engine | Content | Quality | Release |
-|---------|----------------|--------|---------|---------|---------|
-| SQL Fundamentals | 42 portable-SQL lessons | ready | complete | IT Learning V2 reviewed by `verify-sql-fundamentals.mjs` | **green #88** |
-| PostgreSQL | 19 PostgreSQL-specific basic→advanced lessons | ready | complete | IT Learning V2 reviewed by `verify-postgresql-v2.mjs` | **green #88** |
-| JavaScript Basics | 9 MDN-mapped scripting fundamentals lessons | ready | complete | IT Learning V2 reviewed by `verify-javascript-v2.mjs` | **green #88** |
-| HTML Basics | 12 semantic-HTML fundamentals lessons | ready | complete | IT Learning V2 reviewed by `verify-html-v2.mjs` | **green #88** |
-| CSS Basics | 14 fundamentals-through-Flexbox lessons | ready | complete | IT Learning V2 reviewed by `verify-css-v2.mjs` | **green #88** |
-| Mandarin Level 1 foundation | pronunciation Unit 0 + 11 communicative units / **41 nodes per locale** | ready | complete | Mandarin + Language V3 reviewed | **green #88** |
-| English A1 foundation | 8 Can-Do units / **30 nodes per locale** | ready | complete | English + Language V3 + golden-unit reviewed | **green #88** |
-| Japanese N5 foundation | 9 communicative units / **28 nodes per locale** | ready | complete | Japanese + Language V3 reviewed | **green #88** |
-| Chinese IT specialty | 6 mapped workplace-technology lessons per locale | ready | complete | Language V3 specialty reviewed | **green #88** |
+The production product scopes at that baseline are:
 
-The stabilization branch head is `d677c898d49f01fcaa9e79e4c6bcfaf010f3020d`; its Product CI #11 is green and PR #4 is Ready for review. The curriculum branch stays draft until that stabilization PR is merged and the final merge head is revalidated.
+| Product | Declared production scope | Engine | Content | Quality |
+|---------|---------------------------|--------|---------|---------|
+| SQL Fundamentals | 42 portable-SQL lessons | ready | complete | IT Learning V2 reviewed by `verify-sql-fundamentals.mjs` |
+| PostgreSQL | 19 PostgreSQL-specific basic→advanced lessons | ready | complete | IT Learning V2 reviewed by `verify-postgresql-v2.mjs` |
+| JavaScript Basics | 9 MDN-mapped scripting fundamentals lessons | ready | complete | IT Learning V2 reviewed by `verify-javascript-v2.mjs` |
+| HTML Basics | 12 semantic-HTML fundamentals lessons | ready | complete | IT Learning V2 reviewed by `verify-html-v2.mjs` |
+| CSS Basics | 14 fundamentals-through-Flexbox lessons | ready | complete | IT Learning V2 reviewed by `verify-css-v2.mjs` |
+| Mandarin Level 1 foundation | pronunciation Unit 0 + 11 communicative units / **41 nodes per locale** | ready | complete | Mandarin + Language V3 reviewed |
+| English A1 foundation | 8 communicative units / **30 nodes per locale** | ready | complete | English + Language V3 reviewed |
+| Japanese N5 foundation | 9 communicative units / **28 nodes per locale** | ready | complete | Japanese + Language V3 reviewed |
+| Chinese IT specialty | 6 mapped workplace-technology lessons per locale | ready | complete | Language V3 specialty reviewed |
+
+The release promotion candidate passed canonical Product CI before merge. Exact post-merge `main` CI remains a release-health signal and does not redefine curriculum scope.
+
+## Active expansion branch
+
+`feature/home-learning-map-english-foundation` starts from the production release baseline and contains two related product improvements:
+
+1. **Interactive homepage learning map** — preserve the existing `SQL / Web / JS / EN / 中文 / 日本語` visual language while deriving available chips, navigation targets, positions, and progress from live catalog data instead of hard-coded template spans.
+2. **English foundation-first A1 progression** — insert a backward-compatible Unit 0 before the existing eight English communicative units.
+
+The active branch changes the declared English product to **9 units / 37 nodes per locale**:
+
+- Unit 0: 7 pronunciation/grammar/checkpoint/review nodes;
+- Units 1–8: existing 30 communicative nodes, with all published IDs/orders preserved.
+
+Until canonical Product CI and DB-backed release E2E are green on the exact active-branch head, the **37-node English scope is content-authored and statically quality-locked but not yet promoted production-ready**.
 
 ## Domain-specific quality bars
 
@@ -47,21 +63,27 @@ The current IT verifiers enforce the relevant sequence across every declared les
 
 Where a sandbox exists, the authored canonical solution must grade successfully and the exercise must expose progressive hints rather than the solution as the starter.
 
-### Languages
+### Core languages
 
-A production communicative language lesson is a guided session:
+A core foreign-language product must teach reusable language foundations rather than only presenting situations:
+
+`pronunciation / sound -> high-frequency vocabulary & chunks -> basic sentence grammar -> listening -> interaction / speaking -> reading & writing production -> checkpoint -> delayed retrieval`
+
+A production communicative node then follows:
 
 `scene -> listen / notice -> understand -> interact -> controlled recall / production -> checkpoint -> delayed retrieval`
 
-A pronunciation foundation may use a domain-appropriate sequence instead:
+A pronunciation-focused node may instead use:
 
 `visual sound model -> listen -> discriminate -> recall/type -> checkpoint -> delayed retrieval`
 
 Target-language naturalness, listening behavior, semantic visuals, stable assessed IDs, feedback/remediation, EN/VI intent parity, and FSRS review identity are product requirements rather than optional polish.
 
+The exact order is language-specific: Mandarin needs Pinyin/tone foundations; English needs sound-spelling/stress plus a minimal sentence grammar core; Japanese should eventually harden kana/sound and basic grammar prerequisites without renumbering its published N5 units.
+
 ### Specialty language
 
-Specialty tracks add a second rule: terminology must be embedded in a realistic work action. A glossary with selection questions is not a complete specialty-language product.
+Specialty tracks are optional additions after or alongside a core language path. Terminology must be embedded in a realistic work action. A glossary with selection questions is not a complete specialty-language product, and specialty terminology must never substitute for the core language foundation.
 
 ## Course-scope rules
 
@@ -69,22 +91,34 @@ Specialty tracks add a second rule: terminology must be embedded in a realistic 
 - `postgresql` is a bounded **19-lesson PostgreSQL-specific basic→advanced** product.
 - `javascript-basics` ending at functions is a complete **Basics** product; DOM/events/fetch/async require a separately mapped continuation product.
 - `html-basics` and `css-basics` are bounded web-foundation products with executable HTML/CSS sandbox exercises; broader web application work belongs in a future separately mapped product.
-- `english-basics` declares an **8-unit CEFR A1 foundation product**; it does not claim exhaustive CEFR A1 or exam preparation.
+- `english-basics` on the active branch declares a **9-unit / 37-node CEFR A1 language foundation** with Unit 0 for pronunciation and core sentence grammar; it does not claim exhaustive CEFR A1, a complete grammar/phonology syllabus, or exam preparation.
 - `chinese-hsk` declares a **practical Mandarin Level 1 foundation** with an explicit pronunciation Unit 0 plus 11 communicative units; it does not claim exhaustive HSK exam preparation or complete HSK-system coverage.
 - `japanese-jlpt` declares a **9-unit practical N5 foundation**; it does not claim exhaustive JLPT N5 exam preparation, all N5 vocabulary, kanji, or grammar.
-- `chinese-it-vocab` is a six-lesson **specialty mini-course** constrained by its cited term map.
+- `chinese-it-vocab` is a six-lesson **optional specialty mini-course** constrained by its cited term map.
 
 Expansion begins by creating/updating a public-reference curriculum map and defining a new declared scope. Do not silently change what an existing “complete” label means.
 
 ## Language foundation quality locks
 
-### English
+### English — active branch target
 
-Exactly **8 units / 30 nodes per locale**. Units cover meeting, people, navigation/numbers, café ordering, routine/time, shopping, home/location, and free-time planning. Stable assessed IDs feed the generic FSRS engine.
+Exactly **9 units / 37 nodes per locale**.
+
+Unit 0 (`en-a1-foundation-00`) uses `unit_order: 0` and sort orders `-7..-1`:
+
+1. `sound-spelling` — sound ↔ meaning ↔ spelling, with IPA as reference support;
+2. `word-stress` — strong syllable in familiar beginner words;
+3. `sentence-melody` — useful beginner intonation cues for intelligibility;
+4. `core-sentences` — subject pronouns, `am/is/are`, contractions, basic one-clause `be` sentences;
+5. `basic-questions` — `be` inversion, wh + `be`, and `Do you like …?`;
+6. `foundation-checkpoint`;
+7. `foundation-review`.
+
+The existing Units 1–8 remain meeting, people, navigation/numbers, café ordering, routine/time, shopping, home/location, and free-time planning. Existing IDs/orders are unchanged. Stable assessed IDs from Unit 0 must enter the same generic FSRS engine as later units.
 
 ### Japanese
 
-Exactly **9 units / 28 nodes per locale**. Units cover politeness/requesting, people/family, numbers, food/drink, places, routine/time, classroom interaction, train travel, and free-time planning. The source map keeps the official N5 ability boundary separate from open vocabulary cross-checks.
+Exactly **9 units / 28 nodes per locale** in the production baseline. Units cover politeness/requesting, people/family, numbers, food/drink, places, routine/time, classroom interaction, train travel, and free-time planning. The source map keeps the official N5 ability boundary separate from open vocabulary cross-checks.
 
 ### Mandarin
 
@@ -93,9 +127,18 @@ Exactly **41 nodes per locale**:
 - Unit 0 pronunciation foundation: `pinyin-syllables`, `tones`, `tone-changes`, `pronunciation-checkpoint`, `pronunciation-review`;
 - Units 1–11: the existing practical communicative foundation.
 
-Unit 0 uses `unit_order: 0` and sort orders `-5..-1` without renumbering published Unit 1+ identities. The API/parser/web contract preserves zero as a real unit order. New app-owned diagrams visualize syllable structure, tone contours, and canonical spelling versus connected speech.
+Unit 0 uses `unit_order: 0` and sort orders `-5..-1` without renumbering published Unit 1+ identities. The API/parser/web contract preserves zero as a real unit order. App-owned diagrams visualize syllable structure, tone contours, and canonical spelling versus connected speech.
 
-Backward compatibility is part of the product lock: inserting earlier language content must not rewind a returning learner's established frontier. Earlier newly inserted nodes remain available for catch-up, while Continue advances from the furthest completed point. A learner with no prior progress starts at the newly inserted foundation normally.
+## Backward-compatible language expansion
+
+Inserting an earlier language foundation must not fabricate progress or rewind a returning learner's established frontier:
+
+- new learners start at the new first curriculum node;
+- returning learners continue after their furthest completed published node;
+- inserted earlier nodes remain available for catch-up;
+- if the forward frontier is exhausted, remaining gaps become available/current normally.
+
+This behavior is generic and must not be hard-coded to Mandarin or English.
 
 ## Verification ownership
 
@@ -135,25 +178,14 @@ Canonical Product CI verifies:
 - progress and notes persistence;
 - FSRS review synchronization and persisted cards/logs across Mandarin, English, Japanese and Chinese IT.
 
-The cold Go-test requirement is intentional: some drive-package smoke tests read `docs/curriculum` outside the Go package cache key, so cached package results must never hide curriculum changes.
+The cold Go-test requirement is intentional: drive-package smoke tests may read `docs/curriculum` outside the Go package cache key, so cached package results must never hide curriculum changes.
 
-## Current branch objective and status
+For the active English branch, release E2E must additionally prove:
 
-`feature/curriculum-product-completion` closes product-level curriculum gaps without mixing them into stabilization PR #4.
-
-Completed branch slices:
-
-1. **Chinese IT specialty** — six EN/VI V3 workplace-technology sessions with semantic visuals, stable review IDs and FSRS evidence.
-2. **English Basics** — expanded the old starter into an 8-unit/30-node A1 foundation mapped to practical Can-Do outcomes.
-3. **Japanese JLPT** — expanded the old starter into a 9-unit/28-node practical N5 foundation with routine, classroom, train and free-time units.
-4. **Mandarin** — added a five-node pronunciation foundation before the 11 communicative units, bringing the product to 41 nodes/locale; added official Pinyin/proficiency-source boundaries and backward-compatible learner-frontier behavior.
-5. **CI/source-of-truth hardening** — exact runtime inventory locks, cold Go curriculum smoke, full DB-backed E2E/FSRS evidence, and synchronized current-scope documentation.
-
-### Exact-head evidence
-
-Product CI #88 at `8610a2b0435ae502863836d32716adf58ece9c44` is fully green: curriculum, API, web, Language V3, PostgreSQL-backed E2E, sandboxes, progress/notes, and persisted FSRS rows.
-
-The branch remains **draft for dependency ordering**, not because of a known failing technical gate: PR #4 must merge to `develop`, then the final PR #5 merge head must be revalidated before PR #5 is marked Ready.
+- `english-basics = 37` live nodes per locale;
+- Unit 0 exposes `unitOrder: 0` through the API;
+- `en-fnd-sound-hear-meet` synchronizes into and persists through the FSRS review engine;
+- homepage learning-map changes pass build/UI/a11y regressions.
 
 ## Related
 
