@@ -11,7 +11,7 @@ Core foreign-language tracks teach the language itself first. Specialty language
 | Track | Declared scope | Current authored inventory | Learning model |
 |-------|----------------|----------------------------|----------------|
 | `chinese-hsk` | Practical Mandarin Level 1 foundation | **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** | Pronunciation foundation + Language V3 communicative units + FSRS |
-| `english-basics` | CEFR A1 language foundation | **Foundation Unit 0 + 8 communicative units / 37 nodes per locale** | Pronunciation + core sentence grammar + communicative units + FSRS |
+| `english-basics` | CEFR A1 language foundation | **Foundation Unit 0 + 8 communicative units / 39 nodes per locale** | Pronunciation + core sentence grammar + communicative units + FSRS |
 | `japanese-jlpt` | JLPT N5 practical foundation | **9 communicative units / 28 nodes per locale** | Language V3 daily-life/classroom units with lesson/checkpoint/review roles + FSRS |
 | `chinese-it-vocab` | Chinese IT specialty mini-course | **6 guided lessons per locale** | Optional Language V3 specialty sessions with inline checkpoints + FSRS-assessed items |
 
@@ -28,10 +28,11 @@ All four tracks ship paired `en` and `vi` explanation locales. Exact inventories
    - Specialty Chinese IT: [`chinese-it-vocab-map.md`](./chinese-it-vocab-map.md)
 4. **Track-scoped lookup is mandatory.** Database uniqueness is `(track_id, slug, locale)`, so lesson, notes, and solution requests must include the track when slugs can overlap.
 5. **EN/VI parity is a grading contract, not literal translation.** Stable assessed IDs and learning intent stay aligned; learner-facing explanations must sound natural in their locale.
-6. **Semantic visuals and listening are first-class inputs.** App-owned visual keys/assets and safe app-owned image paths replace decorative hotlinks and hard-coded Mandarin behavior.
+6. **Semantic visuals and listening are first-class inputs.** App-owned visual keys/assets and safe app-owned image paths replace decorative hotlinks and hard-coded Mandarin behavior. Shared assets that contain instructional prose are forbidden; explanation-language copy belongs in locale content.
 7. **Foundation prerequisites own the beginning of a core-language path; Can-Do outcomes validate use afterward.** Pronunciation/sound, high-frequency vocabulary/chunks, and a minimal productive grammar core are introduced before or as prerequisites for later communicative outcomes. Syntaxia does not sequence beginners by grammar tables alone, but neither does it assume communicative situations can substitute for language foundations.
 8. **Inserted curriculum must be backward-compatible.** New earlier units may become available for catch-up, but must not silently rewind a returning learner's established Continue frontier.
 9. **Specialty tracks stay optional.** `chinese-it-vocab` may teach terminology inside realistic work actions, but it is not part of the prerequisite sequence for core Mandarin.
+10. **The runtime catalog is application-owned.** API startup reconciles built-in track metadata before lesson sync so a long-lived DB created before later language tracks existed cannot expose only older tracks.
 
 ## Core-language progression
 
@@ -61,23 +62,25 @@ Communicative nodes continue to follow:
 
 `scene -> listen / notice -> understand -> interact -> controlled recall / production -> checkpoint -> later retrieval`
 
-The product distinguishes canonical written Pinyin from common connected-speech tone changes; it does not respell lexical forms merely to mimic a surface realization.
+The product distinguishes canonical written Pinyin from common connected-speech tone changes; it does not respell lexical forms merely to mimic a surface realization. Normal communicative lesson nodes must carry a reusable pattern and enough lexical/chunk material to complete their Can-Do instead of passing with a token vocabulary list.
 
 This is a bounded practical Level 1 foundation, not exhaustive HSK exam preparation or full HSK-system coverage.
 
 ## English A1 foundation
 
-English now begins with **Unit 0 — English foundation** before the eight communicative units. Its seven nodes establish the smallest useful language toolkit:
+English now begins with **Unit 0 — English foundation** before the eight communicative units. Its nine nodes establish the smallest useful language toolkit:
 
 1. `sound-spelling` — hear familiar words first; connect sound, meaning, and standard spelling; IPA is reference support;
-2. `word-stress` — hear/reproduce the strong syllable in familiar beginner words;
-3. `sentence-melody` — notice useful statement / yes-no / wh-question intonation shapes for intelligibility;
-4. `core-sentences` — subject pronouns + `am/is/are`, common contractions, one-clause `be` sentences;
-5. `basic-questions` — `be` inversion, wh + `be`, and a high-frequency `Do you like …?` frame;
-6. `foundation-checkpoint` — integrate sound/stress and sentence-building;
-7. `foundation-review` — retrieve the core forms before Unit 1.
+2. `vowel-contrasts` — discriminate `/ɪ/ ↔ /iː/` and `/æ/ ↔ /ʌ/` in familiar words;
+3. `consonant-clarity` — use simple articulation cues for `/θ/ ↔ /ð/`, `/r/ ↔ /l/`, and `/v/ ↔ /f/`;
+4. `word-stress` — hear/reproduce the strong syllable in familiar beginner words;
+5. `sentence-melody` — notice useful statement / yes-no / wh-question intonation shapes for intelligibility;
+6. `core-sentences` — subject pronouns + `am/is/are`, common contractions, one-clause `be` sentences;
+7. `basic-questions` — `be` inversion, wh + `be`, and a high-frequency `Do you like …?` frame;
+8. `foundation-checkpoint` — integrate pronunciation and sentence-building;
+9. `foundation-review` — retrieve the core forms before Unit 1.
 
-Unit 0 uses `unit_id: en-a1-foundation-00`, `unit_order: 0`, and sort orders `-7..-1`; the original Units 1–8 retain their published IDs/orders.
+Unit 0 uses `unit_id: en-a1-foundation-00`, `unit_order: 0`, and sort orders `-9..-1`; the original Units 1–8 retain their published IDs/orders.
 
 After Unit 0, the eight observable A1 outcomes remain:
 
@@ -90,7 +93,7 @@ After Unit 0, the eight observable A1 outcomes remain:
 7. describe a familiar room and locate a common object;
 8. state a preference and make a simple free-time plan.
 
-Vocabulary is learned as **sound + meaning + spelling + usable chunk**, while grammar is taught as a productive sentence-building tool. The course targets intelligibility and usable A1 control, not accent imitation, an exhaustive grammar reference, or exam preparation.
+Vocabulary is learned as **sound + meaning + spelling + usable chunk**, while grammar is taught as a productive sentence-building tool. Pronunciation work is audio-first and targets intelligibility, not accent imitation. Communicative English lesson nodes require enough lexical/chunk material for the Can-Do; focused pronunciation nodes are evaluated by sound coverage rather than arbitrary word count.
 
 ## Japanese N5 foundation outcomes
 
@@ -129,6 +132,12 @@ Language sequencing separates **curriculum order** from **returning-learner cont
 
 This avoids fabricating progress/FSRS rows while also avoiding an unexpected rewind after a curriculum expansion.
 
+## Runtime catalog compatibility
+
+All bundled curriculum tracks are application-owned catalog entries. API startup reconciles these entries before curriculum sync. The operation is idempotent and exists specifically so a database initialized in an older release cannot remain stuck with only the tracks known at that time.
+
+The DB-backed release gate reproduces this state by deleting English, Japanese, and Chinese IT track rows before API startup. Startup must recreate them and `/api/v1/tracks` must expose all required tracks before exact lesson-inventory checks proceed.
+
 ## Content paths
 
 ```text
@@ -142,7 +151,7 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 
 - Extend a track only after updating/researching its curriculum map
 - Establish pronunciation/sound, reusable vocabulary/chunks, and minimal productive grammar before relying on situation-only sequencing
-- Keep naturalness, audio target language, semantic visuals, accessibility, and mobile behavior in the review bar
+- Keep naturalness, audio target language, semantic visuals, locale-pure explanation copy, accessibility, and mobile behavior in the review bar
 - Ship EN/VI together and preserve stable assessed IDs
 - Keep specialty terminology inside realistic optional actions such as identify, explain, report, compare, or troubleshoot
 - Preserve established learner frontiers when inserting earlier content
@@ -156,6 +165,7 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 - Fall back to generic `mcq` authoring when a semantic exercise type fits
 - Force SQL/JS/HTML sandbox UX into language tracks
 - Publish glossary-only specialty lessons
+- Put explanation-language prose into a shared pronunciation SVG
 - Hotlink language visuals from external domains
 - Renumber old published identities merely to insert a new prerequisite unit
 - Invent new curriculum outlines without a source map
@@ -165,13 +175,13 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 Canonical Language V3 regression locks:
 
 - Mandarin: **41 nodes per locale**, including pronunciation Unit 0;
-- English: **9 units / 37 nodes per locale**, including foundation Unit 0;
+- English: **9 units / 39 nodes per locale**, including foundation Unit 0;
 - Japanese: **9 units / 28 nodes per locale**;
 - Chinese IT: **6 optional specialty lessons per locale**;
 - EN/VI identity + stable assessed-ID parity;
-- language path ordering, backward-compatible continuation, audio, visuals, feedback, and review behavior.
+- locale quality, language path ordering, backward-compatible continuation, audio, visuals, feedback, and review behavior.
 
-The DB-backed release E2E verifies exact live inventories, persisted progress, notes, and FSRS rows across Mandarin, English, Japanese, and Chinese IT. Exact branch release evidence is recorded only after canonical Product CI passes for the promoted commit.
+The DB-backed release E2E verifies exact live inventories, runtime track reconciliation, persisted progress, notes, and FSRS rows across Mandarin, English, Japanese, and Chinese IT. Exact branch release evidence is recorded only after canonical Product CI passes for the promoted commit.
 
 ## Related
 
