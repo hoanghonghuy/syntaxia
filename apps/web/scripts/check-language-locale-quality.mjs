@@ -73,4 +73,20 @@ describe('language locale and content quality', () => {
       }
     }
   })
+
+  it('requires enough lexical material in every English communicative lesson node', () => {
+    for (const locale of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/english-basics/${locale}`)
+      for (const file of readdirSync(dir).filter((name) => name.endsWith('.md'))) {
+        const body = read(join(dir, file))
+        if (scalar(body, 'unit_role') !== 'lesson') continue
+        if (scalar(body, 'unit_order') === '0') continue
+        assert.ok(
+          vocabCount(body) >= 5,
+          `${locale}/${file} has only ${vocabCount(body)} vocab items; English communicative lessons need >= 5`,
+        )
+        assert.ok(scalar(body, 'pattern'), `${locale}/${file} missing an explicit reusable pattern`)
+      }
+    }
+  })
 })
