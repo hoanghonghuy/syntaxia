@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
+  <title id="title">Train platform</title>
+  <desc id="desc">A passenger checks a train destination sign before boarding at a station platform.</desc>
+  <rect width="320" height="180" rx="24" fill="#f4f7f6"/>
+  <rect x="112" y="44" width="154" height="82" rx="14" fill="#ffffff" stroke="#5b6b63" stroke-width="4"/>
+  <rect x="132" y="59" width="46" height="28" rx="5" fill="#dce8e3"/><rect x="187" y="59" width="46" height="28" rx="5" fill="#dce8e3"/>
+  <circle cx="146" cy="110" r="11" fill="#0d9488"/><circle cx="229" cy="110" r="11" fill="#0d9488"/>
+  <path d="M114 132h164M124 146h144" stroke="#879a91" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="84" r="16" fill="#879a91"/><path d="M42 138c4-26 12-38 22-38s18 12 22 38z" fill="#879a91"/>
+  <rect x="34" y="38" width="58" height="30" rx="5" fill="#ffffff" stroke="#5b6b63" stroke-width="3"/>
+  <path d="M45 53h36M91 78h18m-9-8 9 8-9 8" fill="none" stroke="#0d9488" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
