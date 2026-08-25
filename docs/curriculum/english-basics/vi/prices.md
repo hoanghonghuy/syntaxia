@@ -23,6 +23,10 @@ vocab:
   - { word: "shop", ipa: "/ʃɑːp/", gloss: "cửa hàng" }
   - { word: "bag", ipa: "/bæɡ/", gloss: "túi" }
   - { word: "buy", ipa: "/baɪ/", gloss: "mua" }
+  - { word: "how much", ipa: "/haʊ mʌtʃ/", gloss: "dùng để hỏi giá" }
+  - { word: "this", ipa: "/ðɪs/", gloss: "chỉ món đồ ở gần" }
+  - { word: "that", ipa: "/ðæt/", gloss: "chỉ món đồ ở xa hơn" }
+  - { word: "dollar", ipa: "/ˈdɑːlər/", gloss: "đơn vị tiền tệ dùng trong các mức giá mẫu" }
 steps:
   - type: scene
     title: "Hỏi giá trước khi mua"
