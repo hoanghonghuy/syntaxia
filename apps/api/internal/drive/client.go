@@ -160,10 +160,13 @@ func ParseLessonFile(entry FileEntry) (domain.Lesson, error) {
 			}
 		}
 	}
-	if unitOrder := getInt("unit_order"); unitOrder > 0 {
-		ensureExercise()
-		if _, exists := l.Exercise["unitOrder"]; !exists {
-			l.Exercise["unitOrder"] = unitOrder
+	if _, authored := fm["unit_order"]; authored {
+		unitOrder := getInt("unit_order")
+		if unitOrder >= 0 {
+			ensureExercise()
+			if _, exists := l.Exercise["unitOrder"]; !exists {
+				l.Exercise["unitOrder"] = unitOrder
+			}
 		}
 	}
 	if seed, ok := fm["sandbox_seed"].(map[string]any); ok {

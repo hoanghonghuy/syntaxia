@@ -50,6 +50,33 @@ describe('language communicative unit path', () => {
     )
   })
 
+  it('keeps an explicit foundation unit at unit order zero before unit one', () => {
+    const lessons = [
+      lesson('u1-lesson', 'greetings', 'Say hello', 1, {
+        unitId: 'u1', unitTitle: 'Meet someone', unitOrder: 1,
+        unitCanDo: 'Start a short meeting', unitRole: 'lesson',
+      }),
+      lesson('u0-review', 'pronunciation-review', 'Review sounds', -1, {
+        unitId: 'u0', unitTitle: 'Pronunciation foundation', unitOrder: 0,
+        unitCanDo: 'Hear and reproduce core sounds', unitRole: 'review',
+      }),
+      lesson('u0-lesson', 'pinyin-syllables', 'Build a syllable', -5, {
+        unitId: 'u0', unitTitle: 'Pronunciation foundation', unitOrder: 0,
+        unitCanDo: 'Hear and reproduce core sounds', unitRole: 'lesson',
+      }),
+    ]
+
+    assert.deepEqual(
+      orderLanguageLessons(lessons).map((item) => item.id),
+      ['u0-lesson', 'u0-review', 'u1-lesson'],
+    )
+    const units = buildLanguageUnits(lessons, [], 'en')
+    assert.deepEqual(units.map((unit) => unit.id), ['u0', 'u1'])
+    assert.equal(units[0]?.sortOrder, 0)
+    assert.equal(units[0]?.nodes[0]?.state, 'current')
+    assert.equal(units[1]?.nodes[0]?.state, 'locked')
+  })
+
   it('groups explicit summary metadata and preserves lesson/checkpoint/review roles', () => {
     const lessons = [
       lesson('l1', 'hello', 'Say hello', 1, {

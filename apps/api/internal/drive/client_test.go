@@ -257,8 +257,8 @@ func TestChineseHSKCurriculumSmoke(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(files) != 60 {
-		t.Fatalf("expected 60 chinese-hsk lessons (30x2 locales), got %d", len(files))
+	if len(files) != 82 {
+		t.Fatalf("expected 82 chinese-hsk lessons (41x2 locales), got %d", len(files))
 	}
 	validExerciseTypes := map[string]struct{}{
 		"mcq": {},

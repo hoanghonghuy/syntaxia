@@ -29,7 +29,7 @@ type LanguageUnitMeta = {
   id: string
   title: string
   canDo: string
-  sortOrder: number
+  sortOrder: number | null
   role: LanguageUnitRole
 }
 
@@ -43,13 +43,13 @@ function text(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function positiveInt(value: unknown): number {
-  if (typeof value === 'number' && Number.isInteger(value) && value > 0) return value
+function nonNegativeInt(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isInteger(value) && value >= 0) return value
   if (typeof value === 'string' && /^\d+$/.test(value.trim())) {
     const parsed = Number(value)
-    return parsed > 0 ? parsed : 0
+    return parsed >= 0 ? parsed : null
   }
-  return 0
+  return null
 }
 
 function normalizeRole(value: unknown): LanguageUnitRole {
@@ -69,7 +69,7 @@ export function languageUnitMeta(lesson: LanguageUnitLesson): LanguageUnitMeta {
     id: text(lesson.unitId) || text(exercise?.unitId),
     title: text(lesson.unitTitle) || text(exercise?.unitTitle),
     canDo: text(lesson.unitCanDo) || text(exercise?.unitCanDo),
-    sortOrder: positiveInt(lesson.unitOrder) || positiveInt(exercise?.unitOrder),
+    sortOrder: nonNegativeInt(lesson.unitOrder) ?? nonNegativeInt(exercise?.unitOrder),
     role: normalizeRole(lesson.unitRole || exercise?.unitRole),
   }
 }
@@ -77,10 +77,11 @@ export function languageUnitMeta(lesson: LanguageUnitLesson): LanguageUnitMeta {
 /**
  * Return the learner-facing sequence for a language track.
  *
- * Explicit units are ordered by unit_order. Inside one unit, acquisition lessons
- * come first, followed by its checkpoint and then its review node. Lessons with
- * the same role keep their authored lesson order. Unmigrated content is a
- * singleton unit keyed only by stable lesson identity/order, never by slug/title.
+ * Explicit units are ordered by unit_order, including an authored foundation
+ * unit at order 0. Inside one unit, acquisition lessons come first, followed by
+ * its checkpoint and then its review node. Lessons with the same role keep
+ * their authored lesson order. Unmigrated content is a singleton unit keyed
+ * only by stable lesson identity/order, never by slug/title.
  */
 export function orderLanguageLessons<T extends LanguageUnitLesson>(lessons: T[]): T[] {
   type IndexedLesson = { lesson: T; index: number; role: LanguageUnitRole }
@@ -96,7 +97,7 @@ export function orderLanguageLessons<T extends LanguageUnitLesson>(lessons: T[])
   lessons.forEach((lesson, index) => {
     const meta = languageUnitMeta(lesson)
     const key = meta.id || `lesson:${lesson.id}`
-    const order = meta.sortOrder || lesson.sortOrder
+    const order = meta.sortOrder ?? lesson.sortOrder
     const existing = groups.get(key)
     const group = existing || { key, order, firstIndex: index, lessons: [] }
     if (order < group.order) group.order = order
@@ -142,7 +143,7 @@ export function buildLanguageUnits(
     const meta = languageUnitMeta(lesson)
     const unitId = meta.id || `lesson:${lesson.id}`
     const unitTitle = meta.title || lesson.title
-    const unitOrder = meta.sortOrder || lesson.sortOrder
+    const unitOrder = meta.sortOrder ?? lesson.sortOrder
     const existing = units.get(unitId)
     const unit = existing || {
       id: unitId,
