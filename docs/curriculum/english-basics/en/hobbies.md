@@ -23,6 +23,10 @@ vocab:
   - { word: "read", ipa: "/riːd/", gloss: "look at and understand written words" }
   - { word: "music", ipa: "/ˈmjuːzɪk/", gloss: "music" }
   - { word: "game", ipa: "/ɡeɪm/", gloss: "activity with rules for fun" }
+  - { word: "like", ipa: "/laɪk/", gloss: "enjoy or have a positive preference for something" }
+  - { word: "do you like", ipa: "/duː ju laɪk/", gloss: "asks about another person's preference" }
+  - { word: "yes, I do", ipa: "/jes aɪ duː/", gloss: "short positive answer to a do-question" }
+  - { word: "no, I don't", ipa: "/noʊ aɪ doʊnt/", gloss: "short negative answer to a do-question" }
 steps:
   - type: scene
     title: "Find something you both like"
