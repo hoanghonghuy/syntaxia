@@ -37,6 +37,8 @@ describe('language v3 semantic visuals', () => {
       'student-leaving',
       'student-studying',
       'shop-counter-request',
+      'home-room',
+      'weekend-plan',
       'tech-repair-desk',
       'qr-code-login',
       'ai-project-flow',
@@ -92,9 +94,13 @@ describe('language v3 semantic visuals', () => {
     assert.match(exercise, /isAppOwnedLanguageImageUrl/)
   })
 
-  it('ships semantic scenes for the English, Mandarin, Japanese, and specialty Chinese seeds', () => {
+  it('ships semantic scenes for core language and specialty production seeds', () => {
     const expected = [
       ['english-basics', 'greetings', 'classmates-meeting'],
+      ['english-basics', 'time-of-day', 'student-studying'],
+      ['english-basics', 'prices', 'shop-counter-request'],
+      ['english-basics', 'home-things', 'home-room'],
+      ['english-basics', 'hobbies', 'weekend-plan'],
       ['chinese-hsk', 'greetings', 'classmates-meeting'],
       ['japanese-jlpt', 'politeness', 'shop-counter-request'],
       ['chinese-it-vocab', 'hardware-software', 'tech-repair-desk'],
