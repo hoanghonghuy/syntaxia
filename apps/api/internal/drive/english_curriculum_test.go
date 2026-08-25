@@ -36,8 +36,8 @@ func TestEnglishA1CurriculumSmoke(t *testing.T) {
 	}); err != nil {
 		t.Fatal(err)
 	}
-	if len(files) != 74 {
-		t.Fatalf("expected 74 english-basics lessons (37x2 locales), got %d", len(files))
+	if len(files) != 78 {
+		t.Fatalf("expected 78 english-basics lessons (39x2 locales), got %d", len(files))
 	}
 
 	foundationNodes := 0
@@ -86,7 +86,7 @@ func TestEnglishA1CurriculumSmoke(t *testing.T) {
 		}
 	}
 
-	if foundationNodes != 14 {
-		t.Fatalf("expected 14 English Unit 0 files (7x2 locales), got %d", foundationNodes)
+	if foundationNodes != 18 {
+		t.Fatalf("expected 18 English Unit 0 files (9x2 locales), got %d", foundationNodes)
 	}
 }
