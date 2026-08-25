@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">English be sentence builder</title>
+  <desc id="desc">A sentence builder connecting English pronouns to the matching am, is, and are forms, including a simple question pattern.</desc>
+  <rect width="720" height="360" rx="28" fill="#f8f9fd"/>
+  <text x="360" y="60" text-anchor="middle" font-family="system-ui,sans-serif" font-size="26" font-weight="760" fill="#20263a">pronoun + be + information</text>
+  <g font-family="system-ui,sans-serif" font-size="22" font-weight="700">
+    <rect x="62" y="102" width="160" height="58" rx="18" fill="#fff" stroke="#d3d7e6" stroke-width="3"/>
+    <text x="142" y="138" text-anchor="middle" fill="#20263a">I</text>
+    <rect x="280" y="102" width="160" height="58" rx="18" fill="#eef0ff" stroke="#b8c0ff" stroke-width="3"/>
+    <text x="360" y="138" text-anchor="middle" fill="#3730a3">am</text>
+    <rect x="498" y="102" width="160" height="58" rx="18" fill="#fff" stroke="#d3d7e6" stroke-width="3"/>
+    <text x="578" y="138" text-anchor="middle" fill="#20263a">Mai.</text>
+
+    <rect x="62" y="188" width="160" height="58" rx="18" fill="#fff" stroke="#d3d7e6" stroke-width="3"/>
+    <text x="142" y="224" text-anchor="middle" fill="#20263a">You / We / They</text>
+    <rect x="280" y="188" width="160" height="58" rx="18" fill="#eef0ff" stroke="#b8c0ff" stroke-width="3"/>
+    <text x="360" y="224" text-anchor="middle" fill="#3730a3">are</text>
+    <rect x="498" y="188" width="160" height="58" rx="18" fill="#fff" stroke="#d3d7e6" stroke-width="3"/>
+    <text x="578" y="224" text-anchor="middle" fill="#20263a">here.</text>
+  </g>
+  <path d="M118 295h484" stroke="#c4c9dc" stroke-width="4" stroke-linecap="round"/>
+  <text x="360" y="329" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#59617a">Question: move am / is / are before the subject → Are you ready?</text>
+</svg>
