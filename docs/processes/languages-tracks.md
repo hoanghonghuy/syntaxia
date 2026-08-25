@@ -4,16 +4,18 @@
 
 Define the current **languages** catalog in Syntaxia and the actual product scope of each track. “Production-ready” always refers to the declared product boundary; it does **not** mean Syntaxia covers an entire CEFR, HSK, or JLPT certification system.
 
+Core foreign-language tracks teach the language itself first. Specialty language such as Chinese for IT remains a separate optional product and never replaces pronunciation, vocabulary, grammar, listening, speaking, reading/writing, and review foundations.
+
 ## Current tracks
 
 | Track | Declared scope | Current authored inventory | Learning model |
 |-------|----------------|----------------------------|----------------|
 | `chinese-hsk` | Practical Mandarin Level 1 foundation | **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** | Pronunciation foundation + Language V3 communicative units + FSRS |
-| `english-basics` | CEFR A1 foundation course | **8 communicative units / 30 nodes per locale** | Language V3 Can-Do units with lesson/checkpoint/review roles + FSRS |
+| `english-basics` | CEFR A1 language foundation | **Foundation Unit 0 + 8 communicative units / 37 nodes per locale** | Pronunciation + core sentence grammar + communicative units + FSRS |
 | `japanese-jlpt` | JLPT N5 practical foundation | **9 communicative units / 28 nodes per locale** | Language V3 daily-life/classroom units with lesson/checkpoint/review roles + FSRS |
-| `chinese-it-vocab` | Chinese IT specialty mini-course | **6 guided lessons per locale** | Language V3 specialty sessions with inline checkpoints + FSRS-assessed items |
+| `chinese-it-vocab` | Chinese IT specialty mini-course | **6 guided lessons per locale** | Optional Language V3 specialty sessions with inline checkpoints + FSRS-assessed items |
 
-All four tracks ship paired `en` and `vi` explanation locales. The exact current inventories are locked by static Language V3 tests and PostgreSQL-backed runtime E2E.
+All four tracks ship paired `en` and `vi` explanation locales. Exact inventories are locked by static Language V3 tests and PostgreSQL-backed runtime E2E.
 
 ## Architecture lock
 
@@ -27,8 +29,17 @@ All four tracks ship paired `en` and `vi` explanation locales. The exact current
 4. **Track-scoped lookup is mandatory.** Database uniqueness is `(track_id, slug, locale)`, so lesson, notes, and solution requests must include the track when slugs can overlap.
 5. **EN/VI parity is a grading contract, not literal translation.** Stable assessed IDs and learning intent stay aligned; learner-facing explanations must sound natural in their locale.
 6. **Semantic visuals and listening are first-class inputs.** App-owned visual keys/assets and safe app-owned image paths replace decorative hotlinks and hard-coded Mandarin behavior.
-7. **Can-Do outcomes own sequencing.** Foundation courses are organized around observable interaction and useful information extraction, not grammar-table progression.
+7. **Foundation prerequisites own the beginning of a core-language path; Can-Do outcomes validate use afterward.** Pronunciation/sound, high-frequency vocabulary/chunks, and a minimal productive grammar core are introduced before or as prerequisites for later communicative outcomes. Syntaxia does not sequence beginners by grammar tables alone, but neither does it assume communicative situations can substitute for language foundations.
 8. **Inserted curriculum must be backward-compatible.** New earlier units may become available for catch-up, but must not silently rewind a returning learner's established Continue frontier.
+9. **Specialty tracks stay optional.** `chinese-it-vocab` may teach terminology inside realistic work actions, but it is not part of the prerequisite sequence for core Mandarin.
+
+## Core-language progression
+
+The common product principle is:
+
+`pronunciation / sound -> high-frequency vocabulary & chunks -> basic sentence grammar -> listening -> interaction / speaking -> reading & writing production -> checkpoint -> spaced retrieval`
+
+Individual languages adapt this order to their writing/sound system instead of forcing an identical syllabus shape.
 
 ## Mandarin Level 1 foundation
 
@@ -54,9 +65,21 @@ The product distinguishes canonical written Pinyin from common connected-speech 
 
 This is a bounded practical Level 1 foundation, not exhaustive HSK exam preparation or full HSK-system coverage.
 
-## English A1 foundation outcomes
+## English A1 foundation
 
-The current English foundation has eight product outcomes:
+English now begins with **Unit 0 — English foundation** before the eight communicative units. Its seven nodes establish the smallest useful language toolkit:
+
+1. `sound-spelling` — hear familiar words first; connect sound, meaning, and standard spelling; IPA is reference support;
+2. `word-stress` — hear/reproduce the strong syllable in familiar beginner words;
+3. `sentence-melody` — notice useful statement / yes-no / wh-question intonation shapes for intelligibility;
+4. `core-sentences` — subject pronouns + `am/is/are`, common contractions, one-clause `be` sentences;
+5. `basic-questions` — `be` inversion, wh + `be`, and a high-frequency `Do you like …?` frame;
+6. `foundation-checkpoint` — integrate sound/stress and sentence-building;
+7. `foundation-review` — retrieve the core forms before Unit 1.
+
+Unit 0 uses `unit_id: en-a1-foundation-00`, `unit_order: 0`, and sort orders `-7..-1`; the original Units 1–8 retain their published IDs/orders.
+
+After Unit 0, the eight observable A1 outcomes remain:
 
 1. meet someone;
 2. introduce people close to you;
@@ -67,7 +90,7 @@ The current English foundation has eight product outcomes:
 7. describe a familiar room and locate a common object;
 8. state a preference and make a simple free-time plan.
 
-This is a bounded foundation product, not exhaustive CEFR A1 coverage or exam preparation.
+Vocabulary is learned as **sound + meaning + spelling + usable chunk**, while grammar is taught as a productive sentence-building tool. The course targets intelligibility and usable A1 control, not accent imitation, an exhaustive grammar reference, or exam preparation.
 
 ## Japanese N5 foundation outcomes
 
@@ -83,13 +106,15 @@ The Japanese foundation is aligned to the official N5 ability boundary: basic re
 8. confirm a train destination and understand where to get off;
 9. state a preference and make a simple free-time plan.
 
-This is a practical N5 foundation, not exhaustive exam preparation, all N5 vocabulary, kanji, or grammar.
+This is a practical N5 foundation, not exhaustive exam preparation, all N5 vocabulary, kanji, or grammar. A future Japanese foundation-hardening slice should apply the same core-language principle with kana/sound/grammar prerequisites without renumbering published N5 units.
 
 ## What counts as a complete language lesson
 
 A normal V3 communicative learning node must make the learner do something observable rather than just read a vocabulary list:
 
 `scene -> listen / notice -> understand -> interact -> controlled recall / production -> checkpoint -> later retrieval`
+
+Foundation nodes may emphasize sound discrimination or sentence construction earlier in the sequence, but must still include listening, stable assessed identity, controlled recall/production, checkpoint evidence, and later review.
 
 Core unit nodes keep explicit `unit_id`, `unit_order`, `unit_role`, `unit_can_do`, and stable assessed IDs. The Chinese IT specialty mini-course uses one V3 guided session per mapped workplace topic and still requires stable IDs, listening, production, semantic visuals, and checkpoint evidence.
 
@@ -116,15 +141,18 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 ## Do
 
 - Extend a track only after updating/researching its curriculum map
+- Establish pronunciation/sound, reusable vocabulary/chunks, and minimal productive grammar before relying on situation-only sequencing
 - Keep naturalness, audio target language, semantic visuals, accessibility, and mobile behavior in the review bar
 - Ship EN/VI together and preserve stable assessed IDs
-- Keep specialty terminology inside realistic actions such as identify, explain, report, compare, or troubleshoot
+- Keep specialty terminology inside realistic optional actions such as identify, explain, report, compare, or troubleshoot
 - Preserve established learner frontiers when inserting earlier content
 - Use `?track=` for lesson-scoped API reads where slugs overlap
 
 ## Don't
 
 - Call the current scopes “full HSK”, “exhaustive CEFR A1”, or “full JLPT N5 exam preparation”
+- Replace language foundations with IT/specialty vocabulary
+- Turn the course into grammar-table memorization without listening/production
 - Fall back to generic `mcq` authoring when a semantic exercise type fits
 - Force SQL/JS/HTML sandbox UX into language tracks
 - Publish glossary-only specialty lessons
@@ -137,13 +165,13 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 Canonical Language V3 regression locks:
 
 - Mandarin: **41 nodes per locale**, including pronunciation Unit 0;
-- English: **8 units / 30 nodes per locale**;
+- English: **9 units / 37 nodes per locale**, including foundation Unit 0;
 - Japanese: **9 units / 28 nodes per locale**;
-- Chinese IT: **6 specialty lessons per locale**;
+- Chinese IT: **6 optional specialty lessons per locale**;
 - EN/VI identity + stable assessed-ID parity;
 - language path ordering, backward-compatible continuation, audio, visuals, feedback, and review behavior.
 
-The DB-backed release E2E verifies exact live inventories, persisted progress, notes, and FSRS rows across Mandarin, English, Japanese, and Chinese IT. Product CI #88 is green at `8610a2b0435ae502863836d32716adf58ece9c44`.
+The DB-backed release E2E verifies exact live inventories, persisted progress, notes, and FSRS rows across Mandarin, English, Japanese, and Chinese IT. Exact branch release evidence is recorded only after canonical Product CI passes for the promoted commit.
 
 ## Related
 
