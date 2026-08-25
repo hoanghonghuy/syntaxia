@@ -23,6 +23,9 @@ vocab:
   - { word: "bed", ipa: "/bed/", gloss: "giường" }
   - { word: "table", ipa: "/ˈteɪbəl/", gloss: "bàn" }
   - { word: "chair", ipa: "/tʃer/", gloss: "ghế" }
+  - { word: "book", ipa: "/bʊk/", gloss: "sách" }
+  - { word: "wall", ipa: "/wɔːl/", gloss: "tường" }
+  - { word: "there's", ipa: "/ðerz/", gloss: "viết tắt của there is; dùng để nói có một vật ở đó" }
 steps:
   - type: scene
     title: "Cho một người xem phòng của bạn"
