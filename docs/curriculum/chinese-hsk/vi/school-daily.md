@@ -14,16 +14,19 @@ unit_order: 4
 unit_can_do: "Nói khi nào và ở đâu mình học tiếng Trung và xác nhận một kế hoạch học đơn giản"
 unit_role: lesson
 can_do: "Nói mình là học sinh/sinh viên và mô tả việc học tiếng Trung ở trường"
-pattern: "我是学生。/ 我在学校学习汉语。"
+pattern: "我是学生。/ 我在学校学习汉语。/ 你在哪里学习汉语？"
 objectives:
   - "Phân biệt giáo viên / học sinh / trường học"
   - "Dùng 在 + nơi chốn trước một hành động học đơn giản"
+  - "Nhận ra 哪里 ở vị trí nơi chốn cần hỏi"
 vocab:
   - { hanzi: "学校", pinyin: "xué xiào", gloss: "trường học" }
   - { hanzi: "老师", pinyin: "lǎo shī", gloss: "giáo viên" }
   - { hanzi: "学生", pinyin: "xué sheng", gloss: "học sinh / sinh viên" }
   - { hanzi: "学习", pinyin: "xué xí", gloss: "học" }
   - { hanzi: "汉语", pinyin: "hàn yǔ", gloss: "tiếng Trung" }
+  - { hanzi: "在", pinyin: "zài", gloss: "ở; tại" }
+  - { hanzi: "哪里", pinyin: "nǎ lǐ", gloss: "ở đâu" }
 steps:
   - type: scene
     title: "Tình huống"
@@ -40,12 +43,12 @@ steps:
     reading: "wǒ zài xué xiào xué xí hàn yǔ"
   - type: tip
     title: "在 + nơi chốn + hành động"
-    body: "Dùng 在 để đặt hành động vào một nơi: 我在学校学习汉语. Hãy học cả cụm thay vì ghi nhớ 学校 và 学习 như hai từ rời."
+    body: "Dùng 在 để đặt hành động vào một nơi: 我在学校学习汉语. Khi chưa biết nơi đó, 哪里 đứng đúng vị trí cần hỏi: 你在哪里学习汉语？"
   - type: teach
     items:
       - { form: "我是学生。", reading: "wǒ shì xué sheng", gloss: "Tôi là học sinh / sinh viên.", example: "我是学生。" }
-      - { form: "老师", reading: "lǎo shī", gloss: "giáo viên", example: "她是老师。" }
-      - { form: "学校", reading: "xué xiào", gloss: "trường học", example: "我在学校。" }
+      - { form: "在学校", reading: "zài xué xiào", gloss: "ở trường", example: "我在学校。" }
+      - { form: "在哪里？", reading: "zài nǎ lǐ", gloss: "ở đâu?", example: "你在哪里学习汉语？" }
       - { form: "我在学校学习汉语。", reading: "wǒ zài xué xiào xué xí hàn yǔ", gloss: "Tôi học tiếng Trung ở trường.", example: "我在学校学习汉语。" }
   - type: practice
     id: zh-school-reply-1
