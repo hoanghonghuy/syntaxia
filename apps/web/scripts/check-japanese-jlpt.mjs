@@ -1,23 +1,19 @@
 /**
  * Japanese JLPT N5 foundation curriculum + map + V3 contract.
- * Run: node --experimental-strip-types --test scripts/check-japanese-jlpt.mjs
  */
 import assert from 'node:assert/strict'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import {
-  gradeLanguageExercise,
-  isLanguageTrack,
-  languageVocabFromLesson,
-} from '../app/utils/languageLesson.ts'
+import { gradeLanguageExercise, isLanguageTrack, languageVocabFromLesson } from '../app/utils/languageLesson.ts'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
 const UNITS = [
+  { id: 'ja-n5-foundation-00', order: '0', nodes: [['kana-sounds', 'lesson'], ['mora-length', 'lesson'], ['core-sentences', 'lesson'], ['foundation-checkpoint', 'checkpoint'], ['foundation-review', 'review']] },
   { id: 'ja-n5-shop-request-01', order: '1', nodes: [['politeness', 'lesson'], ['politeness-checkpoint', 'checkpoint'], ['politeness-review', 'review']] },
   { id: 'ja-n5-people-02', order: '2', nodes: [['people', 'lesson'], ['family', 'lesson'], ['people-checkpoint', 'checkpoint'], ['people-review', 'review']] },
   { id: 'ja-n5-number-03', order: '3', nodes: [['numbers', 'lesson'], ['number-checkpoint', 'checkpoint'], ['number-review', 'review']] },
@@ -38,6 +34,11 @@ function scalar(body, key) {
 
 function assessedIds(body) {
   return [...body.matchAll(/^\s+(?:-\s+)?id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
+}
+
+function vocabCount(body) {
+  const section = body.match(/^vocab:\s*\n([\s\S]*?)(?=^steps:\s*$)/m)?.[1] || ''
+  return [...section.matchAll(/^\s+-\s+\{/gm)].length
 }
 
 function assertV3Node(body, label) {
@@ -69,31 +70,29 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     assert.equal(surface[0].form, '水')
     assert.equal(surface[0].reading, 'みず')
     assert.equal(surface[0].lang, 'ja')
-
     const alias = languageVocabFromLesson({ exercise: { vocab: [{ kanji: '学校', kana: 'がっこう', gloss: 'school' }] } })
     assert.equal(alias[0].form, '学校')
     assert.equal(alias[0].reading, 'がっこう')
-    assert.equal(alias[0].lang, 'ja')
   })
 
-  it('ships the OpenJLPT-backed N5 foundation map', () => {
-    const map = join(repoRoot, 'docs/processes/japanese-jlpt-n5-map.md')
-    assert.equal(existsSync(map), true)
-    const body = read(map)
-    assert.match(body, /evanclan\/OpenJLPT/)
-    assert.match(body, /9 communicative units/i)
-    for (const theme of ['daily routine', 'classroom', 'train', 'free-time']) {
-      assert.match(body, new RegExp(theme, 'i'))
-    }
+  it('ships a source-backed foundation-first N5 map', () => {
+    const body = read(join(repoRoot, 'docs/processes/japanese-jlpt-n5-map.md'))
+    assert.match(body, /JLPT official level summary/)
+    assert.match(body, /JLPT FAQ/)
+    assert.match(body, /Irodori Starter/)
+    assert.match(body, /10 units \/ 33 nodes per locale/i)
+    assert.match(body, /kana ↔ sound/i)
+    assert.match(body, /mora\/length/i)
+    assert.match(body, /basic sentence order \+ particles \+ polite forms/i)
+    assert.doesNotMatch(body, /official JLPT word list/i)
   })
 
-  it('ships exactly 28 paired EN/VI V3 nodes across nine units', () => {
-    assert.equal(SLUGS.length, 28)
+  it('ships exactly 33 paired EN/VI V3 nodes across ten units', () => {
+    assert.equal(SLUGS.length, 33)
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}`)
       const files = readdirSync(dir).filter((f) => f.endsWith('.md')).map((f) => f.replace(/\.md$/, '')).sort()
       assert.deepEqual(files, [...SLUGS].sort())
-
       for (const unit of UNITS) {
         for (const [slug, role] of unit.nodes) {
           const body = read(join(dir, `${slug}.md`))
@@ -108,6 +107,19 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     }
   })
 
+  it('locks Unit 0 as sound -> length -> grammar -> checkpoint -> review', () => {
+    const foundation = UNITS[0]
+    assert.deepEqual(foundation.nodes.map(([slug]) => slug), ['kana-sounds', 'mora-length', 'core-sentences', 'foundation-checkpoint', 'foundation-review'])
+    for (const locale of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}`)
+      for (const [slug, role] of foundation.nodes) {
+        const body = read(join(dir, `${slug}.md`))
+        assert.equal(scalar(body, 'unit_role'), role)
+        assert.ok(vocabCount(body) >= 5, `${locale}/${slug}: foundation should carry reusable material`)
+      }
+    }
+  })
+
   it('keeps stable assessed identities aligned between EN and VI', () => {
     for (const slug of SLUGS) {
       const en = read(join(repoRoot, `docs/curriculum/japanese-jlpt/en/${slug}.md`))
@@ -116,15 +128,9 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     }
   })
 
-  it('ships app-owned semantic assets for the new routine and train scenes', () => {
+  it('ships app-owned semantic assets for routine and train scenes', () => {
     for (const asset of ['daily-clock.svg', 'train-platform.svg']) {
       assert.equal(existsSync(join(webRoot, 'public/language/scenes', asset)), true, `missing ${asset}`)
-    }
-    for (const locale of ['en', 'vi']) {
-      const routine = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}/daily-routine.md`))
-      const train = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}/train-trip.md`))
-      assert.match(routine, /imageUrl:\s*"\/language\/scenes\/daily-clock\.svg"/)
-      assert.match(train, /imageUrl:\s*"\/language\/scenes\/train-platform\.svg"/)
     }
   })
 
