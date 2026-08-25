@@ -23,6 +23,9 @@ vocab:
   - { word: "school", ipa: "/skuːl/", gloss: "trường học" }
   - { word: "work", ipa: "/wɜːrk/", gloss: "công việc" }
   - { word: "home", ipa: "/hoʊm/", gloss: "nhà" }
+  - { word: "have breakfast", ipa: "/hæv ˈbrekfəst/", gloss: "ăn bữa sáng" }
+  - { word: "go to school", ipa: "/ɡoʊ tə skuːl/", gloss: "đi đến trường" }
+  - { word: "then", ipa: "/ðen/", gloss: "sau đó; dùng để nối sang hành động tiếp theo" }
 steps:
   - type: scene
     title: "So sánh hai buổi sáng"
