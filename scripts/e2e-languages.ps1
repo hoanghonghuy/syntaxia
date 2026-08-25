@@ -57,7 +57,7 @@ Ok "auth/me"
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 41 },
-  @{ Track = "english-basics"; Slug = "sound-spelling"; ExpectedLessons = 37 },
+  @{ Track = "english-basics"; Slug = "sound-spelling"; ExpectedLessons = 39 },
   @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 28 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
