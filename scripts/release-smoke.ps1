@@ -4,20 +4,15 @@
   Automated release smoke gate (fail-closed).
 
 .DESCRIPTION
-  Runs health check, SQL Fundamentals E2E, catalog smoke, Go package tests,
-  and frontend test gates. See docs/processes/release-hardening.md.
+  Runs the full existing-product release contract: health, exact runtime curriculum inventory,
+  catalog/domain E2E, SQL/language flows, JS + HTML/CSS sandboxes, complete Go tests/vet,
+  frontend production build, product-flow/UI/language/i18n regressions.
 
 .PARAMETER SkipDocker
   Do not run docker-up.ps1 (stack already running).
 
 .PARAMETER BaseUrl
   API base URL for HTTP smokes. Default http://127.0.0.1:8082
-
-.EXAMPLE
-  powershell -File scripts/release-smoke.ps1
-
-.EXAMPLE
-  powershell -File scripts/release-smoke.ps1 -SkipDocker
 #>
 param(
   [switch]$SkipDocker,
@@ -26,7 +21,6 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-
 $Root = Split-Path -Parent $PSScriptRoot
 
 function Fail([string]$Message) {
@@ -39,22 +33,16 @@ function Step([string]$Title) {
   Write-Host "==> $Title" -ForegroundColor Cyan
 }
 
-function Invoke-NodeTest([string]$Label, [string[]]$NodeArgs) {
-  Step $Label
-  Push-Location (Join-Path $Root "apps\web")
-  try {
-    & node @NodeArgs
-    if ($LASTEXITCODE -ne 0) { Fail "$Label failed" }
-  } finally {
-    Pop-Location
-  }
+function Invoke-Npm([string]$Script) {
+  & npm run $Script
+  if ($LASTEXITCODE -ne 0) { Fail "npm run $Script failed" }
 }
 
 Write-Host "=== Syntaxia release smoke ===" -ForegroundColor Cyan
 Write-Host "Root: $Root"
 
 if (-not $SkipDocker) {
-  Step "Stack up (docker-up.ps1)"
+  Step "Stack up"
   & (Join-Path $PSScriptRoot "docker-up.ps1")
   if ($LASTEXITCODE -ne 0) { Fail "docker-up.ps1 exited $LASTEXITCODE" }
 }
@@ -68,44 +56,53 @@ try {
 if ($health.status -ne "ok") { Fail "/health status=$($health.status)" }
 Write-Host "OK: /health status=ok backend=$($health.backend)" -ForegroundColor Green
 
-Step "API + E2E suite (catalog + SQL + languages)"
-& (Join-Path $PSScriptRoot "e2e-all.ps1") -BaseUrl $BaseUrl
+Step "Full DB-backed domain E2E + sandboxes"
+& (Join-Path $PSScriptRoot "e2e-all.ps1") -BaseUrl $BaseUrl -IncludeSandboxes
 if ($LASTEXITCODE -ne 0) { Fail "e2e-all.ps1 exited $LASTEXITCODE" }
 
-Step "Catalog architecture (legacy IT categories)"
+Step "Legacy catalog compatibility"
 & (Join-Path $PSScriptRoot "check-catalog.ps1") -BaseUrl $BaseUrl
 if ($LASTEXITCODE -ne 0) { Fail "check-catalog.ps1 exited $LASTEXITCODE" }
 
-Step "JavaScript Basics curriculum"
+Step "JavaScript Basics compatibility"
 & (Join-Path $PSScriptRoot "check-javascript-basics.ps1") -BaseUrl $BaseUrl
 if ($LASTEXITCODE -ne 0) { Fail "check-javascript-basics.ps1 exited $LASTEXITCODE" }
 
-Step "JavaScript sandbox grade"
-& (Join-Path $PSScriptRoot "check-js-sandbox.ps1") -BaseUrl $BaseUrl
-if ($LASTEXITCODE -ne 0) { Fail "check-js-sandbox.ps1 exited $LASTEXITCODE" }
-
-Step "HTML/CSS sandbox grade"
-& (Join-Path $PSScriptRoot "check-htmlcss-sandbox.ps1") -BaseUrl $BaseUrl
-if ($LASTEXITCODE -ne 0) { Fail "check-htmlcss-sandbox.ps1 exited $LASTEXITCODE" }
-
-Step "Go package tests"
+Step "Go module, test and vet gate"
 Remove-Item Env:GOOS -ErrorAction SilentlyContinue
 Remove-Item Env:GOARCH -ErrorAction SilentlyContinue
 Push-Location (Join-Path $Root "apps\api")
 try {
-  go test ./internal/learning ./internal/sandbox ./internal/markdown ./internal/content ./internal/service/...
-  if ($LASTEXITCODE -ne 0) { Fail "go test exited $LASTEXITCODE" }
+  & go mod verify
+  if ($LASTEXITCODE -ne 0) { Fail "go mod verify failed" }
+  & go test -mod=readonly ./...
+  if ($LASTEXITCODE -ne 0) { Fail "go test failed" }
+  & go vet -mod=readonly ./...
+  if ($LASTEXITCODE -ne 0) { Fail "go vet failed" }
 } finally {
   Pop-Location
 }
 
-Invoke-NodeTest "Frontend: i18n" @("--test", "scripts/check-i18n-parity.mjs")
-Invoke-NodeTest "Frontend: TOC" @("--experimental-strip-types", "--test", "scripts/check-toc.mjs")
-Invoke-NodeTest "Frontend: shell UX" @("--test", "scripts/check-shell-ux.mjs")
-Invoke-NodeTest "Frontend: theme" @("--experimental-strip-types", "--test", "scripts/check-theme-accent.mjs")
-Invoke-NodeTest "Frontend: audit remediation" @("scripts/run-audit-remediation-tests.mjs")
+Step "Frontend production build + regression contract"
+Push-Location (Join-Path $Root "apps\web")
+try {
+  Invoke-Npm "build"
+  Invoke-Npm "test:product-flows"
+  Invoke-Npm "test:shell-ux"
+  Invoke-Npm "test:ui-refresh"
+  Invoke-Npm "test:ui-system"
+  Invoke-Npm "test:language-v3"
+  Invoke-Npm "test:language-path-v2"
+  Invoke-Npm "test:language-audio"
+  Invoke-Npm "test:language-review"
+  Invoke-Npm "test:i18n"
+  Invoke-Npm "test:e2e-suite"
+  Invoke-Npm "test:audit-remediation"
+} finally {
+  Pop-Location
+}
 
 Write-Host ""
-Write-Host "PASS: release smoke (automated gates)" -ForegroundColor Green
-Write-Host "Manual UI pass: home Continue, lesson TOC, sandbox hints - see release-hardening.md" -ForegroundColor DarkGray
+Write-Host "PASS: release smoke (full existing-product gate)" -ForegroundColor Green
+Write-Host "Before develop -> main: confirm Product CI + deployment provider checks are green." -ForegroundColor DarkGray
 exit 0

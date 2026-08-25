@@ -48,28 +48,38 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 | ID | Item | Status | Depends on | Done means |
 |---|---|---|---|---|
 | L0 | **FSRS review persistence + concurrency hardening** | done | language review foundation | Durable server-side cards/logs, due scheduling, CAS conflict semantics, reproducible Go CI |
-| L1 | **V3 pedagogy + content-quality source of truth** | done | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked; Vercel smoke green on `8540a76` |
-| L2 | **Dedicated language player correctness + feedback loop** | done | L1 | Progressive hints, delayed non-passing solution reveal, readable structured solutions, keyboard/mobile/screen-reader guards; targeted regression **5/5** + Vercel smoke green on `5775242` |
-| L3 | **Semantic visual asset pipeline** | done | L1–L2 | Closed app-owned `visualKey` registry/provenance, semantic SVG renderer, safe static fallback, EN/VI golden scene + image choice; targeted regression **6/6** and branch Vercel smoke green after sync on `870e865` |
-| L4 | **True communicative unit model** | done | L1–L2 | Explicit content-owned unit metadata, lean summary API, Can-Do grouping, lessons + checkpoint + review roles, sequential unlock; no slug/title grouping hacks; Language V3 CI #77 + IT CI #27 + Vercel green on `e854df2` |
-| L5 | **Golden units: English / Mandarin / Japanese** | in progress | L2–L4 | One production reference unit per language with naturalness, visual, audio, exercise, review and accessibility review |
-| L6 | **Curriculum migration + full release QA** | todo | L5 | Remaining published language content migrated; parity/content gates, E2E, mobile/a11y, review persistence all verified |
+| L1 | **V3 pedagogy + content-quality source of truth** | done | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked |
+| L2 | **Dedicated language player correctness + feedback loop** | done | L1 | Progressive hints, delayed non-passing solution reveal, structured solutions, keyboard/mobile/screen-reader guards |
+| L3 | **Semantic visual asset pipeline** | done | L1–L2 | App-owned semantic visual registry/rendering with safe fallbacks and regression coverage |
+| L4 | **True communicative unit model** | done | L1–L2 | Content-owned unit metadata, Can-Do grouping, lesson/checkpoint/review roles and ordered navigation |
+| L5 | **Golden units: English / Mandarin / Japanese** | done | L2–L4 | Reference units for all three languages pass interaction, audio, review, mobile and accessibility contracts |
+| L6 | **Curriculum migration + full release QA** | done | L5 | Starter language content migrated; parity/content gates, DB-backed E2E, mobile/a11y and FSRS persistence verified |
+
+### L5/L6 release evidence
+
+- PR #3 merged into `develop` as `68802c531e04b86ae2d4bf9a6f95ffd47d6ce465`.
+- Final pre-merge head `c493376564baa76d0874b7ac25d78db55e26588a`.
+- Language v3 CI #511: API, web/regression and PostgreSQL-backed E2E all green.
+- IT Curriculum V2 CI #244: curriculum, API and production web build all green.
+- The DB-backed E2E verifies register → lesson inventory → progress → notes → repeated FSRS review and persisted review rows.
 
 ## Current focus
 
-**Checklist rows 0–27 remain complete** for the original IT/product foundation. Guest static FE and Google/Drive remain deferred.
-
-The active product-quality work is **Language V3**.
+The existing product baseline is now feature-complete enough to stabilize before expansion. **Do not add new tracks, levels or major product features until the stabilization sequence below is green.**
 
 Current ordered focus:
 
-1. L5 — validate complete golden units for English, Mandarin and Japanese against the locked communicative-unit contract.
-2. L6 — migrate remaining published language content only after all three golden units pass content, interaction, review, mobile and accessibility QA.
+1. **Repository/process stabilization** — one canonical CI, feature → develop → main release policy, current roadmap.
+2. **Whole-product audit** — verify every existing user flow and close concrete defects/dead ends.
+3. **UI/UX system unification** — consolidate tokens/components/states and remove page-specific drift.
+4. **Learning/content engine hardening** — parser/sync/sandbox/FSRS invariants and exact curriculum contracts.
+5. **Release readiness** — DB-backed E2E, deploy smoke and a clean `develop → main` promotion.
 
-Do **not** mass-generate or mass-rewrite language curriculum before L5 stabilizes the three golden reference units.
+Only after all five are green should Syntaxia expand curriculum or add new product capabilities.
 
 ## Related
 
+- [`branch-release-policy.md`](./branch-release-policy.md)
 - [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
 - [`language-content-quality-v3.md`](./language-content-quality-v3.md)
 - [`language-review-session.md`](./language-review-session.md)
@@ -77,17 +87,6 @@ Do **not** mass-generate or mass-rewrite language curriculum before L5 stabilize
 - [`multi-domain-roadmap.md`](./multi-domain-roadmap.md)
 - [`learning-domains.md`](./learning-domains.md)
 - [`languages-tracks.md`](./languages-tracks.md)
-- [`product-quality-lock.md`](./product-quality-lock.md)  
-- [`mvp-completion-checklist.md`](./mvp-completion-checklist.md) (historical MVP — complete)  
-- [`release-hardening.md`](./release-hardening.md)  
-- [`e2e-smoke.md`](./e2e-smoke.md)  
-- [`postgresql-track.md`](./postgresql-track.md)  
-- [`javascript-track.md`](./javascript-track.md)
-- [`javascript-sandbox.md`](./javascript-sandbox.md)  
-- [`catalog-architecture.md`](./catalog-architecture.md)  
-- [`curriculum-pedagogy.md`](./curriculum-pedagogy.md)  
-- [`lesson-reader.md`](./lesson-reader.md)  
-- [`ui-skeleton-and-shell.md`](./ui-skeleton-and-shell.md)  
-- [`progress-hub.md`](./progress-hub.md)  
-- [`onboarding.md`](./onboarding.md)  
-- [`future-guest-static-learning.md`](./future-guest-static-learning.md) (deferred)
+- [`product-quality-lock.md`](./product-quality-lock.md)
+- [`release-hardening.md`](./release-hardening.md)
+- [`e2e-smoke.md`](./e2e-smoke.md)
