@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+
+  <g font-family="system-ui,'Noto Sans JP',sans-serif" text-anchor="middle" font-weight="700" fill="#1f2937">
+    <g>
+      <rect x="62" y="54" width="596" height="88" rx="22" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="128" y="110" font-size="38">か</text>
+      <text x="244" y="110" font-size="38">き</text>
+      <text x="360" y="110" font-size="38">く</text>
+      <text x="476" y="110" font-size="38">け</text>
+      <text x="592" y="110" font-size="38">こ</text>
+    </g>
+
+    <path d="M128 150v40M244 150v40M360 150v40M476 150v40M592 150v40" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="128" cy="170" r="6" fill="#0d9488"/>
+    <circle cx="244" cy="170" r="6" fill="#0d9488"/>
+    <circle cx="360" cy="170" r="6" fill="#0d9488"/>
+    <circle cx="476" cy="170" r="6" fill="#0d9488"/>
+    <circle cx="592" cy="170" r="6" fill="#0d9488"/>
+
+    <g>
+      <rect x="62" y="198" width="596" height="88" rx="22" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="128" y="254" font-size="38">カ</text>
+      <text x="244" y="254" font-size="38">キ</text>
+      <text x="360" y="254" font-size="38">ク</text>
+      <text x="476" y="254" font-size="38">ケ</text>
+      <text x="592" y="254" font-size="38">コ</text>
+    </g>
+
+    <g>
+      <rect x="112" y="322" width="206" height="64" rx="18" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+      <text x="215" y="365" font-size="34">カメラ</text>
+    </g>
+    <g>
+      <rect x="350" y="322" width="258" height="64" rx="18" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+      <text x="479" y="365" font-size="34">コーヒー</text>
+      <path d="M448 375h25M534 375h25" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
