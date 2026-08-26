@@ -119,6 +119,21 @@ describe('language v3 semantic visuals', () => {
     }
   })
 
+  it('ships an app-owned sound-to-symbol visual for the Japanese vowel-kana foundation', () => {
+    const assetPath = join(webRoot, 'public/language/scenes/japanese-vowel-kana.svg')
+    assert.equal(existsSync(assetPath), true)
+    const asset = read(assetPath)
+    for (const kana of ['あ', 'い', 'う', 'え', 'お', 'ア', 'イ', 'ウ', 'エ', 'オ']) {
+      assert.match(asset, new RegExp(`>${kana}<`))
+    }
+
+    for (const locale of ['en', 'vi']) {
+      const body = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}/kana-sounds.md`))
+      assert.match(body, /imageUrl: "\/language\/scenes\/japanese-vowel-kana\.svg"/)
+      assert.match(body, /imageAlt: ".+"/)
+    }
+  })
+
   it('keeps the English image-choice exercise on stable semantic ids', () => {
     for (const locale of ['en', 'vi']) {
       const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/greetings.md`))
