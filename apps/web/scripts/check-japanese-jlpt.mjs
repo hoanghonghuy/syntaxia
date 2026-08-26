@@ -41,6 +41,11 @@ function vocabCount(body) {
   return [...section.matchAll(/^\s+-\s+\{/gm)].length
 }
 
+function stepBlock(body, type, nextType) {
+  const end = nextType ? `(?=^  - type: ${nextType}\\s*$)` : '(?=^exercise:|\\Z)'
+  return body.match(new RegExp(`^  - type: ${type}\\s*$[\\s\\S]*?${end}`, 'm'))?.[0] || ''
+}
+
 function assertV3Node(body, label) {
   assert.match(body, /track:\s*japanese-jlpt/)
   assert.match(body, /jlpt_level:\s*n5/)
@@ -134,11 +139,42 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     }
   })
 
+  it('introduces Unit 0 script forms before learner production', () => {
+    for (const locale of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}`)
+      const kana = read(join(dir, 'kana-sounds.md'))
+      const kanaDialogue = stepBlock(kana, 'dialogue', 'listen')
+      const kanaTeach = stepBlock(kana, 'teach', 'practice')
+      assert.match(kanaDialogue, /いえ。あお。/, `${locale}/kana-sounds should stay vowel-only before teaching さ`)
+      assert.doesNotMatch(kanaDialogue, /あさ/, `${locale}/kana-sounds exposes さ before teaching it`)
+      assert.match(kanaTeach, /form:\s*"さ"/, `${locale}/kana-sounds must teach さ before assessed あさ`)
+      assert.ok(kana.indexOf('form: "さ"') < kana.indexOf('id: ja-fnd-kana-hear-asa'), `${locale}/kana-sounds teaching must precede あさ practice`)
+
+      const katakana = read(join(dir, 'katakana-patterns.md'))
+      const katakanaTeach = stepBlock(katakana, 'teach', 'practice')
+      for (const required of [
+        'マ ミ ム メ モ',
+        'ラ リ ル レ ロ',
+        'バ ビ ブ ベ ボ',
+        'パ ピ プ ペ ポ',
+        'カメラ',
+        'テレビ',
+        'トイレ',
+        'バス',
+        'コーヒー',
+        'スポーツ',
+      ]) {
+        assert.ok(katakanaTeach.includes(required), `${locale}/katakana-patterns must introduce ${required} before production`)
+      }
+      assert.ok(katakana.indexOf('  - type: teach') < katakana.indexOf('id: ja-fnd-kata-hear-camera'), `${locale}/katakana teaching must precede assessed production`)
+    }
+  })
+
   it('keeps stable assessed identities aligned between EN and VI', () => {
     for (const slug of SLUGS) {
       const en = read(join(repoRoot, `docs/curriculum/japanese-jlpt/en/${slug}.md`))
       const vi = read(join(repoRoot, `docs/curriculum/japanese-jlpt/vi/${slug}.md`))
-      assert.deepEqual(assessedIds(vi), assessedIds(en), `${slug}: assessed IDs drifted`)
+      assert.deepEqual(assessedIds(vi), assessedIds(en), `${slug}: assessed IDs drifted between locales`)
     }
   })
 
