@@ -35,8 +35,8 @@ steps:
     lines:
       - { speaker: "先生", text: "あ。い。う。え。お。", reading: "あ。い。う。え。お。" }
       - { speaker: "学生", text: "あ。い。う。え。お。", reading: "あ。い。う。え。お。" }
-      - { speaker: "先生", text: "あさ。", reading: "あさ。" }
-      - { speaker: "学生", text: "あさ。", reading: "あさ。" }
+      - { speaker: "先生", text: "いえ。あお。", reading: "いえ。あお。" }
+      - { speaker: "学生", text: "いえ。あお。", reading: "いえ。あお。" }
   - type: listen
     prompt: "Nghe trước. Bạn nghe kana nguyên âm nào?"
     text: "う"
