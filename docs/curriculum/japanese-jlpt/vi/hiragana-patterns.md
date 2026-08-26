@@ -30,6 +30,8 @@ steps:
   - type: scene
     title: "Nhìn ra hệ thống, không học 46 hình rời rạc"
     body: "Hiragana được tổ chức quanh các nguyên âm lặp lại. Hãy dùng quy luật hàng âm để giải mã vài từ hữu ích; các bài sau và FSRS sẽ tiếp tục mở rộng tập ký tự."
+    imageUrl: "/language/scenes/japanese-hiragana-patterns.svg"
+    imageAlt: "Hình nhóm hàng k và hàng s của hiragana thành hai dãy năm vị trí lặp lại, rồi minh họa き đổi thành ぎ khi thêm dakuten, し ghép với ょ nhỏ thành しょ và ん là một kana bổ sung."
   - type: dialogue
     lines:
       - { speaker: "先生", text: "かぎ。", reading: "かぎ。" }
