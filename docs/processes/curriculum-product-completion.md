@@ -43,7 +43,7 @@ The 30-node English and 28-node Japanese values above are intentionally historic
 
 1. **Interactive homepage learning map** — derive available chips, navigation targets, positions, and progress from live catalog data while preserving the familiar `SQL / Web / JS / EN / 中文 / 日本語` visual language.
 2. **English foundation-first A1 progression** — insert a backward-compatible Unit 0 before the existing eight English communicative units.
-3. **Japanese foundation-first N5 progression** — insert a backward-compatible Unit 0 for kana/sound, mora timing and core sentence grammar before the existing nine communicative units.
+3. **Japanese foundation-first N5 progression** — insert a backward-compatible Unit 0 for sound↔kana, hiragana, katakana, mora timing and core sentence grammar before the existing nine communicative units.
 4. **Language catalog recovery** — reconcile all application-owned tracks at API startup so long-lived databases cannot silently expose an incomplete language catalog or fail lesson sync on missing track rows.
 5. **Locale/content quality hardening** — keep explanation-language copy out of shared pronunciation assets, detect instructional-locale leakage, and require meaningful lexical/chunk depth in normal communicative lessons.
 6. **Foundation-first contract hardening** — lock pronunciation/sound, vocabulary, grammar, listening, speaking, reading, writing, and review as deliberate core-language dimensions while keeping specialty terminology optional.
@@ -54,7 +54,7 @@ The 30-node English and 28-node Japanese values above are intentionally historic
 |-------|---------------------------|
 | `chinese-hsk` | **41 nodes per locale** — pronunciation Unit 0 + 11 communicative units |
 | `english-basics` | **9 units / 39 nodes per locale** — foundation Unit 0 + 8 communicative units |
-| `japanese-jlpt` | **10 units / 33 nodes per locale** — foundation Unit 0 + 9 communicative units |
+| `japanese-jlpt` | **10 units / 35 nodes per locale** — seven-node foundation Unit 0 + 9 communicative units |
 | `chinese-it-vocab` | **6 optional specialty lessons per locale** |
 
 Existing published IDs/orders in English Units 1–8 and Japanese Units 1–9 are preserved. Inserted Unit 0 nodes use `unit_order: 0`; generic learner-frontier behavior keeps returning learners on their established continuation path while leaving earlier prerequisites available for catch-up.
@@ -95,7 +95,7 @@ Language-specific adaptation is explicit:
 
 - **Mandarin** — Pinyin syllables, tones/tone changes, general vocabulary, productive grammar, listening/speaking, gradual Hanzi reading/writing.
 - **English** — sound↔spelling, high-value vowel/consonant contrasts, stress/prosody, reusable chunks and a minimal productive sentence core.
-- **Japanese** — kana↔sound, long-vowel/small-`っ` mora contrasts, general vocabulary, `です / ます`, starter sentence order/particles, listening/speaking, kana/basic-kanji reading/writing.
+- **Japanese** — sound↔kana, hiragana/katakana decoding, long-vowel/small-`っ` mora contrasts, general vocabulary, `です / ます`, starter sentence order/particles, listening/speaking, kana/basic-kanji reading/writing.
 
 ### Specialty language
 
@@ -109,7 +109,7 @@ Specialty tracks are optional additions after or alongside a core language path.
 - `html-basics` and `css-basics` are bounded web-foundation products with executable HTML/CSS sandbox exercises.
 - `english-basics` on the active branch declares a **9-unit / 39-node CEFR A1 language foundation** with Unit 0 for pronunciation and core sentence grammar; it does not claim exhaustive CEFR A1, a complete grammar/phonology syllabus, or exam preparation.
 - `chinese-hsk` declares a **practical Mandarin Level 1 foundation** with pronunciation Unit 0 plus 11 communicative units; it does not claim exhaustive HSK exam preparation or complete HSK-system coverage.
-- `japanese-jlpt` on the active branch declares a **10-unit / 33-node practical N5 foundation** with Unit 0 for kana/sound, mora timing and core sentence grammar; it does not claim exhaustive JLPT N5 exam preparation, all N5 vocabulary/kanji, or every grammar point.
+- `japanese-jlpt` on the active branch declares a **10-unit / 35-node practical N5 foundation** with a seven-node Unit 0 for sound↔kana, hiragana, katakana, mora timing and core sentence grammar; it does not claim exhaustive JLPT N5 exam preparation, all N5 vocabulary/kanji, or every grammar point.
 - `chinese-it-vocab` is a six-lesson **optional specialty mini-course** constrained by its cited term map.
 
 Expansion begins by creating/updating a public-reference curriculum map and defining a new declared scope. Do not silently change what an existing “complete” label means.
@@ -138,15 +138,17 @@ Shared pronunciation visuals may contain target English, IPA, or sound symbols b
 
 ### Japanese — active branch target
 
-Exactly **10 units / 33 nodes per locale**.
+Exactly **10 units / 35 nodes per locale**.
 
-Unit 0 (`ja-n5-foundation-00`) uses `unit_order: 0` and sort orders `-5..-1`:
+Unit 0 (`ja-n5-foundation-00`) uses `unit_order: 0` and exact sort orders `-7..-1`:
 
-1. `kana-sounds` — kana↔sound recognition and reading/typing;
-2. `mora-length` — long-vowel and small-`っ` timing contrasts;
-3. `core-sentences` — starter `です / ます` sentence building and concrete `は / を / に / で` uses;
-4. `foundation-checkpoint`;
-5. `foundation-review`.
+1. `kana-sounds` — establish the sound↔kana principle with the five vowel sounds;
+2. `hiragana-patterns` — decode hiragana through recurring rows, dakuten, `ん`, and small `ゃ・ゅ・ょ`;
+3. `katakana-patterns` — transfer the same sound system to katakana and common beginner loanwords;
+4. `mora-length` — long-vowel timing, katakana `ー`, and small-`っ` consonant timing;
+5. `core-sentences` — starter `です / ます` sentence building, concrete `は / を / に / で` uses, particle pronunciation, and explicitly taught polite verb pairs;
+6. `foundation-checkpoint` — integrated script/sound/grammar retrieval;
+7. `foundation-review` — delayed retrieval through the same FSRS system.
 
 Published Units 1–9 keep their identities/orders and cover polite requesting, people/family, numbers, café, location, routine/time, classroom interaction, train travel, and free-time planning.
 
@@ -216,13 +218,13 @@ Canonical Product CI verifies:
 - progress and notes persistence;
 - FSRS review synchronization and persisted cards/logs across Mandarin, English, Japanese and Chinese IT.
 
-The cold Go-test requirement is intentional: drive-package smoke tests may read `docs/curriculum` outside the Go package cache key, so cached package results must never hide curriculum changes.
+The cold Go-test requirement is intentional: drive-package smoke tests may read `docs/curriculum` outside the Go package cache key, so cached package results must never hide curriculum changes. Japanese now has its own cold smoke requiring exactly **70 Markdown files = 35×2 locales**, including **14 Unit 0 files = 7×2**.
 
 For the active branch, release E2E additionally proves:
 
 - `english-basics = 39` live nodes per locale;
 - English Unit 0 exposes `unitOrder: 0` and `en-fnd-sound-hear-meet` persists through FSRS;
-- `japanese-jlpt = 33` live nodes per locale;
+- `japanese-jlpt = 35` live nodes per locale;
 - Japanese Unit 0 exposes `unitOrder: 0` and its authored stable review identity persists through the generic FSRS engine;
 - homepage learning-map changes pass build/UI/accessibility regressions;
 - built-in catalog recovery works before curriculum synchronization.
