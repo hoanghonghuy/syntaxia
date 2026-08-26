@@ -25,7 +25,7 @@ This product is deliberately bounded: it is a practical A1 foundation, not a cla
 
 ## Declared foundation product
 
-The course contains **9 units / 39 nodes per locale** (`en` + `vi`). Unit 0 establishes pronunciation and sentence-building foundations; Units 1–8 then apply them to familiar A1 situations. Every unit ends in an explicit checkpoint and delayed-retrieval review.
+The course contains **10 units / 43 nodes per locale** (`en` + `vi`). Unit 0 establishes pronunciation and sentence-building foundations; Units 1–9 then apply them to familiar A1 situations. Every unit ends in an explicit checkpoint and delayed-retrieval review.
 
 | Unit | Product outcome | Nodes |
 |-----:|-----------------|-------|
@@ -38,8 +38,9 @@ The course contains **9 units / 39 nodes per locale** (`en` + `vi`). Unit 0 esta
 | 6 | Buy one simple item: ask a price, choose, purchase, close politely | `prices` → `shopping` → `shopping-checkpoint` → `shopping-review` |
 | 7 | Find things at home: describe a room and locate a familiar object | `home-things` → `where-things` → `home-checkpoint` → `home-review` |
 | 8 | Make a free-time plan: state a preference, invite, agree on time/place | `hobbies` → `invitations` → `free-time-checkpoint` → `free-time-review` |
+| 9 | Share simple personal details: give age/place and say or ask what everyday things someone has | `personal-details` → `possessions` → `personal-checkpoint` → `personal-review` |
 
-Total nodes: `9 + 3 + 4 + 4 + 3 + 4 + 4 + 4 + 4 = 39` per locale.
+Total nodes: `9 + 3 + 4 + 4 + 3 + 4 + 4 + 4 + 4 + 4 = 43` per locale.
 
 ## Unit 0 — language foundation
 
@@ -66,15 +67,15 @@ The next two nodes provide only the grammar needed to build the later A1 interac
 - wh + `be` questions such as `Where are you from?`;
 - one high-frequency `do + subject + base verb` frame, introduced through `Do you like …?`.
 
-This is intentionally a **small productive grammar core**, not a grammar reference book.
+This is intentionally a **small productive grammar core**, not a grammar reference book. Later communicative units extend that core only when a new function needs it. Unit 9, for example, explicitly teaches `How old are you?`, `Where do you live?`, `I have …`, and `Do you have …?` before those forms are assessed.
 
 ### Vocabulary
 
-Foundation vocabulary is deliberately reusable. A word is learned as **sound + meaning + spelling + usable chunk**, not as a glossary entry. Pronunciation examples add familiar words only when they carry a real sound contrast; communicative Units 1–8 require enough lexical material to perform their declared Can-Do rather than passing with token word lists.
+Foundation vocabulary is deliberately reusable. A word is learned as **sound + meaning + spelling + usable chunk**, not as a glossary entry. Pronunciation examples add familiar words only when they carry a real sound contrast; communicative Units 1–9 require enough lexical material to perform their declared Can-Do rather than passing with token word lists.
 
 ## A1 capability coverage in this product
 
-After Unit 0, Units 1–8 apply the foundation to a useful subset of A1 interaction:
+After Unit 0, Units 1–9 apply the foundation to a useful subset of A1 interaction:
 
 - exchange basic personal/social information;
 - identify familiar people and relationships;
@@ -83,7 +84,10 @@ After Unit 0, Units 1–8 apply the foundation to a useful subset of A1 interact
 - describe familiar surroundings and locate common objects;
 - state simple preferences;
 - make and answer a basic invitation;
-- coordinate a simple time/place plan.
+- coordinate a simple time/place plan;
+- ask and answer a simple age question;
+- say where you live;
+- say that you have a familiar object and ask whether someone else has one.
 
 Grammar and vocabulary are prerequisites and reusable tools; Can-Do outcomes prove that the learner can **use** those tools rather than merely recognise them.
 
@@ -111,14 +115,14 @@ The canonical session arc remains:
 - Prefer beginner words marked Starters and/or Movers in `ozbonus/yle-vocabulary-dataset` when a lexical choice is needed.
 - Reuse already-learned vocabulary rather than introducing unnecessary synonyms.
 - Treat pronunciation/stress and useful chunks as part of knowing a word.
-- Functional chunks such as `How much is this?`, `I'll take it`, `Where's …?`, and `Do you want to …?` are communicative language, not isolated glossary lemmas.
+- Functional chunks such as `How much is this?`, `I'll take it`, `Where's …?`, `Do you want to …?`, `How old are you?`, and `Do you have …?` are communicative language, not isolated glossary lemmas.
 - Each normal communicative lesson must carry enough lexical material to accomplish its Can-Do; the current quality gate requires at least five authored vocab/chunk entries, while focused pronunciation nodes may use smaller sound sets.
 - Do not copy Cambridge example sentences, exam tasks, or textbook paragraphs.
 - Vocabulary membership is a guardrail; naturalness and communicative usefulness still require product review.
 
 ## Product boundary
 
-Calling this course `content-complete` or `production-ready` means **the declared 9-unit / 39-node Syntaxia A1 foundation** is complete. It does **not** mean:
+Calling this course `content-complete` or `production-ready` means **the declared 10-unit / 43-node Syntaxia A1 foundation** is complete. It does **not** mean:
 
 - exhaustive CEFR A1 descriptor coverage;
 - Cambridge A1 Movers exam preparation;
@@ -144,12 +148,13 @@ npm run test:language-review
 
 Release gate:
 
-- exact **39-node** EN inventory exposed through the API;
+- exact **43-node** EN inventory exposed through the API;
 - EN/VI parity locked statically;
 - Unit 0 stable assessed IDs participate in the normal review path;
+- Unit 9 stable assessed IDs preserve EN/VI identity and use only taught age/place/have forms;
 - all app-owned pronunciation diagrams are explanation-locale neutral;
 - progress and notes persist;
-- returning learners with progress in Units 1–8 are not rewound by inserted Unit 0 content;
+- returning learners with progress in earlier units are not rewound by inserted Unit 0 content;
 - canonical Product CI including PostgreSQL-backed E2E is green for the promoted commit.
 
 ## Related

@@ -36,8 +36,8 @@ func TestEnglishA1CurriculumSmoke(t *testing.T) {
 	}); err != nil {
 		t.Fatal(err)
 	}
-	if len(files) != 78 {
-		t.Fatalf("expected 78 english-basics lessons (39x2 locales), got %d", len(files))
+	if len(files) != 86 {
+		t.Fatalf("expected 86 english-basics lessons (43x2 locales), got %d", len(files))
 	}
 
 	foundationNodes := 0
@@ -75,7 +75,7 @@ func TestEnglishA1CurriculumSmoke(t *testing.T) {
 				ok = true
 			}
 		}
-		if !ok || order < 0 || order > 8 {
+		if !ok || order < 0 || order > 9 {
 			t.Fatalf("%s: unitOrder type/value %T=%v", rel, lesson.Exercise["unitOrder"], lesson.Exercise["unitOrder"])
 		}
 		if unitID == "en-a1-foundation-00" {

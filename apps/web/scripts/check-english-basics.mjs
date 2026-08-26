@@ -53,6 +53,10 @@ const SLUGS = [
   'invitations',
   'free-time-checkpoint',
   'free-time-review',
+  'personal-details',
+  'possessions',
+  'personal-checkpoint',
+  'personal-review',
 ]
 
 const FOUNDATION_UNITS = new Map([
@@ -65,6 +69,7 @@ const FOUNDATION_UNITS = new Map([
   ['en-a1-shopping-06', 6],
   ['en-a1-home-07', 7],
   ['en-a1-free-time-08', 8],
+  ['en-a1-personal-09', 9],
 ])
 
 const FOUNDATION_SLUGS = [
@@ -98,18 +103,20 @@ describe('english-basics A1 language foundation curriculum', () => {
     assert.match(body, /phonological/i)
     assert.match(body, /core grammar/i)
     assert.match(body, /Vocabulary/i)
-    assert.match(body, /9 units/i)
-    assert.match(body, /39 nodes/i)
+    assert.match(body, /10 units/i)
+    assert.match(body, /43 nodes/i)
     assert.match(body, /sound.*spelling/i)
     assert.match(body, /vowel/i)
     assert.match(body, /consonant/i)
     assert.match(body, /word stress/i)
     assert.match(body, /subject pronouns/i)
     assert.match(body, /Do you like/i)
+    assert.match(body, /How old are you/i)
+    assert.match(body, /Do you have/i)
     assert.match(body, /ozbonus\/yle-vocabulary-dataset/)
   })
 
-  it('ships exactly 39 paired EN/VI V3 nodes', () => {
+  it('ships exactly 43 paired EN/VI V3 nodes', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
@@ -209,6 +216,8 @@ describe('english-basics A1 language foundation curriculum', () => {
       const home = read(join(dir, 'home-things.md'))
       const where = read(join(dir, 'where-things.md'))
       const invitations = read(join(dir, 'invitations.md'))
+      const details = read(join(dir, 'personal-details.md'))
+      const possessions = read(join(dir, 'possessions.md'))
 
       assert.match(family, /id:\s*family-check-2[\s\S]*answer:\s*"This is Linh\."/)
       assert.doesNotMatch(family, /Room seven/)
@@ -225,6 +234,16 @@ describe('english-basics A1 language foundation curriculum', () => {
       assert.ok(assessedIds(invitations).includes('en-u08-invite-time'))
       assert.match(invitations, /form:\s*"At three in the afternoon\?"/)
       assert.match(invitations, /id:\s*en-u08-invite-time[\s\S]*answer:\s*"At three in the afternoon"/)
+
+      assert.match(details, /form:\s*"How old are you\?"/)
+      assert.match(details, /form:\s*"Where do you live\?"/)
+      assert.ok(details.indexOf('form: "Where do you live?"') < details.indexOf('id: en-u09-details-live'))
+      assert.match(details, /id:\s*en-u09-details-live[\s\S]*answer:\s*"I live in Hanoi"/)
+
+      assert.match(possessions, /form:\s*"I have a book\."/)
+      assert.match(possessions, /form:\s*"Do you have a phone\?"/)
+      assert.ok(possessions.indexOf('form: "Do you have a phone?"') < possessions.indexOf('id: en-u09-have-check-question'))
+      assert.match(possessions, /id:\s*en-u09-have-produce[\s\S]*answer:\s*"I have a book"/)
     }
   })
 

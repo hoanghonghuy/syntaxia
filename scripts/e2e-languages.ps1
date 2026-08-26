@@ -28,7 +28,7 @@ Ok "/health"
 
 $ts = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
 $email = "e2e-lang+$ts@syntaxia.test"
-$password = "e2e-pass-12"
+$password = "e2e-" + [Guid]::NewGuid().ToString("N").Substring(0, 12)
 $regBody = (@{ email = $email; password = $password; displayName = "E2E Lang $ts" } | ConvertTo-Json -Compress)
 
 $session = $null
@@ -44,7 +44,7 @@ Ok "auth/me"
 
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 41 },
-  @{ Track = "english-basics"; Slug = "sound-spelling"; ExpectedLessons = 39 },
+  @{ Track = "english-basics"; Slug = "sound-spelling"; ExpectedLessons = 43 },
   @{ Track = "japanese-jlpt"; Slug = "kana-sounds"; ExpectedLessons = 35 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
@@ -156,7 +156,7 @@ Ok "Japanese foundation review card synced from authored stable item id"
 
 $japaneseReviewBody = (@{ lessonId = $japaneseLessonId; locale = "en"; itemKey = $japaneseItemKey; rating = 3; responseMs = 1050 } | ConvertTo-Json -Compress)
 $japaneseReview = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/review" -JsonBody $japaneseReviewBody -Session $session
-if ($japaneseReview.Json.itemKey -ne $japaneseItemKey -or [int64]$japaneseReview.Json.reps -lt 1) { Fail "persisted Japanese review response invalid" }
+if ($japaneseReview.Json.itemKey -ne $japaneseItemKey -or [int64]$japaneseReview.Json.reps -lt 1) { Fail "persisted Japanese foundation review response invalid" }
 Ok "Japanese foundation review persisted reps=$($japaneseReview.Json.reps)"
 
 # Chinese IT specialty
@@ -165,7 +165,7 @@ $specialtyCards = @($specialtyDue.Json)
 $specialtyItemKey = "zh-it-hw-context-1"
 $specialtySeedCard = @($specialtyCards | Where-Object { $_.lessonId -eq $specialtyLessonId -and $_.itemKey -eq $specialtyItemKey }) | Select-Object -First 1
 if (-not $specialtySeedCard) { Fail "Chinese IT review due sync did not create $specialtyItemKey for $specialtyLessonId" }
-Ok "Chinese IT review card synced from authored stable item id"
+Ok "Chinese IT specialty review card synced from authored stable item id"
 
 $specialtyReviewBody = (@{ lessonId = $specialtyLessonId; locale = "en"; itemKey = $specialtyItemKey; rating = 3; responseMs = 1100 } | ConvertTo-Json -Compress)
 $specialtyReview = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/review" -JsonBody $specialtyReviewBody -Session $session
