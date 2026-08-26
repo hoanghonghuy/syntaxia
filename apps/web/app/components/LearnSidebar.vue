@@ -28,7 +28,7 @@
       <template v-if="trackId && lessons.length">
         <p class="sidebar-label">{{ t('nav.lessons') }}</p>
         <ul class="nav-list">
-          <li v-for="item in lessons" :key="item.id">
+          <li v-for="(item, index) in lessons" :key="item.id">
             <NuxtLink
               class="nav-link"
               :class="{
@@ -38,7 +38,7 @@
               :to="localePath(`/tracks/${trackId}/lessons/${item.slug}`)"
               @click="emit('navigate')"
             >
-              <span class="lesson-order">{{ item.sortOrder }}.</span>
+              <span class="lesson-order">{{ index + 1 }}.</span>
               {{ item.title }}
               <span v-if="catalog.isCompleted(item.id, locale)" class="lesson-done">✓</span>
             </NuxtLink>
@@ -52,6 +52,9 @@
 </template>
 
 <script setup lang="ts">
+import { isLanguageTrack as trackIsLanguage } from '~/utils/languageLesson'
+import { orderLanguageLessons } from '~/utils/languageUnits'
+
 const emit = defineEmits<{ navigate: [] }>()
 
 const { t, locale } = useI18n()
@@ -83,7 +86,9 @@ const lessons = computed(() => {
   const list =
     catalog.lessonsByTrack[trackId.value] ||
     (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
-  return [...list].sort((a, b) => a.sortOrder - b.sortOrder)
+  return trackIsLanguage(trackId.value, trackMeta.value?.category)
+    ? orderLanguageLessons(list)
+    : [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
 
 const nextId = computed(() => catalog.nextForTrack(trackId.value, locale.value)?.id)
