@@ -155,7 +155,7 @@ const languageNodesByTrack = computed(() => {
       lessons,
       catalog.progress,
       locale.value,
-      { unlockAll: !auth.user },
+      { unlockAll: !auth.user || !catalog.progressLoaded },
     ).flatMap((unit) => unit.nodes)
     result.set(track.id, new Map(nodes.map((node) => [node.id, node.clickable])))
   }

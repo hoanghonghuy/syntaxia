@@ -13,6 +13,7 @@ export const useCatalogStore = defineStore('catalog', () => {
   const tracks = ref<Track[]>([])
   const lessons = ref<LessonSummary[]>([])
   const progress = ref<Progress[]>([])
+  const progressLoaded = ref(false)
   const lessonsByTrack = ref<Record<string, LessonSummary[]>>({})
   const loadError = ref<string | null>(null)
   const api = useApi()
@@ -42,9 +43,16 @@ export const useCatalogStore = defineStore('catalog', () => {
   async function loadProgress() {
     try {
       progress.value = await api.listProgress()
+      progressLoaded.value = true
     } catch {
       progress.value = []
+      progressLoaded.value = false
     }
+  }
+
+  function clearProgress() {
+    progress.value = []
+    progressLoaded.value = false
   }
 
   async function loadCatalogForHome(locale: string) {
@@ -92,11 +100,13 @@ export const useCatalogStore = defineStore('catalog', () => {
     tracks,
     lessons,
     progress,
+    progressLoaded,
     lessonsByTrack,
     loadError,
     loadTracks,
     loadLessons,
     loadProgress,
+    clearProgress,
     loadCatalogForHome,
     isCompleted,
     progressForTrack,

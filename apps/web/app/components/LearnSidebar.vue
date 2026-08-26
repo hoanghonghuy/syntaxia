@@ -41,7 +41,7 @@
             >
               <span class="lesson-order">{{ index + 1 }}.</span>
               {{ item.title }}
-              <span v-if="catalog.isCompleted(item.id, locale)" class="lesson-done">✓</span>
+              <span v-if="auth.user && catalog.isCompleted(item.id, locale)" class="lesson-done">✓</span>
             </NuxtLink>
 
             <div
@@ -116,7 +116,7 @@ const languageNodesById = computed(() => {
     rawLessons.value,
     catalog.progress,
     locale.value,
-    { unlockAll: !auth.user },
+    { unlockAll: !auth.user || !catalog.progressLoaded },
   ).flatMap((unit) => unit.nodes)
   return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
 })

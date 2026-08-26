@@ -332,7 +332,7 @@ const languageNodesById = computed(() => {
     sortedLessons.value,
     catalog.progress,
     locale.value,
-    { unlockAll: !auth.user },
+    { unlockAll: !auth.user || !catalog.progressLoaded },
   ).flatMap((unit) => unit.nodes)
   return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
 })
