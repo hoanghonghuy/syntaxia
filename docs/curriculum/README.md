@@ -28,7 +28,7 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
 | `chinese-hsk` | Languages · foundation | Practical Mandarin Level 1, **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** |
 | `english-basics` | Languages · foundation | CEFR A1 language foundation, **Foundation Unit 0 + 8 communicative units / 39 nodes per locale** |
-| `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **Foundation Unit 0 + 9 communicative units / 33 nodes per locale** |
+| `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **Foundation Unit 0 + 9 communicative units / 35 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
 The exact inventories above are locked by static curriculum/language tests and by the PostgreSQL-backed release E2E.
@@ -136,10 +136,12 @@ These nodes use `unit_order: 0` and internal sort orders `-9..-1` without renumb
 
 ## Japanese foundation entry
 
-Japanese begins with a five-node foundation before communicative Unit 1:
+Japanese begins with a seven-node foundation before communicative Unit 1:
 
 ```text
 kana-sounds
+→ hiragana-patterns
+→ katakana-patterns
 → mora-length
 → core-sentences
 → foundation-checkpoint
@@ -147,9 +149,11 @@ kana-sounds
 → communicative Unit 1
 ```
 
-The foundation connects hiragana/katakana to sound, makes long-vowel and small-`っ` timing contrasts audible and readable, and introduces a small productive sentence core with `です / ます` plus concrete uses of `は / を / に / で`. It reaches listening, reading/typing, controlled sentence construction, checkpoint integration, and delayed FSRS retrieval rather than treating kana or particles as static reference tables.
+The foundation first establishes sound↔kana mapping, then expands hiragana and katakana as readable systems before later tasks depend on them. It makes long-vowel, katakana `ー`, and small-`っ` timing contrasts audible/readable, then introduces a small productive sentence core with `です / ます` plus concrete uses of `は / を / に / で`. High-risk beginner details such as topic `は` pronounced `わ`, object `を` commonly pronounced `お`, and the taught pairs `行く → 行きます` / `飲む → 飲みます` are explained directly rather than left for the learner to infer.
 
-These nodes use `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and internal sort orders `-5..-1`. Existing published Units 1–9 keep their IDs/orders. Returning learners are not silently rewound; the earlier foundation remains available for catch-up through the generic language-frontier behavior.
+Checkpoint and delayed review mix hiragana, katakana, timing, particle pronunciation and sentence construction so script work is part of the same retrieval loop instead of a disposable alphabet page.
+
+These nodes use `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and exact internal sort orders `-7..-1`. Existing published Units 1–9 keep their IDs/orders. Returning learners are not silently rewound; the earlier foundation remains available for catch-up through the generic language-frontier behavior.
 
 JLPT defines the N5 ability boundary but does not publish an official vocabulary/kanji/grammar syllabus. Open lists used in authoring are provenance/cross-check inputs, not official JLPT authority.
 
@@ -157,6 +161,6 @@ JLPT defines the N5 ability boundary but does not publish an official vocabulary
 
 IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. These gates require the relevant mental/execution model, prediction, worked example, debugging, common mistakes, learner task, recall, exercise/hints/solution, and EN/VI parity for every declared IT lesson.
 
-Language tracks are enforced by Language V3 web tests, including exact **Mandarin 41 / English 39 / Japanese 33** per-locale inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, locale quality, and FSRS review identity.
+Language tracks are enforced by Language V3 web tests, including exact **Mandarin 41 / English 39 / Japanese 35** per-locale inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, locale quality, and FSRS review identity.
 
 Release E2E then exercises exact runtime inventories, built-in track reconciliation for long-lived databases, SQL/JavaScript/HTML/CSS sandboxes, progress, notes, and FSRS persistence against PostgreSQL. Go curriculum-backed smoke tests are run cold with `go test -count=1` so external curriculum changes cannot be hidden by the Go package test cache.
