@@ -11,7 +11,7 @@ foundation_focus: grammar
 unit_id: en-a1-foundation-00
 unit_title: "English foundation"
 unit_order: 0
-unit_can_do: "Hear and build a small set of familiar English words and basic sentence patterns"
+unit_can_do: "Hear and build a small set of familiar words and basic English sentence patterns"
 unit_role: lesson
 can_do: "Build and answer simple be-questions, wh-questions, and one common do-question"
 pattern: "be + subject …? / wh + be …? / do + subject + verb …?"
@@ -26,10 +26,10 @@ vocab:
   - { word: "music", ipa: "/ˈmjuːzɪk/", gloss: "organised sound" }
 steps:
   - type: scene
-    title: "Ask, then listen for the answer"
-    body: "A beginner question changes the sentence frame. Learn the frame as a reusable pattern instead of translating word by word."
-    visualKey: "classmates-meeting"
-    imageAlt: "Two classmates ask and answer simple questions during a first conversation."
+    title: "Move the frame to make a question"
+    body: "With be, move be before the subject. With a lexical verb such as like, add do before the subject. Learn each change as a reusable frame instead of translating word by word."
+    imageUrl: "/language/scenes/english-question-frames.svg"
+    imageAlt: "Three transformations show You are a student becoming Are you a student, You are from Hanoi becoming Where are you from, and You like music becoming Do you like music."
   - type: dialogue
     lines:
       - { speaker: "A", text: "Are you a student?" }
