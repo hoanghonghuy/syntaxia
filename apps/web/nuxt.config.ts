@@ -22,9 +22,6 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'syntaxia_locale',
     },
-    bundle: {
-      optimizeTranslationDirective: false,
-    },
   },
   app: {
     head: {
