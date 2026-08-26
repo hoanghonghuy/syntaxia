@@ -29,6 +29,8 @@ steps:
   - type: scene
     title: "Âm trước, chưa vội học cả bảng kana"
     body: "Bắt đầu bằng năm nguyên âm, rồi chỉ tạo vài cách đọc từ những kana đã thật sự nhìn thấy. Bài tiếp theo mới mở rộng các hàng hiragana."
+    imageUrl: "/language/scenes/japanese-vowel-kana.svg"
+    imageAlt: "Năm cặp ô nối từng nguyên âm hiragana với nguyên âm katakana tương ứng: あ với ア, い với イ, う với ウ, え với エ và お với オ."
   - type: dialogue
     lines:
       - { speaker: "先生", text: "あ。い。う。え。お。", reading: "あ。い。う。え。お。" }
