@@ -30,6 +30,8 @@ steps:
   - type: scene
     title: "Hệ chữ thứ hai, không phải hệ phát âm thứ hai"
     body: "Bạn gặp các từ vay mượn quen thuộc trên biển báo và thực đơn. Katakana dùng cùng hệ âm tiếng Nhật như hiragana, nên hãy tái sử dụng các quy luật âm đã học."
+    imageUrl: "/language/scenes/japanese-katakana-patterns.svg"
+    imageAlt: "Hàng k của hiragana được nối theo chiều dọc với hàng k katakana tương ứng; phía dưới là các từ カメラ và コーヒー, trong đó các dấu kéo dài của コーヒー được nhấn mạnh."
   - type: dialogue
     lines:
       - { speaker: "A", text: "カメラ。", reading: "カメラ。" }
