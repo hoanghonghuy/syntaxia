@@ -12,7 +12,7 @@ Core foreign-language tracks teach the language itself first. Specialty language
 |-------|----------------|----------------------------|----------------|
 | `chinese-hsk` | Practical Mandarin Level 1 foundation | **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** | Pinyin/tones + core language + Language V3 communicative units + FSRS |
 | `english-basics` | CEFR A1 language foundation | **Foundation Unit 0 + 8 communicative units / 39 nodes per locale** | Pronunciation + core sentence grammar + communicative units + FSRS |
-| `japanese-jlpt` | JLPT N5 practical foundation | **Foundation Unit 0 + 9 communicative units / 33 nodes per locale** | Kana/sound + mora timing + core grammar + communicative units + FSRS |
+| `japanese-jlpt` | JLPT N5 practical foundation | **Foundation Unit 0 + 9 communicative units / 35 nodes per locale** | Sound↔kana + hiragana/katakana + mora timing + core grammar + communicative units + FSRS |
 | `chinese-it-vocab` | Chinese IT specialty mini-course | **6 guided lessons per locale** | Optional Language V3 specialty sessions + FSRS-assessed items |
 
 All four tracks ship paired `en` and `vi` explanation locales. Exact inventories are locked by static Language V3 tests and PostgreSQL-backed runtime E2E.
@@ -80,13 +80,17 @@ The later outcomes remain meeting people, family, numbers/navigation, café orde
 
 Japanese now begins with **Unit 0 — Japanese foundation** before the nine published communicative units:
 
-1. `kana-sounds` — connect common hiragana/katakana to target sounds and read/type familiar forms;
-2. `mora-length` — hear and read long-vowel and small-`っ` timing contrasts;
-3. `core-sentences` — build starter sentences with `です / ます` and concrete uses of `は / を / に / で`;
-4. `foundation-checkpoint` — integrate sound, reading and sentence construction;
-5. `foundation-review` — delayed retrieval before Unit 1.
+1. `kana-sounds` — establish direct sound↔kana mapping with the five vowel sounds;
+2. `hiragana-patterns` — decode hiragana through recurring rows, dakuten, `ん`, and small `ゃ・ゅ・ょ` combinations;
+3. `katakana-patterns` — reuse the same Japanese sound system in katakana and read common beginner loanwords without romaji;
+4. `mora-length` — hear/read long-vowel timing, katakana `ー`, and small-`っ` consonant timing;
+5. `core-sentences` — build starter sentences with `です / ます`, concrete `は / を / に / で` uses, particle pronunciation, and a few explicitly taught polite verb pairs;
+6. `foundation-checkpoint` — integrate hiragana, katakana, timing, particle pronunciation and sentence construction;
+7. `foundation-review` — delayed retrieval before Unit 1 through the same FSRS system.
 
-Unit 0 uses `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and sort orders `-5..-1`. Published Units 1–9 keep their existing identities and order.
+Unit 0 uses `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and exact sort orders `-7..-1`. Published Units 1–9 keep their existing identities and order.
+
+The grammar foundation explicitly tells beginners that topic `は` is pronounced `わ` and object `を` is commonly pronounced `お`; it also teaches concrete pairs such as `行く → 行きます` and `飲む → 飲みます` without pretending those examples are a complete conjugation system.
 
 After Unit 0, the nine observable outcomes remain:
 
@@ -163,7 +167,7 @@ Canonical Language V3 regression locks:
 
 - Mandarin: **41 nodes per locale**, including pronunciation Unit 0;
 - English: **9 units / 39 nodes per locale**, including foundation Unit 0;
-- Japanese: **10 units / 33 nodes per locale**, including foundation Unit 0;
+- Japanese: **10 units / 35 nodes per locale**, including seven-node foundation Unit 0;
 - Chinese IT: **6 optional specialty lessons per locale**;
 - EN/VI identity + stable assessed-ID parity;
 - locale quality, language path ordering, backward-compatible continuation, audio, visuals, feedback, and review behavior.
