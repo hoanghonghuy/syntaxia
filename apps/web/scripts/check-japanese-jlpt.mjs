@@ -13,7 +13,7 @@ const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
 const UNITS = [
-  { id: 'ja-n5-foundation-00', order: '0', nodes: [['kana-sounds', 'lesson'], ['mora-length', 'lesson'], ['core-sentences', 'lesson'], ['foundation-checkpoint', 'checkpoint'], ['foundation-review', 'review']] },
+  { id: 'ja-n5-foundation-00', order: '0', nodes: [['kana-sounds', 'lesson'], ['hiragana-patterns', 'lesson'], ['katakana-patterns', 'lesson'], ['mora-length', 'lesson'], ['core-sentences', 'lesson'], ['foundation-checkpoint', 'checkpoint'], ['foundation-review', 'review']] },
   { id: 'ja-n5-shop-request-01', order: '1', nodes: [['politeness', 'lesson'], ['politeness-checkpoint', 'checkpoint'], ['politeness-review', 'review']] },
   { id: 'ja-n5-people-02', order: '2', nodes: [['people', 'lesson'], ['family', 'lesson'], ['people-checkpoint', 'checkpoint'], ['people-review', 'review']] },
   { id: 'ja-n5-number-03', order: '3', nodes: [['numbers', 'lesson'], ['number-checkpoint', 'checkpoint'], ['number-review', 'review']] },
@@ -80,16 +80,18 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     assert.match(body, /JLPT official level summary/)
     assert.match(body, /JLPT FAQ/)
     assert.match(body, /Irodori Starter/)
-    assert.match(body, /10 units \/ 33 nodes per locale/i)
+    assert.match(body, /10 units \/ 35 nodes per locale/i)
     assert.match(body, /kana ↔ sound/i)
+    assert.match(body, /hiragana/i)
+    assert.match(body, /katakana/i)
     assert.match(body, /mora\/length/i)
     assert.match(body, /basic sentence order \+ particles \+ polite forms/i)
     assert.match(body, /does not publish an official vocabulary\/kanji\/grammar syllabus/i)
     assert.match(body, /not official JLPT authority/i)
   })
 
-  it('ships exactly 33 paired EN/VI V3 nodes across ten units', () => {
-    assert.equal(SLUGS.length, 33)
+  it('ships exactly 35 paired EN/VI V3 nodes across ten units', () => {
+    assert.equal(SLUGS.length, 35)
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}`)
       const files = readdirSync(dir).filter((f) => f.endsWith('.md')).map((f) => f.replace(/\.md$/, '')).sort()
@@ -108,14 +110,25 @@ describe('japanese-jlpt N5 foundation curriculum', () => {
     }
   })
 
-  it('locks Unit 0 as sound -> length -> grammar -> checkpoint -> review', () => {
+  it('locks Unit 0 as sound -> hiragana -> katakana -> length -> grammar -> checkpoint -> review with unique sort order', () => {
     const foundation = UNITS[0]
-    assert.deepEqual(foundation.nodes.map(([slug]) => slug), ['kana-sounds', 'mora-length', 'core-sentences', 'foundation-checkpoint', 'foundation-review'])
+    const expected = [
+      ['kana-sounds', '-7'],
+      ['hiragana-patterns', '-6'],
+      ['katakana-patterns', '-5'],
+      ['mora-length', '-4'],
+      ['core-sentences', '-3'],
+      ['foundation-checkpoint', '-2'],
+      ['foundation-review', '-1'],
+    ]
+    assert.deepEqual(foundation.nodes.map(([slug]) => slug), expected.map(([slug]) => slug))
     for (const locale of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}`)
-      for (const [slug, role] of foundation.nodes) {
+      for (let i = 0; i < foundation.nodes.length; i += 1) {
+        const [slug, role] = foundation.nodes[i]
         const body = read(join(dir, `${slug}.md`))
         assert.equal(scalar(body, 'unit_role'), role)
+        assert.equal(scalar(body, 'order'), expected[i][1], `${locale}/${slug}: sort order`)
         assert.ok(vocabCount(body) >= 5, `${locale}/${slug}: foundation should carry reusable material`)
       }
     }
