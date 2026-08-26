@@ -191,7 +191,10 @@ describe('language communicative unit path', () => {
     assert.doesNotMatch(hub, /Promise\.all\([^)]*api\.lesson/)
 
     const catalog = read(join(webRoot, 'app/stores/catalog.ts'))
-    assert.match(catalog, /nextLanguageLesson/)
+    assert.match(catalog, /nextLessonForTrack/)
+    const learningPath = read(join(webRoot, 'app/utils/learningPath.ts'))
+    assert.match(learningPath, /nextLanguageLesson/)
+    assert.match(learningPath, /isLanguageTrack\(trackId\)/)
 
     const types = read(join(webRoot, 'app/types/api.ts'))
     for (const field of ['unitId', 'unitTitle', 'unitOrder', 'unitCanDo', 'unitRole']) {
