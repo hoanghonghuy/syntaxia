@@ -55,7 +55,7 @@
           />
         </template>
 
-        <HtmlCssSandbox
+        <LazyHtmlCssSandbox
           v-else-if="lesson.exercise && isHtmlCssTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
@@ -70,7 +70,7 @@
           @passed="onSandboxPassed"
         />
 
-        <JsSandbox
+        <LazyJsSandbox
           v-else-if="lesson.exercise && trackId === 'javascript-basics'"
           :key="lesson.id"
           :lesson-id="lesson.id"
@@ -83,7 +83,7 @@
           @passed="onSandboxPassed"
         />
 
-        <SqlSandbox
+        <LazySqlSandbox
           v-else-if="lesson.exercise"
           :key="lesson.id"
           :lesson-id="lesson.id"
