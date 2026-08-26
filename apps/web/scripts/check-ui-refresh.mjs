@@ -29,6 +29,14 @@ describe('UI refresh contract', () => {
     assert.doesNotMatch(home, /chip-(?:sql|web|js|en|zh|ja)/)
   })
 
+  it('keeps home catalog loading atomic and resumes the learner recent track first', () => {
+    const store = read('app/stores/catalog.ts')
+    assert.match(store, /Promise\.allSettled/)
+    assert.match(store, /loadError\.value\s*=\s*formatCatalogLoadError\(failure\.reason\)/)
+    assert.match(store, /prioritizeTracksByRecentProgress\(/)
+    assert.doesNotMatch(store, /const sorted = \[\.\.\.tracks\.value\]\.sort\(\(a, b\) => a\.sortOrder - b\.sortOrder\)[\s\S]*for \(const tr of sorted\)/)
+  })
+
   it('derives the learning orbit from catalog data and keeps it accessible', () => {
     const component = read('app/components/HomeLearningMap.vue')
     const utility = read('app/utils/homeLearningMap.ts')
