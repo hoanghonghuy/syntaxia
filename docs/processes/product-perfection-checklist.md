@@ -52,7 +52,7 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 | L0 | **FSRS review persistence + concurrency hardening** | done | language review foundation | Durable server-side cards/logs, due scheduling, CAS conflict semantics, reproducible Go CI |
 | L1 | **V3 pedagogy + content-quality source of truth** | done | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked |
 | L2 | **Dedicated language player correctness + feedback loop** | done | L1 | Progressive hints, delayed non-passing solution reveal, structured solutions, keyboard/mobile/screen-reader guards |
-| L3 | **Semantic visual asset pipeline** | done | L1–L2 | App-owned semantic visual registry/rendering with safe fallbacks and regression coverage |
+| L3 | **Semantic visual asset pipeline** | done | L1 | App-owned semantic visual registry/rendering with safe fallbacks and regression coverage |
 | L4 | **True communicative unit model** | done | L1–L2 | Content-owned unit metadata, Can-Do grouping, lesson/checkpoint/review roles and ordered navigation |
 | L5 | **Golden units: English / Mandarin / Japanese** | done | L2–L4 | Reference units for all three languages pass interaction, audio, review, mobile and accessibility contracts |
 | L6 | **Curriculum migration + full release QA** | done | L5 | Starter language content migrated; parity/content gates, DB-backed E2E, mobile/a11y and FSRS persistence verified |
@@ -73,18 +73,19 @@ The active candidate is `feature/home-learning-map-english-foundation` / PR #8. 
 
 1. **Data-driven home learning map** — real catalog-backed navigation/progress instead of decorative hard-coded language/code chips.
 2. **English A1 foundation-first path** — Foundation Unit 0 + 8 communicative units = **39 nodes / locale**.
-3. **Japanese N5 foundation-first path** — Foundation Unit 0 + 9 communicative units = **33 nodes / locale**.
+3. **Japanese N5 foundation-first path** — seven-node Foundation Unit 0 + 9 communicative units = **35 nodes / locale**; sound↔kana, hiragana, katakana, mora timing, core grammar, checkpoint and delayed review are all explicit.
 4. **Mandarin practical foundation** — pronunciation Unit 0 + 11 communicative units = **41 nodes / locale**.
 5. **Chinese IT specialty separation** — **6 optional specialty lessons / locale**, never a core-Mandarin prerequisite.
 6. **Runtime catalog recovery** — built-in track metadata is reconciled before curriculum sync for long-lived databases.
 7. **Locale/content quality hardening** — explanation-locale purity, lexical/chunk depth, semantic visuals, stable assessed identities and foundation-first pedagogy are regression-locked.
 8. **Backward-compatible curriculum insertion** — new Unit 0 prerequisites do not fabricate progress or silently rewind returning learners.
+9. **Cold Japanese parser smoke** — Go verifies **70 Japanese Markdown files (35×2)** and **14 Unit 0 files (7×2)** so parser/frontmatter drift cannot hide behind web-only checks.
 
-Canonical Product CI **#184** passed on exact candidate head `7c523b851a7755095bd3bc45fed967ca464505e5`, including Curriculum, cold Go tests/vet, Web/Language V3, PostgreSQL-backed runtime inventory, progress/notes, stale-catalog recovery and persisted FSRS review. This is valid evidence only for that exact head; any later polish commit requires a new exact-head run before release evidence is refreshed.
+Product CI **#184** passed on the earlier exact head `7c523b851a7755095bd3bc45fed967ca464505e5`. It is a valid pre-polish checkpoint, not release evidence for the current head. The current candidate must receive a new fully green exact-head Product CI after the final Japanese/English polish changes before release evidence is refreshed.
 
 ### Current ordered focus
 
-1. **Keep product truth synchronized.** Maps, authored inventory, static gates, runtime E2E and PR release evidence must describe the same exact candidate.
+1. **Keep product truth synchronized.** Maps, authored inventory, static gates, cold parser tests, runtime E2E and PR release evidence must describe the same exact candidate.
 2. **Continue content-level audit even when CI is green.** CI proves contracts and runtime behavior; it does not replace human/product review of language naturalness, prerequisite coverage, distractor quality, accessibility semantics or pedagogical coherence.
 3. **Do not widen declared products silently.** Higher CEFR/HSK/JLPT levels, broader JavaScript/web continuations, capstones or new tracks require a separately researched map/scope.
 4. **Keep PR #8 Draft until the final exact head is revalidated after the last polish change.** Do not promote/merge without an explicit release decision.
