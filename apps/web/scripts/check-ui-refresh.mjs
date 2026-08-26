@@ -57,6 +57,24 @@ describe('UI refresh contract', () => {
     assert.equal((hub.match(/\}\s*catch\s*\{/g) || []).length, 2)
   })
 
+  it('keeps catalog-list and search failures inside their local retry panels', () => {
+    const tracks = read('app/pages/tracks/index.vue')
+    const search = read('app/pages/search.vue')
+
+    for (const page of [tracks, search]) {
+      assert.match(page, /v-else-if="catalog\.loadError"/)
+      assert.equal((page.match(/\}\s*catch\s*\{/g) || []).length, 3)
+    }
+
+    assert.match(tracks, /async function retryCatalog\(\)[\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
+    assert.match(tracks, /onMounted\([\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
+    assert.match(tracks, /watch\(locale,[\s\S]*reloadOnLocaleChange\([\s\S]*\}\s*catch\s*\{/)
+
+    assert.match(search, /async function retryLoad\(\)[\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
+    assert.match(search, /onMounted\([\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
+    assert.match(search, /watch\(locale,[\s\S]*catalog\.loadCatalogForHome\(loc\)[\s\S]*\}\s*catch\s*\{/)
+  })
+
   it('keeps learn-layout and lesson catalog failures inside route-level recovery UI', () => {
     const layout = read('app/layouts/learn.vue')
     const lesson = read('app/pages/tracks/[track]/lessons/[slug].vue')
