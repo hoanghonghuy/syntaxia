@@ -104,7 +104,9 @@
           <article class="card domain-card domain-card--languages">
             <div class="domain-card-top">
               <span class="domain-mark" aria-hidden="true">Aa</span>
-              <p class="track-meta">CEFR A1 · HSK 3.0 · JLPT N5</p>
+              <p class="track-meta">
+                {{ t('catalog.cefrA1') }} · {{ t('catalog.hskBand1') }} · {{ t('catalog.jlptN5') }}
+              </p>
             </div>
             <h3 class="card-title">{{ t('domain.languages') }}</h3>
             <div class="domain-tags" aria-hidden="true">
