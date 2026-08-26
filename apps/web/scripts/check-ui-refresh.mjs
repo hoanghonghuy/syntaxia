@@ -70,9 +70,10 @@ describe('UI refresh contract', () => {
     assert.match(tracks, /onMounted\([\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
     assert.match(tracks, /watch\(locale,[\s\S]*reloadOnLocaleChange\([\s\S]*\}\s*catch\s*\{/)
 
-    assert.match(search, /async function retryLoad\(\)[\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
-    assert.match(search, /onMounted\([\s\S]*catalog\.loadCatalogForHome\([\s\S]*\}\s*catch\s*\{/)
-    assert.match(search, /watch\(locale,[\s\S]*catalog\.loadCatalogForHome\(loc\)[\s\S]*\}\s*catch\s*\{/)
+    assert.match(search, /async function loadSearchData\(loc: string\)[\s\S]*catalog\.loadCatalogForHome\(loc\)/)
+    assert.match(search, /async function retryLoad\(\)[\s\S]*loadSearchData\(locale\.value\)[\s\S]*\}\s*catch\s*\{/)
+    assert.match(search, /onMounted\([\s\S]*loadSearchData\(locale\.value\)[\s\S]*\}\s*catch\s*\{/)
+    assert.match(search, /watch\(locale,[\s\S]*loadSearchData\(loc\)[\s\S]*\}\s*catch\s*\{/)
   })
 
   it('keeps learn-layout and lesson catalog failures inside route-level recovery UI', () => {
