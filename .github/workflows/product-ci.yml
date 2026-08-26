@@ -91,6 +91,7 @@ jobs:
       - name: Product flow, shell and UI regression
         run: |
           npm run test:product-flows
+          npm run test:learning-path
           npm run test:shell-ux
           npm run test:ui-refresh
           npm run test:ui-system
