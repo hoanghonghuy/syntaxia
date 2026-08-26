@@ -10,6 +10,7 @@ import {
   nextIncompleteLesson,
   overallProgress,
   overallProgressForDomain,
+  prioritizeTracksByRecentProgress,
   resumeTargetForDomain,
   trackLessonStatusRows,
   trackProgress,
@@ -51,6 +52,66 @@ describe('learningPath', () => {
       total: 3,
       percent: 66,
     })
+  })
+
+  it('prioritizes the most recently studied track for a global Continue action', () => {
+    const tracks = [
+      {
+        id: 't1',
+        title: { en: 'SQL' },
+        description: { en: '' },
+        category: 'sql',
+        level: 'basic',
+        sortOrder: 1,
+      },
+      {
+        id: 't2',
+        title: { en: 'Japanese' },
+        description: { en: '' },
+        category: 'languages',
+        level: 'basic',
+        sortOrder: 120,
+      },
+    ]
+    const byTrack = { t1: lessonsA, t2: lessonsB }
+    const progress = [
+      { lessonId: 'a1', locale: 'en', completed: true, completedAt: '2026-08-20T10:00:00Z' },
+      { lessonId: 'b1', locale: 'en', completed: true, completedAt: '2026-08-25T10:00:00Z' },
+    ]
+    assert.deepEqual(
+      prioritizeTracksByRecentProgress(tracks, byTrack, progress, 'en').map((track) => track.id),
+      ['t2', 't1'],
+    )
+    assert.deepEqual(
+      prioritizeTracksByRecentProgress(tracks, byTrack, progress, 'vi').map((track) => track.id),
+      ['t1', 't2'],
+    )
+  })
+
+  it('keeps catalog order for learners without history', () => {
+    const tracks = [
+      {
+        id: 't2',
+        title: { en: 'B' },
+        description: { en: '' },
+        category: 'languages',
+        level: 'basic',
+        sortOrder: 120,
+      },
+      {
+        id: 't1',
+        title: { en: 'A' },
+        description: { en: '' },
+        category: 'sql',
+        level: 'basic',
+        sortOrder: 1,
+      },
+    ]
+    assert.deepEqual(
+      prioritizeTracksByRecentProgress(tracks, { t1: lessonsA, t2: lessonsB }, [], 'en')
+        .map((track) => track.id),
+      ['t1', 't2'],
+    )
   })
 
   it('trackProgressRows sorts by track sortOrder and includes next lesson', () => {
