@@ -43,7 +43,7 @@ steps:
     id: en-u05-check-reply
     kind: dialogue_choice
     prompt: "Someone asks, “What time do you go to work?” You go at 8:00. Which reply is natural?"
-    choices: ["I go to work at eight.", "I work is eight.", "At work who?"]
+    choices: ["I go to work at eight.", "I leave work at eight.", "I go to school at eight."]
     answer: "I go to work at eight."
   - type: practice
     id: en-u05-check-produce
@@ -59,7 +59,7 @@ steps:
       - id: en-u05-check-time-question
         kind: dialogue_choice
         prompt: "Which question asks when a routine happens?"
-        choices: ["What time do you have breakfast?", "What breakfast is time?", "Who is breakfast?"]
+        choices: ["What time do you have breakfast?", "Where do you have breakfast?", "What do you have for breakfast?"]
         answer: "What time do you have breakfast?"
       - id: en-u05-check-time-phrase
         kind: order_words

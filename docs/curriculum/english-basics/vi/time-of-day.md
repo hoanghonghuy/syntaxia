@@ -53,7 +53,7 @@ steps:
     id: en-u05-time-context
     kind: dialogue_choice
     prompt: "Một bạn hỏi “What time is class?” Lớp bắt đầu lúc 8:00. Câu nào tự nhiên?"
-    choices: ["It's at eight o'clock.", "It's eight classes.", "Class is who?"]
+    choices: ["It's at eight o'clock.", "Class is in room eight.", "Is class at eight?"]
     answer: "It's at eight o'clock."
     explanation: "Dùng at + giờ để nói khi nào hoạt động diễn ra."
   - type: practice

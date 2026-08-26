@@ -53,7 +53,7 @@ steps:
     id: en-u05-time-context
     kind: dialogue_choice
     prompt: "A classmate asks, “What time is class?” Class starts at 8:00. Which reply is natural?"
-    choices: ["It's at eight o'clock.", "It's eight classes.", "Class is who?"]
+    choices: ["It's at eight o'clock.", "Class is in room eight.", "Is class at eight?"]
     answer: "It's at eight o'clock."
     explanation: "Use at + clock time to say when an activity happens."
   - type: practice
