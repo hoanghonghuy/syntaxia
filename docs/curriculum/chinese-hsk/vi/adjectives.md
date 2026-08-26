@@ -29,8 +29,10 @@ vocab:
   - { hanzi: "很", pinyin: "hěn", gloss: "rất / thường dùng trước tính từ" }
 steps:
   - type: scene
-    title: "Tình huống"
-    body: "Bạn so sánh hai đồ vật rồi kiểm tra nước nóng hay lạnh."
+    title: "Nhìn đối lập rồi ghép câu mô tả"
+    body: "So sánh lớn với nhỏ và nóng với lạnh. Sau đó dùng cùng một khung ba phần để mô tả tự nhiên: chủ ngữ + 很 + tính từ."
+    imageUrl: "/language/scenes/mandarin-adjective-contrasts.svg"
+    imageAlt: "Một hình tròn lớn đối lập với hình tròn nhỏ cạnh 大 và 小; biểu tượng nóng và lạnh đối lập cạnh 热 và 冷; phía dưới 水 nối tới 很 rồi 冷 để minh họa khung 水很冷."
   - type: dialogue
     lines:
       - { speaker: "A", text: "这个大吗？", reading: "zhè ge dà ma" }
