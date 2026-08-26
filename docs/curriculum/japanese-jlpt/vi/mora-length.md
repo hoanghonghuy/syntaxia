@@ -29,7 +29,9 @@ vocab:
 steps:
   - type: scene
     title: "Giữ đúng thời lượng được viết"
-    body: "Bạn đã biết các quy luật hiragana và katakana cơ bản. Bây giờ hãy nghe thời lượng âm có thể làm thay đổi cách viết và cách nhận ra từ."
+    body: "Bạn đã biết các quy luật hiragana và katakana cơ bản. Hãy đọc mỗi ô thời lượng được nhấn mạnh như một phần của từ: kana nguyên âm bổ sung, small っ hay ー đều không phải ký hiệu trang trí."
+    imageUrl: "/language/scenes/japanese-mora-timing.svg"
+    imageAlt: "Ba hàng thời lượng cho thấy お・か・あ・さ・ん với あ bổ sung được nhấn mạnh, き・っ・ぷ với small っ là một khoảng thời lượng ngắn riêng, và コ・ー・ヒ・ー với cả hai dấu kéo dài được nhấn mạnh."
   - type: dialogue
     lines:
       - { speaker: "先生", text: "きっぷ。", reading: "きっぷ。" }
