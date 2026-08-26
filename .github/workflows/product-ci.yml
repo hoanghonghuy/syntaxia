@@ -84,6 +84,10 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
+      - name: Use pinned npm
+        run: |
+          npm install --global npm@11.19.0 --no-audit --no-fund
+          test "$(npm --version)" = "11.19.0"
       - name: Install committed dependencies
         run: npm ci
       - name: Audit production dependencies
