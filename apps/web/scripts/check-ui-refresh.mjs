@@ -49,6 +49,14 @@ describe('UI refresh contract', () => {
     assert.match(learningPath, /nextLessonForTrack\([\s\S]*nextLanguageLesson/)
   })
 
+  it('keeps track-hub catalog failures inside the local retry state', () => {
+    const hub = read('app/pages/tracks/[track]/index.vue')
+    assert.match(hub, /v-else-if="catalog\.loadError"/)
+    assert.match(hub, /async function loadHub\(\)[\s\S]*try\s*\{[\s\S]*catalog\.loadTracks\(\)[\s\S]*catalog\.loadLessons\([\s\S]*\}\s*catch\s*\{/)
+    assert.match(hub, /watch\(locale,[\s\S]*reloadOnLocaleChange\([\s\S]*\}\s*catch\s*\{/)
+    assert.equal((hub.match(/\}\s*catch\s*\{/g) || []).length, 2)
+  })
+
   it('derives the learning orbit from catalog data and keeps it accessible', () => {
     const component = read('app/components/HomeLearningMap.vue')
     const utility = read('app/utils/homeLearningMap.ts')

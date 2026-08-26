@@ -171,6 +171,8 @@ async function loadHub() {
     await catalog.loadLessons(trackId.value, locale.value)
     await auth.fetchMe()
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // The catalog store owns the learner-facing error/retry state rendered above.
   } finally {
     loading.value = false
   }
@@ -191,6 +193,8 @@ watch(locale, async (loc) => {
       loadCatalog: (l) => catalog.loadLessons(trackId.value, l),
       loadProgress: () => catalog.loadProgress(),
     })
+  } catch {
+    // Locale reload failures use the same local catalog error/retry state.
   } finally {
     loading.value = false
   }
