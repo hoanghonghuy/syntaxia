@@ -8,6 +8,7 @@ import { describe, it } from 'node:test'
 import {
   buildLanguageUnitPath,
   nextIncompleteLesson,
+  nextLessonForTrack,
   overallProgress,
   overallProgressForDomain,
   prioritizeTracksByRecentProgress,
@@ -39,6 +40,26 @@ describe('learningPath', () => {
     const progress = [{ lessonId: 'a1', locale: 'en', completed: true }]
     const next = nextIncompleteLesson(lessonsA, progress, 'en')
     assert.equal(next?.id, 'a2')
+  })
+
+  it('does not rewind a returning language learner to an inserted Unit 0', () => {
+    const lessons = [
+      {
+        id: 'foundation', locale: 'en', trackId: 'english-basics', slug: 'foundation', title: 'Foundation',
+        sortOrder: -1, published: true, unitId: 'en-a1-foundation-00', unitOrder: 0, unitRole: 'lesson',
+      },
+      {
+        id: 'old-1', locale: 'en', trackId: 'english-basics', slug: 'old-1', title: 'Old 1',
+        sortOrder: 1, published: true, unitId: 'en-a1-meeting-01', unitOrder: 1, unitRole: 'lesson',
+      },
+      {
+        id: 'old-2', locale: 'en', trackId: 'english-basics', slug: 'old-2', title: 'Old 2',
+        sortOrder: 2, published: true, unitId: 'en-a1-meeting-01', unitOrder: 1, unitRole: 'lesson',
+      },
+    ]
+    const progress = [{ lessonId: 'old-1', locale: 'en', completed: true }]
+    assert.equal(nextIncompleteLesson(lessons, progress, 'en')?.id, 'foundation')
+    assert.equal(nextLessonForTrack('english-basics', lessons, progress, 'en')?.id, 'old-2')
   })
 
   it('overallProgress aggregates across tracks', () => {
@@ -215,6 +236,35 @@ describe('learningPath', () => {
     const resumeIt = resumeTargetForDomain(tracks, byTrack, progress, 'en', 'it')
     assert.equal(resumeIt?.trackId, 't1')
     assert.equal(resumeIt?.lesson.id, 'a2')
+  })
+
+  it('resumes the most recently studied unfinished track inside a domain', () => {
+    const tracks = [
+      {
+        id: 'chinese-hsk', title: { en: 'Mandarin' }, description: { en: '' },
+        category: 'languages', level: 'basic', sortOrder: 100,
+      },
+      {
+        id: 'japanese-jlpt', title: { en: 'Japanese' }, description: { en: '' },
+        category: 'languages', level: 'basic', sortOrder: 120,
+      },
+    ]
+    const mandarin = [
+      { id: 'zh1', locale: 'en', trackId: 'chinese-hsk', slug: 'zh1', title: 'ZH 1', sortOrder: 1, published: true, unitId: 'zh-u1', unitOrder: 1, unitRole: 'lesson' },
+      { id: 'zh2', locale: 'en', trackId: 'chinese-hsk', slug: 'zh2', title: 'ZH 2', sortOrder: 2, published: true, unitId: 'zh-u1', unitOrder: 1, unitRole: 'lesson' },
+    ]
+    const japanese = [
+      { id: 'ja1', locale: 'en', trackId: 'japanese-jlpt', slug: 'ja1', title: 'JA 1', sortOrder: 1, published: true, unitId: 'ja-u1', unitOrder: 1, unitRole: 'lesson' },
+      { id: 'ja2', locale: 'en', trackId: 'japanese-jlpt', slug: 'ja2', title: 'JA 2', sortOrder: 2, published: true, unitId: 'ja-u1', unitOrder: 1, unitRole: 'lesson' },
+    ]
+    const byTrack = { 'chinese-hsk': mandarin, 'japanese-jlpt': japanese }
+    const progress = [
+      { lessonId: 'zh1', locale: 'en', completed: true, completedAt: '2026-08-20T10:00:00Z' },
+      { lessonId: 'ja1', locale: 'en', completed: true, completedAt: '2026-08-25T10:00:00Z' },
+    ]
+    const resume = resumeTargetForDomain(tracks, byTrack, progress, 'en', 'languages')
+    assert.equal(resume?.trackId, 'japanese-jlpt')
+    assert.equal(resume?.lesson.id, 'ja2')
   })
 
   it('buildLanguageUnitPath marks done / current / locked sequentially', () => {
