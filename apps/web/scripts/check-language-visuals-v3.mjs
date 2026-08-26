@@ -164,6 +164,23 @@ describe('language v3 semantic visuals', () => {
     }
   })
 
+  it('ships an app-owned meaning-and-frame visual for Mandarin adjective contrasts', () => {
+    const assetName = 'mandarin-adjective-contrasts.svg'
+    const assetPath = join(webRoot, 'public/language/scenes', assetName)
+    assert.equal(existsSync(assetPath), true)
+    const asset = read(assetPath)
+    for (const token of ['大', '小', '热', '冷', '水', '很']) {
+      assert.ok(asset.includes(`>${token}<`), `${assetName} must visibly teach ${token}`)
+    }
+
+    for (const locale of ['en', 'vi']) {
+      const body = read(join(repoRoot, `docs/curriculum/chinese-hsk/${locale}/adjectives.md`))
+      assert.match(body, /imageUrl: "\/language\/scenes\/mandarin-adjective-contrasts\.svg"/)
+      assert.match(body, /imageAlt: ".+"/)
+      assert.match(body, /水很冷/)
+    }
+  })
+
   it('keeps the English image-choice exercise on stable semantic ids', () => {
     for (const locale of ['en', 'vi']) {
       const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/greetings.md`))
