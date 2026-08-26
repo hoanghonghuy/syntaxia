@@ -191,7 +191,7 @@ describe('language communicative unit path', () => {
     assert.doesNotMatch(hub, /Promise\.all\([^)]*api\.lesson/)
 
     const sidebar = read(join(webRoot, 'app/components/LearnSidebar.vue'))
-    assert.match(sidebar, /orderLanguageLessons\(list\)/)
+    assert.match(sidebar, /orderLanguageLessons\(rawLessons\.value\)/)
     assert.match(sidebar, /v-for="\(item, index\) in lessons"/)
     assert.match(sidebar, /index \+ 1/)
     assert.doesNotMatch(sidebar, /\{\{ item\.sortOrder \}\}/)
