@@ -42,22 +42,23 @@ The 30-node English and 28-node Japanese values above are intentionally historic
 `feature/home-learning-map-english-foundation` starts from the production release baseline and contains related product-hardening work:
 
 1. **Interactive homepage learning map** — derive available chips, navigation targets, positions, and progress from live catalog data while preserving the familiar `SQL / Web / JS / EN / 中文 / 日本語` visual language.
-2. **English foundation-first A1 progression** — insert a backward-compatible Unit 0 before the existing eight English communicative units.
+2. **English foundation-first A1 progression** — insert a backward-compatible Unit 0 before the existing eight English communicative units, then add Unit 9 for personal details and concrete possession language without renumbering Units 1–8.
 3. **Japanese foundation-first N5 progression** — insert a backward-compatible Unit 0 for sound↔kana, hiragana, katakana, mora timing and core sentence grammar before the existing nine communicative units.
 4. **Language catalog recovery** — reconcile all application-owned tracks at API startup so long-lived databases cannot silently expose an incomplete language catalog or fail lesson sync on missing track rows.
-5. **Locale/content quality hardening** — keep explanation-language copy out of shared pronunciation assets, detect instructional-locale leakage, and require meaningful lexical/chunk depth in normal communicative lessons.
+5. **Locale/content quality hardening** — keep explanation-language copy out of shared pronunciation assets, detect instructional-locale leakage, require meaningful lexical/chunk depth in normal communicative lessons, and reject audited broken-English distractors.
 6. **Foundation-first contract hardening** — lock pronunciation/sound, vocabulary, grammar, listening, speaking, reading, writing, and review as deliberate core-language dimensions while keeping specialty terminology optional.
+7. **Dependency/auth security hardening** — block reachable Go vulnerabilities in canonical CI, patch known vulnerable dependency/toolchain floors, keep production npm audit blocking, and restrict JWT verification to the intended HS256 method.
 
 ### Active language candidate inventory
 
 | Track | Active authored candidate |
 |-------|---------------------------|
 | `chinese-hsk` | **41 nodes per locale** — pronunciation Unit 0 + 11 communicative units |
-| `english-basics` | **9 units / 39 nodes per locale** — foundation Unit 0 + 8 communicative units |
+| `english-basics` | **10 units / 43 nodes per locale** — nine-node foundation Unit 0 + Units 1–9 |
 | `japanese-jlpt` | **10 units / 35 nodes per locale** — seven-node foundation Unit 0 + 9 communicative units |
 | `chinese-it-vocab` | **6 optional specialty lessons per locale** |
 
-Existing published IDs/orders in English Units 1–8 and Japanese Units 1–9 are preserved. Inserted Unit 0 nodes use `unit_order: 0`; generic learner-frontier behavior keeps returning learners on their established continuation path while leaving earlier prerequisites available for catch-up.
+Existing published IDs/orders in English Units 1–8 and Japanese Units 1–9 are preserved. Inserted Unit 0 nodes use `unit_order: 0`; generic learner-frontier behavior keeps returning learners on their established continuation path while leaving earlier prerequisites available for catch-up. English Unit 9 is additive and uses new authored IDs for `personal-details`, `possessions`, checkpoint, and delayed review.
 
 Until canonical Product CI and DB-backed release E2E are green on the **exact active-branch head**, these expanded scopes are authored candidates and must not be promoted as a new production baseline.
 
@@ -89,12 +90,12 @@ A normal production communicative node then follows:
 
 Foundation-focused nodes may emphasize sound discrimination, writing-system decoding, or sentence construction earlier in the sequence, but still require stable assessed identity, recall/production, checkpoint evidence and later retrieval.
 
-Target-language naturalness, listening behavior, semantic visuals, stable assessed IDs, feedback/remediation, EN/VI intent parity, locale-pure explanatory copy, accessibility, and FSRS review identity are product requirements rather than optional polish.
+Target-language naturalness, listening behavior, semantic visuals, stable assessed IDs, feedback/remediation, EN/VI intent parity, locale-pure explanatory copy, accessibility, and FSRS review identity are product requirements rather than optional polish. Learner-facing distractors must be plausible alternatives that test meaning/speech act; obviously malformed “word salad” is a regression.
 
 Language-specific adaptation is explicit:
 
 - **Mandarin** — Pinyin syllables, tones/tone changes, general vocabulary, productive grammar, listening/speaking, gradual Hanzi reading/writing.
-- **English** — sound↔spelling, high-value vowel/consonant contrasts, stress/prosody, reusable chunks and a minimal productive sentence core.
+- **English** — sound↔spelling, high-value vowel/consonant contrasts, stress/prosody, reusable chunks and a minimal productive sentence core, followed by practical A1 personal/social/transactional use.
 - **Japanese** — sound↔kana, hiragana/katakana decoding, long-vowel/small-`っ` mora contrasts, general vocabulary, `です / ます`, starter sentence order/particles, listening/speaking, kana/basic-kanji reading/writing.
 
 ### Specialty language
@@ -107,7 +108,7 @@ Specialty tracks are optional additions after or alongside a core language path.
 - `postgresql` is a bounded **19-lesson PostgreSQL-specific basic→advanced** product.
 - `javascript-basics` ending at functions is a complete **Basics** product; DOM/events/fetch/async require a separately mapped continuation product.
 - `html-basics` and `css-basics` are bounded web-foundation products with executable HTML/CSS sandbox exercises.
-- `english-basics` on the active branch declares a **9-unit / 39-node CEFR A1 language foundation** with Unit 0 for pronunciation and core sentence grammar; it does not claim exhaustive CEFR A1, a complete grammar/phonology syllabus, or exam preparation.
+- `english-basics` on the active branch declares a **10-unit / 43-node CEFR A1 language foundation** with Unit 0 for pronunciation/core sentence grammar and Unit 9 for age, place of residence, and concrete possession; it does not claim exhaustive CEFR A1, a complete grammar/phonology syllabus, or exam preparation.
 - `chinese-hsk` declares a **practical Mandarin Level 1 foundation** with pronunciation Unit 0 plus 11 communicative units; it does not claim exhaustive HSK exam preparation or complete HSK-system coverage.
 - `japanese-jlpt` on the active branch declares a **10-unit / 35-node practical N5 foundation** with a seven-node Unit 0 for sound↔kana, hiragana, katakana, mora timing and core sentence grammar; it does not claim exhaustive JLPT N5 exam preparation, all N5 vocabulary/kanji, or every grammar point.
 - `chinese-it-vocab` is a six-lesson **optional specialty mini-course** constrained by its cited term map.
@@ -118,7 +119,7 @@ Expansion begins by creating/updating a public-reference curriculum map and defi
 
 ### English — active branch target
 
-Exactly **9 units / 39 nodes per locale**.
+Exactly **10 units / 43 nodes per locale**.
 
 Unit 0 (`en-a1-foundation-00`) uses `unit_order: 0` and sort orders `-9..-1`:
 
@@ -132,9 +133,9 @@ Unit 0 (`en-a1-foundation-00`) uses `unit_order: 0` and sort orders `-9..-1`:
 8. `foundation-checkpoint`;
 9. `foundation-review`.
 
-Published Units 1–8 remain meeting, people, navigation/numbers, café ordering, routine/time, shopping, home/location, and free-time planning. Their identities/orders are unchanged. Stable assessed IDs from Unit 0 enter the same generic FSRS engine as later units.
+Published Units 1–8 remain meeting, people, navigation/numbers, café ordering, routine/time, shopping, home/location, and free-time planning. Their identities/orders are unchanged. Unit 9 adds `personal-details`, `possessions`, `personal-checkpoint`, and `personal-review` for basic age/place/have language. Stable assessed IDs from Unit 0 and Unit 9 enter the same generic FSRS engine as later review items.
 
-Shared pronunciation visuals may contain target English, IPA, or sound symbols but must not inject English instructional prose into a Vietnamese lesson.
+Shared pronunciation visuals may contain target English, IPA, or sound symbols but must not inject English instructional prose into a Vietnamese lesson. The final communicative audit also regression-locks removal of low-quality malformed distractors through `test:english-distractor-quality`.
 
 ### Japanese — active branch target
 
@@ -178,6 +179,18 @@ This behavior is generic and must not be hard-coded to one target language.
 
 The bundled curriculum depends on application-owned track metadata. API startup reconciles the built-in catalog **before** lesson sync. The release DB-backed gate simulates an older database by deleting `english-basics`, `japanese-jlpt`, and `chinese-it-vocab` after schema initialization and before API startup. The API must recreate them and expose all required tracks through `/api/v1/tracks` before exact lesson inventory checks pass.
 
+## Security quality lock
+
+Canonical Product CI treats dependency/auth security as release-blocking:
+
+- Go module graph and checksums must match committed files;
+- `govulncheck` must report no reachable known vulnerabilities for the API/toolchain graph;
+- the API runs on the patched Go **1.26.6** floor with patched `pgx v5.9.2`, `gRPC v1.82.1`, `x/text v0.39.0`, and `github.com/golang-jwt/jwt/v5 v5.2.2` floors from this candidate;
+- JWT parsing accepts only the intended **HS256** method; a regression test proves an HS512 token using the same secret is rejected;
+- web production dependencies remain protected by `npm audit --omit=dev --audit-level=high` on the committed lockfile.
+
+Security gates are not warnings and are not allowlisted merely to obtain a green release run.
+
 ## Verification ownership
 
 ### IT curriculum
@@ -196,6 +209,7 @@ node scripts/verify-css-v2.mjs
 cd apps/web
 npm run test:chinese-hsk
 npm run test:english-basics
+npm run test:english-distractor-quality
 npm run test:japanese-jlpt
 npm run test:chinese-it-vocab
 npm run test:language-v3
@@ -208,28 +222,29 @@ npm run test:language-review
 
 Canonical Product CI verifies:
 
-- Go module graph, cold `go test -count=1`, and vet;
+- Go module graph/checksums, reachable-vulnerability scan, cold `go test -count=1`, and vet;
+- committed web dependency graph + production npm audit;
 - Nuxt production build and product/UI regressions;
 - exact curriculum structure and EN/VI parity;
-- Language V3 unit/path/audio/review/locale-quality contracts;
+- Language V3 unit/path/audio/review/locale/distractor-quality contracts;
 - PostgreSQL-backed exact live inventories;
 - built-in track reconciliation against a simulated long-lived/stale database;
 - SQL, JavaScript and HTML/CSS sandbox execution;
 - progress and notes persistence;
 - FSRS review synchronization and persisted cards/logs across Mandarin, English, Japanese and Chinese IT.
 
-The cold Go-test requirement is intentional: drive-package smoke tests may read `docs/curriculum` outside the Go package cache key, so cached package results must never hide curriculum changes. Japanese now has its own cold smoke requiring exactly **70 Markdown files = 35×2 locales**, including **14 Unit 0 files = 7×2**.
+The cold Go-test requirement is intentional: drive-package smoke tests may read `docs/curriculum` outside the Go package cache key, so cached package results must never hide curriculum changes. English cold smoke requires exactly **86 Markdown files = 43×2 locales**, including **18 Unit 0 files = 9×2**. Japanese cold smoke requires exactly **70 Markdown files = 35×2 locales**, including **14 Unit 0 files = 7×2**.
 
 For the active branch, release E2E additionally proves:
 
-- `english-basics = 39` live nodes per locale;
+- `english-basics = 43` live nodes per locale;
 - English Unit 0 exposes `unitOrder: 0` and `en-fnd-sound-hear-meet` persists through FSRS;
 - `japanese-jlpt = 35` live nodes per locale;
 - Japanese Unit 0 exposes `unitOrder: 0` and its authored stable review identity persists through the generic FSRS engine;
 - homepage learning-map changes pass build/UI/accessibility regressions;
 - built-in catalog recovery works before curriculum synchronization.
 
-Exact Product CI run number and SHA are recorded only after the **final exact candidate head** is fully green. A green run from an earlier head is not release evidence for later content changes.
+Exact Product CI run number and SHA are recorded only after the **final exact candidate head** is fully green. A green run from an earlier head is not release evidence for later content or documentation changes.
 
 ## Related
 
