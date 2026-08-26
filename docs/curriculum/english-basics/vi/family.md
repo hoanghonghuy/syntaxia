@@ -51,7 +51,7 @@ steps:
     id: family-dialogue-1
     kind: dialogue_choice
     prompt: "Một người chỉ vào người phụ nữ trong ảnh gia đình và hỏi “Who's this?” Đó là mẹ của bạn. Bạn nói gì?"
-    choices: ["This is my mother.", "She's this mother.", "Who is my mother?"]
+    choices: ["This is my mother.", "She's my friend.", "Where is my mother?"]
     answer: "This is my mother."
   - type: practice
     id: family-build-1
@@ -83,7 +83,7 @@ steps:
 exercise:
   type: dialogue_choice
   prompt: "Chọn câu giới thiệu người thân tự nhiên."
-  choices: ["This is my sister.", "My this sister.", "Who sister my?"]
+  choices: ["This is my sister.", "Where is my sister?", "Is she your sister?"]
   answer: "This is my sister."
 ---
 

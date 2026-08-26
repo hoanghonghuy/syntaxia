@@ -42,7 +42,7 @@ steps:
     id: en-u02-check-reply
     kind: dialogue_choice
     prompt: "Someone asks “Who's that?” Anna is your friend. What is a natural reply?"
-    choices: ["That's Anna. She's my friend.", "This friend is who?", "Anna is room five."]
+    choices: ["That's Anna. She's my friend.", "Is Anna your friend?", "Where is Anna?"]
     answer: "That's Anna. She's my friend."
     explanation: "Identify the person first, then add the relationship."
   - type: practice
@@ -58,7 +58,7 @@ steps:
       - id: en-u02-check-question
         kind: dialogue_choice
         prompt: "Which question asks who a person is?"
-        choices: ["Who's that?", "Where's that?", "How many is that?"]
+        choices: ["Who's that?", "Where is that person?", "What is that?"]
         answer: "Who's that?"
       - id: en-u02-check-family
         kind: meaning_choice

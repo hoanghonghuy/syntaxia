@@ -76,7 +76,7 @@ steps:
       - id: people-check-1
         kind: dialogue_choice
         prompt: "Muốn biết người ở phía bên kia phòng là ai, bạn có thể hỏi gì?"
-        choices: ["Who's that?", "Where is that?", "How many?"]
+        choices: ["Who's that?", "Where is that person?", "How old is that person?"]
         answer: "Who's that?"
       - id: people-check-2
         kind: dialogue_choice
@@ -86,7 +86,7 @@ steps:
 exercise:
   type: dialogue_choice
   prompt: "Chọn cách giới thiệu Linh tự nhiên."
-  choices: ["This is Linh.", "Who Linh?", "Linh is this?"]
+  choices: ["This is Linh.", "She's my friend.", "Who's Linh?"]
   answer: "This is Linh."
 ---
 

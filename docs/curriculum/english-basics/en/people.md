@@ -76,7 +76,7 @@ steps:
       - id: people-check-1
         kind: dialogue_choice
         prompt: "You want to know the person across the room. What can you ask?"
-        choices: ["Who's that?", "Where is that?", "How many?" ]
+        choices: ["Who's that?", "Where is that person?", "How old is that person?"]
         answer: "Who's that?"
       - id: people-check-2
         kind: dialogue_choice
@@ -86,7 +86,7 @@ steps:
 exercise:
   type: dialogue_choice
   prompt: "Choose the natural way to introduce Linh."
-  choices: ["This is Linh.", "Who Linh?", "Linh is this?"]
+  choices: ["This is Linh.", "She's my friend.", "Who's Linh?"]
   answer: "This is Linh."
 ---
 
