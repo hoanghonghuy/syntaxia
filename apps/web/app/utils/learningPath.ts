@@ -1,4 +1,6 @@
 import type { LessonSummary, Progress, Track } from '~/types/api'
+import { isLanguageTrack } from './languageLesson.ts'
+import { nextLanguageLesson } from './languageUnits.ts'
 import {
   type LearningDomainFilter,
   filterTracksByDomain,
@@ -30,6 +32,19 @@ export function nextIncompleteLesson(
     if (!done) return lesson
   }
   return null
+}
+
+/** One continuation rule for cards, Progress and Home. Language tracks preserve
+ * the learner frontier when an earlier prerequisite Unit 0 is inserted. */
+export function nextLessonForTrack(
+  trackId: string,
+  lessons: LessonSummary[],
+  progress: Progress[],
+  locale: string,
+): LessonSummary | null {
+  return isLanguageTrack(trackId)
+    ? nextLanguageLesson(lessons, progress, locale)
+    : nextIncompleteLesson(lessons, progress, locale)
 }
 
 export function overallProgress(
@@ -146,7 +161,7 @@ export function trackProgressRows(
         done: stats.done,
         total: stats.total,
         percent: stats.percent,
-        next: nextIncompleteLesson(lessons, progress, locale),
+        next: nextLessonForTrack(tr.id, lessons, progress, locale),
       }
     })
     .filter((row) => row.total > 0)
@@ -188,9 +203,16 @@ export function resumeTargetForDomain(
   locale: string,
   domain: LearningDomainFilter,
 ): { trackId: string; lesson: LessonSummary } | null {
-  for (const tr of filterTracksByDomain(tracks, domain)) {
-    const next = nextIncompleteLesson(lessonsByTrack[tr.id] || [], progress, locale)
-    if (next) return { trackId: tr.id, lesson: next }
+  const scopedTracks = filterTracksByDomain(tracks, domain)
+  const ordered = prioritizeTracksByRecentProgress(scopedTracks, lessonsByTrack, progress, locale)
+  for (const track of ordered) {
+    const next = nextLessonForTrack(
+      track.id,
+      lessonsByTrack[track.id] || [],
+      progress,
+      locale,
+    )
+    if (next) return { trackId: track.id, lesson: next }
   }
   return null
 }
