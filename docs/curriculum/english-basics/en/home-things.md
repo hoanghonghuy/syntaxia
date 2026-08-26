@@ -13,7 +13,7 @@ unit_order: 7
 unit_can_do: "Say what is in a familiar room and ask where a common object is"
 unit_role: lesson
 can_do: "Name a few common things in a room and say that one thing is there"
-pattern: "There's a … / There are … / This is my …"
+pattern: "There's a … / This is my …"
 objectives:
   - Name common room objects
   - Use There's a … for one visible object

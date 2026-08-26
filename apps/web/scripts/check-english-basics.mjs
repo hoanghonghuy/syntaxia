@@ -201,6 +201,33 @@ describe('english-basics A1 language foundation curriculum', () => {
     }
   })
 
+  it('keeps communicative progression prerequisite-safe and aligned with declared Can-Do', () => {
+    for (const loc of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
+      const family = read(join(dir, 'family.md'))
+      const places = read(join(dir, 'places.md'))
+      const home = read(join(dir, 'home-things.md'))
+      const where = read(join(dir, 'where-things.md'))
+      const invitations = read(join(dir, 'invitations.md'))
+
+      assert.match(family, /id:\s*family-check-2[\s\S]*answer:\s*"This is Linh\."/)
+      assert.doesNotMatch(family, /Room seven/)
+
+      assert.match(places, /id:\s*places-check-2[\s\S]*answer:\s*"Room five\?"/)
+      assert.doesNotMatch(places, /I'd like a tea, please/)
+
+      assert.equal(scalar(home, 'pattern'), "There's a … / This is my …")
+      assert.doesNotMatch(home, /pattern:\s*"[^"]*There are/)
+
+      assert.match(where, /form:\s*"It's in the bag\."/)
+      assert.match(where, /gloss:\s*"[^"]+"/)
+
+      assert.ok(assessedIds(invitations).includes('en-u08-invite-time'))
+      assert.match(invitations, /form:\s*"At three in the afternoon\?"/)
+      assert.match(invitations, /id:\s*en-u08-invite-time[\s\S]*answer:\s*"At three in the afternoon"/)
+    }
+  })
+
   it('grades each published fallback exercise answer against itself', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)

@@ -13,7 +13,7 @@ unit_order: 7
 unit_can_do: "Nói những gì có trong một phòng quen thuộc và hỏi vị trí của một đồ vật thường gặp"
 unit_role: lesson
 can_do: "Gọi tên vài đồ vật quen thuộc trong phòng và nói rằng một đồ vật đang ở đó"
-pattern: "There's a … / There are … / This is my …"
+pattern: "There's a … / This is my …"
 objectives:
   - Gọi tên đồ vật quen thuộc trong phòng
   - Dùng There's a … cho một đồ vật nhìn thấy

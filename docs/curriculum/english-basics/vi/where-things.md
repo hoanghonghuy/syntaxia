@@ -51,6 +51,7 @@ steps:
       - { form: "Where's my book?", gloss: "hỏi vị trí đồ vật", example: "Where's my book?" }
       - { form: "It's on the table.", gloss: "đồ vật nằm trên bề mặt", example: "It's on the table." }
       - { form: "It's under the chair.", gloss: "đồ vật nằm phía dưới", example: "It's under the chair." }
+      - { form: "It's in the bag.", gloss: "đồ vật nằm bên trong một vật khác", example: "It's in the bag." }
   - type: practice
     id: en-u07-where-context
     kind: dialogue_choice

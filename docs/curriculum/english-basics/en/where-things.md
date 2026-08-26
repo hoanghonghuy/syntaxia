@@ -51,6 +51,7 @@ steps:
       - { form: "Where's my book?", gloss: "ask for an object's location", example: "Where's my book?" }
       - { form: "It's on the table.", gloss: "object is supported by a surface", example: "It's on the table." }
       - { form: "It's under the chair.", gloss: "object is below something", example: "It's under the chair." }
+      - { form: "It's in the bag.", gloss: "object is inside something", example: "It's in the bag." }
   - type: practice
     id: en-u07-where-context
     kind: dialogue_choice

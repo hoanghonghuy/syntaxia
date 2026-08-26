@@ -77,9 +77,9 @@ steps:
         answer: "my brother"
       - id: family-check-2
         kind: dialogue_choice
-        prompt: "Ôn lại: nhân viên nói “Room seven.” Bạn xác nhận lại thế nào?"
-        choices: ["Room seven?", "Who's seven?", "This is seven."]
-        answer: "Room seven?"
+        prompt: "Ôn lại: bạn giới thiệu người bạn Linh. Câu nào phù hợp?"
+        choices: ["This is Linh.", "I'm Linh.", "Who's Linh?"]
+        answer: "This is Linh."
 exercise:
   type: dialogue_choice
   prompt: "Chọn câu giới thiệu người thân tự nhiên."

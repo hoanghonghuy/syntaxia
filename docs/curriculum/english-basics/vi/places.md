@@ -78,9 +78,9 @@ steps:
         answer: "It's here."
       - id: places-check-2
         kind: dialogue_choice
-        prompt: "Ôn lại: ở quán, cách lịch sự để gọi trà là gì?"
-        choices: ["I'd like a tea, please.", "Where's tea?", "This is my tea friend."]
-        answer: "I'd like a tea, please."
+        prompt: "Ôn lại: nhân viên nói “Room five.” Bạn xác nhận lại thế nào?"
+        choices: ["Room five?", "Who's five?", "This is five."]
+        answer: "Room five?"
 exercise:
   type: dialogue_choice
   prompt: "Chọn câu hỏi dùng để hỏi vị trí một địa điểm."

@@ -49,6 +49,7 @@ steps:
     items:
       - { form: "Do you want to go to the park?", gloss: "simple invitation", example: "Do you want to go to the park on Saturday?" }
       - { form: "Yes, let's go.", gloss: "accept the invitation", example: "Yes, let's go." }
+      - { form: "At three in the afternoon?", gloss: "confirm a simple meeting time", example: "At three in the afternoon?" }
       - { form: "See you there.", gloss: "close the plan", example: "Great. See you there." }
   - type: practice
     id: en-u08-invite-context
@@ -71,6 +72,14 @@ steps:
     acceptedAnswers: ["Do you want to go to the park?", "Do you want to go to the park with me?", "Do you want to go to the park with me"]
     hints:
       - "Start with Do you want to …"
+  - type: practice
+    id: en-u08-invite-time
+    kind: type_answer
+    prompt: "You both chose the park. Confirm the meeting time: 3:00 in the afternoon."
+    answer: "At three in the afternoon"
+    acceptedAnswers: ["At three in the afternoon?", "At three in the afternoon.", "At three in the afternoon"]
+    hints:
+      - "Use At + time + in the afternoon."
   - type: checkpoint
     items:
       - id: en-u08-invite-check-accept

@@ -78,9 +78,9 @@ steps:
         answer: "It's here."
       - id: places-check-2
         kind: dialogue_choice
-        prompt: "Review: at a café, what is a polite way to ask for tea?"
-        choices: ["I'd like a tea, please.", "Where's tea?", "This is my tea friend."]
-        answer: "I'd like a tea, please."
+        prompt: "Review: a staff member says “Room five.” How can you confirm it?"
+        choices: ["Room five?", "Who's five?", "This is five."]
+        answer: "Room five?"
 exercise:
   type: dialogue_choice
   prompt: "Choose the question that asks for a place."
