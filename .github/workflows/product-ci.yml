@@ -41,7 +41,7 @@ jobs:
         run: node scripts/verify-css-v2.mjs
 
   api:
-    name: API · Go verify, security, test and vet
+    name: API · Go verify, test and vet
     runs-on: ubuntu-latest
     defaults:
       run:
