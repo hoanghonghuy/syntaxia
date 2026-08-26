@@ -157,7 +157,7 @@ describe('UI refresh contract', () => {
     assert.doesNotMatch(path, /--color-accent|--color-muted|--color-border/)
   })
 
-  it('keeps the guided language player mobile-safe and screen-reader aware', () => {
+  it('keeps the guided language player reversible, mobile-safe and screen-reader aware', () => {
     const player = read('app/components/LanguageLessonPlayer.vue')
     const steps = read('app/components/LanguageLessonSteps.vue')
 
@@ -170,6 +170,13 @@ describe('UI refresh contract', () => {
     assert.match(steps, /:aria-valuetext=/)
     assert.match(steps, /aria-live="polite"/)
     assert.match(steps, /:lang="targetLang"/)
+    assert.match(steps, /v-if="stepIndex > 0"/)
+    assert.match(steps, /@click="previous"/)
+    assert.match(steps, /function previous\(\)/)
+    assert.match(steps, /const passedStepIndexes = ref<number\[\]>\(\[\]\)/)
+    assert.match(steps, /const practicePassed = computed\(\(\) => passedStepIndexes\.value\.includes\(stepIndex\.value\)\)/)
+    assert.match(steps, /checkpointCursorByStep/)
+    assert.doesNotMatch(steps, /const practicePassed = ref\(false\)/)
     assert.match(steps, /@media \(max-width:\s*560px\)/)
     assert.match(steps, /flex-direction:\s*column/)
     assert.match(steps, /width:\s*100%/)
