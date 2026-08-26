@@ -29,7 +29,9 @@ vocab:
 steps:
   - type: scene
     title: "Keep the timing that is written"
-    body: "You already know basic hiragana and katakana patterns. Now listen for timing that changes how a word is written and recognized."
+    body: "You already know basic hiragana and katakana patterns. Read each highlighted timing slot as part of the word: an extra vowel kana, small っ, or ー is not decorative."
+    imageUrl: "/language/scenes/japanese-mora-timing.svg"
+    imageAlt: "Three timing rows show お・か・あ・さ・ん with the extra あ highlighted, き・っ・ぷ with small っ as its own brief timing slot, and コ・ー・ヒ・ー with both long-vowel marks highlighted."
   - type: dialogue
     lines:
       - { speaker: "先生", text: "きっぷ。", reading: "きっぷ。" }
