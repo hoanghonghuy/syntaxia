@@ -221,6 +221,8 @@ async function retryCatalog() {
   try {
     await catalog.loadCatalogForHome(locale.value)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // The catalog store owns the learner-facing error state.
   } finally {
     loading.value = false
   }
@@ -232,6 +234,8 @@ onMounted(async () => {
     if (auth.user === null) await auth.fetchMe()
     await catalog.loadCatalogForHome(locale.value)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // Keep this page on its in-context error/retry panel instead of escalating to a global app error.
   } finally {
     loading.value = false
   }
@@ -246,6 +250,8 @@ watch(locale, async (loc) => {
       loadCatalog: (l) => catalog.loadCatalogForHome(l),
       loadProgress: () => catalog.loadProgress(),
     })
+  } catch {
+    // Locale reload failures use the same catalog error/retry state.
   } finally {
     loading.value = false
   }
