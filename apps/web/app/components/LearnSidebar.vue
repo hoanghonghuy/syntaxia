@@ -30,6 +30,7 @@
         <ul class="nav-list">
           <li v-for="(item, index) in lessons" :key="item.id">
             <NuxtLink
+              v-if="lessonClickable(item.id)"
               class="nav-link"
               :class="{
                 'is-active': item.slug === lessonSlug,
@@ -42,6 +43,18 @@
               {{ item.title }}
               <span v-if="catalog.isCompleted(item.id, locale)" class="lesson-done">✓</span>
             </NuxtLink>
+
+            <div
+              v-else
+              class="nav-link is-locked"
+              :class="{ 'is-active': item.slug === lessonSlug }"
+              :aria-disabled="true"
+              :aria-label="`${item.title}. ${t('lesson.unitLocked')}`"
+            >
+              <span class="lesson-order">{{ index + 1 }}.</span>
+              {{ item.title }}
+              <span class="lesson-lock" aria-hidden="true">·</span>
+            </div>
           </li>
         </ul>
       </template>
@@ -53,7 +66,7 @@
 
 <script setup lang="ts">
 import { isLanguageTrack as trackIsLanguage } from '~/utils/languageLesson'
-import { orderLanguageLessons } from '~/utils/languageUnits'
+import { buildLanguageUnits, orderLanguageLessons } from '~/utils/languageUnits'
 
 const emit = defineEmits<{ navigate: [] }>()
 
@@ -67,6 +80,9 @@ const trackId = computed(() => (route.params.track as string) || '')
 const lessonSlug = computed(() => (route.params.slug as string) || '')
 
 const trackMeta = computed(() => catalog.tracks.find((tr) => tr.id === trackId.value))
+const isLanguageTrack = computed(() =>
+  trackIsLanguage(trackId.value, trackMeta.value?.category),
+)
 
 const trackTitle = computed(() => {
   const track = trackMeta.value
@@ -82,16 +98,30 @@ const tracksListPath = computed(() => {
   return localePath({ path: '/tracks', query: { domain: 'it' } })
 })
 
-const lessons = computed(() => {
-  const list =
-    catalog.lessonsByTrack[trackId.value] ||
-    (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : [])
-  return trackIsLanguage(trackId.value, trackMeta.value?.category)
-    ? orderLanguageLessons(list)
-    : [...list].sort((a, b) => a.sortOrder - b.sortOrder)
+const rawLessons = computed(() =>
+  catalog.lessonsByTrack[trackId.value]
+    || (catalog.lessons[0]?.trackId === trackId.value ? catalog.lessons : []),
+)
+
+const lessons = computed(() =>
+  isLanguageTrack.value
+    ? orderLanguageLessons(rawLessons.value)
+    : [...rawLessons.value].sort((a, b) => a.sortOrder - b.sortOrder),
+)
+
+const languageNodesById = computed(() => {
+  if (!isLanguageTrack.value) return new Map<string, { clickable: boolean }>()
+  const nodes = buildLanguageUnits(rawLessons.value, catalog.progress, locale.value)
+    .flatMap((unit) => unit.nodes)
+  return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
 })
 
 const nextId = computed(() => catalog.nextForTrack(trackId.value, locale.value)?.id)
+
+function lessonClickable(lessonId: string): boolean {
+  if (!isLanguageTrack.value) return true
+  return languageNodesById.value.get(lessonId)?.clickable === true
+}
 
 function syncLoading() {
   if (!trackId.value) {
@@ -173,7 +203,23 @@ onMounted(() => syncLoading())
   margin-right: 0.15rem;
 }
 
-.lesson-done {
+.lesson-done,
+.lesson-lock {
   margin-left: 0.25rem;
+}
+
+.nav-link.is-locked {
+  opacity: 0.48;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.nav-link.is-locked:hover {
+  background: transparent;
+  color: var(--color-ink-muted);
+}
+
+.lesson-lock {
+  color: var(--color-ink-faint);
 }
 </style>
