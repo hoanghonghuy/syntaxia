@@ -35,7 +35,18 @@ describe('UI refresh contract', () => {
     assert.match(store, /Promise\.allSettled/)
     assert.match(store, /loadError\.value\s*=\s*formatCatalogLoadError\(failure\.reason\)/)
     assert.match(store, /prioritizeTracksByRecentProgress\(/)
+    assert.match(store, /nextLessonForTrack\(/)
     assert.doesNotMatch(store, /const sorted = \[\.\.\.tracks\.value\]\.sort\(\(a, b\) => a\.sortOrder - b\.sortOrder\)[\s\S]*for \(const tr of sorted\)/)
+  })
+
+  it('keeps Progress continuation language-aware and request failures in context', () => {
+    const progress = read('app/pages/progress.vue')
+    const learningPath = read('app/utils/learningPath.ts')
+    assert.match(progress, /resumeTargetForDomain\(/)
+    assert.equal((progress.match(/\}\s*catch\s*\{/g) || []).length, 3)
+    assert.match(learningPath, /next:\s*nextLessonForTrack\(tr\.id, lessons, progress, locale\)/)
+    assert.match(learningPath, /const ordered = prioritizeTracksByRecentProgress\(scopedTracks, lessonsByTrack, progress, locale\)/)
+    assert.match(learningPath, /nextLessonForTrack\([\s\S]*nextLanguageLesson/)
   })
 
   it('derives the learning orbit from catalog data and keeps it accessible', () => {
