@@ -26,10 +26,10 @@ vocab:
   - { word: "music", ipa: "/ˈmjuːzɪk/", gloss: "âm nhạc" }
 steps:
   - type: scene
-    title: "Hỏi rồi nghe câu trả lời"
-    body: "Câu hỏi cơ bản thay đổi khung câu. Học cả khung như một mẫu có thể dùng lại thay vì dịch từng từ."
-    visualKey: "classmates-meeting"
-    imageAlt: "Hai bạn học hỏi và trả lời các câu đơn giản trong cuộc trò chuyện đầu tiên."
+    title: "Đổi khung câu để tạo câu hỏi"
+    body: "Với be, đưa be lên trước chủ ngữ. Với động từ như like, thêm do trước chủ ngữ. Học từng thay đổi như một khung có thể dùng lại thay vì dịch từng từ."
+    imageUrl: "/language/scenes/english-question-frames.svg"
+    imageAlt: "Ba phép biến đổi cho thấy You are a student thành Are you a student, You are from Hanoi thành Where are you from, và You like music thành Do you like music."
   - type: dialogue
     lines:
       - { speaker: "A", text: "Are you a student?" }
