@@ -74,6 +74,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const catalog = useCatalogStore()
+const auth = useAuthStore()
 
 const loading = ref(true)
 const trackId = computed(() => (route.params.track as string) || '')
@@ -111,8 +112,12 @@ const lessons = computed(() =>
 
 const languageNodesById = computed(() => {
   if (!isLanguageTrack.value) return new Map<string, { clickable: boolean }>()
-  const nodes = buildLanguageUnits(rawLessons.value, catalog.progress, locale.value)
-    .flatMap((unit) => unit.nodes)
+  const nodes = buildLanguageUnits(
+    rawLessons.value,
+    catalog.progress,
+    locale.value,
+    { unlockAll: !auth.user },
+  ).flatMap((unit) => unit.nodes)
   return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
 })
 

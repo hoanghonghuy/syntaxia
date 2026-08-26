@@ -328,8 +328,12 @@ const sortedLessons = computed(() => {
 const currentIndex = computed(() => sortedLessons.value.findIndex((item) => item.slug === slug.value))
 const languageNodesById = computed(() => {
   if (!isLanguageTrack.value) return new Map<string, { clickable: boolean }>()
-  const nodes = buildLanguageUnits(sortedLessons.value, catalog.progress, locale.value)
-    .flatMap((unit) => unit.nodes)
+  const nodes = buildLanguageUnits(
+    sortedLessons.value,
+    catalog.progress,
+    locale.value,
+    { unlockAll: !auth.user },
+  ).flatMap((unit) => unit.nodes)
   return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
 })
 

@@ -78,9 +78,15 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const auth = useAuthStore()
 
 const units = computed(() =>
-  buildLanguageUnits(props.lessons, props.progress, props.locale),
+  buildLanguageUnits(
+    props.lessons,
+    props.progress,
+    props.locale,
+    { unlockAll: !auth.user },
+  ),
 )
 </script>
 

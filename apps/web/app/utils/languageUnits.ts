@@ -25,6 +25,11 @@ export type LanguageUnit = {
   nodes: LanguageUnitNode[]
 }
 
+export type LanguageUnitBuildOptions = {
+  /** Guests may read every published lesson even though they have no persisted progress. */
+  unlockAll?: boolean
+}
+
 type LanguageUnitMeta = {
   id: string
   title: string
@@ -160,6 +165,11 @@ export function nextLanguageLesson<T extends LanguageUnitLesson>(
 /**
  * Build the language path from explicit content-owned unit metadata.
  *
+ * Signed-in learners follow sequential unlock based on persisted progress.
+ * Guests have no progress record, so callers can set unlockAll to preserve the
+ * product contract that published lesson reading remains public; the first
+ * lesson stays the suggested current node and the rest become available.
+ *
  * Lessons that have not been migrated yet remain visible as singleton units.
  * The fallback uses only the stable lesson id/order; it never guesses grouping
  * from a slug or a localized title.
@@ -168,6 +178,7 @@ export function buildLanguageUnits(
   lessons: LanguageUnitLesson[],
   progress: Progress[],
   locale: string,
+  options: LanguageUnitBuildOptions = {},
 ): LanguageUnit[] {
   const ordered = orderLanguageLessons(lessons)
   const completed = completedLessonIds(progress, locale)
@@ -201,6 +212,7 @@ export function buildLanguageUnits(
     let state: LanguageUnitNodeState = 'locked'
     if (completed.has(lesson.id)) state = 'done'
     else if (lesson.id === currentId) state = 'current'
+    else if (options.unlockAll) state = 'available'
     else if (furthestCompletedIndex >= 0 && lessonIndex < furthestCompletedIndex) state = 'available'
 
     unit.nodes.push({
@@ -210,7 +222,7 @@ export function buildLanguageUnits(
       sortOrder: lesson.sortOrder,
       role: meta.role,
       state,
-      clickable: state !== 'locked',
+      clickable: options.unlockAll === true || state !== 'locked',
     })
     units.set(unitId, unit)
   })

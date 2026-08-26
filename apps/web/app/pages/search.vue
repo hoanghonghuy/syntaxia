@@ -151,8 +151,12 @@ const languageNodesByTrack = computed(() => {
   for (const track of catalog.tracks) {
     if (!trackIsLanguage(track.id, track.category)) continue
     const lessons = catalog.lessonsByTrack[track.id] || []
-    const nodes = buildLanguageUnits(lessons, catalog.progress, locale.value)
-      .flatMap((unit) => unit.nodes)
+    const nodes = buildLanguageUnits(
+      lessons,
+      catalog.progress,
+      locale.value,
+      { unlockAll: !auth.user },
+    ).flatMap((unit) => unit.nodes)
     result.set(track.id, new Map(nodes.map((node) => [node.id, node.clickable])))
   }
   return result
