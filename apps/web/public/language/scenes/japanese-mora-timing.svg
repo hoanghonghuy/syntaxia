@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+
+  <g font-family="system-ui,'Noto Sans JP',sans-serif" text-anchor="middle" font-weight="700" fill="#1f2937">
+    <g transform="translate(52 50)">
+      <rect x="0" y="0" width="616" height="88" rx="22" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <g font-size="34">
+        <rect x="26" y="18" width="92" height="52" rx="14" fill="#ecfdf5"/><text x="72" y="54">お</text>
+        <rect x="130" y="18" width="92" height="52" rx="14" fill="#ecfdf5"/><text x="176" y="54">か</text>
+        <rect x="234" y="18" width="92" height="52" rx="14" fill="#d1fae5"/><text x="280" y="54">あ</text>
+        <rect x="338" y="18" width="92" height="52" rx="14" fill="#ecfdf5"/><text x="384" y="54">さ</text>
+        <rect x="442" y="18" width="92" height="52" rx="14" fill="#ecfdf5"/><text x="488" y="54">ん</text>
+      </g>
+      <path d="M234 77h92" stroke="#0d9488" stroke-width="5" stroke-linecap="round"/>
+    </g>
+
+    <g transform="translate(52 166)">
+      <rect x="0" y="0" width="616" height="88" rx="22" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <g font-size="34">
+        <rect x="130" y="18" width="92" height="52" rx="14" fill="#eef2ff"/><text x="176" y="54">き</text>
+        <rect x="234" y="18" width="92" height="52" rx="14" fill="#e0e7ff" stroke="#6366f1" stroke-width="3" stroke-dasharray="7 6"/><text x="280" y="54">っ</text>
+        <rect x="338" y="18" width="92" height="52" rx="14" fill="#eef2ff"/><text x="384" y="54">ぷ</text>
+      </g>
+      <path d="M250 77h60" stroke="#6366f1" stroke-width="5" stroke-linecap="round"/>
+    </g>
+
+    <g transform="translate(52 282)">
+      <rect x="0" y="0" width="616" height="88" rx="22" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <g font-size="34">
+        <rect x="78" y="18" width="92" height="52" rx="14" fill="#ecfeff"/><text x="124" y="54">コ</text>
+        <rect x="182" y="18" width="92" height="52" rx="14" fill="#cffafe" stroke="#0891b2" stroke-width="3"/><text x="228" y="54">ー</text>
+        <rect x="286" y="18" width="92" height="52" rx="14" fill="#ecfeff"/><text x="332" y="54">ヒ</text>
+        <rect x="390" y="18" width="92" height="52" rx="14" fill="#cffafe" stroke="#0891b2" stroke-width="3"/><text x="436" y="54">ー</text>
+      </g>
+      <path d="M198 77h60M406 77h60" stroke="#0891b2" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
