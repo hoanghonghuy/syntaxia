@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+
+  <g font-family="system-ui,sans-serif" text-anchor="middle" font-weight="700" fill="#1f2937">
+    <g transform="translate(0 56)">
+      <rect x="64" y="0" width="150" height="78" rx="20" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="139" y="50" font-size="34">I</text>
+      <path d="M226 39h52" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M267 29l14 10-14 10" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="292" y="0" width="136" height="78" rx="20" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="360" y="50" font-size="34">am</text>
+      <path d="M440 39h52" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M481 29l14 10-14 10" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="506" y="0" width="150" height="78" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <text x="581" y="49" font-size="27">a student</text>
+    </g>
+
+    <g transform="translate(0 171)">
+      <rect x="64" y="0" width="150" height="78" rx="20" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="139" y="50" font-size="34">She</text>
+      <path d="M226 39h52" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M267 29l14 10-14 10" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="292" y="0" width="136" height="78" rx="20" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="360" y="50" font-size="34">is</text>
+      <path d="M440 39h52" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M481 29l14 10-14 10" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="506" y="0" width="150" height="78" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <text x="581" y="49" font-size="27">a teacher</text>
+    </g>
+
+    <g transform="translate(0 286)">
+      <rect x="64" y="0" width="150" height="78" rx="20" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="139" y="50" font-size="34">They</text>
+      <path d="M226 39h52" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M267 29l14 10-14 10" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="292" y="0" width="136" height="78" rx="20" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="360" y="50" font-size="34">are</text>
+      <path d="M440 39h52" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M481 29l14 10-14 10" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="506" y="0" width="150" height="78" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <text x="581" y="49" font-size="27">students</text>
+    </g>
+  </g>
+</svg>
