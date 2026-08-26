@@ -12,22 +12,37 @@ JLPT N5 officially describes the ability to understand some basic Japanese: read
 |---|---|
 | [JLPT official level summary](https://www.jlpt.jp/e/about/levelsummary.html) | Authoritative N5 reading/listening ability boundary |
 | [JLPT FAQ](https://www.jlpt.jp/e/faq/) | Confirms vocabulary/grammar knowledge matters but no official item-list syllabus is published |
-| [Japan Foundation Irodori Starter](https://www.irodori.jpf.go.jp/starter/pdf.html) | Beginner kana/pronunciation reference; explicitly includes long-vowel and small-っ/long-consonant work |
+| [Japan Foundation Irodori Starter](https://www.irodori.jpf.go.jp/starter/pdf.html) | Beginner kana/pronunciation reference; explicitly includes kana, long-vowel and small-っ/long-consonant work |
 | [evanclan/OpenJLPT](https://github.com/evanclan/OpenJLPT) (CC BY-SA 4.0) | Open vocabulary/readings provenance for authored frontmatter; not official JLPT authority |
 
-## Declared scope — 10 units / 33 nodes per locale
+## Declared scope — 10 units / 35 nodes per locale
 
 ### Unit 0 — Japanese foundation
 
 | Node | Foundation goal |
 |---|---|
-| `kana-sounds` | Connect common kana to Japanese sounds and read/type familiar beginner forms |
-| `mora-length` | Hear and read long-vowel / small-っ length contrasts |
-| `core-sentences` | Build a minimal productive core with `です / ます` and concrete particle roles |
-| `foundation-checkpoint` | Mix kana/sound/grammar retrieval |
-| `foundation-review` | Delayed retrieval before communicative Unit 1 |
+| `kana-sounds` | Establish direct sound↔kana mapping with the five vowel sounds; avoid pretending five symbols equal script mastery |
+| `hiragana-patterns` | Decode hiragana through recurring sound rows, dakuten, `ん`, and small `ゃ・ゅ・ょ` combinations |
+| `katakana-patterns` | Reuse the same sound system in katakana and read common beginner loanwords without romaji |
+| `mora-length` | Hear/read long-vowel timing, katakana `ー`, and small-`っ` consonant timing |
+| `core-sentences` | Build a minimal productive core with `です / ます`, concrete particle roles, particle pronunciation, and a few taught polite verb pairs |
+| `foundation-checkpoint` | Mix hiragana, katakana, sound timing, particle pronunciation, and grammar retrieval |
+| `foundation-review` | Delayed retrieval before communicative Unit 1 and seed the same FSRS system used later |
 
-Unit 0 uses `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and internal sort orders `-5..-1`. Published Units 1–9 keep all existing IDs and orders.
+Unit 0 uses `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and exact internal sort orders `-7..-1`:
+
+```text
+kana-sounds (-7)
+→ hiragana-patterns (-6)
+→ katakana-patterns (-5)
+→ mora-length (-4)
+→ core-sentences (-3)
+→ foundation-checkpoint (-2)
+→ foundation-review (-1)
+→ communicative Unit 1
+```
+
+Published Units 1–9 keep all existing IDs and orders.
 
 ### Communicative Units 1–9
 
@@ -45,7 +60,7 @@ Unit 0 uses `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and internal sort o
 
 ## Foundation progression
 
-`kana ↔ sound -> mora/length contrasts -> high-frequency words/chunks -> basic sentence order + particles + polite forms -> listening/speaking -> kana/basic-kanji reading/writing -> checkpoint -> FSRS`
+`kana ↔ sound -> hiragana rows -> katakana rows -> mora/length contrasts -> high-frequency words/chunks -> basic sentence order + particles + polite forms -> listening/speaking -> kana/basic-kanji reading/writing -> checkpoint -> FSRS`
 
 The nine Can-Do units apply this foundation; they are not a substitute for it.
 
@@ -61,7 +76,9 @@ Every published node must:
 - avoid generic authored `mcq` when a more specific task exists;
 - use app-owned semantic visuals where visuals help.
 
-Foundation pronunciation is bounded: the product teaches kana-to-sound mapping, mora/length awareness, long vowels and small `っ` needed for beginner reading/listening. It does not claim to be a complete Japanese phonetics or pitch-accent course.
+Foundation pronunciation is bounded: the product teaches kana-to-sound mapping, hiragana/katakana decoding, mora/length awareness, long vowels and small `っ` needed for beginner reading/listening. It does not claim to be a complete Japanese phonetics or pitch-accent course.
+
+The grammar foundation is also bounded: it teaches concrete starter frames and explicitly explains high-risk beginner details such as topic `は` being pronounced `わ` and object `を` commonly pronounced `お`. It does not pretend that two polite verb pairs constitute a full conjugation system.
 
 ## Vocabulary policy
 
@@ -82,7 +99,7 @@ npm run test:language-audio
 npm run test:language-review
 ```
 
-Canonical Product CI additionally verifies exact 33-node runtime inventory, EN/VI parity, progress/notes, backward-compatible learner continuation and PostgreSQL-backed FSRS persistence.
+Canonical Product CI additionally verifies exact 35-node runtime inventory, EN/VI parity, progress/notes, backward-compatible learner continuation and PostgreSQL-backed FSRS persistence.
 
 ## Related
 
