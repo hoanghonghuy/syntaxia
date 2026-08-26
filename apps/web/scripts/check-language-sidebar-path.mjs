@@ -6,9 +6,10 @@ import { fileURLToPath } from 'node:url'
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const sidebar = readFileSync(join(webRoot, 'app/components/LearnSidebar.vue'), 'utf8')
+const lessonPage = readFileSync(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'), 'utf8')
 
-describe('language sidebar path contract', () => {
-  it('uses the canonical language path state instead of exposing future lessons', () => {
+describe('language navigation path contract', () => {
+  it('uses the canonical language path state instead of exposing future sidebar lessons', () => {
     assert.match(sidebar, /buildLanguageUnits\(rawLessons\.value, catalog\.progress, locale\.value\)/)
     assert.match(sidebar, /v-if="lessonClickable\(item\.id\)"/)
     assert.match(sidebar, /:aria-disabled="true"/)
@@ -23,7 +24,15 @@ describe('language sidebar path contract', () => {
     assert.doesNotMatch(sidebar, /\{\{ item\.sortOrder \}\}/)
   })
 
-  it('keeps non-language tracks freely navigable', () => {
+  it('keeps non-language sidebar tracks freely navigable', () => {
     assert.match(sidebar, /if \(!isLanguageTrack\.value\) return true/)
+  })
+
+  it('prevents the lesson pager from linking to locked future language lessons', () => {
+    assert.match(lessonPage, /buildLanguageUnits\(sortedLessons\.value, catalog\.progress, locale\.value\)/)
+    assert.match(lessonPage, /function pagerLessonAt\(index: number\)/)
+    assert.match(lessonPage, /if \(!isLanguageTrack\.value\) return candidate/)
+    assert.match(lessonPage, /languageNodesById\.value\.get\(candidate\.id\)\?\.clickable \? candidate : null/)
+    assert.match(lessonPage, /const nextLesson = computed\(\(\) => pagerLessonAt\(currentIndex\.value \+ 1\)\)/)
   })
 })

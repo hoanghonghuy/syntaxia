@@ -200,7 +200,7 @@ import {
   languageHasSteps,
   languageVocabFromLesson,
 } from '~/utils/languageLesson'
-import { orderLanguageLessons } from '~/utils/languageUnits'
+import { buildLanguageUnits, orderLanguageLessons } from '~/utils/languageUnits'
 import { createLessonLoadGuard } from '~/utils/lessonLoadGuard'
 import { pickPrimaryNote, resolveNoteSaveMode } from '~/utils/noteSave'
 import { extractToc } from '~/utils/toc'
@@ -326,12 +326,23 @@ const sortedLessons = computed(() => {
     : [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
 const currentIndex = computed(() => sortedLessons.value.findIndex((item) => item.slug === slug.value))
-const prevLesson = computed(() => currentIndex.value > 0 ? sortedLessons.value[currentIndex.value - 1] : null)
-const nextLesson = computed(() =>
-  currentIndex.value >= 0 && currentIndex.value < sortedLessons.value.length - 1
-    ? sortedLessons.value[currentIndex.value + 1]
-    : null,
-)
+const languageNodesById = computed(() => {
+  if (!isLanguageTrack.value) return new Map<string, { clickable: boolean }>()
+  const nodes = buildLanguageUnits(sortedLessons.value, catalog.progress, locale.value)
+    .flatMap((unit) => unit.nodes)
+  return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
+})
+
+function pagerLessonAt(index: number) {
+  if (index < 0 || index >= sortedLessons.value.length) return null
+  const candidate = sortedLessons.value[index]
+  if (!candidate) return null
+  if (!isLanguageTrack.value) return candidate
+  return languageNodesById.value.get(candidate.id)?.clickable ? candidate : null
+}
+
+const prevLesson = computed(() => pagerLessonAt(currentIndex.value - 1))
+const nextLesson = computed(() => pagerLessonAt(currentIndex.value + 1))
 const lessonCompleted = computed(() =>
   lesson.value ? catalog.isCompleted(lesson.value.id, locale.value) : false,
 )
