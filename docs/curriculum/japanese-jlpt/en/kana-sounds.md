@@ -29,6 +29,8 @@ steps:
   - type: scene
     title: "Sound before a full kana chart"
     body: "Start with the five vowel sounds, then build only a few readings from kana you have actually seen. The next lesson expands the hiragana rows."
+    imageUrl: "/language/scenes/japanese-vowel-kana.svg"
+    imageAlt: "Five paired tiles connect each hiragana vowel with its matching katakana vowel: あ with ア, い with イ, う with ウ, え with エ, and お with オ."
   - type: dialogue
     lines:
       - { speaker: "先生", text: "あ。い。う。え。お。", reading: "あ。い。う。え。お。" }
