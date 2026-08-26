@@ -45,7 +45,7 @@ Ok "auth/me"
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 41 },
   @{ Track = "english-basics"; Slug = "sound-spelling"; ExpectedLessons = 39 },
-  @{ Track = "japanese-jlpt"; Slug = "kana-sounds"; ExpectedLessons = 33 },
+  @{ Track = "japanese-jlpt"; Slug = "kana-sounds"; ExpectedLessons = 35 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
 
@@ -169,7 +169,7 @@ Ok "Chinese IT review card synced from authored stable item id"
 
 $specialtyReviewBody = (@{ lessonId = $specialtyLessonId; locale = "en"; itemKey = $specialtyItemKey; rating = 3; responseMs = 1100 } | ConvertTo-Json -Compress)
 $specialtyReview = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/review" -JsonBody $specialtyReviewBody -Session $session
-if ($specialtyReview.Json.itemKey -ne $specialtyItemKey -or [int64]$specialtyReview.Json.reps -lt 1) { Fail "persisted Chinese IT review response invalid" }
+if ($specialtyReview.Json.itemKey -ne $specialtyItemKey -or [int64]$specialtyReview.Json.reps -lt 1) { Fail "persisted Chinese IT specialty review response invalid" }
 Ok "Chinese IT review persisted reps=$($specialtyReview.Json.reps)"
 
 Invoke-SyntaxiaApi -Method POST -Path "/api/v1/auth/logout" -Session $session -ExpectStatus @(200, 204) | Out-Null
