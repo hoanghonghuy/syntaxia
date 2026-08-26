@@ -27,10 +27,10 @@ vocab:
   - { word: "tired", ipa: "/ˈtaɪərd/", gloss: "mệt" }
 steps:
   - type: scene
-    title: "Nói ai là ai"
-    body: "Dùng một mệnh đề ngắn: chọn chủ ngữ, chọn đúng dạng của be, rồi thêm tên, danh từ hoặc tính từ đơn giản."
-    visualKey: "classmates-meeting"
-    imageAlt: "Hai học viên gặp nhau trong lớp và giới thiệu bản thân cùng giáo viên."
+    title: "Ghép câu thành ba phần"
+    body: "Chọn chủ ngữ, ghép với am, is hoặc are phù hợp, rồi thêm tên, danh từ hoặc tính từ đơn giản. Phần ở giữa thay đổi theo chủ ngữ."
+    imageUrl: "/language/scenes/english-be-sentence-frame.svg"
+    imageAlt: "Ba hàng ghép câu cho thấy I nối với am rồi a student, She nối với is rồi a teacher, và They nối với are rồi students."
   - type: dialogue
     lines:
       - { speaker: "A", text: "I'm Mai. I'm a student." }
