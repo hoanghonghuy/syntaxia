@@ -51,7 +51,7 @@ steps:
     id: food-dialogue-1
     kind: dialogue_choice
     prompt: "Nhân viên hỏi “What would you like?” Bạn muốn trà. Câu nào tự nhiên?"
-    choices: ["I'd like a tea, please.", "Tea is my friend.", "Who's the tea?"]
+    choices: ["I'd like a tea, please.", "Where is the tea?", "The tea is hot."]
     answer: "I'd like a tea, please."
     explanation: "Câu trả lời nêu đúng món và dùng một cụm gọi món lịch sự."
   - type: practice
@@ -79,12 +79,12 @@ steps:
       - id: food-check-2
         kind: dialogue_choice
         prompt: "Ôn lại: có người hỏi người phụ nữ trong ảnh là ai. Đó là mẹ của bạn. Bạn nói gì?"
-        choices: ["This is my mother.", "I'd like my mother.", "Room mother?"]
+        choices: ["This is my mother.", "Where is my mother?", "My mother is at home."]
         answer: "This is my mother."
 exercise:
   type: dialogue_choice
   prompt: "Chọn câu gọi món lịch sự ở quán."
-  choices: ["I'd like water, please.", "Water who?", "This is water friend."]
+  choices: ["I'd like water, please.", "Where is the water?", "The water is cold."]
   answer: "I'd like water, please."
 ---
 

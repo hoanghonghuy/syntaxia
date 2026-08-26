@@ -61,7 +61,7 @@ steps:
       - id: en-u04-review-order
         kind: dialogue_choice
         prompt: "Which line orders water politely?"
-        choices: ["I'd like water, please.", "Where's water?", "Who's water?"]
+        choices: ["I'd like water, please.", "Where is the water?", "The water is cold."]
         answer: "I'd like water, please."
       - id: en-u04-review-close
         kind: dialogue_choice
