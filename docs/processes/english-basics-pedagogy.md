@@ -31,14 +31,15 @@ The current course no longer starts from situations alone. Core English follows:
 
 `pronunciation / sound -> reusable vocabulary/chunks -> minimal productive grammar -> listening -> interaction/speaking -> reading/writing production -> checkpoint -> spaced retrieval`
 
-The active branch expands English to **9 units / 39 nodes per locale**:
+The active branch defines **10 units / 43 nodes per locale**:
 
 - **Unit 0 — English foundation (9 nodes):** sound↔spelling, vowel contrasts, consonant clarity, word stress, sentence melody, core `be` sentences, basic questions, checkpoint, review;
-- **Units 1–8 (30 existing nodes):** practical CEFR A1 communicative outcomes.
+- **Units 1–8 (30 existing nodes):** practical CEFR A1 communicative outcomes for meeting people, family, navigation, café ordering, routine/time, shopping, home/location, and free-time planning;
+- **Unit 9 (4 nodes):** `personal-details`, `possessions`, `personal-checkpoint`, `personal-review`, adding age, place of residence, and concrete `have` language that the declared A1 foundation previously lacked.
 
 The pronunciation slice is audio-first and targets intelligibility rather than accent imitation. IPA is support, not a prerequisite alphabet. Shared pronunciation visuals must not contain explanation-locale prose; Vietnamese explanations remain Vietnamese while target English, IPA, and example sentences remain English.
 
-All earlier published Unit 1–8 identities/order remain stable so inserting Unit 0 does not invalidate learner progress or FSRS identity.
+All earlier published Unit 1–8 identities/order remain stable so inserting Unit 0 does not invalidate learner progress or FSRS identity. Unit 9 is additive and uses new stable authored assessment IDs rather than renumbering existing content.
 
 ## Current lesson contract
 
@@ -57,6 +58,8 @@ A production English node uses the Language V3 player and must include appropria
 
 Normal communicative lesson nodes must contain enough lexical/chunk material to accomplish their Can-Do. Focused pronunciation nodes are judged by meaningful sound coverage and listening/production evidence instead of arbitrary vocabulary quotas.
 
+Learner-facing distractors must also test meaning, listening, or speech act—not the ability to spot broken English. The final communicative-content audit replaced legacy word-salad/implausible distractors with grammatical, plausible alternatives and `test:english-distractor-quality` regression-locks those removals through the canonical Language V3 gate.
+
 Audio/TTS, delayed review, FSRS persistence, semantic visuals, structured feedback, and unit paths are now shipped product capabilities rather than deferred ideas.
 
 ## Standards lineage
@@ -67,6 +70,8 @@ Current standards treatment is documented in [`english-basics-a1-map.md`](./engl
 - CEFR is not treated as a ready-made grammar/vocabulary syllabus;
 - open YLE vocabulary sources constrain/support beginner lexical choices;
 - Syntaxia authors the sequencing, explanations, examples, and assessments for the declared product scope.
+
+The declared 10-unit / 43-node product is a bounded practical A1 foundation. It is not a claim of exhaustive CEFR A1 descriptor coverage, complete English grammar/phonology, or exam preparation.
 
 ## Historical context
 
