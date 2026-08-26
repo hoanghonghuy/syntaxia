@@ -3,7 +3,11 @@ import type { LessonSummary, Progress, Track } from '~/types/api'
 import { formatCatalogLoadError } from '~/utils/catalogLoad'
 import { isLanguageTrack } from '~/utils/languageLesson'
 import { nextLanguageLesson, orderLanguageLessons } from '~/utils/languageUnits'
-import { nextIncompleteLesson, trackProgress } from '~/utils/learningPath'
+import {
+  nextIncompleteLesson,
+  prioritizeTracksByRecentProgress,
+  trackProgress,
+} from '~/utils/learningPath'
 
 export const useCatalogStore = defineStore('catalog', () => {
   const tracks = ref<Track[]>([])
@@ -45,7 +49,15 @@ export const useCatalogStore = defineStore('catalog', () => {
 
   async function loadCatalogForHome(locale: string) {
     await loadTracks()
-    await Promise.all(tracks.value.map((tr) => loadLessons(tr.id, locale)))
+    const results = await Promise.allSettled(
+      tracks.value.map((track) => loadLessons(track.id, locale)),
+    )
+    const failure = results.find((result) => result.status === 'rejected')
+    if (failure?.status === 'rejected') {
+      loadError.value = formatCatalogLoadError(failure.reason)
+      throw failure.reason
+    }
+    loadError.value = null
   }
 
   function isCompleted(lessonId: string, locale: string) {
@@ -66,10 +78,15 @@ export const useCatalogStore = defineStore('catalog', () => {
   }
 
   function resumeTarget(locale: string) {
-    const sorted = [...tracks.value].sort((a, b) => a.sortOrder - b.sortOrder)
-    for (const tr of sorted) {
-      const next = nextForTrack(tr.id, locale)
-      if (next) return { trackId: tr.id, lesson: next }
+    const ordered = prioritizeTracksByRecentProgress(
+      tracks.value,
+      lessonsByTrack.value,
+      progress.value,
+      locale,
+    )
+    for (const track of ordered) {
+      const next = nextForTrack(track.id, locale)
+      if (next) return { trackId: track.id, lesson: next }
     }
     return null
   }
