@@ -55,7 +55,7 @@ steps:
     id: en-u08-invite-context
     kind: dialogue_choice
     prompt: "Bạn muốn mời một người bạn đến công viên. Câu nào tự nhiên?"
-    choices: ["Do you want to go to the park?", "How much is the park?", "Who's the park?"]
+    choices: ["Do you want to go to the park?", "Is the park open?", "Where is the park?"]
     answer: "Do you want to go to the park?"
   - type: practice
     id: en-u08-invite-listen
@@ -85,7 +85,7 @@ steps:
       - id: en-u08-invite-check-accept
         kind: dialogue_choice
         prompt: "Câu nào chấp nhận lời mời?"
-        choices: ["Yes, let's go.", "No price.", "Where is my book?"]
+        choices: ["Yes, let's go.", "No, I can't.", "The park is open."]
         answer: "Yes, let's go."
       - id: en-u08-invite-check-close
         kind: dialogue_choice

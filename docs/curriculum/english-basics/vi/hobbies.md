@@ -54,7 +54,7 @@ steps:
     id: en-u08-hobby-context
     kind: dialogue_choice
     prompt: "Một bạn hỏi bạn thích gì. Câu trả lời nào tự nhiên?"
-    choices: ["I like music.", "Music is at eight.", "How much music?"]
+    choices: ["I like music.", "I listen to music after class.", "Do you like music?"]
     answer: "I like music."
   - type: practice
     id: en-u08-hobby-listen
@@ -76,7 +76,7 @@ steps:
       - id: en-u08-hobby-check-question
         kind: dialogue_choice
         prompt: "Câu nào hỏi về sở thích?"
-        choices: ["Do you like games?", "Where are games?", "How much are games?"]
+        choices: ["Do you like games?", "What games do you play?", "Where do you play games?"]
         answer: "Do you like games?"
       - id: en-u08-hobby-check-yes
         kind: dialogue_choice

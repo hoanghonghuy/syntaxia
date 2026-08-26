@@ -54,7 +54,7 @@ steps:
     id: en-u08-hobby-context
     kind: dialogue_choice
     prompt: "A classmate asks what you enjoy. Which reply is natural?"
-    choices: ["I like music.", "Music is at eight.", "How much music?"]
+    choices: ["I like music.", "I listen to music after class.", "Do you like music?"]
     answer: "I like music."
   - type: practice
     id: en-u08-hobby-listen
@@ -76,7 +76,7 @@ steps:
       - id: en-u08-hobby-check-question
         kind: dialogue_choice
         prompt: "Which question asks about a preference?"
-        choices: ["Do you like games?", "Where are games?", "How much are games?"]
+        choices: ["Do you like games?", "What games do you play?", "Where do you play games?"]
         answer: "Do you like games?"
       - id: en-u08-hobby-check-yes
         kind: dialogue_choice
