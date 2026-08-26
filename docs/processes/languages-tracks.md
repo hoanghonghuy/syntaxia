@@ -11,7 +11,7 @@ Core foreign-language tracks teach the language itself first. Specialty language
 | Track | Declared scope | Current authored inventory | Learning model |
 |-------|----------------|----------------------------|----------------|
 | `chinese-hsk` | Practical Mandarin Level 1 foundation | **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** | Pinyin/tones + core language + Language V3 communicative units + FSRS |
-| `english-basics` | CEFR A1 language foundation | **Foundation Unit 0 + 8 communicative units / 39 nodes per locale** | Pronunciation + core sentence grammar + communicative units + FSRS |
+| `english-basics` | CEFR A1 language foundation | **Foundation Unit 0 + 9 communicative units / 43 nodes per locale** | Pronunciation + core sentence grammar + communicative units + FSRS |
 | `japanese-jlpt` | JLPT N5 practical foundation | **Foundation Unit 0 + 9 communicative units / 35 nodes per locale** | Sound↔kana + hiragana/katakana + mora timing + core grammar + communicative units + FSRS |
 | `chinese-it-vocab` | Chinese IT specialty mini-course | **6 guided lessons per locale** | Optional Language V3 specialty sessions + FSRS-assessed items |
 
@@ -60,7 +60,7 @@ The 2021 international-Chinese proficiency standard and the current HSK exam tra
 
 ## English A1 foundation
 
-English begins with **Unit 0 — English foundation** before the eight communicative units:
+English begins with **Unit 0 — English foundation** before nine communicative units:
 
 1. `sound-spelling` — sound, meaning and standard spelling; IPA is reference support;
 2. `vowel-contrasts` — `/ɪ/ ↔ /iː/` and `/æ/ ↔ /ʌ/`;
@@ -72,9 +72,11 @@ English begins with **Unit 0 — English foundation** before the eight communica
 8. `foundation-checkpoint`;
 9. `foundation-review`.
 
-Unit 0 uses `unit_id: en-a1-foundation-00`, `unit_order: 0`, and sort orders `-9..-1`; published Units 1–8 keep their IDs/orders.
+Unit 0 uses `unit_id: en-a1-foundation-00`, `unit_order: 0`, and sort orders `-9..-1`; published Units 1–8 keep their IDs/orders. Unit 9 is additive and introduces `personal-details`, `possessions`, `personal-checkpoint`, and `personal-review` without renumbering earlier content.
 
-The later outcomes remain meeting people, family, numbers/navigation, café ordering, daily routine/time, shopping, home/location, and free-time planning. Vocabulary is learned as **sound + meaning + spelling + usable chunk** and grammar is a productive sentence-building tool. Pronunciation targets intelligibility rather than accent imitation.
+The later outcomes cover meeting people, family, numbers/navigation, café ordering, daily routine/time, shopping, home/location, free-time planning, and simple personal details/possessions. Unit 9 explicitly teaches `How old are you?`, `Where do you live?`, `I have …`, and `Do you have …?` before those forms are assessed. Vocabulary is learned as **sound + meaning + spelling + usable chunk** and grammar is a productive sentence-building tool. Pronunciation targets intelligibility rather than accent imitation.
+
+Learner-facing choice tasks must use plausible semantic/speech-act competition rather than broken-English distractors. The final English audit is regression-locked by `test:english-distractor-quality` inside the canonical Language V3 suite.
 
 ## Japanese N5 foundation
 
@@ -166,11 +168,11 @@ docs/curriculum/chinese-it-vocab/{en,vi}/
 Canonical Language V3 regression locks:
 
 - Mandarin: **41 nodes per locale**, including pronunciation Unit 0;
-- English: **9 units / 39 nodes per locale**, including foundation Unit 0;
+- English: **10 units / 43 nodes per locale**, including foundation Unit 0 and Unit 9 personal-details/possession coverage;
 - Japanese: **10 units / 35 nodes per locale**, including seven-node foundation Unit 0;
 - Chinese IT: **6 optional specialty lessons per locale**;
 - EN/VI identity + stable assessed-ID parity;
-- locale quality, language path ordering, backward-compatible continuation, audio, visuals, feedback, and review behavior.
+- locale quality, language path ordering, backward-compatible continuation, audio, visuals, feedback, distractor quality, and review behavior.
 
 The DB-backed release E2E verifies exact live inventories, runtime track reconciliation, persisted progress, notes, and FSRS rows across Mandarin, English, Japanese, and Chinese IT. Exact branch release evidence is recorded only after canonical Product CI passes for the exact candidate commit.
 
