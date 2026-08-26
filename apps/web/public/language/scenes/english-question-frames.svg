@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+
+  <g font-family="system-ui,sans-serif" font-weight="700" fill="#1f2937">
+    <g transform="translate(0 44)">
+      <rect x="54" y="0" width="252" height="82" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <text x="180" y="50" text-anchor="middle" font-size="27">You are a student.</text>
+      <path d="M326 41h62" stroke="#0d9488" stroke-width="6" stroke-linecap="round"/>
+      <path d="M374 28l18 13-18 13" fill="none" stroke="#0d9488" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="410" y="0" width="256" height="82" rx="20" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="538" y="50" text-anchor="middle" font-size="27">Are you a student?</text>
+    </g>
+
+    <g transform="translate(0 167)">
+      <rect x="54" y="0" width="252" height="82" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <text x="180" y="50" text-anchor="middle" font-size="27">You are from Hanoi.</text>
+      <path d="M326 41h62" stroke="#6366f1" stroke-width="6" stroke-linecap="round"/>
+      <path d="M374 28l18 13-18 13" fill="none" stroke="#6366f1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="410" y="0" width="256" height="82" rx="20" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="538" y="50" text-anchor="middle" font-size="27">Where are you from?</text>
+    </g>
+
+    <g transform="translate(0 290)">
+      <rect x="54" y="0" width="252" height="82" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <text x="180" y="50" text-anchor="middle" font-size="27">You like music.</text>
+      <path d="M326 41h62" stroke="#0d9488" stroke-width="6" stroke-linecap="round"/>
+      <path d="M374 28l18 13-18 13" fill="none" stroke="#0d9488" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="410" y="0" width="256" height="82" rx="20" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="538" y="50" text-anchor="middle" font-size="27">Do you like music?</text>
+    </g>
+  </g>
+</svg>
