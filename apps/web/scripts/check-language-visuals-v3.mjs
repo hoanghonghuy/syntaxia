@@ -124,6 +124,7 @@ describe('language v3 semantic visuals', () => {
       ['kana-sounds', 'japanese-vowel-kana.svg', ['あ', 'い', 'う', 'え', 'お', 'ア', 'イ', 'ウ', 'エ', 'オ']],
       ['hiragana-patterns', 'japanese-hiragana-patterns.svg', ['か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ', 'ぎ', 'しょ', 'ん']],
       ['katakana-patterns', 'japanese-katakana-patterns.svg', ['か', 'き', 'く', 'け', 'こ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'カメラ', 'コーヒー']],
+      ['mora-length', 'japanese-mora-timing.svg', ['お', 'か', 'あ', 'さ', 'ん', 'き', 'っ', 'ぷ', 'コ', 'ー', 'ヒ']],
     ]
 
     for (const [slug, assetName, tokens] of expected) {
