@@ -69,7 +69,7 @@ steps:
     id: numbers-dialogue-1
     kind: dialogue_choice
     prompt: "The staff member says “Room five.” You want to confirm. What do you say?"
-    choices: ["Room five?", "Who is five?", "Five is my friend."]
+    choices: ["Room five?", "Where is room five?", "Room five is upstairs."]
     answer: "Room five?"
     explanation: "Repeating the key number as a short question confirms what you heard."
   - type: checkpoint
@@ -82,7 +82,7 @@ steps:
       - id: numbers-check-2
         kind: dialogue_choice
         prompt: "Review: you introduce your friend Linh. Which sentence works?"
-        choices: ["This is Linh.", "Room Linh?", "Who's eight?"]
+        choices: ["This is Linh.", "Where is Linh?", "Linh is in room eight."]
         answer: "This is Linh."
 exercise:
   type: listen_type

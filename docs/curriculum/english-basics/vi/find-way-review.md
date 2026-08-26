@@ -62,13 +62,13 @@ steps:
       - id: en-u03-review-confirm
         kind: dialogue_choice
         prompt: "Bạn nghe “Room two.” Câu nào xác nhận lại?"
-        choices: ["Room two?", "Who's two?", "This is two."]
+        choices: ["Room two?", "Where is room two?", "Room two is upstairs."]
         answer: "Room two?"
       - id: en-u03-review-here
         kind: audio_choice
         prompt: "Nghe. Địa điểm ở đâu?"
         audioText: "It's here."
-        choices: ["here", "over there", "five"]
+        choices: ["here", "over there", "in room five"]
         answer: "here"
 exercise:
   type: type_answer
