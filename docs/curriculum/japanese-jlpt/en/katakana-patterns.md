@@ -44,12 +44,14 @@ steps:
     reading: "カメラ"
   - type: tip
     title: "Reuse the same sound rows"
-    body: "ア・イ・ウ・エ・オ match the same vowel sounds as あ・い・う・え・お, and katakana continues with parallel rows such as カ・キ・ク・ケ・コ. Katakana is common in loanwords, names, sound effects, and some labels; it is not limited to foreign words."
+    body: "ア・イ・ウ・エ・オ match the same vowel sounds as あ・い・う・え・お. Katakana continues with parallel rows, and the same dakuten/handakuten idea changes the h-row into b- and p-sounds."
   - type: teach
     items:
       - { form: "ア イ ウ エ オ / カ キ ク ケ コ", reading: "あ い う え お / か き く け こ", gloss: "katakana vowel and k rows", example: "カメラ" }
       - { form: "サ シ ス セ ソ / タ チ ツ テ ト / ナ ニ ヌ ネ ノ", reading: "さ し す せ そ / た ち つ て と / な に ぬ ね の", gloss: "parallel katakana sound rows", example: "テレビ / トイレ" }
-      - { form: "バス / コーヒー / スポーツ", reading: "ばす / こーひー / すぽーつ", gloss: "common loanwords; ー marks extra vowel timing", example: "コーヒー" }
+      - { form: "ハ ヒ フ ヘ ホ / マ ミ ム メ モ / ラ リ ル レ ロ", reading: "は ひ ふ へ ほ / ま み む め も / ら り る れ ろ", gloss: "h, m and r rows needed by the common words in this lesson", example: "カメラ / コーヒー" }
+      - { form: "ハ ヒ フ ヘ ホ → バ ビ ブ ベ ボ / パ ピ プ ペ ポ", reading: "は ひ ふ へ ほ → ば び ぶ べ ぼ / ぱ ぴ ぷ ぺ ぽ", gloss: "dakuten and handakuten create b- and p-sound rows", example: "バス / スポーツ" }
+      - { form: "ー", reading: "ー", gloss: "extends the preceding vowel timing", example: "コーヒー / スポーツ" }
   - type: practice
     id: ja-fnd-kata-hear-camera
     kind: audio_choice
@@ -91,4 +93,4 @@ exercise:
   answer: "バス"
 ---
 
-The goal is to reuse Japanese sound knowledge across two scripts. Later units keep katakana visible in real words instead of returning to romaji as the default support.
+The goal is to reuse Japanese sound knowledge across two scripts. The rows and marks needed by this lesson's production tasks are introduced before those tasks; later units keep katakana visible in real words instead of returning to romaji as the default support.
