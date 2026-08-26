@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const sidebar = readFileSync(join(webRoot, 'app/components/LearnSidebar.vue'), 'utf8')
 const lessonPage = readFileSync(join(webRoot, 'app/pages/tracks/[track]/lessons/[slug].vue'), 'utf8')
+const searchPage = readFileSync(join(webRoot, 'app/pages/search.vue'), 'utf8')
 
 describe('language navigation path contract', () => {
   it('uses the canonical language path state instead of exposing future sidebar lessons', () => {
@@ -34,5 +35,13 @@ describe('language navigation path contract', () => {
     assert.match(lessonPage, /if \(!isLanguageTrack\.value\) return candidate/)
     assert.match(lessonPage, /languageNodesById\.value\.get\(candidate\.id\)\?\.clickable \? candidate : null/)
     assert.match(lessonPage, /const nextLesson = computed\(\(\) => pagerLessonAt\(currentIndex\.value \+ 1\)\)/)
+  })
+
+  it('keeps locked language search hits visible but non-navigable', () => {
+    assert.match(searchPage, /buildLanguageUnits\(lessons, catalog\.progress, locale\.value\)/)
+    assert.match(searchPage, /v-if="lessonClickable\(lesson\)"/)
+    assert.match(searchPage, /class="nav-link search-lesson-locked"/)
+    assert.match(searchPage, /:aria-disabled="true"/)
+    assert.match(searchPage, /async function loadSearchData\(loc: string\)[\s\S]*catalog\.loadProgress\(\)/)
   })
 })
