@@ -15,21 +15,23 @@ Define how Syntaxia teaches Japanese as the target language on `japanese-jlpt`. 
 
 Japanese core learning follows:
 
-`kana ↔ sound -> mora timing / long vowels / small っ -> high-frequency general vocabulary -> basic sentence order / particles / polite forms -> listening + speaking -> kana + gradual basic-kanji reading/writing -> checkpoint -> FSRS review`
+`kana ↔ sound -> hiragana decoding -> katakana decoding -> mora timing / long vowels / small っ -> high-frequency general vocabulary -> basic sentence order / particles / polite forms -> listening + speaking -> kana + gradual basic-kanji reading/writing -> checkpoint -> FSRS review`
 
 Communicative units then prove that foundation in practical tasks. Can-Do scenes do not replace kana, sound, vocabulary or grammar prerequisites.
 
 ## Foundation Unit 0
 
-A backward-compatible Unit 0 precedes the published N5 communicative units without renumbering them:
+A backward-compatible seven-node Unit 0 precedes the published N5 communicative units without renumbering them:
 
-1. `kana-sounds` — connect common hiragana/katakana forms to Japanese sounds and type/read them without relying on romaji as the final representation;
-2. `mora-length` — hear/read length contrasts, especially long vowels and small `っ`;
-3. `core-sentences` — build a small productive grammar core with `です / ます` plus beginner particles in concrete sentence patterns;
-4. `foundation-checkpoint` — mixed sound, kana and sentence-form retrieval;
-5. `foundation-review` — delayed retrieval before communicative Unit 1.
+1. `kana-sounds` — establish the direct sound↔kana principle with the five vowel sounds; do not pretend this equals full kana mastery;
+2. `hiragana-patterns` — decode hiragana through recurring sound rows, dakuten, `ん`, and small `ゃ・ゅ・ょ` combinations;
+3. `katakana-patterns` — reuse the same Japanese sound system in katakana and read common beginner loanwords without romaji;
+4. `mora-length` — hear/read long-vowel timing, katakana `ー`, and small-`っ` consonant timing;
+5. `core-sentences` — build a small productive grammar core with `です / ます`, concrete beginner particle roles, particle pronunciation, and explicitly taught polite verb pairs;
+6. `foundation-checkpoint` — mixed hiragana, katakana, timing, particle-pronunciation and sentence-form retrieval;
+7. `foundation-review` — delayed retrieval before communicative Unit 1 through the same FSRS system.
 
-Unit 0 focuses on prerequisites; Units 1+ remain the practical N5 application path.
+Unit 0 uses exact authored sort orders `-7..-1`. Unit 0 focuses on prerequisites; Units 1+ remain the practical N5 application path.
 
 ## Target × explanation languages
 
@@ -42,7 +44,7 @@ Target Japanese, kana readings and examples remain Japanese. Instructions, expla
 
 ## Authoring contract
 
-- Prefer `surface` + hiragana `reading` + localized `gloss` for vocabulary.
+- Prefer `surface` + kana `reading` + localized `gloss` for vocabulary.
 - Every assessed node has stable IDs shared between EN/VI.
 - Every node includes listening and reaches controlled recall/production (`type_answer`, `listen_type`, `order_words`, or another semantic production type).
 - New content does not use generic authored `mcq` where a specific Language V3 task fits.
@@ -54,7 +56,10 @@ Target Japanese, kana readings and examples remain Japanese. Instructions, expla
 ## Kana and pronunciation rules
 
 - Teach kana as sound-bearing writing, not as a chart to memorize before any real words.
+- Do not test a kana form before its sound/shape pattern has been introduced. A lesson may preview a form, but assessed production must follow instruction.
+- Teach hiragana and katakana as two scripts for the same Japanese sound system. Katakana is not a second pronunciation system and is not described as “foreign words only”.
 - Use audio/listening discrimination for long vowels and small `っ`; these contrasts affect word form and cannot be reduced to typography notes.
+- Distinguish common hiragana long-vowel spellings from katakana `ー` rather than presenting a single fake orthographic rule.
 - Do not over-promise one fixed pitch-accent pattern as necessary for beginner intelligibility; lexical/phrase audio may model natural pronunciation without turning N5 foundation into a pitch-accent course.
 - Romaji may appear as temporary input help only when technically necessary; learner-facing Japanese identity remains kana/kanji.
 
@@ -65,6 +70,8 @@ Teach grammar as productive sentence building:
 - `です` for basic nominal/adjectival identification where appropriate;
 - common polite `ます` verb forms as they enter the curriculum;
 - particles such as `は`, `を`, `に`, `で` through concrete roles and reusable patterns;
+- explicitly explain beginner pronunciation traps: topic `は` is pronounced `わ`, and object `を` is commonly pronounced `お`;
+- teach concrete verb pairs such as `行く → 行きます` and `飲む → 飲みます` before asking learners to produce them, without presenting two examples as a complete conjugation rule;
 - questions and response patterns inside meaningful exchanges.
 
 Do not dump a particle table without listening and production.
@@ -75,7 +82,7 @@ The declared course is a **practical N5 foundation**, not exhaustive JLPT N5 exa
 
 ## Verification
 
-The Japanese checker must lock exact EN/VI inventory, Unit 0 order/roles, V3 steps, readings, stable assessed IDs, no generic authored MCQ, self-grading fallback answers and EN/VI identity parity. Canonical Product CI must also verify exact runtime inventory and PostgreSQL-backed progress/notes/FSRS persistence.
+The Japanese checker must lock exact **35-node EN/VI inventory**, exact Unit 0 sequence/sort order, V3 steps, readings, stable assessed IDs, no generic authored MCQ, self-grading fallback answers and EN/VI identity parity. Cold Go smoke must parse exactly **70 Japanese Markdown files (35×2)** including **14 Unit 0 files (7×2)**. Canonical Product CI must also verify exact runtime inventory and PostgreSQL-backed progress/notes/FSRS persistence.
 
 ## Related
 
