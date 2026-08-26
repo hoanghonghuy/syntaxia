@@ -142,6 +142,28 @@ describe('language v3 semantic visuals', () => {
     }
   })
 
+  it('ships app-owned structural visuals for the English grammar foundation', () => {
+    const expected = [
+      ['core-sentences', 'english-be-sentence-frame.svg', ['I', 'am', 'a student', 'She', 'is', 'a teacher', 'They', 'are', 'students']],
+      ['basic-questions', 'english-question-frames.svg', ['You are a student.', 'Are you a student?', 'You are from Hanoi.', 'Where are you from?', 'You like music.', 'Do you like music?']],
+    ]
+
+    for (const [slug, assetName, tokens] of expected) {
+      const assetPath = join(webRoot, 'public/language/scenes', assetName)
+      assert.equal(existsSync(assetPath), true, `${assetName} must be app-owned`)
+      const asset = read(assetPath)
+      for (const token of tokens) {
+        assert.ok(asset.includes(`>${token}<`), `${assetName} must visibly teach ${token}`)
+      }
+
+      for (const locale of ['en', 'vi']) {
+        const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/${slug}.md`))
+        assert.match(body, new RegExp(`imageUrl: "\\/language\\/scenes\\/${assetName.replace('.', '\\.')}"`))
+        assert.match(body, /imageAlt: ".+"/)
+      }
+    }
+  })
+
   it('keeps the English image-choice exercise on stable semantic ids', () => {
     for (const locale of ['en', 'vi']) {
       const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/greetings.md`))
