@@ -11,7 +11,7 @@ foundation_focus: grammar
 unit_id: en-a1-foundation-00
 unit_title: "English foundation"
 unit_order: 0
-unit_can_do: "Hear and build a small set of familiar English words and basic sentence patterns"
+unit_can_do: "Hear and build a small set of familiar words and basic English sentence patterns"
 unit_role: lesson
 can_do: "Build a short one-clause sentence with a subject pronoun and the verb be"
 pattern: "subject + be + name / noun / adjective"
@@ -27,10 +27,10 @@ vocab:
   - { word: "tired", ipa: "/ˈtaɪərd/", gloss: "needing rest" }
 steps:
   - type: scene
-    title: "Say who someone is"
-    body: "Use one short clause: choose the subject, choose the right form of be, then add a name, noun, or simple adjective."
-    visualKey: "classmates-meeting"
-    imageAlt: "Two students meet in class and identify themselves and their teacher."
+    title: "Build the sentence in three parts"
+    body: "Choose the subject, match it with am, is, or are, then add a name, noun, or simple adjective. The middle slot changes with the subject."
+    imageUrl: "/language/scenes/english-be-sentence-frame.svg"
+    imageAlt: "Three sentence-building rows show I pointing to am and a student, She pointing to is and a teacher, and They pointing to are and students."
   - type: dialogue
     lines:
       - { speaker: "A", text: "I'm Mai. I'm a student." }
