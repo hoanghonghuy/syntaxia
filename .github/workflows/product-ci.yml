@@ -84,20 +84,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
-      - name: Use current npm resolver
-        run: npm install --global npm@11.19.0
-      - name: Regenerate patched dependency lock
-        run: |
-          rm package-lock.json
-          npm install --package-lock-only --ignore-scripts
-      - name: Upload remediated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: remediated-web-lock
-          path: apps/web/package-lock.json
-          if-no-files-found: error
-          retention-days: 1
-      - name: Install dependencies
+      - name: Install committed dependencies
         run: npm ci
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
@@ -194,32 +181,3 @@ jobs:
       - name: Show API log on failure
         if: failure()
         run: cat "$RUNNER_TEMP/syntaxia-api.log" || true
-
-  persist-web-lock:
-    name: Maintenance · persist verified web lock
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    needs: [e2e]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout PR head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: Download verified lockfile
-        uses: actions/download-artifact@v4
-        with:
-          name: remediated-web-lock
-          path: apps/web
-      - name: Commit lockfile when changed
-        run: |
-          if git diff --quiet -- apps/web/package-lock.json; then
-            echo "Verified lockfile already committed."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add apps/web/package-lock.json
-          git commit -m "fix(web): refresh patched dependency lock"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
