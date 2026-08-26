@@ -30,6 +30,8 @@ steps:
   - type: scene
     title: "See a system, not 46 unrelated shapes"
     body: "Hiragana is organized around recurring vowel sounds. Use the row pattern to decode a few useful words, then let later lessons and review expand the set."
+    imageUrl: "/language/scenes/japanese-hiragana-patterns.svg"
+    imageAlt: "A visual groups the hiragana k and s rows into repeated five-position patterns, then shows き changing to ぎ with dakuten, し combining with small ょ to make しょ, and ん as an additional kana."
   - type: dialogue
     lines:
       - { speaker: "先生", text: "かぎ。", reading: "かぎ。" }
