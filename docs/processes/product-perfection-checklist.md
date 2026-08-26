@@ -69,26 +69,27 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 
 The earlier stabilization/curriculum PR sequence is historical: PRs #4, #5 and #6 have already been merged. The production baseline tracked by [`curriculum-product-completion.md`](./curriculum-product-completion.md) is `a91d9c8c4e4bc14ee3ad92e13ab5c75fe5ecbcf2`.
 
-The active candidate is `feature/home-learning-map-english-foundation` / PR #8. Its current product-hardening scope is:
+The active candidate is `feature/home-learning-map-english-foundation` / PR #8. Its final product-hardening scope is:
 
 1. **Data-driven home learning map** — real catalog-backed navigation/progress instead of decorative hard-coded language/code chips.
-2. **English A1 foundation-first path** — Foundation Unit 0 + 8 communicative units = **39 nodes / locale**.
+2. **English A1 foundation-first path** — Foundation Unit 0 + Units 1–9 = **10 units / 43 nodes per locale**; Unit 9 adds personal details and concrete possession language while existing Unit 1–8 identities remain stable.
 3. **Japanese N5 foundation-first path** — seven-node Foundation Unit 0 + 9 communicative units = **35 nodes / locale**; sound↔kana, hiragana, katakana, mora timing, core grammar, checkpoint and delayed review are all explicit.
 4. **Mandarin practical foundation** — pronunciation Unit 0 + 11 communicative units = **41 nodes / locale**.
 5. **Chinese IT specialty separation** — **6 optional specialty lessons / locale**, never a core-Mandarin prerequisite.
 6. **Runtime catalog recovery** — built-in track metadata is reconciled before curriculum sync for long-lived databases.
-7. **Locale/content quality hardening** — explanation-locale purity, lexical/chunk depth, semantic visuals, stable assessed identities and foundation-first pedagogy are regression-locked.
+7. **Locale/content quality hardening** — explanation-locale purity, lexical/chunk depth, semantic visuals, stable assessed identities, foundation-first pedagogy, and English distractor quality are regression-locked.
 8. **Backward-compatible curriculum insertion** — new Unit 0 prerequisites do not fabricate progress or silently rewind returning learners.
-9. **Cold Japanese parser smoke** — Go verifies **70 Japanese Markdown files (35×2)** and **14 Unit 0 files (7×2)** so parser/frontmatter drift cannot hide behind web-only checks.
+9. **Cold language parser smoke** — Go verifies English **86 Markdown files (43×2)** with **18 Unit 0 files (9×2)** and Japanese **70 files (35×2)** with **14 Unit 0 files (7×2)**.
+10. **Security release gate** — blocking `govulncheck`, patched Go/JWT/pgx/gRPC/x/text floors, JWT HS256-only verification with HS512 rejection test, and blocking npm production audit are part of canonical Product CI.
 
-Product CI **#184** passed on the earlier exact head `7c523b851a7755095bd3bc45fed967ca464505e5`. It is a valid pre-polish checkpoint, not release evidence for the current head. The current candidate must receive a new fully green exact-head Product CI after the final Japanese/English polish changes before release evidence is refreshed.
+Intermediate Product CI runs are valid development checkpoints but are not release evidence for a later head. The final candidate must receive a fully green exact-head Product CI after the last content/test/documentation change before PR #8 is marked ready for review.
 
 ### Current ordered focus
 
 1. **Keep product truth synchronized.** Maps, authored inventory, static gates, cold parser tests, runtime E2E and PR release evidence must describe the same exact candidate.
-2. **Continue content-level audit even when CI is green.** CI proves contracts and runtime behavior; it does not replace human/product review of language naturalness, prerequisite coverage, distractor quality, accessibility semantics or pedagogical coherence.
+2. **Require content-level audit even when CI is green.** CI proves contracts and runtime behavior; it does not replace human/product review of language naturalness, prerequisite coverage, distractor quality, accessibility semantics or pedagogical coherence. The final English Units 1–9 audit is complete within the declared 43-node scope and malformed distractors are regression-locked.
 3. **Do not widen declared products silently.** Higher CEFR/HSK/JLPT levels, broader JavaScript/web continuations, capstones or new tracks require a separately researched map/scope.
-4. **Keep PR #8 Draft until the final exact head is revalidated after the last polish change.** Do not promote/merge without an explicit release decision.
+4. **PR lifecycle.** Keep PR #8 Draft until the final exact head passes canonical Product CI; after that mark it **Ready for review**. Do not merge/promote without an explicit release/merge decision.
 5. **Use [`curriculum-product-completion.md`](./curriculum-product-completion.md) as the release source of truth.** Historical milestone counts in this checklist are intentionally not rewritten as current production facts.
 
 ## Related
