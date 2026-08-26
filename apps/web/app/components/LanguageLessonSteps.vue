@@ -94,12 +94,15 @@
         :track-id="trackId"
         @passed="onPracticePassed"
       />
+      <p v-if="practicePassed" class="lang-step-complete" aria-live="polite">
+        ✓ {{ t('lesson.completed') }}
+      </p>
     </div>
 
     <div v-else-if="checkpointItems.length" class="lang-step lang-practice">
       <p class="lang-step-label">{{ t('lesson.stepCheckpoint') }}</p>
       <LanguageExercise
-        :key="checkpointCursor"
+        :key="`${stepIndex}-${checkpointCursor}`"
         :exercise="checkpointItems[checkpointCursor]!"
         :track-id="trackId"
         @passed="onCheckpointItemPassed"
@@ -107,9 +110,20 @@
       <p class="lang-checkpoint-meta" aria-live="polite">
         {{ checkpointCursor + 1 }} / {{ checkpointItems.length }}
       </p>
+      <p v-if="practicePassed" class="lang-step-complete" aria-live="polite">
+        ✓ {{ t('lesson.completed') }}
+      </p>
     </div>
 
     <div class="lang-step-nav">
+      <button
+        v-if="stepIndex > 0"
+        class="btn btn-ghost"
+        type="button"
+        @click="previous"
+      >
+        ← {{ t('catalog.prevPage') }}
+      </button>
       <button
         v-if="!isLast || !waitingPractice"
         class="btn btn-primary"
@@ -157,14 +171,16 @@ const showTranscriptLabel = computed(() =>
 const targetLang = computed(() => languageTargetLang(props.trackId))
 const steps = computed(() => languageStepsFromLesson(props.lesson))
 const stepIndex = ref(0)
-const practicePassed = ref(false)
-const checkpointCursor = ref(0)
+const passedStepIndexes = ref<number[]>([])
+const checkpointCursorByStep = ref<Record<number, number>>({})
 const listenAttempted = ref(false)
 const listenMode = ref<LanguageAudioMode | null>(null)
 const listenRevealed = ref(false)
 const current = computed(() => steps.value[stepIndex.value] as LanguageStep | undefined)
 const isLast = computed(() => stepIndex.value >= steps.value.length - 1)
 const progressPercent = computed(() => steps.value.length ? ((stepIndex.value + 1) / steps.value.length) * 100 : 0)
+const practicePassed = computed(() => passedStepIndexes.value.includes(stepIndex.value))
+const checkpointCursor = computed(() => checkpointCursorByStep.value[stepIndex.value] || 0)
 
 const sceneTitle = computed(() => stringField(current.value, 'title'))
 const sceneBody = computed(() => stringField(current.value, 'body'))
@@ -201,8 +217,6 @@ const checkpointItems = computed((): LanguageExercise[] => {
 const waitingPractice = computed(() => Boolean(practiceExercise.value) || checkpointItems.value.length > 0)
 
 watch(() => [stepIndex.value, current.value?.type] as const, () => {
-  practicePassed.value = false
-  checkpointCursor.value = 0
   listenAttempted.value = false
   listenMode.value = null
   listenRevealed.value = false
@@ -212,6 +226,18 @@ function stringField(value: unknown, key: string): string {
   if (!value || typeof value !== 'object') return ''
   const raw = (value as Record<string, unknown>)[key]
   return typeof raw === 'string' ? raw : ''
+}
+
+function markCurrentStepPassed() {
+  if (passedStepIndexes.value.includes(stepIndex.value)) return
+  passedStepIndexes.value = [...passedStepIndexes.value, stepIndex.value]
+}
+
+function setCheckpointCursor(value: number) {
+  checkpointCursorByStep.value = {
+    ...checkpointCursorByStep.value,
+    [stepIndex.value]: value,
+  }
 }
 
 function onListenActivated(mode: LanguageAudioMode) {
@@ -227,17 +253,22 @@ function revealTranscript() {
 }
 
 function onPracticePassed() {
-  practicePassed.value = true
+  markCurrentStepPassed()
   if (isLast.value) emit('passed')
 }
 
 function onCheckpointItemPassed() {
   if (checkpointCursor.value < checkpointItems.value.length - 1) {
-    checkpointCursor.value += 1
+    setCheckpointCursor(checkpointCursor.value + 1)
     return
   }
-  practicePassed.value = true
+  markCurrentStepPassed()
   if (isLast.value) emit('passed')
+}
+
+function previous() {
+  if (stepIndex.value <= 0) return
+  stepIndex.value -= 1
 }
 
 function next() {
@@ -276,7 +307,9 @@ function next() {
 .lang-teach-form { font-size: 1.22rem; margin-right: .45rem; overflow-wrap: anywhere; }
 .lang-teach-reading { margin-right: .45rem; color: var(--color-ink-muted); overflow-wrap: anywhere; }
 .lang-teach-example { margin: .3rem 0 0; font-size: 1.03rem; line-height: 1.5; overflow-wrap: anywhere; }
-.lang-step-nav { margin-top: 1.1rem; display: flex; justify-content: flex-end; }
+.lang-step-complete { margin: .65rem 0 0; color: var(--color-brand-deep); font-size: .86rem; font-weight: 700; }
+.lang-step-nav { margin-top: 1.1rem; display: flex; gap: .6rem; justify-content: flex-end; }
+.lang-step-nav .btn-primary { margin-left: auto; }
 .lang-checkpoint-meta { margin: .6rem 0 0; font-size: .85rem; color: var(--color-ink-muted); }
 
 @media (max-width: 560px) {
@@ -298,7 +331,12 @@ function next() {
   }
 
   .lang-step-nav {
-    justify-content: stretch;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lang-step-nav .btn-primary {
+    margin-left: 0;
   }
 }
 
