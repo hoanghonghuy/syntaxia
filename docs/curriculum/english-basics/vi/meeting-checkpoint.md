@@ -38,7 +38,7 @@ steps:
     id: en-u01-check-reply
     kind: dialogue_choice
     prompt: "Một người nói: “Hi, I'm Sam.” Chọn câu đáp tự nhiên."
-    choices: ["Hi, Sam. I'm Linh.", "See you yesterday.", "Thank you, Sam."]
+    choices: ["Hi, Sam. I'm Linh.", "See you later.", "Thank you, Sam."]
     answer: "Hi, Sam. I'm Linh."
     explanation: "Đáp lại lời chào rồi nói tên của mình."
   - type: practice
@@ -63,12 +63,12 @@ steps:
       - id: en-u01-check-close
         kind: dialogue_choice
         prompt: "Lớp sắp bắt đầu. Câu nào kết thúc cuộc nói chuyện tự nhiên?"
-        choices: ["See you later.", "Nice yesterday.", "You're welcome."]
+        choices: ["See you later.", "Nice to meet you.", "You're welcome."]
         answer: "See you later."
       - id: en-u01-check-meet
         kind: meaning_choice
         prompt: "Cụm nào dùng khi gặp lần đầu?"
-        choices: ["Nice to meet you.", "Good night yesterday.", "No problem tomorrow."]
+        choices: ["Nice to meet you.", "See you later.", "You're welcome."]
         answer: "Nice to meet you."
 exercise:
   type: type_answer

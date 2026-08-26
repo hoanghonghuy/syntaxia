@@ -90,7 +90,7 @@ steps:
       - id: greet-check-1
         kind: meaning_choice
         prompt: "Which phrase fits a first meeting?"
-        choices: ["Nice to meet you.", "See you yesterday.", "You're welcome."]
+        choices: ["Nice to meet you.", "Nice to see you again.", "You're welcome."]
         answer: "Nice to meet you."
       - id: greet-check-2
         kind: dialogue_choice
@@ -100,7 +100,7 @@ steps:
 exercise:
   type: dialogue_choice
   prompt: "Choose the natural first-meeting reply."
-  choices: ["Hi, I'm Mai.", "Goodbye, I'm Mai.", "Thank you, I'm Mai."]
+  choices: ["Hi, I'm Mai.", "See you later.", "You're welcome."]
   answer: "Hi, I'm Mai."
   hints:
     - "Return the greeting, then say your name."

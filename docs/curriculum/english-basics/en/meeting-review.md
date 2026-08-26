@@ -62,17 +62,17 @@ steps:
       - id: en-u01-review-reply
         kind: dialogue_choice
         prompt: "A says: “Nice to meet you.” What is the natural reply?"
-        choices: ["Nice to meet you too.", "I'm goodbye.", "Thank yesterday."]
+        choices: ["Nice to meet you too.", "See you later.", "You're welcome."]
         answer: "Nice to meet you too."
       - id: en-u01-review-open
         kind: dialogue_choice
         prompt: "Which line can open a first meeting?"
-        choices: ["Hi, I'm An.", "See you yesterday.", "You're welcome, goodbye."]
+        choices: ["Hi, I'm An.", "See you later.", "Nice to meet you too."]
         answer: "Hi, I'm An."
 exercise:
   type: dialogue_choice
   prompt: "Choose the natural reply to “Nice to meet you.”"
-  choices: ["Nice to meet you too.", "See you yesterday.", "Thank please."]
+  choices: ["Nice to meet you too.", "See you later.", "You're welcome."]
   answer: "Nice to meet you too."
 ---
 
