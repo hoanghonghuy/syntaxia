@@ -8,7 +8,7 @@
         <h1>{{ t('lesson.loadErrorTitle') }}</h1>
         <p>{{ loadError }}</p>
         <div class="lesson-error-actions">
-          <button class="btn btn-primary" type="button" @click="loadLesson">
+          <button class="btn btn-primary" type="button" @click="loadPage">
             {{ t('lesson.retry') }}
           </button>
           <NuxtLink class="btn btn-ghost" :to="localePath(`/tracks/${trackId}`)">
@@ -380,6 +380,22 @@ async function loadLesson() {
   }
 }
 
+async function loadPage() {
+  loading.value = true
+  loadError.value = ''
+  try {
+    await catalog.loadTracks()
+    await catalog.loadLessons(trackId.value, locale.value)
+    await auth.fetchMe()
+    if (auth.user) await catalog.loadProgress()
+    await loadLesson()
+  } catch (error) {
+    loadError.value = catalog.loadError
+      || (error instanceof Error ? error.message : t('lesson.loadErrorGeneric'))
+    loading.value = false
+  }
+}
+
 async function saveNote() {
   if (!lesson.value || savingNote.value) return
   savingNote.value = true
@@ -428,17 +444,14 @@ async function onSandboxPassed() {
   await setLessonCompleted(true, false)
 }
 
-onMounted(async () => {
-  await catalog.loadTracks()
-  await catalog.loadLessons(trackId.value, locale.value)
-  await auth.fetchMe()
-  if (auth.user) await catalog.loadProgress()
-  await loadLesson()
-})
+onMounted(loadPage)
 
-watch([slug, locale, trackId], async ([, , track]) => {
-  if (track) await catalog.loadLessons(String(track), locale.value)
-  await loadLesson()
+watch([slug, locale, trackId], async ([nextSlug, nextLocale, nextTrack], [previousSlug, previousLocale, previousTrack]) => {
+  if (nextLocale !== previousLocale || nextTrack !== previousTrack) {
+    await loadPage()
+    return
+  }
+  if (nextSlug !== previousSlug) await loadLesson()
 })
 </script>
 

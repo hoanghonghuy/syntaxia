@@ -57,6 +57,21 @@ describe('UI refresh contract', () => {
     assert.equal((hub.match(/\}\s*catch\s*\{/g) || []).length, 2)
   })
 
+  it('keeps learn-layout and lesson catalog failures inside route-level recovery UI', () => {
+    const layout = read('app/layouts/learn.vue')
+    const lesson = read('app/pages/tracks/[track]/lessons/[slug].vue')
+
+    assert.match(layout, /async function bootstrap\(\)[\s\S]*try\s*\{[\s\S]*catalog\.loadTracks\(\)[\s\S]*catalog\.loadLessons\([\s\S]*\}\s*catch\s*\{/)
+    assert.match(layout, /watch\([\s\S]*catalog\.loadLessons\(String\(trackId\), loc\)[\s\S]*\}\s*catch\s*\{/)
+
+    assert.match(lesson, /@click="loadPage"/)
+    assert.match(lesson, /async function loadPage\(\)[\s\S]*catalog\.loadTracks\(\)[\s\S]*catalog\.loadLessons\([\s\S]*\}\s*catch \(error\)\s*\{/)
+    assert.match(lesson, /loadError\.value = catalog\.loadError/)
+    assert.match(lesson, /onMounted\(loadPage\)/)
+    assert.match(lesson, /nextLocale !== previousLocale \|\| nextTrack !== previousTrack/)
+    assert.match(lesson, /nextSlug !== previousSlug[\s\S]*loadLesson\(\)/)
+  })
+
   it('derives the learning orbit from catalog data and keeps it accessible', () => {
     const component = read('app/components/HomeLearningMap.vue')
     const utility = read('app/utils/homeLearningMap.ts')
