@@ -84,10 +84,10 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
-      - name: Install dependencies
-        run: npm ci
-      - name: Refresh vulnerable transitive dependencies
-        run: npm audit fix --package-lock-only
+      - name: Resolve patched dependency lock
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Refresh transitive dependencies
+        run: npm update --package-lock-only --ignore-scripts
       - name: Upload remediated lockfile
         uses: actions/upload-artifact@v4
         with:
@@ -95,6 +95,8 @@ jobs:
           path: apps/web/package-lock.json
           if-no-files-found: error
           retention-days: 1
+      - name: Install dependencies
+        run: npm ci
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
       - name: Build
