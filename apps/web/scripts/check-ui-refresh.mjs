@@ -21,6 +21,7 @@ describe('UI refresh contract', () => {
     assert.match(home, /t\('catalog\.hskBand1'\)/)
     assert.match(home, /t\('catalog\.cefrA1'\)/)
     assert.match(home, /t\('catalog\.jlptN5'\)/)
+    assert.equal((home.match(/\}\s*catch\s*\{/g) || []).length, 3)
     assert.doesNotMatch(home, /HSK\s*3\.0/)
     assert.doesNotMatch(home, /firstTrackId/)
     assert.doesNotMatch(home, /domain\.underDevelopment/)
