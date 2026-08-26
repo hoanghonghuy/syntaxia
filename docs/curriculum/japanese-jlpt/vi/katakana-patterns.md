@@ -44,12 +44,14 @@ steps:
     reading: "カメラ"
   - type: tip
     title: "Dùng lại cùng các hàng âm"
-    body: "ア・イ・ウ・エ・オ tương ứng cùng các nguyên âm như あ・い・う・え・お; katakana tiếp tục với các hàng song song như カ・キ・ク・ケ・コ. Katakana thường xuất hiện trong từ vay mượn, tên riêng, từ tượng thanh và một số nhãn; không chỉ dùng cho từ nước ngoài."
+    body: "ア・イ・ウ・エ・オ tương ứng cùng các nguyên âm như あ・い・う・え・お. Katakana tiếp tục với các hàng song song; cùng nguyên tắc dakuten/handakuten biến hàng h thành các âm b và p."
   - type: teach
     items:
       - { form: "ア イ ウ エ オ / カ キ ク ケ コ", reading: "あ い う え お / か き く け こ", gloss: "hàng nguyên âm và hàng k của katakana", example: "カメラ" }
       - { form: "サ シ ス セ ソ / タ チ ツ テ ト / ナ ニ ヌ ネ ノ", reading: "さ し す せ そ / た ち つ て と / な に ぬ ね の", gloss: "các hàng âm katakana song song", example: "テレビ / トイレ" }
-      - { form: "バス / コーヒー / スポーツ", reading: "ばす / こーひー / すぽーつ", gloss: "từ vay mượn thông dụng; ー đánh dấu thêm thời lượng nguyên âm", example: "コーヒー" }
+      - { form: "ハ ヒ フ ヘ ホ / マ ミ ム メ モ / ラ リ ル レ ロ", reading: "は ひ ふ へ ほ / ま み む め も / ら り る れ ろ", gloss: "các hàng h, m và r cần cho những từ thông dụng trong bài", example: "カメラ / コーヒー" }
+      - { form: "ハ ヒ フ ヘ ホ → バ ビ ブ ベ ボ / パ ピ プ ペ ポ", reading: "は ひ ふ へ ほ → ば び ぶ べ ぼ / ぱ ぴ ぷ ぺ ぽ", gloss: "dakuten và handakuten tạo các hàng âm b và p", example: "バス / スポーツ" }
+      - { form: "ー", reading: "ー", gloss: "kéo dài thời lượng nguyên âm đứng trước", example: "コーヒー / スポーツ" }
   - type: practice
     id: ja-fnd-kata-hear-camera
     kind: audio_choice
@@ -91,4 +93,4 @@ exercise:
   answer: "バス"
 ---
 
-Mục tiêu là dùng lại kiến thức âm tiếng Nhật trên hai hệ chữ. Các unit sau tiếp tục cho katakana xuất hiện trong từ thật thay vì quay lại romaji làm hỗ trợ mặc định.
+Mục tiêu là dùng lại kiến thức âm tiếng Nhật trên hai hệ chữ. Các hàng và dấu cần cho những bài tập sản xuất trong bài này được giới thiệu trước khi learner phải gõ; các unit sau tiếp tục cho katakana xuất hiện trong từ thật thay vì quay lại romaji làm hỗ trợ mặc định.
