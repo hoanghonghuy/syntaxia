@@ -119,18 +119,26 @@ describe('language v3 semantic visuals', () => {
     }
   })
 
-  it('ships an app-owned sound-to-symbol visual for the Japanese vowel-kana foundation', () => {
-    const assetPath = join(webRoot, 'public/language/scenes/japanese-vowel-kana.svg')
-    assert.equal(existsSync(assetPath), true)
-    const asset = read(assetPath)
-    for (const kana of ['あ', 'い', 'う', 'え', 'お', 'ア', 'イ', 'ウ', 'エ', 'オ']) {
-      assert.match(asset, new RegExp(`>${kana}<`))
-    }
+  it('ships app-owned sound-to-symbol visuals across the Japanese script foundation', () => {
+    const expected = [
+      ['kana-sounds', 'japanese-vowel-kana.svg', ['あ', 'い', 'う', 'え', 'お', 'ア', 'イ', 'ウ', 'エ', 'オ']],
+      ['hiragana-patterns', 'japanese-hiragana-patterns.svg', ['か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ', 'ぎ', 'しょ', 'ん']],
+      ['katakana-patterns', 'japanese-katakana-patterns.svg', ['か', 'き', 'く', 'け', 'こ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'カメラ', 'コーヒー']],
+    ]
 
-    for (const locale of ['en', 'vi']) {
-      const body = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}/kana-sounds.md`))
-      assert.match(body, /imageUrl: "\/language\/scenes\/japanese-vowel-kana\.svg"/)
-      assert.match(body, /imageAlt: ".+"/)
+    for (const [slug, assetName, tokens] of expected) {
+      const assetPath = join(webRoot, 'public/language/scenes', assetName)
+      assert.equal(existsSync(assetPath), true, `${assetName} must be app-owned`)
+      const asset = read(assetPath)
+      for (const token of tokens) {
+        assert.ok(asset.includes(`>${token}<`), `${assetName} must visibly teach ${token}`)
+      }
+
+      for (const locale of ['en', 'vi']) {
+        const body = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}/${slug}.md`))
+        assert.match(body, new RegExp(`imageUrl: "\\/language\\/scenes\\/${assetName.replace('.', '\\.')}"`))
+        assert.match(body, /imageAlt: ".+"/)
+      }
     }
   })
 
