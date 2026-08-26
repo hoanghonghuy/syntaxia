@@ -60,7 +60,7 @@ steps:
       - id: en-u06-check-choice
         kind: dialogue_choice
         prompt: "Which line politely names the item you want?"
-        choices: ["I'd like this bag, please.", "This bag who?", "At bag five."]
+        choices: ["I'd like this bag, please.", "How much is this bag?", "Is this the small bag?"]
         answer: "I'd like this bag, please."
       - id: en-u06-check-thanks
         kind: dialogue_choice

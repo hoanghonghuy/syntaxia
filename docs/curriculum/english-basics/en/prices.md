@@ -53,7 +53,7 @@ steps:
     id: en-u06-price-context
     kind: dialogue_choice
     prompt: "You point to a bag beside you. Which question is natural?"
-    choices: ["How much is this bag?", "Who is this bag?", "What time is this bag?"]
+    choices: ["How much is this bag?", "Where is this bag?", "Do you like this bag?"]
     answer: "How much is this bag?"
   - type: practice
     id: en-u06-price-listen

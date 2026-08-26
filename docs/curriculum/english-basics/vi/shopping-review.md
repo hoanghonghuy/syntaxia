@@ -59,12 +59,12 @@ steps:
       - id: en-u06-review-choice
         kind: dialogue_choice
         prompt: "Câu nào nêu lựa chọn lịch sự?"
-        choices: ["I'd like this, please.", "This is at eight.", "Who is this?"]
+        choices: ["I'd like this, please.", "How much is this?", "Is this the small bag?"]
         answer: "I'd like this, please."
       - id: en-u06-review-close
         kind: dialogue_choice
         prompt: "Câu nào kết thúc mua hàng lịch sự?"
-        choices: ["Thank you.", "Morning.", "Brother."]
+        choices: ["Thank you.", "How much is this?", "I'll take it."]
         answer: "Thank you."
 exercise:
   type: type_answer

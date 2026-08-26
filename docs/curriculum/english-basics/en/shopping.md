@@ -81,7 +81,7 @@ steps:
       - id: en-u06-shop-check-close
         kind: dialogue_choice
         prompt: "The clerk gives you the bag. What is a natural reply?"
-        choices: ["Thank you.", "Who are you?", "At five."]
+        choices: ["Thank you.", "Who are you?", "See you at five."]
         answer: "Thank you."
 exercise:
   type: type_answer
