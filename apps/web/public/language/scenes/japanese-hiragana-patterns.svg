@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+
+  <g font-family="system-ui,'Noto Sans JP',sans-serif" text-anchor="middle" font-weight="700" fill="#1f2937">
+    <g>
+      <rect x="64" y="62" width="592" height="94" rx="24" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <text x="128" y="122" font-size="42">か</text>
+      <text x="244" y="122" font-size="42">き</text>
+      <text x="360" y="122" font-size="42">く</text>
+      <text x="476" y="122" font-size="42">け</text>
+      <text x="592" y="122" font-size="42">こ</text>
+      <path d="M186 82v54M302 82v54M418 82v54M534 82v54" stroke="#a7f3d0" stroke-width="3"/>
+    </g>
+
+    <g>
+      <rect x="64" y="178" width="592" height="94" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="128" y="238" font-size="42">さ</text>
+      <text x="244" y="238" font-size="42">し</text>
+      <text x="360" y="238" font-size="42">す</text>
+      <text x="476" y="238" font-size="42">せ</text>
+      <text x="592" y="238" font-size="42">そ</text>
+      <path d="M186 198v54M302 198v54M418 198v54M534 198v54" stroke="#c7d2fe" stroke-width="3"/>
+    </g>
+
+    <g>
+      <rect x="88" y="310" width="132" height="72" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+      <text x="122" y="359" font-size="38">き</text>
+      <path d="M151 346h22" stroke="#0d9488" stroke-width="5" stroke-linecap="round"/>
+      <path d="M165 337l12 9-12 9" fill="none" stroke="#0d9488" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="195" y="359" font-size="38">ぎ</text>
+    </g>
+
+    <g>
+      <rect x="260" y="310" width="196" height="72" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+      <text x="302" y="359" font-size="38">し</text>
+      <text x="350" y="359" font-size="29">ょ</text>
+      <path d="M382 346h24" stroke="#6366f1" stroke-width="5" stroke-linecap="round"/>
+      <path d="M398 337l12 9-12 9" fill="none" stroke="#6366f1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="435" y="359" font-size="38">しょ</text>
+    </g>
+
+    <g>
+      <rect x="496" y="310" width="136" height="72" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+      <text x="564" y="359" font-size="38">ん</text>
+    </g>
+  </g>
+</svg>
