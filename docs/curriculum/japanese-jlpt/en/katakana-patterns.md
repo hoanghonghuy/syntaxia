@@ -30,6 +30,8 @@ steps:
   - type: scene
     title: "A second script, not a second pronunciation system"
     body: "You see common loanwords on signs and menus. Katakana uses the same Japanese sound units as hiragana, so reuse the sound patterns you already started learning."
+    imageUrl: "/language/scenes/japanese-katakana-patterns.svg"
+    imageAlt: "The hiragana k row is paired vertically with the matching katakana k row, followed by the katakana words カメラ and コーヒー, with the long-vowel marks in コーヒー emphasized."
   - type: dialogue
     lines:
       - { speaker: "A", text: "カメラ。", reading: "カメラ。" }
