@@ -41,7 +41,7 @@ jobs:
         run: node scripts/verify-css-v2.mjs
 
   api:
-    name: API · Go verify, test and vet
+    name: API · Go verify, security, test and vet
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -61,6 +61,8 @@ jobs:
           git diff --exit-code -- go.mod go.sum
       - name: Verify module checksums
         run: go mod verify
+      - name: Scan reachable Go vulnerabilities
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
       - name: Unit tests
         # Some drive package smoke tests intentionally read docs/curriculum,
         # which is outside the Go package cache key. Run tests cold so content
