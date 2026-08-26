@@ -56,7 +56,7 @@ steps:
     id: en-u07-where-context
     kind: dialogue_choice
     prompt: "Bạn không tìm thấy sách. Câu hỏi nào tự nhiên?"
-    choices: ["Where's my book?", "How much is my book?", "What time is my book?"]
+    choices: ["Where's my book?", "Do you have my book?", "Is this my book?"]
     answer: "Where's my book?"
   - type: practice
     id: en-u07-where-listen

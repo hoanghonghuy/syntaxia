@@ -53,7 +53,7 @@ steps:
     id: en-u07-home-context
     kind: dialogue_choice
     prompt: "Bạn muốn chỉ ra một chiếc giường trong phòng. Câu nào phù hợp?"
-    choices: ["There's a bed.", "Bed is who?", "At bed seven."]
+    choices: ["There's a bed.", "Where is the bed?", "I have a bed."]
     answer: "There's a bed."
   - type: practice
     id: en-u07-home-listen
@@ -75,7 +75,7 @@ steps:
       - id: en-u07-home-check-room
         kind: dialogue_choice
         prompt: "Câu nào xác định đây là phòng ngủ của bạn?"
-        choices: ["This is my bedroom.", "How much bedroom?", "Bedroom at eight."]
+        choices: ["This is my bedroom.", "Where is my bedroom?", "My bedroom is upstairs."]
         answer: "This is my bedroom."
       - id: en-u07-home-check-one
         kind: order_words

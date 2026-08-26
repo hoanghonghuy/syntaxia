@@ -53,7 +53,7 @@ steps:
     id: en-u07-home-context
     kind: dialogue_choice
     prompt: "You want to point out one bed in the room. Which sentence fits?"
-    choices: ["There's a bed.", "Bed is who?", "At bed seven."]
+    choices: ["There's a bed.", "Where is the bed?", "I have a bed."]
     answer: "There's a bed."
   - type: practice
     id: en-u07-home-listen
@@ -75,7 +75,7 @@ steps:
       - id: en-u07-home-check-room
         kind: dialogue_choice
         prompt: "Which sentence identifies your bedroom?"
-        choices: ["This is my bedroom.", "How much bedroom?", "Bedroom at eight."]
+        choices: ["This is my bedroom.", "Where is my bedroom?", "My bedroom is upstairs."]
         answer: "This is my bedroom."
       - id: en-u07-home-check-one
         kind: order_words

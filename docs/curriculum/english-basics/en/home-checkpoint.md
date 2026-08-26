@@ -58,7 +58,7 @@ steps:
       - id: en-u07-check-question
         kind: dialogue_choice
         prompt: "Which question asks for an object's location?"
-        choices: ["Where's the book?", "How much is the book?", "What time is the book?"]
+        choices: ["Where's the book?", "Do you have the book?", "Is this the book?"]
         answer: "Where's the book?"
       - id: en-u07-check-surface
         kind: meaning_choice
