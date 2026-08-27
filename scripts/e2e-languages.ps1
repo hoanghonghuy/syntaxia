@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review for Mandarin, English, Japanese, and Chinese IT specialty.
+  Languages domain E2E: register -> lesson(?track=) -> progress -> notes -> persisted review/mastery for Mandarin, English, Japanese, and Chinese IT specialty.
 
 .PARAMETER BaseUrl
   API base URL. Default http://127.0.0.1:8082
@@ -145,6 +145,15 @@ $englishReviewBody = (@{ lessonId = $englishLessonId; locale = "en"; itemKey = $
 $englishReview = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/review" -JsonBody $englishReviewBody -Session $session
 if ($englishReview.Json.itemKey -ne $englishItemKey -or [int64]$englishReview.Json.reps -lt 1) { Fail "persisted English foundation review response invalid" }
 Ok "English foundation review persisted reps=$($englishReview.Json.reps)"
+
+$masteryResponse = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/learning/mastery?track=english-basics&locale=en" -Session $session
+$masteryRows = @($masteryResponse.Json)
+$soundMastery = @($masteryRows | Where-Object { $_.skillId -eq "en.sound.spelling" }) | Select-Object -First 1
+$listeningMastery = @($masteryRows | Where-Object { $_.skillId -eq "en.listening.word-recognition" }) | Select-Object -First 1
+if (-not $soundMastery -or -not $listeningMastery) { Fail "English review did not produce authored skill mastery rows" }
+if ([int64]$soundMastery.evidenceCount -lt 1 -or [double]$soundMastery.score -ne 80) { Fail "unexpected sound mastery after Good review" }
+if ([int64]$listeningMastery.evidenceCount -lt 1 -or [double]$listeningMastery.score -ne 80) { Fail "unexpected listening mastery after Good review" }
+Ok "English review persisted skill evidence/mastery from authored item skills"
 
 # Japanese foundation: prove Unit 0 stable IDs enter the same generic FSRS engine.
 $japaneseDue = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/language/review/due?track=japanese-jlpt&locale=en&limit=50" -Session $session
