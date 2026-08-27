@@ -69,7 +69,7 @@ steps:
     id: numbers-dialogue-1
     kind: dialogue_choice
     prompt: "Nhân viên nói “Room five.” Bạn muốn xác nhận lại. Nói gì phù hợp?"
-    choices: ["Room five?", "Who is five?", "Five is my friend."]
+    choices: ["Room five?", "Where is room five?", "Room five is upstairs."]
     answer: "Room five?"
     explanation: "Lặp lại thông tin chính dưới dạng câu hỏi ngắn là cách tự nhiên để xác nhận điều vừa nghe."
   - type: checkpoint
@@ -82,7 +82,7 @@ steps:
       - id: numbers-check-2
         kind: dialogue_choice
         prompt: "Ôn lại: bạn giới thiệu người bạn tên Linh. Câu nào đúng tình huống?"
-        choices: ["This is Linh.", "Room Linh?", "Who's eight?"]
+        choices: ["This is Linh.", "Where is Linh?", "Linh is in room eight."]
         answer: "This is Linh."
 exercise:
   type: listen_type

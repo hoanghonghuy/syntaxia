@@ -194,6 +194,8 @@ async function retryLoad() {
     await auth.fetchMe()
     await catalog.loadCatalogForHome(locale.value)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // The stores own the in-context auth/catalog error state rendered above.
   } finally {
     loading.value = false
   }
@@ -215,6 +217,8 @@ onMounted(async () => {
     await auth.fetchMe()
     await catalog.loadCatalogForHome(locale.value)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // Keep the hub on its local error/retry state instead of escalating a handled request failure.
   } finally {
     loading.value = false
   }
@@ -225,6 +229,8 @@ watch(locale, async (loc) => {
   try {
     await catalog.loadCatalogForHome(loc)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // Locale reload failures use the same local catalog error state.
   } finally {
     loading.value = false
   }

@@ -61,17 +61,17 @@ steps:
       - id: en-u02-review-who
         kind: dialogue_choice
         prompt: "You do not know the person across the room. What can you ask?"
-        choices: ["Who's that?", "Room that?", "Anything else?"]
+        choices: ["Who's that?", "Where is that person?", "Anything else?"]
         answer: "Who's that?"
       - id: en-u02-review-intro
         kind: dialogue_choice
         prompt: "Which line naturally introduces Daniel?"
-        choices: ["This is Daniel.", "Daniel who this?", "Where's Daniel friend?"]
+        choices: ["This is Daniel.", "Who's Daniel?", "Where's Daniel?"]
         answer: "This is Daniel."
 exercise:
   type: dialogue_choice
   prompt: "Choose the natural introduction."
-  choices: ["This is my sister, Mai.", "My sister this Mai.", "Who's my Mai sister?"]
+  choices: ["This is my sister, Mai.", "Is Mai your sister?", "Where is Mai?"]
   answer: "This is my sister, Mai."
 ---
 

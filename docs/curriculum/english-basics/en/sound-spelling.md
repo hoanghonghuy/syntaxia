@@ -1,93 +1,93 @@
 ---
-id: en-a1-foundation-01-sound-spelling
+id: en-a1-u00-sound-spelling
 track: english-basics
 locale: en
 slug: sound-spelling
-title: Hear the sound before trusting the spelling
-order: -5
+title: "Hear the word, then read the spelling"
+order: -9
 published: true
 cefr_level: a1
+foundation_focus: pronunciation
 unit_id: en-a1-foundation-00
-unit_title: "English foundations"
+unit_title: "English foundation"
 unit_order: 0
-unit_can_do: "Hear and produce a small beginner sound set, use word stress, and build core be-sentences"
+unit_can_do: "Hear and build a small set of familiar English words and basic sentence patterns"
 unit_role: lesson
-can_do: "Distinguish and reproduce a small set of familiar English vowel contrasts with careful guidance"
-pattern: "spelling → listen → sound"
+can_do: "Connect a familiar English word with its spelling and a simple sound reference"
+pattern: "sound ↔ word ↔ spelling"
 objectives:
-  - Treat spelling as a clue rather than a perfect pronunciation rule
-  - Hear a basic short/long vowel contrast in familiar words
-  - Use IPA only as optional listening support
+  - Notice that English letters and sounds are related but not one-to-one
+  - Use audio first and IPA only as a supporting reference
+  - Hear and reproduce a small set of familiar A1 words
 vocab:
-  - { word: "sit", ipa: "/sɪt/", gloss: "be seated" }
-  - { word: "seat", ipa: "/siːt/", gloss: "a place to sit" }
-  - { word: "live", ipa: "/lɪv/", gloss: "have your home somewhere" }
-  - { word: "leave", ipa: "/liːv/", gloss: "go away" }
+  - { word: "hi", ipa: "/haɪ/", gloss: "greeting" }
+  - { word: "meet", ipa: "/miːt/", gloss: "see someone for the first time" }
+  - { word: "name", ipa: "/neɪm/", gloss: "what someone is called" }
+  - { word: "this", ipa: "/ðɪs/", gloss: "points to something near" }
 steps:
   - type: scene
-    title: "Listen before you read"
-    body: "English spelling is useful, but the same letters do not always tell you the exact sound. Listen first, then connect the sound to the written word."
+    title: "Sound before spelling"
+    body: "Listen to a familiar word first. Then connect what you heard to the written form. IPA is a reference, not a second spelling system to memorise."
     imageUrl: "/language/scenes/english-sound-spelling.svg"
-    imageAlt: "A diagram connecting written words sit and seat to their different spoken vowel sounds."
+    imageAlt: "The word meet points to a simple sound breakdown, showing spelling and pronunciation as connected but different."
   - type: dialogue
     lines:
-      - { speaker: "Teacher", text: "Please sit here." }
-      - { speaker: "Learner", text: "This seat?" }
-      - { speaker: "Teacher", text: "Yes. Sit in this seat." }
+      - { speaker: "A", text: "Hi, I'm Mia." }
+      - { speaker: "B", text: "Hi, Mia. Nice to meet you." }
   - type: listen
-    prompt: "Listen for the two different vowel sounds."
-    text: "Sit in this seat."
+    prompt: "Listen for the whole words before looking at the sound symbols."
+    text: "hi, meet, name, this"
   - type: tip
-    title: "Use your ear first"
-    body: "The letters i and ea look different, but the important beginner habit is simpler: hear the word, imitate it, then connect it to spelling. IPA such as /ɪ/ and /iː/ is only a support label."
+    title: "Do not pronounce letter by letter"
+    body: "English spelling gives clues, but a word is learned as a sound-and-meaning unit. Listen, imitate, then use the spelling to remember it."
   - type: teach
     items:
-      - { form: "sit", reading: "/sɪt/", gloss: "short vowel", example: "Please sit here." }
-      - { form: "seat", reading: "/siːt/", gloss: "longer vowel", example: "This seat is free." }
-      - { form: "live / leave", reading: "/lɪv/ · /liːv/", gloss: "another useful listening contrast", example: "I live here. / I leave at eight." }
+      - { form: "hi", reading: "/haɪ/", gloss: "one syllable", example: "Hi, I'm Mia." }
+      - { form: "meet", reading: "/miːt/", gloss: "the two e letters represent one long vowel sound here", example: "Nice to meet you." }
+      - { form: "name", reading: "/neɪm/", gloss: "the final e changes the vowel pattern here", example: "My name is Mia." }
   - type: practice
-    id: en-f00-sound-listen-1
+    id: en-fnd-sound-hear-meet
+    kind: audio_choice
+    prompt: "Listen. Which written word matches?"
+    audioText: "meet"
+    choices: ["meet", "met", "mate"]
+    answer: "meet"
+    explanation: "The target word is meet /miːt/. All three choices are real words, so listen to the vowel rather than looking for an obviously invalid spelling."
+  - type: practice
+    id: en-fnd-sound-hear-name
     kind: audio_choice
     prompt: "Listen. Which word do you hear?"
-    audioText: "seat"
-    choices: ["sit", "seat", "set"]
-    answer: "seat"
-    explanation: "The vowel is /iː/, the sound in seat."
+    audioText: "name"
+    choices: ["name", "same", "game"]
+    answer: "name"
+    explanation: "All three choices are real words. Listen to the initial consonant and keep the standard spelling together with the spoken word."
   - type: practice
-    id: en-f00-sound-context-1
-    kind: dialogue_choice
-    prompt: "Someone points to a chair and says, “This ___ is free.” Which word fits?"
-    choices: ["seat", "sit", "leave"]
-    answer: "seat"
-    explanation: "Seat is the noun for the place you sit."
-  - type: practice
-    id: en-f00-sound-produce-1
+    id: en-fnd-sound-type-hi
     kind: type_answer
-    prompt: "Write the word with /ɪ/: “Please ___ here.”"
-    answer: "sit"
+    prompt: "Type the greeting you hear."
+    audioText: "hi"
+    answer: "hi"
+    acceptedAnswers: ["Hi", "Hi!"]
     hints:
-      - "The verb is /sɪt/."
+      - "It is one short greeting."
+      - "It starts with h."
   - type: checkpoint
     items:
-      - id: en-f00-sound-check-1
+      - id: en-fnd-sound-check-this
         kind: audio_choice
         prompt: "Listen and choose the word."
-        audioText: "live"
-        choices: ["live", "leave", "love"]
-        answer: "live"
-      - id: en-f00-sound-check-2
-        kind: meaning_choice
-        prompt: "Which statement is the best pronunciation habit?"
-        choices: ["Listen first, then connect sound and spelling.", "Guess every sound from spelling only.", "Ignore spoken English and read silently."]
-        answer: "Listen first, then connect sound and spelling."
+        audioText: "this"
+        choices: ["this", "these", "thus"]
+        answer: "this"
+      - id: en-fnd-sound-check-meet
+        kind: type_answer
+        prompt: "Type the word you hear."
+        audioText: "meet"
+        answer: "meet"
 exercise:
-  type: audio_choice
-  prompt: "Listen and choose the word you hear."
-  audioText: "seat"
-  choices: ["sit", "seat", "set"]
-  answer: "seat"
-  hints:
-    - "Listen for /iː/."
+  type: type_answer
+  prompt: "Type the word you hear: meet."
+  answer: "meet"
 ---
 
-This foundation lesson builds a listening habit rather than trying to teach the entire English sound system at once.
+This session establishes the rule used by the rest of the course: learn a word through sound, meaning, and spelling together.

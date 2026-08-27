@@ -1,18 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-labelledby="title desc">
-  <title id="title">Pinyin syllable anatomy</title>
-  <desc id="desc">The syllable nǐ is split into initial n, final i, and third tone.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" aria-hidden="true">
   <rect width="640" height="320" rx="28" fill="#f5f7f6"/>
   <text x="320" y="68" text-anchor="middle" font-family="system-ui,sans-serif" font-size="42" font-weight="700" fill="#17201c">nǐ</text>
   <path d="M320 88v38" stroke="#61716a" stroke-width="4" stroke-linecap="round"/>
   <rect x="58" y="142" width="154" height="92" rx="18" fill="#d8eee8"/>
   <rect x="243" y="142" width="154" height="92" rx="18" fill="#e8ecea"/>
   <rect x="428" y="142" width="154" height="92" rx="18" fill="#dce6f4"/>
-  <text x="135" y="180" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="650" fill="#17201c">initial</text>
-  <text x="135" y="216" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" fill="#17201c">n</text>
-  <text x="320" y="180" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="650" fill="#17201c">final</text>
-  <text x="320" y="216" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" fill="#17201c">i</text>
-  <text x="505" y="180" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="650" fill="#17201c">tone</text>
-  <text x="505" y="216" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" fill="#17201c">ˇ  3</text>
+  <text x="135" y="202" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="700" fill="#17201c">n</text>
+  <text x="320" y="202" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="700" fill="#17201c">i</text>
+  <text x="505" y="202" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="700" fill="#17201c">ˇ 3</text>
   <path d="M212 188h28M397 188h28" stroke="#61716a" stroke-width="4" stroke-linecap="round"/>
-  <text x="320" y="282" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#56645e">sound parts + tone → one Mandarin syllable</text>
+  <text x="320" y="282" text-anchor="middle" font-family="system-ui,sans-serif" font-size="26" fill="#56645e">n + i + ˇ3 → nǐ</text>
 </svg>

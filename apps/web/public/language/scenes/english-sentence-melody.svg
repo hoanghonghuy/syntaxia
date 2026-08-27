@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+  <g font-family="system-ui,sans-serif" fill="#1f2937">
+    <text x="72" y="112" font-size="28" font-weight="700">I'm Mai.</text>
+    <path d="M235 106 C310 104 350 114 455 146" fill="none" stroke="#6366f1" stroke-width="7" stroke-linecap="round"/>
+    <path d="m440 130 20 18-27 4" fill="none" stroke="#6366f1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <text x="72" y="220" font-size="28" font-weight="700">Are you Mai?</text>
+    <path d="M250 214 C330 214 372 204 465 154" fill="none" stroke="#10b981" stroke-width="7" stroke-linecap="round"/>
+    <path d="m447 155 22-4-6 25" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <text x="72" y="328" font-size="28" font-weight="700">Where are you from?</text>
+    <path d="M315 322 C385 310 430 318 505 350" fill="none" stroke="#f97316" stroke-width="7" stroke-linecap="round"/>
+    <path d="m492 332 18 20-27 1" fill="none" stroke="#f97316" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

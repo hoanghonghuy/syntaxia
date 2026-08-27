@@ -23,6 +23,10 @@ vocab:
   - { word: "Saturday", ipa: "/ˈsætərdeɪ/", gloss: "day of the week" }
   - { word: "friend", ipa: "/frend/", gloss: "person you know and like" }
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "later part of the day" }
+  - { word: "do you want to", ipa: "/duː ju wɑːnt tə/", gloss: "starts a simple invitation" }
+  - { word: "let's", ipa: "/lets/", gloss: "suggests doing something together" }
+  - { word: "meet", ipa: "/miːt/", gloss: "come together at an agreed time or place" }
+  - { word: "see you there", ipa: "/siː ju ðer/", gloss: "closes a plan after the place is agreed" }
 steps:
   - type: scene
     title: "Make a plan after class"
@@ -45,12 +49,13 @@ steps:
     items:
       - { form: "Do you want to go to the park?", gloss: "simple invitation", example: "Do you want to go to the park on Saturday?" }
       - { form: "Yes, let's go.", gloss: "accept the invitation", example: "Yes, let's go." }
+      - { form: "At three in the afternoon?", gloss: "confirm a simple meeting time", example: "At three in the afternoon?" }
       - { form: "See you there.", gloss: "close the plan", example: "Great. See you there." }
   - type: practice
     id: en-u08-invite-context
     kind: dialogue_choice
     prompt: "You want to invite a friend to the park. Which line is natural?"
-    choices: ["Do you want to go to the park?", "How much is the park?", "Who's the park?"]
+    choices: ["Do you want to go to the park?", "Is the park open?", "Where is the park?"]
     answer: "Do you want to go to the park?"
   - type: practice
     id: en-u08-invite-listen
@@ -67,12 +72,20 @@ steps:
     acceptedAnswers: ["Do you want to go to the park?", "Do you want to go to the park with me?", "Do you want to go to the park with me"]
     hints:
       - "Start with Do you want to …"
+  - type: practice
+    id: en-u08-invite-time
+    kind: type_answer
+    prompt: "You both chose the park. Confirm the meeting time: 3:00 in the afternoon."
+    answer: "At three in the afternoon"
+    acceptedAnswers: ["At three in the afternoon?", "At three in the afternoon.", "At three in the afternoon"]
+    hints:
+      - "Use At + time + in the afternoon."
   - type: checkpoint
     items:
       - id: en-u08-invite-check-accept
         kind: dialogue_choice
         prompt: "Which reply accepts the invitation?"
-        choices: ["Yes, let's go.", "No price.", "Where is my book?"]
+        choices: ["Yes, let's go.", "No, I can't.", "The park is open."]
         answer: "Yes, let's go."
       - id: en-u08-invite-check-close
         kind: dialogue_choice

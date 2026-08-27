@@ -16,6 +16,13 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (path) => readFileSync(path, 'utf8')
 const englishSlugs = [
+  'sound-spelling',
+  'word-stress',
+  'sentence-melody',
+  'core-sentences',
+  'basic-questions',
+  'foundation-checkpoint',
+  'foundation-review',
   'greetings',
   'meeting-checkpoint',
   'meeting-review',
@@ -35,7 +42,25 @@ describe('language learning v3', () => {
     const path = join(repoRoot, 'docs/processes/language-learning-pedagogy-v3.md')
     assert.equal(existsSync(path), true)
     const body = read(path)
-    assert.match(body, /scene -> notice\/listen -> understand -> manipulate -> respond -> produce -> retrieve later/)
+    assert.match(
+      body,
+      /pronunciation \/ sound -> high-frequency general vocabulary & chunks -> basic productive grammar \/ patterns -> listening -> interaction \/ speaking -> reading & writing -> mixed checkpoint -> delayed retrieval/,
+    )
+    assert.match(body, /scene -> notice\/listen -> understand -> manipulate -> respond -> produce -> checkpoint -> retrieve later/)
+    for (const dimension of [
+      'Pronunciation / sound',
+      'Vocabulary / chunks',
+      'Grammar / patterns',
+      'Listening',
+      'Speaking / interaction',
+      'Reading',
+      'Writing',
+      'Review',
+    ]) {
+      assert.match(body, new RegExp(`\\| ${dimension.replace('/', '\\/')} \\|`, 'i'), `missing foundation dimension ${dimension}`)
+    }
+    assert.match(body, /Core vs specialty tracks/)
+    assert.match(body, /Specialist\/domain terminology belongs in a separate optional specialty path/i)
     assert.match(body, /FSRS/)
     assert.match(body, /natural language/i)
   })
@@ -48,6 +73,7 @@ describe('language learning v3', () => {
     assert.deepEqual(languageTrackProfile('english-basics'), {
       targetLang: 'en',
       speechLang: 'en-US',
+      homeLabel: 'EN',
     })
     assert.deepEqual(languageTrackProfile('future-language-track'), {
       targetLang: 'und',

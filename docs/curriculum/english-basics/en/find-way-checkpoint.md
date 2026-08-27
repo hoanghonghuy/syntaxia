@@ -44,7 +44,7 @@ steps:
     id: en-u03-check-confirm
     kind: dialogue_choice
     prompt: "You hear “Room nine.” How do you confirm it?"
-    choices: ["Room nine?", "Where nine?", "Who's nine?"]
+    choices: ["Room nine?", "Where is room nine?", "Room nine is upstairs."]
     answer: "Room nine?"
   - type: practice
     id: en-u03-check-place
@@ -60,17 +60,17 @@ steps:
         kind: audio_choice
         prompt: "Listen. Where is the shop?"
         audioText: "It's here."
-        choices: ["here", "over there", "room eight"]
+        choices: ["here", "over there", "in room eight"]
         answer: "here"
       - id: en-u03-check-flow
         kind: dialogue_choice
         prompt: "You confirmed the room number but do not know its location. What should you ask next?"
-        choices: ["Where's room six?", "Who's room six?", "Anything else?"]
+        choices: ["Where's room six?", "Is room six upstairs?", "Room six is my classroom."]
         answer: "Where's room six?"
 exercise:
   type: dialogue_choice
   prompt: "You hear “Room five.” Choose the natural confirmation."
-  choices: ["Room five?", "Five is where?", "Who's five?"]
+  choices: ["Room five?", "Where is room five?", "Room five is upstairs."]
   answer: "Room five?"
 ---
 

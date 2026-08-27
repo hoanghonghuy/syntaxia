@@ -52,12 +52,12 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 | L0 | **FSRS review persistence + concurrency hardening** | done | language review foundation | Durable server-side cards/logs, due scheduling, CAS conflict semantics, reproducible Go CI |
 | L1 | **V3 pedagogy + content-quality source of truth** | done | L0 | V3 active in process index; naturalness/visual/audio/accessibility QA contract exists; listen-first behavior regression-locked |
 | L2 | **Dedicated language player correctness + feedback loop** | done | L1 | Progressive hints, delayed non-passing solution reveal, structured solutions, keyboard/mobile/screen-reader guards |
-| L3 | **Semantic visual asset pipeline** | done | L1–L2 | App-owned semantic visual registry/rendering with safe fallbacks and regression coverage |
+| L3 | **Semantic visual asset pipeline** | done | L1 | App-owned semantic visual registry/rendering with safe fallbacks and regression coverage |
 | L4 | **True communicative unit model** | done | L1–L2 | Content-owned unit metadata, Can-Do grouping, lesson/checkpoint/review roles and ordered navigation |
 | L5 | **Golden units: English / Mandarin / Japanese** | done | L2–L4 | Reference units for all three languages pass interaction, audio, review, mobile and accessibility contracts |
 | L6 | **Curriculum migration + full release QA** | done | L5 | Starter language content migrated; parity/content gates, DB-backed E2E, mobile/a11y and FSRS persistence verified |
 
-### L5/L6 release evidence
+### L5/L6 historical release evidence
 
 - PR #3 merged into `develop` as `68802c531e04b86ae2d4bf9a6f95ffd47d6ce465`.
 - Final pre-merge head `c493376564baa76d0874b7ac25d78db55e26588a`.
@@ -65,33 +65,32 @@ The earlier language MVP/v2 work is a foundation, not the completion bar for the
 - IT Curriculum V2 CI #244: curriculum, API and production web build all green.
 - The DB-backed E2E verifies register → lesson inventory → progress → notes → repeated FSRS review and persisted review rows.
 
-## Post-stabilization curriculum completion
+## Current product-hardening cycle
 
-The stabilization technical gate is now green:
+The earlier stabilization/curriculum PR sequence is historical: PRs #4, #5 and #6 have already been merged. The production baseline tracked by [`curriculum-product-completion.md`](./curriculum-product-completion.md) is `a91d9c8c4e4bc14ee3ad92e13ab5c75fe5ecbcf2`.
 
-- PR #4 head `d677c898d49f01fcaa9e79e4c6bcfaf010f3020d` passed Product CI #11 including DB-backed E2E and FSRS persistence;
-- PR #4 is Ready for review and remains unmerged pending the explicit merge action.
+The active candidate is `feature/home-learning-map-english-foundation` / PR #8. Its final product-hardening scope is:
 
-The active curriculum-quality branch is `feature/curriculum-product-completion`. Its declared products and current evidence are tracked in [`curriculum-product-completion.md`](./curriculum-product-completion.md).
+1. **Data-driven home learning map** — real catalog-backed navigation/progress instead of decorative hard-coded language/code chips.
+2. **English A1 foundation-first path** — Foundation Unit 0 + Units 1–9 = **10 units / 43 nodes per locale**; Unit 9 adds personal details and concrete possession language while existing Unit 1–8 identities remain stable.
+3. **Japanese N5 foundation-first path** — seven-node Foundation Unit 0 + 9 communicative units = **35 nodes / locale**; sound↔kana, hiragana, katakana, mora timing, core grammar, checkpoint and delayed review are all explicit.
+4. **Mandarin practical foundation** — pronunciation Unit 0 + 11 communicative units = **41 nodes / locale**.
+5. **Chinese IT specialty separation** — **6 optional specialty lessons / locale**, never a core-Mandarin prerequisite.
+6. **Runtime catalog recovery** — built-in track metadata is reconciled before curriculum sync for long-lived databases.
+7. **Locale/content quality hardening** — explanation-locale purity, lexical/chunk depth, semantic visuals, stable assessed identities, foundation-first pedagogy, and English distractor quality are regression-locked.
+8. **Backward-compatible curriculum insertion** — new Unit 0 prerequisites do not fabricate progress or silently rewind returning learners.
+9. **Cold language parser smoke** — Go verifies English **86 Markdown files (43×2)** with **18 Unit 0 files (9×2)** and Japanese **70 files (35×2)** with **14 Unit 0 files (7×2)**.
+10. **Security release gate** — blocking `govulncheck`, patched Go/JWT/pgx/gRPC/x/text floors, JWT HS256-only verification with HS512 rejection test, and blocking npm production audit are part of canonical Product CI.
 
-Completed product slices on that branch:
-
-1. Chinese IT specialty — 6 Language V3 workplace lessons / locale;
-2. English A1 foundation — 8 units / 30 nodes / locale;
-3. Japanese N5 foundation — 9 units / 28 nodes / locale;
-4. Mandarin practical Level 1 foundation — pronunciation Unit 0 + 11 communicative units / **41 nodes / locale**;
-5. CI hardening — cold Go curriculum smoke, exact runtime inventories, PostgreSQL-backed cross-domain E2E and persisted FSRS rows;
-6. learner-frontier compatibility — inserting new earlier language content does not rewind returning learners or fabricate progress.
-
-Product CI #88 is fully green at `8610a2b0435ae502863836d32716adf58ece9c44`.
+Intermediate Product CI runs are valid development checkpoints but are not release evidence for a later head. The final candidate must receive a fully green exact-head Product CI after the last content/test/documentation change before PR #8 is marked ready for review.
 
 ### Current ordered focus
 
-1. **Keep PR #4 isolated and merge-ready** — stabilization stays free of curriculum expansion.
-2. **Keep PR #5 source-of-truth synchronized** — exact counts, maps, quality gates and release evidence must match the current branch head.
-3. **Do not widen existing declared products silently.** New DOM/events/fetch/async JavaScript, higher CEFR/HSK/JLPT levels, capstones, or new tracks require their own researched curriculum map/scope.
-4. **After PR #4 merges**, revalidate PR #5 against the updated `develop` merge head before marking PR #5 Ready.
-5. **Only then choose the next product expansion** as a separate scope/branch.
+1. **Keep product truth synchronized.** Maps, authored inventory, static gates, cold parser tests, runtime E2E and PR release evidence must describe the same exact candidate.
+2. **Require content-level audit even when CI is green.** CI proves contracts and runtime behavior; it does not replace human/product review of language naturalness, prerequisite coverage, distractor quality, accessibility semantics or pedagogical coherence. The final English Units 1–9 audit is complete within the declared 43-node scope and malformed distractors are regression-locked.
+3. **Do not widen declared products silently.** Higher CEFR/HSK/JLPT levels, broader JavaScript/web continuations, capstones or new tracks require a separately researched map/scope.
+4. **PR lifecycle.** Keep PR #8 Draft until the final exact head passes canonical Product CI; after that mark it **Ready for review**. Do not merge/promote without an explicit release/merge decision.
+5. **Use [`curriculum-product-completion.md`](./curriculum-product-completion.md) as the release source of truth.** Historical milestone counts in this checklist are intentionally not rewritten as current production facts.
 
 ## Related
 

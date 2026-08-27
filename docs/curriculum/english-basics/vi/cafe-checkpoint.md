@@ -65,7 +65,7 @@ steps:
       - id: en-u04-check-polite
         kind: dialogue_choice
         prompt: "Câu nào là cách gọi trà lịch sự?"
-        choices: ["I'd like a tea, please.", "Tea who?", "Room tea?"]
+        choices: ["I'd like a tea, please.", "Where is the tea?", "The tea is hot."]
         answer: "I'd like a tea, please."
 exercise:
   type: type_answer

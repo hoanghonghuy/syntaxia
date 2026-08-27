@@ -23,6 +23,11 @@ vocab:
   - { word: "computer", ipa: "/kəmˈpjuːtər/", gloss: "computer" }
   - { word: "door", ipa: "/dɔːr/", gloss: "room entrance" }
   - { word: "room", ipa: "/ruːm/", gloss: "part of a home or building" }
+  - { word: "on", ipa: "/ɑːn/", gloss: "supported by or touching a surface" }
+  - { word: "under", ipa: "/ˈʌndər/", gloss: "below something" }
+  - { word: "in", ipa: "/ɪn/", gloss: "inside something" }
+  - { word: "next to", ipa: "/nekst tə/", gloss: "beside something" }
+  - { word: "where's", ipa: "/werz/", gloss: "short for where is; asks for a location" }
 steps:
   - type: scene
     title: "Find the missing book"
@@ -46,11 +51,12 @@ steps:
       - { form: "Where's my book?", gloss: "ask for an object's location", example: "Where's my book?" }
       - { form: "It's on the table.", gloss: "object is supported by a surface", example: "It's on the table." }
       - { form: "It's under the chair.", gloss: "object is below something", example: "It's under the chair." }
+      - { form: "It's in the bag.", gloss: "object is inside something", example: "It's in the bag." }
   - type: practice
     id: en-u07-where-context
     kind: dialogue_choice
     prompt: "You cannot find your book. Which question is natural?"
-    choices: ["Where's my book?", "How much is my book?", "What time is my book?"]
+    choices: ["Where's my book?", "Do you have my book?", "Is this my book?"]
     answer: "Where's my book?"
   - type: practice
     id: en-u07-where-listen

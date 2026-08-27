@@ -39,9 +39,14 @@ func (t *TokenService) Sign(userID uuid.UUID, email, role string) (string, error
 }
 
 func (t *TokenService) Parse(tokenStr string) (Claims, error) {
-	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (any, error) {
-		return t.secret, nil
-	})
+	token, err := jwt.ParseWithClaims(
+		tokenStr,
+		&Claims{},
+		func(token *jwt.Token) (any, error) {
+			return t.secret, nil
+		},
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
+	)
 	if err != nil {
 		return Claims{}, err
 	}

@@ -1,4 +1,6 @@
 import type { LessonSummary, Progress, Track } from '~/types/api'
+import { isLanguageTrack } from './languageLesson.ts'
+import { nextLanguageLesson } from './languageUnits.ts'
 import {
   type LearningDomainFilter,
   filterTracksByDomain,
@@ -32,6 +34,19 @@ export function nextIncompleteLesson(
   return null
 }
 
+/** One continuation rule for cards, Progress and Home. Language tracks preserve
+ * the learner frontier when an earlier prerequisite Unit 0 is inserted. */
+export function nextLessonForTrack(
+  trackId: string,
+  lessons: LessonSummary[],
+  progress: Progress[],
+  locale: string,
+): LessonSummary | null {
+  return isLanguageTrack(trackId)
+    ? nextLanguageLesson(lessons, progress, locale)
+    : nextIncompleteLesson(lessons, progress, locale)
+}
+
 export function overallProgress(
   lessonsByTrack: Record<string, LessonSummary[]>,
   progress: Progress[],
@@ -46,6 +61,46 @@ export function overallProgress(
   }
   if (total === 0) return { done: 0, total: 0, percent: 0 }
   return { done, total, percent: Math.floor((done * 100) / total) }
+}
+
+/**
+ * Order tracks for a global "Continue" action. Tracks with completed work in the
+ * active locale come first, newest completion first. Learners with no history keep
+ * the catalog order. This prevents unrelated earlier tracks from stealing the
+ * resume CTA merely because their sortOrder is lower.
+ */
+export function prioritizeTracksByRecentProgress(
+  tracks: Track[],
+  lessonsByTrack: Record<string, LessonSummary[]>,
+  progress: Progress[],
+  locale: string,
+): Track[] {
+  const lessonToTrack = new Map<string, string>()
+  for (const [trackId, lessons] of Object.entries(lessonsByTrack)) {
+    for (const lesson of lessons) lessonToTrack.set(lesson.id, trackId)
+  }
+
+  const latestByTrack = new Map<string, number>()
+  for (const row of progress) {
+    if (!row.completed || row.locale !== locale) continue
+    const trackId = lessonToTrack.get(row.lessonId)
+    if (!trackId) continue
+    const parsed = row.completedAt ? Date.parse(row.completedAt) : Number.NaN
+    const timestamp = Number.isFinite(parsed) ? parsed : 0
+    const current = latestByTrack.get(trackId)
+    if (current === undefined || timestamp > current) latestByTrack.set(trackId, timestamp)
+  }
+
+  return [...tracks].sort((a, b) => {
+    const aRecent = latestByTrack.get(a.id)
+    const bRecent = latestByTrack.get(b.id)
+    if (aRecent !== undefined && bRecent === undefined) return -1
+    if (aRecent === undefined && bRecent !== undefined) return 1
+    if (aRecent !== undefined && bRecent !== undefined && aRecent !== bRecent) {
+      return bRecent - aRecent
+    }
+    return a.sortOrder - b.sortOrder
+  })
 }
 
 export type TrackProgressRow = {
@@ -106,7 +161,7 @@ export function trackProgressRows(
         done: stats.done,
         total: stats.total,
         percent: stats.percent,
-        next: nextIncompleteLesson(lessons, progress, locale),
+        next: nextLessonForTrack(tr.id, lessons, progress, locale),
       }
     })
     .filter((row) => row.total > 0)
@@ -148,9 +203,16 @@ export function resumeTargetForDomain(
   locale: string,
   domain: LearningDomainFilter,
 ): { trackId: string; lesson: LessonSummary } | null {
-  for (const tr of filterTracksByDomain(tracks, domain)) {
-    const next = nextIncompleteLesson(lessonsByTrack[tr.id] || [], progress, locale)
-    if (next) return { trackId: tr.id, lesson: next }
+  const scopedTracks = filterTracksByDomain(tracks, domain)
+  const ordered = prioritizeTracksByRecentProgress(scopedTracks, lessonsByTrack, progress, locale)
+  for (const track of ordered) {
+    const next = nextLessonForTrack(
+      track.id,
+      lessonsByTrack[track.id] || [],
+      progress,
+      locale,
+    )
+    if (next) return { trackId: track.id, lesson: next }
   }
   return null
 }

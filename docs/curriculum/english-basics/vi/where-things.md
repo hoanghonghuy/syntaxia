@@ -23,6 +23,11 @@ vocab:
   - { word: "computer", ipa: "/kəmˈpjuːtər/", gloss: "máy tính" }
   - { word: "door", ipa: "/dɔːr/", gloss: "cửa" }
   - { word: "room", ipa: "/ruːm/", gloss: "phòng" }
+  - { word: "on", ipa: "/ɑːn/", gloss: "ở trên và tiếp xúc với một bề mặt" }
+  - { word: "under", ipa: "/ˈʌndər/", gloss: "ở phía dưới" }
+  - { word: "in", ipa: "/ɪn/", gloss: "ở bên trong" }
+  - { word: "next to", ipa: "/nekst tə/", gloss: "ở ngay bên cạnh" }
+  - { word: "where's", ipa: "/werz/", gloss: "viết tắt của where is; dùng để hỏi vị trí" }
 steps:
   - type: scene
     title: "Tìm cuốn sách bị thất lạc"
@@ -46,11 +51,12 @@ steps:
       - { form: "Where's my book?", gloss: "hỏi vị trí đồ vật", example: "Where's my book?" }
       - { form: "It's on the table.", gloss: "đồ vật nằm trên bề mặt", example: "It's on the table." }
       - { form: "It's under the chair.", gloss: "đồ vật nằm phía dưới", example: "It's under the chair." }
+      - { form: "It's in the bag.", gloss: "đồ vật nằm bên trong một vật khác", example: "It's in the bag." }
   - type: practice
     id: en-u07-where-context
     kind: dialogue_choice
     prompt: "Bạn không tìm thấy sách. Câu hỏi nào tự nhiên?"
-    choices: ["Where's my book?", "How much is my book?", "What time is my book?"]
+    choices: ["Where's my book?", "Do you have my book?", "Is this my book?"]
     answer: "Where's my book?"
   - type: practice
     id: en-u07-where-listen

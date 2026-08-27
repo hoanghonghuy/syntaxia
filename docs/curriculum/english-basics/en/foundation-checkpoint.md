@@ -1,81 +1,84 @@
 ---
-id: en-a1-foundation-04-checkpoint
+id: en-a1-u00-foundation-checkpoint
 track: english-basics
 locale: en
 slug: foundation-checkpoint
-title: English foundations checkpoint
+title: "Foundation checkpoint"
 order: -2
 published: true
 cefr_level: a1
+foundation_focus: integrated
 unit_id: en-a1-foundation-00
-unit_title: "English foundations"
+unit_title: "English foundation"
 unit_order: 0
-unit_can_do: "Hear and produce a small beginner sound set, use word stress, and build core be-sentences"
+unit_can_do: "Hear and build a small set of familiar English words and basic sentence patterns"
 unit_role: checkpoint
-can_do: "Show that you can hear a basic contrast, identify stress, and build a simple be-sentence before Unit 1"
-pattern: "sound + stress + be"
+can_do: "Combine beginner pronunciation cues with basic be and question patterns"
+pattern: "hear → choose/build → answer"
 objectives:
-  - Check a beginner sound contrast
-  - Check familiar word stress
-  - Check am/is/are in statements and questions
-vocab:
-  - { word: "seat", ipa: "/siːt/", gloss: "a place to sit" }
-  - { word: "water", ipa: "/ˈwɔːtər/", gloss: "a drink" }
-  - { word: "ready", ipa: "/ˈredi/", gloss: "prepared" }
+  - Check sound-spelling and word-stress awareness
+  - Build a simple be sentence
+  - Build and answer a simple question
 steps:
   - type: scene
-    title: "Foundation gate before your first meeting"
-    body: "Complete one short mixed check. The goal is intelligible sound and a usable sentence, not perfect accent or grammar terminology."
-    imageUrl: "/language/scenes/english-be-sentence.svg"
-    imageAlt: "A simple English sentence builder with pronouns and forms of be."
+    title: "Before your first conversation"
+    body: "Use the sound and sentence tools together. The goal is not perfect accent or a grammar table; it is a small foundation you can retrieve while communicating."
+    visualKey: "classmates-meeting"
+    imageAlt: "Two classmates prepare for a short introductory conversation."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "Are you ready?" }
-      - { speaker: "B", text: "Yes, I am." }
-      - { speaker: "A", text: "Water?" }
-      - { speaker: "B", text: "Yes, water, please." }
+      - { speaker: "A", text: "Hello. I'm Mai. I'm a student." }
+      - { speaker: "B", text: "Hi, Mai. Are you from Hanoi?" }
+      - { speaker: "A", text: "Yes, I am." }
+      - { speaker: "B", text: "Do you like music?" }
+      - { speaker: "A", text: "Yes, I do." }
   - type: listen
-    prompt: "Listen for both the word and its stress."
-    text: "Water, please."
+    prompt: "Listen once for meaning, then once for hello, student, and the question starters Are and Do."
+    text: "Hello. I'm Mai. I'm a student. Are you from Hanoi? Do you like music?"
+  - type: tip
+    title: "Retrieve, do not translate every word"
+    body: "Use chunks and sentence frames: I'm …, Are you …?, Where are you …?, Do you like …?"
+  - type: teach
+    items:
+      - { form: "hel-LO", reading: "/həˈloʊ/", gloss: "word stress", example: "Hello, Mai." }
+      - { form: "I'm a student.", reading: "I + am + noun", gloss: "basic be sentence", example: "I'm a student." }
+      - { form: "Are you …?", reading: "be + subject", gloss: "yes/no question with be", example: "Are you from Hanoi?" }
+      - { form: "Do you like …?", reading: "do + subject + verb", gloss: "yes/no question with like", example: "Do you like music?" }
   - type: practice
-    id: en-f00-gate-sound-1
+    id: en-fnd-check-hear-hello
     kind: audio_choice
-    prompt: "Listen. Which word do you hear?"
-    audioText: "seat"
-    choices: ["sit", "seat", "set"]
-    answer: "seat"
+    prompt: "Which stress pattern matches the word you hear?"
+    audioText: "hello"
+    choices: ["hel-LO", "HEL-lo"]
+    answer: "hel-LO"
   - type: practice
-    id: en-f00-gate-stress-1
-    kind: meaning_choice
-    prompt: "Which stress pattern is correct for water?"
-    choices: ["WA-ter", "wa-TER", "equal stress"]
-    answer: "WA-ter"
+    id: en-fnd-check-build-be
+    kind: order_words
+    prompt: "Build the sentence."
+    tokens: ["student", "a", "I'm"]
+    answer: "I'm a student"
+    acceptedAnswers: ["I'm a student."]
   - type: practice
-    id: en-f00-gate-be-1
-    kind: fill_blank
-    prompt: "Complete: We ___ ready."
-    choices: ["am", "is", "are"]
-    answer: "are"
+    id: en-fnd-check-build-question
+    kind: order_words
+    prompt: "Build the question."
+    tokens: ["you", "Are", "from", "Hanoi"]
+    answer: "Are you from Hanoi"
+    acceptedAnswers: ["Are you from Hanoi?"]
   - type: checkpoint
     items:
-      - id: en-f00-gate-check-1
-        kind: order_words
-        prompt: "Build the question."
-        tokens: ["you", "Are", "ready"]
-        answer: "Are you ready"
-        acceptedAnswers: ["Are you ready?"]
-      - id: en-f00-gate-check-2
-        kind: dialogue_choice
-        prompt: "Someone asks, “Are you Mai?” You are not Mai. Which reply fits?"
-        choices: ["No, I'm not.", "No, I isn't.", "No, you aren't."]
-        answer: "No, I'm not."
+      - id: en-fnd-check-do
+        kind: type_answer
+        prompt: "Complete: “___ you like music?”"
+        answer: "Do"
+      - id: en-fnd-check-am
+        kind: type_answer
+        prompt: "Complete the short answer: “Yes, I ___.”"
+        answer: "am"
 exercise:
-  type: fill_blank
-  prompt: "Complete: She ___ here."
-  choices: ["am", "is", "are"]
-  answer: "is"
-  hints:
-    - "She uses is."
+  type: type_answer
+  prompt: "Complete: Yes, I ___."
+  answer: "am"
 ---
 
-Passing this checkpoint means the learner has enough sound and sentence foundation to start the communicative sequence.
+Passing this checkpoint means the learner is ready to use the same foundations inside the communicative units.

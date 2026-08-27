@@ -14,16 +14,19 @@ unit_order: 4
 unit_can_do: "Say when and where you study Chinese and confirm a simple study plan"
 unit_role: lesson
 can_do: "Say that you are a student and describe studying Chinese at school"
-pattern: "我是学生。/ 我在学校学习汉语。"
+pattern: "我是学生。/ 我在学校学习汉语。/ 你在哪里学习汉语？"
 objectives:
   - "Identify teacher / student / school"
   - "Use 在 + place before a simple study action"
+  - "Recognize 哪里 in the place slot when asking where"
 vocab:
   - { hanzi: "学校", pinyin: "xué xiào", gloss: "school" }
   - { hanzi: "老师", pinyin: "lǎo shī", gloss: "teacher" }
   - { hanzi: "学生", pinyin: "xué sheng", gloss: "student" }
   - { hanzi: "学习", pinyin: "xué xí", gloss: "to study" }
   - { hanzi: "汉语", pinyin: "hàn yǔ", gloss: "Chinese language" }
+  - { hanzi: "在", pinyin: "zài", gloss: "at; in" }
+  - { hanzi: "哪里", pinyin: "nǎ lǐ", gloss: "where" }
 steps:
   - type: scene
     title: "Situation"
@@ -40,12 +43,12 @@ steps:
     reading: "wǒ zài xué xiào xué xí hàn yǔ"
   - type: tip
     title: "在 + place + action"
-    body: "Use 在 to locate an action: 我在学校学习汉语. Keep the whole chunk together instead of memorizing 学校 and 学习 as isolated words."
+    body: "Use 在 to locate an action: 我在学校学习汉语. When the place is unknown, 哪里 fills that same slot: 你在哪里学习汉语？"
   - type: teach
     items:
       - { form: "我是学生。", reading: "wǒ shì xué sheng", gloss: "I am a student.", example: "我是学生。" }
-      - { form: "老师", reading: "lǎo shī", gloss: "teacher", example: "她是老师。" }
-      - { form: "学校", reading: "xué xiào", gloss: "school", example: "我在学校。" }
+      - { form: "在学校", reading: "zài xué xiào", gloss: "at school", example: "我在学校。" }
+      - { form: "在哪里？", reading: "zài nǎ lǐ", gloss: "where?", example: "你在哪里学习汉语？" }
       - { form: "我在学校学习汉语。", reading: "wǒ zài xué xiào xué xí hàn yǔ", gloss: "I study Chinese at school.", example: "我在学校学习汉语。" }
   - type: practice
     id: zh-school-reply-1

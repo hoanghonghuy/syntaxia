@@ -23,6 +23,9 @@ vocab:
   - { word: "big", ipa: "/bɪɡ/", gloss: "large" }
   - { word: "please", ipa: "/pliːz/", gloss: "polite request word" }
   - { word: "thank you", ipa: "/ˈθæŋk juː/", gloss: "polite thanks" }
+  - { word: "I'd like", ipa: "/aɪd laɪk/", gloss: "polite phrase for choosing or requesting an item" }
+  - { word: "I'll take it", ipa: "/aɪl teɪk ɪt/", gloss: "says you have decided to buy the item" }
+  - { word: "here you are", ipa: "/hɪr ju ɑːr/", gloss: "said when handing something to someone" }
 steps:
   - type: scene
     title: "Buy the bag you chose"
@@ -78,7 +81,7 @@ steps:
       - id: en-u06-shop-check-close
         kind: dialogue_choice
         prompt: "The clerk gives you the bag. What is a natural reply?"
-        choices: ["Thank you.", "Who are you?", "At five."]
+        choices: ["Thank you.", "Who are you?", "See you at five."]
         answer: "Thank you."
 exercise:
   type: type_answer

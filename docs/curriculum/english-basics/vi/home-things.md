@@ -13,7 +13,7 @@ unit_order: 7
 unit_can_do: "Nói những gì có trong một phòng quen thuộc và hỏi vị trí của một đồ vật thường gặp"
 unit_role: lesson
 can_do: "Gọi tên vài đồ vật quen thuộc trong phòng và nói rằng một đồ vật đang ở đó"
-pattern: "There's a … / There are … / This is my …"
+pattern: "There's a … / This is my …"
 objectives:
   - Gọi tên đồ vật quen thuộc trong phòng
   - Dùng There's a … cho một đồ vật nhìn thấy
@@ -23,6 +23,9 @@ vocab:
   - { word: "bed", ipa: "/bed/", gloss: "giường" }
   - { word: "table", ipa: "/ˈteɪbəl/", gloss: "bàn" }
   - { word: "chair", ipa: "/tʃer/", gloss: "ghế" }
+  - { word: "book", ipa: "/bʊk/", gloss: "sách" }
+  - { word: "wall", ipa: "/wɔːl/", gloss: "tường" }
+  - { word: "there's", ipa: "/ðerz/", gloss: "viết tắt của there is; dùng để nói có một vật ở đó" }
 steps:
   - type: scene
     title: "Cho một người xem phòng của bạn"
@@ -50,7 +53,7 @@ steps:
     id: en-u07-home-context
     kind: dialogue_choice
     prompt: "Bạn muốn chỉ ra một chiếc giường trong phòng. Câu nào phù hợp?"
-    choices: ["There's a bed.", "Bed is who?", "At bed seven."]
+    choices: ["There's a bed.", "Where is the bed?", "I have a bed."]
     answer: "There's a bed."
   - type: practice
     id: en-u07-home-listen
@@ -72,7 +75,7 @@ steps:
       - id: en-u07-home-check-room
         kind: dialogue_choice
         prompt: "Câu nào xác định đây là phòng ngủ của bạn?"
-        choices: ["This is my bedroom.", "How much bedroom?", "Bedroom at eight."]
+        choices: ["This is my bedroom.", "Where is my bedroom?", "My bedroom is upstairs."]
         answer: "This is my bedroom."
       - id: en-u07-home-check-one
         kind: order_words

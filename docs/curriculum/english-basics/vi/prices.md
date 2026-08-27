@@ -23,6 +23,10 @@ vocab:
   - { word: "shop", ipa: "/ʃɑːp/", gloss: "cửa hàng" }
   - { word: "bag", ipa: "/bæɡ/", gloss: "túi" }
   - { word: "buy", ipa: "/baɪ/", gloss: "mua" }
+  - { word: "how much", ipa: "/haʊ mʌtʃ/", gloss: "dùng để hỏi giá" }
+  - { word: "this", ipa: "/ðɪs/", gloss: "chỉ món đồ ở gần" }
+  - { word: "that", ipa: "/ðæt/", gloss: "chỉ món đồ ở xa hơn" }
+  - { word: "dollar", ipa: "/ˈdɑːlər/", gloss: "đơn vị tiền tệ dùng trong các mức giá mẫu" }
 steps:
   - type: scene
     title: "Hỏi giá trước khi mua"
@@ -49,7 +53,7 @@ steps:
     id: en-u06-price-context
     kind: dialogue_choice
     prompt: "Bạn chỉ vào chiếc túi ngay cạnh. Câu nào tự nhiên?"
-    choices: ["How much is this bag?", "Who is this bag?", "What time is this bag?"]
+    choices: ["How much is this bag?", "Where is this bag?", "Do you like this bag?"]
     answer: "How much is this bag?"
   - type: practice
     id: en-u06-price-listen

@@ -1,81 +1,84 @@
 ---
-id: en-a1-foundation-04-checkpoint
+id: en-a1-u00-foundation-checkpoint
 track: english-basics
 locale: vi
 slug: foundation-checkpoint
-title: Checkpoint nền tảng tiếng Anh
+title: "Checkpoint nền tảng"
 order: -2
 published: true
 cefr_level: a1
+foundation_focus: integrated
 unit_id: en-a1-foundation-00
 unit_title: "Nền tảng tiếng Anh"
 unit_order: 0
-unit_can_do: "Nghe và tạo được một nhóm âm cơ bản, dùng trọng âm từ và xây câu be nền tảng"
+unit_can_do: "Nghe và xây dựng một nhóm nhỏ từ quen thuộc cùng các mẫu câu tiếng Anh cơ bản"
 unit_role: checkpoint
-can_do: "Chứng minh có thể nghe một đối lập âm cơ bản, nhận ra trọng âm và xây câu be đơn giản trước Unit 1"
-pattern: "sound + stress + be"
+can_do: "Kết hợp tín hiệu phát âm cơ bản với mẫu câu be và mẫu câu hỏi"
+pattern: "nghe → chọn/ghép → trả lời"
 objectives:
-  - Kiểm tra một đối lập âm cơ bản
-  - Kiểm tra trọng âm của từ quen thuộc
-  - Kiểm tra am/is/are trong câu kể và câu hỏi
-vocab:
-  - { word: "seat", ipa: "/siːt/", gloss: "chỗ ngồi" }
-  - { word: "water", ipa: "/ˈwɔːtər/", gloss: "nước" }
-  - { word: "ready", ipa: "/ˈredi/", gloss: "sẵn sàng" }
+  - Kiểm tra khả năng nối âm-cách viết và nhận biết trọng âm từ
+  - Tạo một câu đơn với be
+  - Tạo và trả lời một câu hỏi cơ bản
 steps:
   - type: scene
-    title: "Cổng nền tảng trước bài gặp gỡ"
-    body: "Làm một bài kiểm tra hỗn hợp ngắn. Mục tiêu là âm đủ rõ và câu dùng được, không phải accent hoàn hảo hay thuộc tên ngữ pháp."
-    imageUrl: "/language/scenes/english-be-sentence.svg"
-    imageAlt: "Sơ đồ xây câu tiếng Anh đơn giản với đại từ và các dạng be."
+    title: "Trước cuộc trò chuyện đầu tiên"
+    body: "Dùng công cụ âm và cấu trúc câu cùng lúc. Mục tiêu không phải accent hoàn hảo hay thuộc bảng ngữ pháp, mà là nền tảng nhỏ có thể gọi ra khi giao tiếp."
+    visualKey: "classmates-meeting"
+    imageAlt: "Hai bạn học chuẩn bị cho một cuộc trò chuyện giới thiệu ngắn."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "Are you ready?" }
-      - { speaker: "B", text: "Yes, I am." }
-      - { speaker: "A", text: "Water?" }
-      - { speaker: "B", text: "Yes, water, please." }
+      - { speaker: "A", text: "Hello. I'm Mai. I'm a student." }
+      - { speaker: "B", text: "Hi, Mai. Are you from Hanoi?" }
+      - { speaker: "A", text: "Yes, I am." }
+      - { speaker: "B", text: "Do you like music?" }
+      - { speaker: "A", text: "Yes, I do." }
   - type: listen
-    prompt: "Nghe cả từ và trọng âm của nó."
-    text: "Water, please."
+    prompt: "Nghe một lượt để hiểu ý, rồi nghe lại hello, student và các từ mở đầu câu hỏi Are, Do."
+    text: "Hello. I'm Mai. I'm a student. Are you from Hanoi? Do you like music?"
+  - type: tip
+    title: "Gọi lại mẫu, đừng dịch từng từ"
+    body: "Dùng các khối và khung câu: I'm …, Are you …?, Where are you …?, Do you like …?"
+  - type: teach
+    items:
+      - { form: "hel-LO", reading: "/həˈloʊ/", gloss: "trọng âm từ", example: "Hello, Mai." }
+      - { form: "I'm a student.", reading: "I + am + noun", gloss: "câu be cơ bản", example: "I'm a student." }
+      - { form: "Are you …?", reading: "be + subject", gloss: "câu hỏi yes/no với be", example: "Are you from Hanoi?" }
+      - { form: "Do you like …?", reading: "do + subject + verb", gloss: "câu hỏi yes/no với like", example: "Do you like music?" }
   - type: practice
-    id: en-f00-gate-sound-1
+    id: en-fnd-check-hear-hello
     kind: audio_choice
-    prompt: "Nghe và chọn từ."
-    audioText: "seat"
-    choices: ["sit", "seat", "set"]
-    answer: "seat"
+    prompt: "Mẫu trọng âm nào khớp với từ vừa nghe?"
+    audioText: "hello"
+    choices: ["hel-LO", "HEL-lo"]
+    answer: "hel-LO"
   - type: practice
-    id: en-f00-gate-stress-1
-    kind: meaning_choice
-    prompt: "Mẫu trọng âm đúng của water là gì?"
-    choices: ["WA-ter", "wa-TER", "nhấn đều"]
-    answer: "WA-ter"
+    id: en-fnd-check-build-be
+    kind: order_words
+    prompt: "Ghép câu."
+    tokens: ["student", "a", "I'm"]
+    answer: "I'm a student"
+    acceptedAnswers: ["I'm a student."]
   - type: practice
-    id: en-f00-gate-be-1
-    kind: fill_blank
-    prompt: "Hoàn thành: We ___ ready."
-    choices: ["am", "is", "are"]
-    answer: "are"
+    id: en-fnd-check-build-question
+    kind: order_words
+    prompt: "Ghép câu hỏi."
+    tokens: ["you", "Are", "from", "Hanoi"]
+    answer: "Are you from Hanoi"
+    acceptedAnswers: ["Are you from Hanoi?"]
   - type: checkpoint
     items:
-      - id: en-f00-gate-check-1
-        kind: order_words
-        prompt: "Xây câu hỏi."
-        tokens: ["you", "Are", "ready"]
-        answer: "Are you ready"
-        acceptedAnswers: ["Are you ready?"]
-      - id: en-f00-gate-check-2
-        kind: dialogue_choice
-        prompt: "Có người hỏi “Are you Mai?” Bạn không phải Mai. Câu nào phù hợp?"
-        choices: ["No, I'm not.", "No, I isn't.", "No, you aren't."]
-        answer: "No, I'm not."
+      - id: en-fnd-check-do
+        kind: type_answer
+        prompt: "Hoàn thành: “___ you like music?”"
+        answer: "Do"
+      - id: en-fnd-check-am
+        kind: type_answer
+        prompt: "Hoàn thành câu trả lời ngắn: “Yes, I ___.”"
+        answer: "am"
 exercise:
-  type: fill_blank
-  prompt: "Hoàn thành: She ___ here."
-  choices: ["am", "is", "are"]
-  answer: "is"
-  hints:
-    - "She đi với is."
+  type: type_answer
+  prompt: "Hoàn thành: Yes, I ___."
+  answer: "am"
 ---
 
-Qua checkpoint này nghĩa là người học có đủ nền tảng âm và câu để bắt đầu chuỗi giao tiếp.
+Qua checkpoint này nghĩa là người học đã có nền để dùng lại các cấu trúc trong các unit giao tiếp.

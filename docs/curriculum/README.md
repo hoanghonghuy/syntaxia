@@ -15,7 +15,7 @@ docs/curriculum/<track>/<locale>/<slug>.md
 - Language content quality: [`docs/processes/language-content-quality-v3.md`](../processes/language-content-quality-v3.md)
 - Product-level scope/status: [`docs/processes/curriculum-product-completion.md`](../processes/curriculum-product-completion.md)
 
-“Complete” always means complete **within the declared track scope**. A bounded CEFR/HSK/JLPT foundation is not the same claim as full certification-level coverage.
+“Complete” always means complete **within the declared track scope**. A foundation/starter CEFR/HSK/JLPT path is not the same claim as full certification-level coverage.
 
 ## Tracks
 
@@ -27,11 +27,11 @@ docs/curriculum/<track>/<locale>/<slug>.md
 | `html-basics` | IT · basic | Semantic HTML fundamentals, **12** lessons; HTML/CSS sandbox shipped |
 | `css-basics` | IT · basic | CSS fundamentals through Flexbox, **14** lessons; HTML/CSS sandbox shipped |
 | `chinese-hsk` | Languages · foundation | Practical Mandarin Level 1, **Pronunciation Unit 0 + 11 communicative units / 41 nodes per locale** |
-| `english-basics` | Languages · foundation | CEFR A1, **Language Foundation Unit 0 + 8 communicative units / 35 nodes per locale** |
-| `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **9 units / 28 nodes per locale** |
+| `english-basics` | Languages · foundation | CEFR A1 language foundation, **Foundation Unit 0 + 9 communicative units / 43 nodes per locale** |
+| `japanese-jlpt` | Languages · foundation | JLPT N5 practical foundation, **Foundation Unit 0 + 9 communicative units / 35 nodes per locale** |
 | `chinese-it-vocab` | Languages · specialty | Chinese IT workplace mini-course, **6 V3 guided lessons per locale** |
 
-Exact inventories are locked statically and through PostgreSQL-backed release E2E.
+The exact inventories above are locked by static curriculum/language tests and by the PostgreSQL-backed release E2E.
 
 ## SQL Fundamentals (published order)
 
@@ -100,7 +100,7 @@ Full path + polish rules: [`docs/processes/sql-fundamentals-closure.md`](../proc
 
 ## Mandarin foundation entry
 
-The Mandarin core begins with:
+Mandarin begins with five pronunciation nodes before communicative Unit 1:
 
 ```text
 pinyin-syllables
@@ -111,27 +111,56 @@ pinyin-syllables
 → communicative Unit 1
 ```
 
-These nodes use `unit_order: 0` and internal sort orders `-5..-1` without renumbering existing published units.
+These nodes use `unit_order: 0` and internal sort orders `-5..-1` without renumbering existing published units. Returning learners keep their established continuation frontier; inserted earlier foundation nodes remain available for catch-up.
 
 ## English foundation entry
 
-The English core now begins with:
+English begins with a nine-node language foundation before communicative Unit 1:
 
 ```text
 sound-spelling
+→ vowel-contrasts
+→ consonant-clarity
 → word-stress
-→ core-be
+→ sentence-melody
+→ core-sentences
+→ basic-questions
 → foundation-checkpoint
 → foundation-review
 → communicative Unit 1
 ```
 
-Unit 0 introduces listening-before-spelling, intelligible word stress, and the smallest reusable grammar core (`pronouns + am/is/are + negative/question`). Existing Unit 1–8 lesson IDs/orders are unchanged. A returning learner keeps the established continuation frontier while the inserted foundation remains available for catch-up.
+The first five nodes build bounded intelligibility foundations: sound↔spelling, high-value vowel/consonant contrasts, word stress, and sentence melody. The next two establish the minimal productive grammar used by later A1 units (`be`, subject pronouns, simple `be`/wh/`do` question frames). Vocabulary is learned as sound + meaning + spelling + usable chunk rather than a standalone glossary.
+
+These nodes use `unit_order: 0` and internal sort orders `-9..-1` without renumbering published Units 1–8. Unit 9 extends the declared A1 foundation with age, place of residence, and concrete possession language while preserving the existing Unit 1–8 identities. The generic language-frontier logic keeps returning learners on their established continuation path while the inserted foundation remains available for catch-up.
+
+## Japanese foundation entry
+
+Japanese begins with a seven-node foundation before communicative Unit 1:
+
+```text
+kana-sounds
+→ hiragana-patterns
+→ katakana-patterns
+→ mora-length
+→ core-sentences
+→ foundation-checkpoint
+→ foundation-review
+→ communicative Unit 1
+```
+
+The foundation first establishes sound↔kana mapping, then expands hiragana and katakana as readable systems before later tasks depend on them. It makes long-vowel, katakana `ー`, and small-`っ` timing contrasts audible/readable, then introduces a small productive sentence core with `です / ます` plus concrete uses of `は / を / に / で`. High-risk beginner details such as topic `は` pronounced `わ`, object `を` commonly pronounced `お`, and the taught pairs `行く → 行きます` / `飲む → 飲みます` are explained directly rather than left for the learner to infer.
+
+Checkpoint and delayed review mix hiragana, katakana, timing, particle pronunciation and sentence construction so script work is part of the same retrieval loop instead of a disposable alphabet page.
+
+These nodes use `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and exact internal sort orders `-7..-1`. Existing published Units 1–9 keep their IDs/orders. Returning learners are not silently rewound; the earlier foundation remains available for catch-up through the generic language-frontier behavior.
+
+JLPT defines the N5 ability boundary but does not publish an official vocabulary/kanji/grammar syllabus. Open lists used in authoring are provenance/cross-check inputs, not official JLPT authority.
 
 ## Verification
 
 IT curriculum structure/pedagogy is enforced by `scripts/verify-*-v2.mjs` plus the SQL Fundamentals verifier. These gates require the relevant mental/execution model, prediction, worked example, debugging, common mistakes, learner task, recall, exercise/hints/solution, and EN/VI parity for every declared IT lesson.
 
-Language tracks are enforced by Language V3 tests, including exact Mandarin/English/Japanese inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, grammar/foundation progression, and FSRS review identity.
+Language tracks are enforced by Language V3 web tests, including exact **Mandarin 41 / English 43 / Japanese 35** per-locale inventories, specialty Chinese IT contracts, EN/VI assessed-ID parity, learner-frontier compatibility, audio, visuals, feedback, locale quality, English distractor quality, and FSRS review identity.
 
-Release E2E exercises exact runtime inventories, SQL/JavaScript/HTML/CSS sandboxes, progress, notes, and FSRS persistence against PostgreSQL. Go curriculum-backed smoke tests run cold with `go test -count=1` so external curriculum changes cannot be hidden by package test cache.
+Release E2E then exercises exact runtime inventories, built-in track reconciliation for long-lived databases, SQL/JavaScript/HTML/CSS sandboxes, progress, notes, and FSRS persistence against PostgreSQL. Go curriculum-backed smoke tests are run cold with `go test -count=1` so external curriculum changes cannot be hidden by the Go package test cache.

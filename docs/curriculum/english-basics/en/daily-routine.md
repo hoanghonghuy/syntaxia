@@ -23,6 +23,9 @@ vocab:
   - { word: "school", ipa: "/skuːl/", gloss: "place for learning" }
   - { word: "work", ipa: "/wɜːrk/", gloss: "job activity" }
   - { word: "home", ipa: "/hoʊm/", gloss: "place where you live" }
+  - { word: "have breakfast", ipa: "/hæv ˈbrekfəst/", gloss: "eat the first meal of the day" }
+  - { word: "go to school", ipa: "/ɡoʊ tə skuːl/", gloss: "travel to school" }
+  - { word: "then", ipa: "/ðen/", gloss: "introduces the next action in a sequence" }
 steps:
   - type: scene
     title: "Compare two mornings"
@@ -50,7 +53,7 @@ steps:
     id: en-u05-routine-context
     kind: dialogue_choice
     prompt: "Someone asks, “What time do you go to school?” You leave at 8:00. Which reply fits?"
-    choices: ["I go to school at eight.", "School is eight people.", "I am school at eight."]
+    choices: ["I go to school at eight.", "I leave school at eight.", "I go to work at eight."]
     answer: "I go to school at eight."
   - type: practice
     id: en-u05-routine-listen
@@ -78,7 +81,7 @@ steps:
       - id: en-u05-routine-check-question
         kind: dialogue_choice
         prompt: "Which question asks about the time of a routine?"
-        choices: ["What time do you go to school?", "Who is your school?", "How many school?"]
+        choices: ["What time do you go to school?", "Where is your school?", "Who do you go to school with?"]
         answer: "What time do you go to school?"
 exercise:
   type: type_answer

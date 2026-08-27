@@ -51,7 +51,7 @@ steps:
     id: food-dialogue-1
     kind: dialogue_choice
     prompt: "The server asks “What would you like?” You want tea. Which answer is natural?"
-    choices: ["I'd like a tea, please.", "Tea is my friend.", "Who's the tea?"]
+    choices: ["I'd like a tea, please.", "Where is the tea?", "The tea is hot."]
     answer: "I'd like a tea, please."
     explanation: "The request names the item and uses a polite ordering chunk."
   - type: practice
@@ -79,12 +79,12 @@ steps:
       - id: food-check-2
         kind: dialogue_choice
         prompt: "Review: someone asks who the woman in your photo is. She is your mother. What do you say?"
-        choices: ["This is my mother.", "I'd like my mother.", "Room mother?"]
+        choices: ["This is my mother.", "Where is my mother?", "My mother is at home."]
         answer: "This is my mother."
 exercise:
   type: dialogue_choice
   prompt: "Choose the polite café order."
-  choices: ["I'd like water, please.", "Water who?", "This is water friend."]
+  choices: ["I'd like water, please.", "Where is the water?", "The water is cold."]
   answer: "I'd like water, please."
 ---
 

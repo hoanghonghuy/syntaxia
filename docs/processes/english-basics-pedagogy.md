@@ -1,142 +1,81 @@
-# English Basics pedagogy
+# English Basics pedagogy — historical v1 note
 
-## Purpose
+## Status
 
-Define **how Syntaxia teaches English as a target language** on `english-basics`. This is the pedagogy contract behind the CEFR A1 curriculum map; it supersedes the earlier MVP/starter assumptions.
+**Historical / superseded. Do not use this file as the active authoring contract.**
 
-## Product principle
+This document records the original English MVP research cut from 2026-08-02. Decisions such as “5–8 lessons”, “audio later”, “no FSRS”, and generic MCQ/fill-blank exercises have since been replaced by the production Language V3 system.
 
-English is a core language course, not English-for-IT and not a collection of situations with hidden grammar.
+Active source-of-truth files are:
 
-The learner should repeatedly move through:
+1. [`english-basics-a1-map.md`](./english-basics-a1-map.md) — current English A1 scope and foundation-first sequence;
+2. [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md) — current language learning model;
+3. [`language-content-quality-v3.md`](./language-content-quality-v3.md) — current content-quality contract;
+4. [`languages-tracks.md`](./languages-tracks.md) — current cross-language architecture and inventories;
+5. [`curriculum-product-completion.md`](./curriculum-product-completion.md) — current completion/release state.
 
-`sound / stress -> vocabulary -> grammar / sentence pattern -> listening -> interaction -> controlled production -> checkpoint -> delayed retrieval`
+## What remains valid from the original research
 
-Can-Do outcomes still determine what the learner should ultimately be able to do. Pronunciation, vocabulary and grammar are the language system that makes those outcomes possible.
+The original research still contributes several durable constraints:
 
-## Standards
+- target level is **CEFR A1** for `english-basics`;
+- explanations ship in both `en` and `vi`;
+- the course is for general/adult learners rather than copying child-exam scenarios;
+- Cambridge YLE-derived open vocabulary data is a **membership/theme support source**, not the product syllabus or prose source;
+- learner-facing explanations and examples are original Syntaxia content;
+- English remains a `languages` track and does not use IT sandboxes.
 
-Primary proficiency boundary: **CEFR A1**.
+## Current pedagogy
 
-Relevant Council of Europe guidance:
+The current course no longer starts from situations alone. Core English follows:
 
-- A1 uses a very basic repertoire of words and simple phrases for concrete situations.
-- Control is limited to a few simple grammatical structures and sentence patterns.
-- Spoken production is short and often needs pauses/support.
-- Phonological work should aim at intelligibility with a limited familiar repertoire rather than forcing one native accent.
-- Language-specific Reference Level Descriptions make words, grammar, pronunciation/spelling and other forms explicit underneath generic CEFR Can-Do descriptors.
+`pronunciation / sound -> reusable vocabulary/chunks -> minimal productive grammar -> listening -> interaction/speaking -> reading/writing production -> checkpoint -> spaced retrieval`
 
-See [`english-basics-a1-map.md`](./english-basics-a1-map.md) for source links and the current progression matrix.
+The active branch defines **10 units / 43 nodes per locale**:
 
-## Target and explanation languages
+- **Unit 0 — English foundation (9 nodes):** sound↔spelling, vowel contrasts, consonant clarity, word stress, sentence melody, core `be` sentences, basic questions, checkpoint, review;
+- **Units 1–8 (30 existing nodes):** practical CEFR A1 communicative outcomes for meeting people, family, navigation, café ordering, routine/time, shopping, home/location, and free-time planning;
+- **Unit 9 (4 nodes):** `personal-details`, `possessions`, `personal-checkpoint`, `personal-review`, adding age, place of residence, and concrete `have` language that the declared A1 foundation previously lacked.
 
-| Role | Language |
-|------|----------|
-| Target language | English (`en`, speech profile `en-US` for the current product) |
-| Explanation locales | Vietnamese (`vi`) and English (`en`) |
+The pronunciation slice is audio-first and targets intelligibility rather than accent imitation. IPA is support, not a prerequisite alphabet. Shared pronunciation visuals must not contain explanation-locale prose; Vietnamese explanations remain Vietnamese while target English, IPA, and example sentences remain English.
 
-The explanation locale never changes the target answers or stable grading identities.
+All earlier published Unit 1–8 identities/order remain stable so inserting Unit 0 does not invalidate learner progress or FSRS identity. Unit 9 is additive and uses new stable authored assessment IDs rather than renumbering existing content.
 
-## Foundation Unit 0
+## Current lesson contract
 
-Before the eight existing communicative units, English teaches a small explicit foundation:
+A production English node uses the Language V3 player and must include appropriate combinations of:
 
-1. **Sound–spelling awareness** — listen first; use spelling and optional IPA as support.
-2. **Word stress** — recognise and reproduce the strongest beat in familiar words.
-3. **Core `be` sentences** — subject pronouns, `am/is/are`, common contractions, a basic negative and yes/no question.
-4. **Checkpoint** — mixed sound/stress/sentence retrieval.
-5. **Review** — delayed recall before entering Unit 1.
-
-The foundation is intentionally small. It does not dump the full phoneme chart or full English grammar syllabus on a beginner.
-
-## Communicative units
-
-The existing eight units remain the core everyday A1 path:
-
-1. first meeting;
-2. people/family;
-3. numbers and finding a place;
-4. café ordering;
-5. time and daily routine;
-6. shopping;
-7. home and object location;
-8. hobbies and a simple invitation/plan.
-
-Each unit introduces a small vocabulary set and one or more reusable sentence patterns, then requires the learner to hear, understand and produce them.
-
-## Vocabulary policy
-
-- Prefer high-frequency, familiar beginner vocabulary supported by the cited YLE-derived open dataset when choosing between alternatives.
-- Reuse known words before adding synonyms.
-- Teach words in a sentence/action, not as a detached glossary.
-- Keep functional chunks (`I'd like …`, `Where's …?`, `Do you want to …?`) intact when that is how a beginner can actually use them.
-- Do not copy Cambridge tasks, textbook paragraphs or proprietary example sets.
-
-## Grammar policy
-
-Grammar must be **explicit but light**:
-
-- name the usable pattern in learner-friendly language;
-- show the form in a mental model/example;
-- contrast a likely error when useful;
-- require the pattern in listening or interaction;
-- require controlled production;
-- retrieve it later through checkpoint/review.
-
-Do not make the learner infer core grammar accidentally, but do not turn a lesson into a long terminology lecture either.
-
-Current progression includes `be`, contractions, `this/that`, `he/she`, location questions, polite `would like` chunks, present-simple routine questions with `do`, `there is/are`, concrete prepositions, preference questions and invitation patterns.
-
-## Pronunciation policy
-
-- Goal: **intelligibility**, not accent erasure.
-- Audio comes before spelling assumptions when they conflict.
-- IPA is optional support, not a memorisation target.
-- Start with a very limited set of useful contrasts and familiar word stress.
-- Encourage imitation/repetition of short target chunks.
-- Do not grade a learner against one native accent.
-
-## Language V3 lesson shape
-
-A published node should normally contain:
-
-- semantic scene/visual context;
-- target-language dialogue;
-- a listen step;
-- a teach/tip stage that exposes the sound, vocabulary or grammar pattern;
-- semantic practice (`audio_choice`, `dialogue_choice`, `order_words`, `fill_blank`, `type_answer`, etc.);
-- controlled production;
+- semantic/app-owned scene or learning visual;
+- target-language listening;
+- dialogue/context;
+- teaching/notice step;
+- semantic practice rather than generic authored MCQ as the default;
+- controlled recall or production;
 - checkpoint;
-- stable authored IDs for FSRS review.
+- stable assessed IDs for FSRS;
+- EN/VI intent and identity parity;
+- locale-pure learner-facing explanation copy.
 
-Generic authored `mcq` is not the default when a more meaningful exercise type exists.
+Normal communicative lesson nodes must contain enough lexical/chunk material to accomplish their Can-Do. Focused pronunciation nodes are judged by meaningful sound coverage and listening/production evidence instead of arbitrary vocabulary quotas.
 
-## Progress and backward compatibility
+Learner-facing distractors must also test meaning, listening, or speech act—not the ability to spot broken English. The final communicative-content audit replaced legacy word-salad/implausible distractors with grammatical, plausible alternatives and `test:english-distractor-quality` regression-locks those removals through the canonical Language V3 gate.
 
-Published lesson identities are stable. Adding Unit 0 uses negative internal sort orders and `unit_order: 0` without renumbering Units 1–8.
+Audio/TTS, delayed review, FSRS persistence, semantic visuals, structured feedback, and unit paths are now shipped product capabilities rather than deferred ideas.
 
-A new learner starts from Unit 0. A returning learner who already progressed in the historical course keeps the established Continue frontier; Unit 0 remains available for catch-up instead of silently rewinding them.
+## Standards lineage
 
-## Current declared scope
+Current standards treatment is documented in [`english-basics-a1-map.md`](./english-basics-a1-map.md). In particular:
 
-**9 units / 35 nodes per locale**:
+- Council of Europe CEFR/Companion Volume sets the A1 ability and phonological/linguistic competence boundary;
+- CEFR is not treated as a ready-made grammar/vocabulary syllabus;
+- open YLE vocabulary sources constrain/support beginner lexical choices;
+- Syntaxia authors the sequencing, explanations, examples, and assessments for the declared product scope.
 
-- 5 Foundation Unit 0 nodes;
-- 30 existing nodes across 8 communicative units.
+The declared 10-unit / 43-node product is a bounded practical A1 foundation. It is not a claim of exhaustive CEFR A1 descriptor coverage, complete English grammar/phonology, or exam preparation.
 
-This is a bounded CEFR A1 foundation. It is not exhaustive CEFR A1, a full pronunciation course, a full grammar reference, or an exam-preparation product.
+## Historical context
 
-## Verification
-
-```bash
-cd apps/web
-npm run test:english-basics
-npm run test:language-v3
-npm run test:language-audio
-npm run test:language-review
-```
-
-The canonical DB-backed release gate additionally verifies exact 35-node runtime inventory, Unit 0 serialization/order, progress/notes persistence and an English FSRS card from a stable authored ID.
+The original archived implementation change remains under `openspec/changes/archive/english-basics-mvp/`. It explains how the first English slice entered the product, but it must not override the current Language V3 map or quality gates.
 
 ## Related
 
@@ -144,3 +83,4 @@ The canonical DB-backed release gate additionally verifies exact 35-node runtime
 - [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
 - [`language-content-quality-v3.md`](./language-content-quality-v3.md)
 - [`languages-tracks.md`](./languages-tracks.md)
+- [`curriculum-product-completion.md`](./curriculum-product-completion.md)

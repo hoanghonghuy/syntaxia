@@ -23,6 +23,10 @@ vocab:
   - { word: "read", ipa: "/riːd/", gloss: "look at and understand written words" }
   - { word: "music", ipa: "/ˈmjuːzɪk/", gloss: "music" }
   - { word: "game", ipa: "/ɡeɪm/", gloss: "activity with rules for fun" }
+  - { word: "like", ipa: "/laɪk/", gloss: "enjoy or have a positive preference for something" }
+  - { word: "do you like", ipa: "/duː ju laɪk/", gloss: "asks about another person's preference" }
+  - { word: "yes, I do", ipa: "/jes aɪ duː/", gloss: "short positive answer to a do-question" }
+  - { word: "no, I don't", ipa: "/noʊ aɪ doʊnt/", gloss: "short negative answer to a do-question" }
 steps:
   - type: scene
     title: "Find something you both like"
@@ -50,7 +54,7 @@ steps:
     id: en-u08-hobby-context
     kind: dialogue_choice
     prompt: "A classmate asks what you enjoy. Which reply is natural?"
-    choices: ["I like music.", "Music is at eight.", "How much music?"]
+    choices: ["I like music.", "I listen to music after class.", "Do you like music?"]
     answer: "I like music."
   - type: practice
     id: en-u08-hobby-listen
@@ -72,7 +76,7 @@ steps:
       - id: en-u08-hobby-check-question
         kind: dialogue_choice
         prompt: "Which question asks about a preference?"
-        choices: ["Do you like games?", "Where are games?", "How much are games?"]
+        choices: ["Do you like games?", "What games do you play?", "Where do you play games?"]
         answer: "Do you like games?"
       - id: en-u08-hobby-check-yes
         kind: dialogue_choice

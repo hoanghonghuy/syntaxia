@@ -51,7 +51,7 @@ steps:
     id: family-dialogue-1
     kind: dialogue_choice
     prompt: "Someone points to a woman in your family photo and asks “Who's this?” She is your mother. What do you say?"
-    choices: ["This is my mother.", "She's this mother.", "Who is my mother?"]
+    choices: ["This is my mother.", "She's my friend.", "Where is my mother?"]
     answer: "This is my mother."
   - type: practice
     id: family-build-1
@@ -77,13 +77,13 @@ steps:
         answer: "my brother"
       - id: family-check-2
         kind: dialogue_choice
-        prompt: "Review: a staff member says “Room seven.” How can you confirm it?"
-        choices: ["Room seven?", "Who's seven?", "This is seven."]
-        answer: "Room seven?"
+        prompt: "Review: you introduce your friend Linh. Which sentence works?"
+        choices: ["This is Linh.", "I'm Linh.", "Who's Linh?"]
+        answer: "This is Linh."
 exercise:
   type: dialogue_choice
   prompt: "Choose the natural family introduction."
-  choices: ["This is my sister.", "My this sister.", "Who sister my?"]
+  choices: ["This is my sister.", "Where is my sister?", "Is she your sister?"]
   answer: "This is my sister."
 ---
 

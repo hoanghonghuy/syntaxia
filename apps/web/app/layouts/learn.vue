@@ -127,13 +127,17 @@ const { navOpen, isNarrow, syncViewport, toggleNav, closeNav } = useLearnNav()
 const inTrackContext = computed(() => Boolean(route.params.track))
 
 async function bootstrap() {
-  await catalog.loadTracks()
-  const trackId = route.params.track as string | undefined
-  if (trackId) {
-    await catalog.loadLessons(trackId, locale.value)
+  try {
+    await catalog.loadTracks()
+    const trackId = route.params.track as string | undefined
+    if (trackId) {
+      await catalog.loadLessons(trackId, locale.value)
+    }
+    await auth.fetchMe()
+    if (auth.user) await catalog.loadProgress()
+  } catch {
+    // Route pages own the visible catalog error/retry state; the layout must not crash them.
   }
-  await auth.fetchMe()
-  if (auth.user) await catalog.loadProgress()
 }
 
 onMounted(() => {
@@ -164,7 +168,12 @@ watch(inTrackContext, (inTrack) => {
 watch(
   () => [route.params.track, locale.value] as const,
   async ([trackId, loc]) => {
-    if (trackId) await catalog.loadLessons(String(trackId), loc)
+    if (!trackId) return
+    try {
+      await catalog.loadLessons(String(trackId), loc)
+    } catch {
+      // The active route renders the shared catalog error state and retry action.
+    }
   },
 )
 </script>

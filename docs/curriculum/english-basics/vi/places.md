@@ -52,14 +52,14 @@ steps:
     id: places-dialogue-1
     kind: dialogue_choice
     prompt: "Bạn cần tìm quán cà phê. Câu nào hỏi đúng vị trí của quán?"
-    choices: ["Where's the café?", "Who's the café?", "I'd like the café."]
+    choices: ["Where's the café?", "Is the café open?", "I'd like a coffee."]
     answer: "Where's the café?"
   - type: practice
     id: places-listen-1
     kind: audio_choice
     prompt: "Nghe. Cửa hàng ở đâu?"
     audioText: "The shop is here."
-    choices: ["here", "over there", "eight"]
+    choices: ["here", "over there", "in room eight"]
     answer: "here"
   - type: practice
     id: places-produce-1
@@ -74,17 +74,17 @@ steps:
       - id: places-check-1
         kind: dialogue_choice
         prompt: "Có người hỏi “Where's the shop?” Cửa hàng ở ngay cạnh bạn. Câu trả lời ngắn hữu ích nhất là gì?"
-        choices: ["It's here.", "She's my friend.", "Room five?"]
+        choices: ["It's here.", "It's open now.", "I like this shop."]
         answer: "It's here."
       - id: places-check-2
         kind: dialogue_choice
-        prompt: "Ôn lại: ở quán, cách lịch sự để gọi trà là gì?"
-        choices: ["I'd like a tea, please.", "Where's tea?", "This is my tea friend."]
-        answer: "I'd like a tea, please."
+        prompt: "Ôn lại: nhân viên nói “Room five.” Bạn xác nhận lại thế nào?"
+        choices: ["Room five?", "Where is room five?", "Room five is upstairs."]
+        answer: "Room five?"
 exercise:
   type: dialogue_choice
   prompt: "Chọn câu hỏi dùng để hỏi vị trí một địa điểm."
-  choices: ["Where's the park?", "Who's the park?", "What number park?"]
+  choices: ["Where's the park?", "Is the park open?", "Do you like the park?"]
   answer: "Where's the park?"
 ---
 

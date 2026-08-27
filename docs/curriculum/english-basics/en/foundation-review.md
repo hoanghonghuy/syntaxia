@@ -1,82 +1,86 @@
 ---
-id: en-a1-foundation-05-review
+id: en-a1-u00-foundation-review
 track: english-basics
 locale: en
 slug: foundation-review
-title: Retrieve the English foundations
+title: "Foundation review"
 order: -1
 published: true
 cefr_level: a1
+foundation_focus: integrated
 unit_id: en-a1-foundation-00
-unit_title: "English foundations"
+unit_title: "English foundation"
 unit_order: 0
-unit_can_do: "Hear and produce a small beginner sound set, use word stress, and build core be-sentences"
+unit_can_do: "Hear and build a small set of familiar English words and basic sentence patterns"
 unit_role: review
-can_do: "Retrieve the key sound, stress, and be-sentence patterns without rereading the lessons"
-pattern: "listen → recall → produce"
+can_do: "Retrieve core sound, stress, be, and question patterns without rereading the lesson"
+pattern: "retrieve → produce → continue"
 objectives:
-  - Retrieve a familiar sound contrast from audio
-  - Recall one common word-stress pattern
-  - Produce a short be-sentence from memory
-vocab:
-  - { word: "sit", ipa: "/sɪt/", gloss: "be seated" }
-  - { word: "hotel", ipa: "/hoʊˈtel/", gloss: "a place to stay" }
-  - { word: "here", ipa: "/hɪr/", gloss: "at this place" }
+  - Recall familiar pronunciation cues from memory
+  - Rebuild basic be and question frames
+  - Prepare for delayed FSRS retrieval in later sessions
 steps:
   - type: scene
-    title: "No notes first"
-    body: "Try the first answer from memory. If you miss it, use the feedback and repeat the target aloud once before continuing."
-    imageUrl: "/language/scenes/english-word-stress.svg"
-    imageAlt: "A word-stress beat diagram used as a visual cue for retrieval practice."
+    title: "Recall before you continue"
+    body: "Try the language from memory first. If you hesitate, use the hint and then produce the whole phrase again."
+    visualKey: "classmates-meeting"
+    imageAlt: "Two classmates continue a simple conversation using familiar beginner sentence frames."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "Are they here?" }
-      - { speaker: "B", text: "No, they aren't." }
-      - { speaker: "A", text: "Is Mai here?" }
-      - { speaker: "B", text: "Yes, she is." }
+      - { speaker: "A", text: "Hi. I'm Mai." }
+      - { speaker: "B", text: "Hi, Mai. Are you a student?" }
+      - { speaker: "A", text: "Yes, I am." }
+      - { speaker: "B", text: "Where are you from?" }
+      - { speaker: "A", text: "I'm from Hanoi." }
   - type: listen
-    prompt: "Listen once, then answer without looking back."
-    text: "Are they here? No, they aren't."
+    prompt: "Listen once. Then repeat the short exchange without looking at the text."
+    text: "Hi. I'm Mai. Are you a student? Yes, I am. Where are you from? I'm from Hanoi."
+  - type: tip
+    title: "Accuracy grows through retrieval"
+    body: "A1 control is limited by design. Recalling a small set of useful forms reliably is more valuable than recognising a long grammar list once."
+  - type: teach
+    items:
+      - { form: "I'm …", reading: "/aɪm/", gloss: "subject + be", example: "I'm Mai." }
+      - { form: "Are you …?", reading: "/ɑr juː/", gloss: "be question", example: "Are you a student?" }
+      - { form: "Where are you from?", reading: "/wer ɑr juː frəm/", gloss: "origin question", example: "Where are you from?" }
   - type: practice
-    id: en-f00-review-sound-1
+    id: en-fnd-review-hear
     kind: audio_choice
-    prompt: "Listen. Which word do you hear?"
-    audioText: "sit"
-    choices: ["sit", "seat", "set"]
-    answer: "sit"
+    prompt: "Which written word matches the audio?"
+    audioText: "meet"
+    choices: ["meet", "met", "mate"]
+    answer: "meet"
   - type: practice
-    id: en-f00-review-stress-1
-    kind: meaning_choice
-    prompt: "Where is the main stress in hotel?"
-    choices: ["first syllable", "second syllable", "both equally"]
-    answer: "second syllable"
-  - type: practice
-    id: en-f00-review-produce-1
+    id: en-fnd-review-be
     kind: type_answer
-    prompt: "Write one short sentence: Mai is here. Use the contraction She's."
-    answer: "She's here"
-    acceptedAnswers: ["She's here."]
+    prompt: "Complete: “She ___ a teacher.”"
+    answer: "is"
     hints:
-      - "Use She's + place word."
+      - "The subject is she."
+      - "Use the third-person singular form of be."
+  - type: practice
+    id: en-fnd-review-question
+    kind: order_words
+    prompt: "Build the origin question."
+    tokens: ["you", "from", "Where", "are"]
+    answer: "Where are you from"
+    acceptedAnswers: ["Where are you from?"]
   - type: checkpoint
     items:
-      - id: en-f00-review-check-1
+      - id: en-fnd-review-check-do
+        kind: type_answer
+        prompt: "Complete: “___ you like coffee?”"
+        answer: "Do"
+      - id: en-fnd-review-check-answer
         kind: dialogue_choice
-        prompt: "“Are you Alex?” You are Alex. Choose the reply."
-        choices: ["Yes, I am.", "Yes, I is.", "Yes, you are."]
+        prompt: "Someone asks “Are you a student?” Choose the short positive answer."
+        choices: ["Yes, I am.", "Yes, I do.", "Yes, I is."]
         answer: "Yes, I am."
-      - id: en-f00-review-check-2
-        kind: fill_blank
-        prompt: "Complete: They ___ not here."
-        choices: ["am", "is", "are"]
-        answer: "are"
 exercise:
   type: dialogue_choice
-  prompt: "Choose the correct reply to “Is she here?”"
-  choices: ["Yes, she is.", "Yes, she are.", "Yes, I am."]
-  answer: "Yes, she is."
-  hints:
-    - "The subject is she."
+  prompt: "Choose the correct answer to “Are you a student?”"
+  choices: ["Yes, I am.", "Yes, I do.", "Yes, I are."]
+  answer: "Yes, I am."
 ---
 
-This review closes Foundation Unit 0 and hands the learner into the existing first-meeting unit without changing any published IDs there.
+This review closes Unit 0 and feeds stable assessed identities into the same FSRS path used by later English units.

@@ -65,7 +65,7 @@ steps:
       - id: en-u05-review-then
         kind: dialogue_choice
         prompt: "Which phrase naturally moves to the next routine action?"
-        choices: ["Then I …", "Who I …", "At then …"]
+        choices: ["Then I …", "Before that, I …", "What time do you …?"]
         answer: "Then I …"
 exercise:
   type: type_answer

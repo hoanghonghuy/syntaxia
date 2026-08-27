@@ -42,7 +42,7 @@ steps:
     id: en-u02-check-reply
     kind: dialogue_choice
     prompt: "Có người hỏi “Who's that?” Anna là bạn của bạn. Câu nào tự nhiên?"
-    choices: ["That's Anna. She's my friend.", "This friend is who?", "Anna is room five."]
+    choices: ["That's Anna. She's my friend.", "Is Anna your friend?", "Where is Anna?"]
     answer: "That's Anna. She's my friend."
     explanation: "Xác định người đó trước rồi nói thêm mối quan hệ."
   - type: practice
@@ -58,7 +58,7 @@ steps:
       - id: en-u02-check-question
         kind: dialogue_choice
         prompt: "Câu nào dùng để hỏi một người là ai?"
-        choices: ["Who's that?", "Where's that?", "How many is that?"]
+        choices: ["Who's that?", "Where is that person?", "What is that?"]
         answer: "Who's that?"
       - id: en-u02-check-family
         kind: meaning_choice

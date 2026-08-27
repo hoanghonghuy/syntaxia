@@ -29,8 +29,10 @@ vocab:
   - { hanzi: "很", pinyin: "hěn", gloss: "very / linking adverb" }
 steps:
   - type: scene
-    title: "Situation"
-    body: "You compare two objects and check whether the water is hot or cold."
+    title: "See the contrast, then build the description"
+    body: "Compare big with small and hot with cold. Then use the same three-part frame to describe something naturally: subject + 很 + adjective."
+    imageUrl: "/language/scenes/mandarin-adjective-contrasts.svg"
+    imageAlt: "A large circle contrasts with a small circle beside 大 and 小; hot and cold symbols contrast beside 热 and 冷; below, 水 points to 很 and then 冷 to show the frame 水很冷."
   - type: dialogue
     lines:
       - { speaker: "A", text: "这个大吗？", reading: "zhè ge dà ma" }

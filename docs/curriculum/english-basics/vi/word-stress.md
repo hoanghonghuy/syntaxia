@@ -1,93 +1,91 @@
 ---
-id: en-a1-foundation-02-word-stress
+id: en-a1-u00-word-stress
 track: english-basics
 locale: vi
 slug: word-stress
-title: Nghe nhịp mạnh trong từ quen thuộc
-order: -4
+title: "Đặt trọng âm đúng âm tiết"
+order: -6
 published: true
 cefr_level: a1
+foundation_focus: pronunciation
 unit_id: en-a1-foundation-00
 unit_title: "Nền tảng tiếng Anh"
 unit_order: 0
-unit_can_do: "Nghe và tạo được một nhóm âm cơ bản, dùng trọng âm từ và xây câu be nền tảng"
+unit_can_do: "Nghe và xây dựng một nhóm nhỏ từ quen thuộc cùng các mẫu câu tiếng Anh cơ bản"
 unit_role: lesson
-can_do: "Nhận biết và phát lại trọng âm chính của một nhóm từ/cụm A1 quen thuộc"
-pattern: "strong beat + weaker beat"
+can_do: "Nghe và tái tạo trọng âm chính trong một số từ hai âm tiết quen thuộc"
+pattern: "một âm tiết mạnh hơn"
 objectives:
-  - Nhận ra một âm tiết thường nổi bật hơn trong từ nhiều âm tiết
-  - Bắt chước trọng âm của các từ đầu vào quen thuộc
-  - Giữ cụm ngắn dễ hiểu mà không cố xoá giọng cá nhân
+  - Nghe ra các âm tiết không phải lúc nào cũng mạnh như nhau
+  - Phát lại trọng âm chính trong các từ cơ bản quen thuộc
+  - Học trọng âm như một phần của từ mới
 vocab:
-  - { word: "table", ipa: "/ˈteɪbəl/", gloss: "cái bàn" }
-  - { word: "water", ipa: "/ˈwɔːtər/", gloss: "nước" }
+  - { word: "hello", ipa: "/həˈloʊ/", gloss: "lời chào" }
+  - { word: "teacher", ipa: "/ˈtiːtʃər/", gloss: "giáo viên" }
   - { word: "coffee", ipa: "/ˈkɔːfi/", gloss: "cà phê" }
-  - { word: "hotel", ipa: "/hoʊˈtel/", gloss: "khách sạn" }
 steps:
   - type: scene
-    title: "Gõ vào nhịp mạnh"
-    body: "Không đọc mọi âm tiết mạnh như nhau. Hãy nghe âm tiết nổi bật nhất và gõ một nhịp vào nó."
+    title: "Tìm nhịp chính"
+    body: "Nghe âm tiết rõ và mạnh hơn. Trọng âm từ giúp những từ quen thuộc vẫn dễ hiểu khi nói."
     imageUrl: "/language/scenes/english-word-stress.svg"
-    imageAlt: "Sơ đồ nhịp cho thấy trọng âm đầu trong table và water."
+    imageAlt: "Các từ hello, teacher và coffee hiển thị một âm tiết lớn và mạnh hơn âm tiết còn lại."
   - type: dialogue
     lines:
-      - { speaker: "A", text: "Water?" }
-      - { speaker: "B", text: "Yes, water, please." }
-      - { speaker: "A", text: "Coffee too?" }
-      - { speaker: "B", text: "No, just water." }
+      - { speaker: "A", text: "Hello. I'm Mia." }
+      - { speaker: "B", text: "Hello, Mia. I'm your teacher." }
+      - { speaker: "A", text: "Nice to meet you." }
   - type: listen
-    prompt: "Nghe nhịp đầu nổi bật trong water và coffee."
-    text: "Water and coffee."
+    prompt: "Nghe âm tiết mang trọng âm trong từng từ."
+    text: "hello, teacher, coffee"
   - type: tip
-    title: "Mục tiêu là dễ hiểu"
-    body: "Ở A1 không cần bắt chước hoàn hảo một accent. Chỉ cần từ quen thuộc đủ rõ bằng cách đặt đúng trọng âm chính và làm các âm tiết còn lại nhẹ hơn."
+    title: "Trọng âm là một phần của từ"
+    body: "Không làm mọi âm tiết mạnh ngang nhau. Học nhịp của từ cùng với cách viết và nghĩa."
   - type: teach
     items:
-      - { form: "TA-ble", reading: "/ˈteɪbəl/", gloss: "nhấn âm tiết đầu", example: "The table is here." }
-      - { form: "WA-ter", reading: "/ˈwɔːtər/", gloss: "nhấn âm tiết đầu", example: "Water, please." }
-      - { form: "ho-TEL", reading: "/hoʊˈtel/", gloss: "nhấn âm tiết hai", example: "The hotel is over there." }
+      - { form: "hello", reading: "hel-LO", gloss: "nhấn âm tiết thứ hai", example: "Hello, Mia." }
+      - { form: "teacher", reading: "TEA-cher", gloss: "nhấn âm tiết thứ nhất", example: "I'm a teacher." }
+      - { form: "coffee", reading: "COF-fee", gloss: "nhấn âm tiết thứ nhất", example: "Coffee, please." }
   - type: practice
-    id: en-f00-stress-listen-1
+    id: en-fnd-stress-hello
     kind: audio_choice
-    prompt: "Nghe. Mẫu trọng âm nào đúng?"
-    audioText: "hotel"
-    choices: ["HO-tel", "ho-TEL", "ho-tel đều nhau"]
-    answer: "ho-TEL"
-    explanation: "Hotel có trọng âm chính ở âm tiết thứ hai."
+    prompt: "Mẫu trọng âm nào khớp với hello?"
+    audioText: "hello"
+    choices: ["hel-LO", "HEL-lo", "hel-lo ngang nhau"]
+    answer: "hel-LO"
+    explanation: "Âm tiết thứ hai mang trọng âm chính."
   - type: practice
-    id: en-f00-stress-context-1
-    kind: meaning_choice
-    prompt: "Cách viết nào thể hiện đúng trọng âm của coffee?"
-    choices: ["COF-fee", "cof-FEE", "cof-fee đều nhau"]
-    answer: "COF-fee"
+    id: en-fnd-stress-teacher
+    kind: audio_choice
+    prompt: "Mẫu trọng âm nào khớp với teacher?"
+    audioText: "teacher"
+    choices: ["TEA-cher", "tea-CHER", "tea-cher ngang nhau"]
+    answer: "TEA-cher"
   - type: practice
-    id: en-f00-stress-produce-1
+    id: en-fnd-stress-type-coffee
     kind: type_answer
-    prompt: "Viết mẫu trọng âm của table bằng chữ hoa ở âm tiết mạnh."
-    answer: "TA-ble"
-    acceptedAnswers: ["TAble", "TA ble"]
+    prompt: "Gõ từ vừa nghe."
+    audioText: "coffee"
+    answer: "coffee"
     hints:
       - "Âm tiết đầu mạnh hơn."
+      - "Đây là một loại đồ uống quen thuộc."
   - type: checkpoint
     items:
-      - id: en-f00-stress-check-1
+      - id: en-fnd-stress-check-hello
         kind: audio_choice
-        prompt: "Nghe. Nhịp mạnh ở đâu?"
-        audioText: "water"
-        choices: ["âm tiết đầu", "âm tiết hai", "không có âm tiết nào"]
-        answer: "âm tiết đầu"
-      - id: en-f00-stress-check-2
-        kind: meaning_choice
-        prompt: "Ở A1 điều gì quan trọng nhất?"
-        choices: ["Làm từ quen thuộc đủ dễ hiểu.", "Bắt chước hoàn hảo một accent.", "Nhấn mọi âm tiết như nhau."]
-        answer: "Làm từ quen thuộc đủ dễ hiểu."
+        prompt: "Chọn trọng âm tự nhiên cho hello."
+        audioText: "hello"
+        choices: ["hel-LO", "HEL-lo"]
+        answer: "hel-LO"
+      - id: en-fnd-stress-check-teacher
+        kind: type_answer
+        prompt: "Gõ từ chỉ nghề nghiệp vừa nghe."
+        audioText: "teacher"
+        answer: "teacher"
 exercise:
-  type: meaning_choice
-  prompt: "Chọn trọng âm đúng của hotel."
-  choices: ["HO-tel", "ho-TEL", "nhấn đều"]
-  answer: "ho-TEL"
-  hints:
-    - "Nghe âm tiết hai mạnh hơn."
+  type: type_answer
+  prompt: "Gõ từ vừa nghe: teacher."
+  answer: "teacher"
 ---
 
-Trọng âm được dạy như công cụ nghe-nói để dễ hiểu, không phải cuộc thi bắt chước accent.
+Bài này coi trọng âm là một phần của vốn từ, không phải phần trang trí phát âm.

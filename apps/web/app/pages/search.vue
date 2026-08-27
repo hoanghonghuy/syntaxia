@@ -68,11 +68,21 @@
           <ul class="nav-list">
             <li v-for="lesson in hits.lessons" :key="lesson.id">
               <NuxtLink
+                v-if="lessonClickable(lesson)"
                 class="nav-link"
                 :to="localePath(`/tracks/${lesson.trackId}/lessons/${lesson.slug}`)"
               >
                 {{ lesson.title }}
               </NuxtLink>
+              <div
+                v-else
+                class="nav-link search-lesson-locked"
+                :aria-disabled="true"
+                :aria-label="`${lesson.title}. ${t('lesson.unitLocked')}`"
+              >
+                {{ lesson.title }}
+                <span aria-hidden="true">·</span>
+              </div>
             </li>
           </ul>
         </section>
@@ -82,8 +92,10 @@
 </template>
 
 <script setup lang="ts">
+import type { LessonSummary } from '~/types/api'
 import { buildHubBreadcrumbs } from '~/utils/breadcrumbs'
 import { filterCatalog, normalizeQuery } from '~/utils/catalogSearch'
+import { isLanguageTrack as trackIsLanguage } from '~/utils/languageLesson'
 import {
   LEARNING_DOMAIN_IDS,
   isLearningDomainId,
@@ -91,6 +103,7 @@ import {
   readStoredDomain,
   writeStoredDomain,
 } from '~/utils/learningDomains'
+import { buildLanguageUnits } from '~/utils/languageUnits'
 import { shouldShowSkeleton } from '~/utils/softLoading'
 
 definePageMeta({ layout: 'learn' })
@@ -99,6 +112,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const catalog = useCatalogStore()
+const auth = useAuthStore()
 const loading = ref(true)
 const query = ref('')
 const inputEl = ref<HTMLInputElement | null>(null)
@@ -132,6 +146,28 @@ const hits = computed(() =>
 
 const hasHits = computed(() => hits.value.tracks.length > 0 || hits.value.lessons.length > 0)
 
+const languageNodesByTrack = computed(() => {
+  const result = new Map<string, Map<string, boolean>>()
+  for (const track of catalog.tracks) {
+    if (!trackIsLanguage(track.id, track.category)) continue
+    const lessons = catalog.lessonsByTrack[track.id] || []
+    const nodes = buildLanguageUnits(
+      lessons,
+      catalog.progress,
+      locale.value,
+      { unlockAll: !auth.user || !catalog.progressLoaded },
+    ).flatMap((unit) => unit.nodes)
+    result.set(track.id, new Map(nodes.map((node) => [node.id, node.clickable])))
+  }
+  return result
+})
+
+function lessonClickable(lesson: LessonSummary): boolean {
+  const track = catalog.tracks.find((candidate) => candidate.id === lesson.trackId)
+  if (!trackIsLanguage(lesson.trackId, track?.category)) return true
+  return languageNodesByTrack.value.get(lesson.trackId)?.get(lesson.id) === true
+}
+
 watch(
   domain,
   (d) => {
@@ -142,10 +178,18 @@ watch(
   { immediate: true },
 )
 
+async function loadSearchData(loc: string) {
+  if (auth.user === null) await auth.fetchMe()
+  await catalog.loadCatalogForHome(loc)
+  if (auth.user) await catalog.loadProgress()
+}
+
 async function retryLoad() {
   loading.value = true
   try {
-    await catalog.loadCatalogForHome(locale.value)
+    await loadSearchData(locale.value)
+  } catch {
+    // The catalog store owns the learner-facing error/retry state rendered above.
   } finally {
     loading.value = false
   }
@@ -164,7 +208,9 @@ onMounted(async () => {
 
   loading.value = true
   try {
-    await catalog.loadCatalogForHome(locale.value)
+    await loadSearchData(locale.value)
+  } catch {
+    // Keep search on its in-context catalog error panel instead of escalating a handled request failure.
   } finally {
     loading.value = false
   }
@@ -175,9 +221,24 @@ onMounted(async () => {
 watch(locale, async (loc) => {
   loading.value = true
   try {
-    await catalog.loadCatalogForHome(loc)
+    await loadSearchData(loc)
+  } catch {
+    // Locale reload failures use the same local catalog error/retry state.
   } finally {
     loading.value = false
   }
 })
 </script>
+
+<style scoped>
+.search-lesson-locked {
+  opacity: 0.48;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.search-lesson-locked:hover {
+  background: transparent;
+  color: var(--color-ink-muted);
+}
+</style>

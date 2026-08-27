@@ -65,7 +65,7 @@ steps:
       - id: en-u05-review-then
         kind: dialogue_choice
         prompt: "Cụm nào tự nhiên để chuyển sang hoạt động tiếp theo?"
-        choices: ["Then I …", "Who I …", "At then …"]
+        choices: ["Then I …", "Before that, I …", "What time do you …?"]
         answer: "Then I …"
 exercise:
   type: type_answer

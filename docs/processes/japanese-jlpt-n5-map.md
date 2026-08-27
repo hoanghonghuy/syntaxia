@@ -1,56 +1,92 @@
-# Japanese (JLPT) — N5 foundation map
+# Japanese (JLPT) — N5 practical foundation map
 
 ## Purpose
 
-Define the declared Syntaxia `japanese-jlpt` **N5 foundation course**. The product is organized by communicative outcomes rather than by a grammar checklist or a vocabulary dump.
+Define the declared Syntaxia `japanese-jlpt` N5 foundation. JLPT supplies the ability boundary; Syntaxia supplies an explicit teaching progression so beginners are not dropped directly into situation lessons without kana, sound or grammar prerequisites.
 
-JLPT N5 officially describes the ability to understand some basic Japanese: read typical expressions/sentences in hiragana, katakana, and basic kanji, and pick up necessary information from short, slowly spoken conversations in daily-life and classroom situations. JLPT does **not** publish an official vocabulary list.
+JLPT N5 officially describes the ability to understand some basic Japanese: read typical expressions/sentences written in hiragana, katakana and basic kanji, and obtain necessary information from short, slowly spoken conversations in daily-life/classroom situations. JLPT explicitly notes that vocabulary and grammar knowledge are required but does not publish an official vocabulary/kanji/grammar syllabus.
 
 ## Sources
 
 | Source | Role |
-|--------|------|
+|---|---|
 | [JLPT official level summary](https://www.jlpt.jp/e/about/levelsummary.html) | Authoritative N5 reading/listening ability boundary |
-| [evanclan/OpenJLPT](https://github.com/evanclan/OpenJLPT) `data/csv/vocab-n5.csv` (CC BY-SA 4.0) | Primary vocabulary membership + readings for authored frontmatter |
-| OpenJLPT [`NOTICE.md`](https://github.com/evanclan/OpenJLPT/blob/main/NOTICE.md) | Attribution and dataset lineage |
-| Jonathan Waller / tanos JLPT lists (CC BY) | Community level assignments underlying OpenJLPT |
+| [JLPT FAQ](https://www.jlpt.jp/e/faq/) | Confirms vocabulary/grammar knowledge matters but no official item-list syllabus is published |
+| [Japan Foundation Irodori Starter](https://www.irodori.jpf.go.jp/starter/pdf.html) | Beginner kana/pronunciation reference; explicitly includes kana, long-vowel and small-っ/long-consonant work |
+| [evanclan/OpenJLPT](https://github.com/evanclan/OpenJLPT) (CC BY-SA 4.0) | Open vocabulary/readings provenance for authored frontmatter; not official JLPT authority |
 
-**Vocabulary rule:** every `vocab[].surface` (or alias) published in this course must match an OpenJLPT N5 `word` entry. Prefer its `reading` when available. The official JLPT descriptor defines the ability target; OpenJLPT defines the open vocabulary-membership source used by Syntaxia.
+## Declared scope — 10 units / 35 nodes per locale
 
-## Declared foundation scope — 9 communicative units / 28 nodes per locale
+### Unit 0 — Japanese foundation
 
-| Unit | Can-Do outcome | Primary mapped N5 vocabulary |
-|-----:|----------------|------------------------------|
-| 1. Polite request | Make one simple polite request and respond | はい, いいえ, ください, どうも |
-| 2. People & family | Identify and introduce a person/family member | 私, あなた, 人, 名前, 友達, お母さん, お父さん, 家族, 兄, 姉 |
-| 3. Numbers | Understand and produce basic numbers in a short exchange | 一, 二, 三, 四, 五, 六, 七, 八, 九, 十 |
-| 4. Café | Request a simple food/drink item | 水, 食べる, 飲む, 御飯, お茶 |
-| 5. Location | Ask where a familiar place is and understand viewpoint words | どこ, ここ, そこ, あそこ, トイレ, 駅, 店 |
-| 6. Daily routine | Ask when someone gets up/goes to bed and answer with a simple time | 朝, 午前, 午後, 起きる, 寝る |
-| 7. Classroom | Follow read/write instructions and ask for repetition | 授業, 宿題, 読む, 書く, 先生, 教室, もう一度 |
-| 8. Train travel | Check a train destination and understand where to get off | 電車, 駅, 乗る, 降りる, 切符, 次, 出る |
-| 9. Free-time plan | State a preference, invite someone, and agree on a simple plan | 好き, 音楽, 映画, スポーツ, 一緒, 日曜日, 暇, 会う |
+| Node | Foundation goal |
+|---|---|
+| `kana-sounds` | Establish direct sound↔kana mapping with the five vowel sounds; avoid pretending five symbols equal script mastery |
+| `hiragana-patterns` | Decode hiragana through recurring sound rows, dakuten, `ん`, and small `ゃ・ゅ・ょ` combinations |
+| `katakana-patterns` | Reuse the same sound system in katakana and read common beginner loanwords without romaji |
+| `mora-length` | Hear/read long-vowel timing, katakana `ー`, and small-`っ` consonant timing |
+| `core-sentences` | Build a minimal productive core with `です / ます`, concrete particle roles, particle pronunciation, and a few taught polite verb pairs |
+| `foundation-checkpoint` | Mix hiragana, katakana, sound timing, particle pronunciation, and grammar retrieval |
+| `foundation-review` | Delayed retrieval before communicative Unit 1 and seed the same FSRS system used later |
 
-Each unit ends in explicit checkpoint and delayed-review nodes. The first five units retain the existing published identities; units 6–9 extend the course without renumbering earlier nodes.
+Unit 0 uses `unit_id: ja-n5-foundation-00`, `unit_order: 0`, and exact internal sort orders `-7..-1`:
+
+```text
+kana-sounds (-7)
+→ hiragana-patterns (-6)
+→ katakana-patterns (-5)
+→ mora-length (-4)
+→ core-sentences (-3)
+→ foundation-checkpoint (-2)
+→ foundation-review (-1)
+→ communicative Unit 1
+```
+
+Published Units 1–9 keep all existing IDs and orders.
+
+### Communicative Units 1–9
+
+| Unit | Can-Do outcome | Primary mapped vocabulary |
+|---:|---|---|
+| 1 | Make one simple polite request and respond | はい, いいえ, ください, どうも |
+| 2 | Identify and introduce a person/family member | 私, あなた, 人, 名前, 友達, お母さん, お父さん, 家族, 兄, 姉 |
+| 3 | Understand and produce basic numbers in context | 一, 二, 三, 四, 五, 六, 七, 八, 九, 十 |
+| 4 | Request a simple food/drink item | 水, 食べる, 飲む, 御飯, お茶 |
+| 5 | Ask where a familiar place is | どこ, ここ, そこ, あそこ, トイレ, 駅, 店 |
+| 6 | Ask/tell a simple daily-routine time | 朝, 午前, 午後, 起きる, 寝る |
+| 7 | Follow read/write classroom instructions and ask for repetition | 授業, 宿題, 読む, 書く, 先生, 教室, もう一度 |
+| 8 | Check a train destination and understand where to get off | 電車, 駅, 乗る, 降りる, 切符, 次, 出る |
+| 9 | State a preference and make a simple free-time plan | 好き, 音楽, 映画, スポーツ, 一緒, 日曜日, 暇, 会う |
+
+## Foundation progression
+
+`kana ↔ sound -> hiragana rows -> katakana rows -> mora/length contrasts -> high-frequency words/chunks -> basic sentence order + particles + polite forms -> listening/speaking -> kana/basic-kanji reading/writing -> checkpoint -> FSRS`
+
+The nine Can-Do units apply this foundation; they are not a substitute for it.
 
 ## Learning contract
 
-A normal learning node follows the Language V3 guided-session model:
+Every published node must:
 
-`scene -> dialogue/listen -> notice/teach -> contextual practice -> controlled production -> checkpoint -> delayed review`
+- include target Japanese audio/listening work;
+- preserve learner-readable `reading` values while reducing dependence on reading support only after the form is taught;
+- reach controlled recall/production (`type_answer`, `listen_type`, `order_words`, or another semantic task);
+- use stable assessed IDs shared across EN/VI;
+- keep natural word order, particles and register;
+- avoid generic authored `mcq` when a more specific task exists;
+- use app-owned semantic visuals where visuals help.
 
-For this N5 foundation specifically:
+Foundation pronunciation is bounded: the product teaches kana-to-sound mapping, hiragana/katakana decoding, mora/length awareness, long vowels and small `っ` needed for beginner reading/listening. It does not claim to be a complete Japanese phonetics or pitch-accent course.
 
-- listening must require extracting a useful detail, not just replaying audio;
-- Japanese lines keep learner-readable `reading` values;
-- assessed items use stable IDs shared by EN/VI explanation locales;
-- production uses Japanese recall (`type_answer`, `listen_type`, or structured production), not generic `mcq` authoring;
-- daily-life and classroom contexts are preferred because they match the official N5 ability description;
-- semantic visuals must be app-owned; external hotlinks are not allowed.
+The grammar foundation is also bounded: it teaches concrete starter frames and explicitly explains high-risk beginner details such as topic `は` being pronounced `わ` and object `を` commonly pronounced `お`. It does not pretend that two polite verb pairs constitute a full conjugation system.
+
+## Vocabulary policy
+
+OpenJLPT remains the project’s open vocabulary/readings provenance for the mapped N5 slice. It must not be described as an official JLPT word list. The official descriptor controls the ability boundary; naturalness and pedagogical usefulness control what Syntaxia actually teaches.
 
 ## Product boundary
 
-This course is a **practical N5 foundation**, not a claim of exhaustive JLPT N5 exam preparation, all 662 OpenJLPT N5 words, every N5 kanji, or every grammar point. Expanding beyond this boundary requires a new mapped scope and explicit exam-preparation design rather than silently redefining “complete”.
+This course is a **practical N5 foundation**, not exhaustive JLPT N5 exam preparation, all vocabulary, every kanji, every grammar point, or certification of speaking/writing proficiency.
 
 ## Verification
 
@@ -58,11 +94,12 @@ This course is a **practical N5 foundation**, not a claim of exhaustive JLPT N5 
 cd apps/web
 npm run test:japanese-jlpt
 npm run test:language-v3
+npm run test:language-locale-quality
 npm run test:language-audio
 npm run test:language-review
 ```
 
-The canonical Product CI additionally verifies exact runtime inventory, progress/notes, cross-domain E2E, and PostgreSQL-backed FSRS persistence.
+Canonical Product CI additionally verifies exact 35-node runtime inventory, EN/VI parity, progress/notes, backward-compatible learner continuation and PostgreSQL-backed FSRS persistence.
 
 ## Related
 

@@ -1,93 +1,93 @@
 ---
-id: en-a1-foundation-01-sound-spelling
+id: en-a1-u00-sound-spelling
 track: english-basics
 locale: vi
 slug: sound-spelling
-title: Nghe âm trước khi tin hoàn toàn vào cách viết
-order: -5
+title: "Nghe từ trước, rồi nối với cách viết"
+order: -9
 published: true
 cefr_level: a1
+foundation_focus: pronunciation
 unit_id: en-a1-foundation-00
 unit_title: "Nền tảng tiếng Anh"
 unit_order: 0
-unit_can_do: "Nghe và tạo được một nhóm âm cơ bản, dùng trọng âm từ và xây câu be nền tảng"
+unit_can_do: "Nghe và xây dựng một nhóm nhỏ từ quen thuộc cùng các mẫu câu tiếng Anh cơ bản"
 unit_role: lesson
-can_do: "Phân biệt và phát lại một nhóm đối lập nguyên âm quen thuộc với hướng dẫn rõ ràng"
-pattern: "spelling → listen → sound"
+can_do: "Nối một từ tiếng Anh quen thuộc với cách viết và ký hiệu âm đơn giản"
+pattern: "âm ↔ từ ↔ cách viết"
 objectives:
-  - Xem chính tả là gợi ý chứ không phải quy tắc phát âm tuyệt đối
-  - Nghe được một đối lập nguyên âm cơ bản trong từ quen thuộc
-  - Dùng IPA như nhãn hỗ trợ nghe, không phải mục tiêu ghi nhớ
+  - Nhận ra chữ viết và âm tiếng Anh có liên hệ nhưng không phải lúc nào cũng một-một
+  - Nghe trước, dùng IPA như công cụ tham khảo chứ không phải bảng chữ cái thứ hai
+  - Nghe và phát lại một nhóm nhỏ từ A1 quen thuộc
 vocab:
-  - { word: "sit", ipa: "/sɪt/", gloss: "ngồi" }
-  - { word: "seat", ipa: "/siːt/", gloss: "chỗ ngồi" }
-  - { word: "live", ipa: "/lɪv/", gloss: "sống ở đâu đó" }
-  - { word: "leave", ipa: "/liːv/", gloss: "rời đi" }
+  - { word: "hi", ipa: "/haɪ/", gloss: "lời chào" }
+  - { word: "meet", ipa: "/miːt/", gloss: "gặp ai đó" }
+  - { word: "name", ipa: "/neɪm/", gloss: "tên" }
+  - { word: "this", ipa: "/ðɪs/", gloss: "chỉ vật/người ở gần" }
 steps:
   - type: scene
-    title: "Nghe trước, nhìn chữ sau"
-    body: "Chính tả tiếng Anh có ích nhưng không phải lúc nào cũng cho biết chính xác âm. Hãy nghe trước, rồi nối âm nghe được với từ viết."
+    title: "Âm trước, chữ sau"
+    body: "Nghe một từ quen thuộc trước. Sau đó nối âm vừa nghe với dạng viết. IPA chỉ là công cụ tham khảo, không phải một hệ chính tả mới cần học thuộc trước."
     imageUrl: "/language/scenes/english-sound-spelling.svg"
-    imageAlt: "Sơ đồ nối hai từ sit và seat với hai nguyên âm nói khác nhau."
+    imageAlt: "Từ meet được nối với phần mô tả âm đơn giản, cho thấy cách viết và phát âm liên quan nhưng không giống hệt nhau."
   - type: dialogue
     lines:
-      - { speaker: "Teacher", text: "Please sit here." }
-      - { speaker: "Learner", text: "This seat?" }
-      - { speaker: "Teacher", text: "Yes. Sit in this seat." }
+      - { speaker: "A", text: "Hi, I'm Mia." }
+      - { speaker: "B", text: "Hi, Mia. Nice to meet you." }
   - type: listen
-    prompt: "Nghe hai nguyên âm khác nhau trong câu."
-    text: "Sit in this seat."
+    prompt: "Nghe trọn từ trước khi nhìn ký hiệu âm."
+    text: "hi, meet, name, this"
   - type: tip
-    title: "Ưu tiên tai nghe"
-    body: "Thói quen quan trọng ở mức đầu là nghe từ, bắt chước, rồi mới nối với cách viết. IPA như /ɪ/ và /iː/ chỉ là nhãn hỗ trợ."
+    title: "Không đọc từng chữ cái"
+    body: "Chính tả tiếng Anh cho gợi ý, nhưng nên học từ như một khối gồm âm + nghĩa + cách viết. Nghe, bắt chước, rồi dùng chữ viết để ghi nhớ."
   - type: teach
     items:
-      - { form: "sit", reading: "/sɪt/", gloss: "nguyên âm ngắn", example: "Please sit here." }
-      - { form: "seat", reading: "/siːt/", gloss: "nguyên âm dài hơn", example: "This seat is free." }
-      - { form: "live / leave", reading: "/lɪv/ · /liːv/", gloss: "một cặp nghe hữu ích khác", example: "I live here. / I leave at eight." }
+      - { form: "hi", reading: "/haɪ/", gloss: "một âm tiết", example: "Hi, I'm Mia." }
+      - { form: "meet", reading: "/miːt/", gloss: "hai chữ e tạo một nguyên âm dài trong từ này", example: "Nice to meet you." }
+      - { form: "name", reading: "/neɪm/", gloss: "chữ e cuối làm thay đổi mẫu nguyên âm trong từ này", example: "My name is Mia." }
   - type: practice
-    id: en-f00-sound-listen-1
+    id: en-fnd-sound-hear-meet
     kind: audio_choice
-    prompt: "Nghe và chọn từ được nói."
-    audioText: "seat"
-    choices: ["sit", "seat", "set"]
-    answer: "seat"
-    explanation: "Nguyên âm là /iː/, như trong seat."
+    prompt: "Nghe và chọn từ viết khớp."
+    audioText: "meet"
+    choices: ["meet", "met", "mate"]
+    answer: "meet"
+    explanation: "Từ mục tiêu là meet /miːt/. Cả ba lựa chọn đều là từ thật, nên cần nghe nguyên âm thay vì tìm một dạng viết rõ ràng sai."
   - type: practice
-    id: en-f00-sound-context-1
-    kind: dialogue_choice
-    prompt: "Có người chỉ vào ghế và nói “This ___ is free.” Từ nào phù hợp?"
-    choices: ["seat", "sit", "leave"]
-    answer: "seat"
-    explanation: "Seat là danh từ chỉ chỗ để ngồi."
+    id: en-fnd-sound-hear-name
+    kind: audio_choice
+    prompt: "Nghe và chọn từ vừa nghe."
+    audioText: "name"
+    choices: ["name", "same", "game"]
+    answer: "name"
+    explanation: "Cả ba lựa chọn đều là từ thật. Hãy nghe phụ âm đầu và ghi nhớ dạng viết chuẩn cùng với dạng nói."
   - type: practice
-    id: en-f00-sound-produce-1
+    id: en-fnd-sound-type-hi
     kind: type_answer
-    prompt: "Viết từ có âm /ɪ/: “Please ___ here.”"
-    answer: "sit"
+    prompt: "Gõ lời chào vừa nghe."
+    audioText: "hi"
+    answer: "hi"
+    acceptedAnswers: ["Hi", "Hi!"]
     hints:
-      - "Động từ cần dùng là /sɪt/."
+      - "Đây là một lời chào ngắn."
+      - "Bắt đầu bằng h."
   - type: checkpoint
     items:
-      - id: en-f00-sound-check-1
+      - id: en-fnd-sound-check-this
         kind: audio_choice
         prompt: "Nghe và chọn từ."
-        audioText: "live"
-        choices: ["live", "leave", "love"]
-        answer: "live"
-      - id: en-f00-sound-check-2
-        kind: meaning_choice
-        prompt: "Thói quen phát âm nào tốt nhất?"
-        choices: ["Nghe trước rồi nối âm với cách viết.", "Chỉ đoán âm từ chính tả.", "Bỏ qua tiếng nói và chỉ đọc thầm."]
-        answer: "Nghe trước rồi nối âm với cách viết."
+        audioText: "this"
+        choices: ["this", "these", "thus"]
+        answer: "this"
+      - id: en-fnd-sound-check-meet
+        kind: type_answer
+        prompt: "Gõ từ vừa nghe."
+        audioText: "meet"
+        answer: "meet"
 exercise:
-  type: audio_choice
-  prompt: "Nghe và chọn từ được nói."
-  audioText: "seat"
-  choices: ["sit", "seat", "set"]
-  answer: "seat"
-  hints:
-    - "Nghe âm /iː/."
+  type: type_answer
+  prompt: "Gõ từ vừa nghe: meet."
+  answer: "meet"
 ---
 
-Bài nền tảng này xây thói quen nghe trước, không cố nhồi toàn bộ hệ thống âm tiếng Anh trong một bài.
+Bài này đặt quy tắc cho phần còn lại của khóa học: học từ bằng âm, nghĩa và cách viết cùng lúc.

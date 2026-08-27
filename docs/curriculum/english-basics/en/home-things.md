@@ -13,7 +13,7 @@ unit_order: 7
 unit_can_do: "Say what is in a familiar room and ask where a common object is"
 unit_role: lesson
 can_do: "Name a few common things in a room and say that one thing is there"
-pattern: "There's a … / There are … / This is my …"
+pattern: "There's a … / This is my …"
 objectives:
   - Name common room objects
   - Use There's a … for one visible object
@@ -23,6 +23,9 @@ vocab:
   - { word: "bed", ipa: "/bed/", gloss: "furniture for sleeping" }
   - { word: "table", ipa: "/ˈteɪbəl/", gloss: "flat furniture surface" }
   - { word: "chair", ipa: "/tʃer/", gloss: "seat for one person" }
+  - { word: "book", ipa: "/bʊk/", gloss: "something you read" }
+  - { word: "wall", ipa: "/wɔːl/", gloss: "vertical side of a room" }
+  - { word: "there's", ipa: "/ðerz/", gloss: "short for there is; points out one thing that is present" }
 steps:
   - type: scene
     title: "Show someone your room"
@@ -50,7 +53,7 @@ steps:
     id: en-u07-home-context
     kind: dialogue_choice
     prompt: "You want to point out one bed in the room. Which sentence fits?"
-    choices: ["There's a bed.", "Bed is who?", "At bed seven."]
+    choices: ["There's a bed.", "Where is the bed?", "I have a bed."]
     answer: "There's a bed."
   - type: practice
     id: en-u07-home-listen
@@ -72,7 +75,7 @@ steps:
       - id: en-u07-home-check-room
         kind: dialogue_choice
         prompt: "Which sentence identifies your bedroom?"
-        choices: ["This is my bedroom.", "How much bedroom?", "Bedroom at eight."]
+        choices: ["This is my bedroom.", "Where is my bedroom?", "My bedroom is upstairs."]
         answer: "This is my bedroom."
       - id: en-u07-home-check-one
         kind: order_words

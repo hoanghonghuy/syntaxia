@@ -61,6 +61,16 @@ func main() {
 	tokens := auth.NewTokenService(cfg.JWTSecret)
 	svc := service.New(cfg, repo, driveClient, sandbox.NewRunner(sandboxPool), tokens)
 
+	// Reconcile app-owned tracks before lesson sync. Production databases can
+	// outlive the migration that first introduced a track; without this step,
+	// lesson sync would fail on the track FK and the Languages catalog could
+	// silently show only older tracks such as Mandarin.
+	if n, err := svc.Content.EnsureBuiltinTracks(ctx); err != nil {
+		log.Fatalf("catalog reconcile: %v", err)
+	} else {
+		logr.Info("catalog reconciled", "count", n)
+	}
+
 	// Sync curriculum from Drive/local mirror on startup (dev-friendly).
 	if n, err := svc.Content.SyncFromDrive(ctx); err != nil {
 		logr.Warn("curriculum sync failed", "err", err)

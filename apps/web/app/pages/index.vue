@@ -67,12 +67,7 @@
           </p>
         </div>
 
-        <HomeLearningMap
-          :items="learningMapLinks"
-          :aria-label="t('home.domainsHeading')"
-          :all-tracks-to="localePath('/tracks')"
-          :all-tracks-label="t('catalog.viewAllTracks')"
-        />
+        <HomeLearningMap />
       </section>
 
       <section class="catalog-section domains-section" :aria-label="t('home.domainsHeading')">
@@ -109,7 +104,9 @@
           <article class="card domain-card domain-card--languages">
             <div class="domain-card-top">
               <span class="domain-mark" aria-hidden="true">Aa</span>
-              <p class="track-meta">CEFR A1 · HSK · JLPT N5</p>
+              <p class="track-meta">
+                {{ t('catalog.cefrA1') }} · {{ t('catalog.hskBand1') }} · {{ t('catalog.jlptN5') }}
+              </p>
             </div>
             <h3 class="card-title">{{ t('domain.languages') }}</h3>
             <div class="domain-tags" aria-hidden="true">
@@ -183,9 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HomeLearningMapLink } from '~/components/HomeLearningMap.vue'
 import { featuredTracks } from '~/utils/catalogBrowse'
-import { resolveHomeLearningMap } from '~/utils/homeLearningMap'
 import { filterTracksByDomain } from '~/utils/learningDomains'
 import { reloadOnLocaleChange } from '~/utils/localeReload'
 import { overallProgress } from '~/utils/learningPath'
@@ -202,7 +197,6 @@ const showSkeleton = computed(() =>
 )
 
 const itTracks = computed(() => filterTracksByDomain(catalog.tracks, 'it'))
-const trackById = computed(() => new Map(catalog.tracks.map((track) => [track.id, track])))
 
 const resume = computed(() => {
   if (!auth.user) return null
@@ -222,56 +216,13 @@ const overall = computed(() =>
 
 const featured = computed(() => featuredTracks(itTracks.value))
 
-function learningMapTarget(item: ReturnType<typeof resolveHomeLearningMap>[number]): string {
-  if (item.primaryTrackId) {
-    const next = auth.user ? catalog.nextForTrack(item.primaryTrackId, locale.value) : null
-    if (next) return localePath(`/tracks/${item.primaryTrackId}/lessons/${next.slug}`)
-    return localePath(`/tracks/${item.primaryTrackId}`)
-  }
-
-  return localePath({
-    path: '/tracks',
-    query: {
-      domain: item.domain,
-      ...(item.category ? { category: item.category } : {}),
-    },
-  })
-}
-
-const learningMapLinks = computed<HomeLearningMapLink[]>(() =>
-  resolveHomeLearningMap(
-    catalog.tracks,
-    catalog.lessonsByTrack,
-    catalog.progress,
-    locale.value,
-  ).map((item) => {
-    const titles = item.trackIds
-      .map((trackId) => {
-        const track = trackById.value.get(trackId)
-        return track ? track.title[locale.value] || track.title.en : ''
-      })
-      .filter(Boolean)
-      .join(' · ')
-    const progressLabel = auth.user
-      ? t('lesson.progressPercent', { percent: item.progressPercent })
-      : ''
-
-    return {
-      key: item.key,
-      label: item.label,
-      to: learningMapTarget(item),
-      title: [item.label, titles, progressLabel].filter(Boolean).join(' · '),
-      ariaLabel: [item.label, titles, progressLabel].filter(Boolean).join(' · '),
-      progressPercent: item.progressPercent,
-    }
-  }),
-)
-
 async function retryCatalog() {
   loading.value = true
   try {
     await catalog.loadCatalogForHome(locale.value)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // The catalog store owns the learner-facing error state.
   } finally {
     loading.value = false
   }
@@ -283,6 +234,8 @@ onMounted(async () => {
     if (auth.user === null) await auth.fetchMe()
     await catalog.loadCatalogForHome(locale.value)
     if (auth.user) await catalog.loadProgress()
+  } catch {
+    // Keep this page on its in-context error/retry panel instead of escalating to a global app error.
   } finally {
     loading.value = false
   }
@@ -297,6 +250,8 @@ watch(locale, async (loc) => {
       loadCatalog: (l) => catalog.loadCatalogForHome(l),
       loadProgress: () => catalog.loadProgress(),
     })
+  } catch {
+    // Locale reload failures use the same catalog error/retry state.
   } finally {
     loading.value = false
   }

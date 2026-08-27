@@ -8,7 +8,7 @@
         <h1>{{ t('lesson.loadErrorTitle') }}</h1>
         <p>{{ loadError }}</p>
         <div class="lesson-error-actions">
-          <button class="btn btn-primary" type="button" @click="loadLesson">
+          <button class="btn btn-primary" type="button" @click="loadPage">
             {{ t('lesson.retry') }}
           </button>
           <NuxtLink class="btn btn-ghost" :to="localePath(`/tracks/${trackId}`)">
@@ -55,7 +55,7 @@
           />
         </template>
 
-        <HtmlCssSandbox
+        <LazyHtmlCssSandbox
           v-else-if="lesson.exercise && isHtmlCssTrack"
           :key="lesson.id"
           :lesson-id="lesson.id"
@@ -70,7 +70,7 @@
           @passed="onSandboxPassed"
         />
 
-        <JsSandbox
+        <LazyJsSandbox
           v-else-if="lesson.exercise && trackId === 'javascript-basics'"
           :key="lesson.id"
           :lesson-id="lesson.id"
@@ -83,7 +83,7 @@
           @passed="onSandboxPassed"
         />
 
-        <SqlSandbox
+        <LazySqlSandbox
           v-else-if="lesson.exercise"
           :key="lesson.id"
           :lesson-id="lesson.id"
@@ -200,7 +200,7 @@ import {
   languageHasSteps,
   languageVocabFromLesson,
 } from '~/utils/languageLesson'
-import { orderLanguageLessons } from '~/utils/languageUnits'
+import { buildLanguageUnits, orderLanguageLessons } from '~/utils/languageUnits'
 import { createLessonLoadGuard } from '~/utils/lessonLoadGuard'
 import { pickPrimaryNote, resolveNoteSaveMode } from '~/utils/noteSave'
 import { extractToc } from '~/utils/toc'
@@ -326,12 +326,27 @@ const sortedLessons = computed(() => {
     : [...list].sort((a, b) => a.sortOrder - b.sortOrder)
 })
 const currentIndex = computed(() => sortedLessons.value.findIndex((item) => item.slug === slug.value))
-const prevLesson = computed(() => currentIndex.value > 0 ? sortedLessons.value[currentIndex.value - 1] : null)
-const nextLesson = computed(() =>
-  currentIndex.value >= 0 && currentIndex.value < sortedLessons.value.length - 1
-    ? sortedLessons.value[currentIndex.value + 1]
-    : null,
-)
+const languageNodesById = computed(() => {
+  if (!isLanguageTrack.value) return new Map<string, { clickable: boolean }>()
+  const nodes = buildLanguageUnits(
+    sortedLessons.value,
+    catalog.progress,
+    locale.value,
+    { unlockAll: !auth.user || !catalog.progressLoaded },
+  ).flatMap((unit) => unit.nodes)
+  return new Map(nodes.map((node) => [node.id, { clickable: node.clickable }]))
+})
+
+function pagerLessonAt(index: number) {
+  if (index < 0 || index >= sortedLessons.value.length) return null
+  const candidate = sortedLessons.value[index]
+  if (!candidate) return null
+  if (!isLanguageTrack.value) return candidate
+  return languageNodesById.value.get(candidate.id)?.clickable ? candidate : null
+}
+
+const prevLesson = computed(() => pagerLessonAt(currentIndex.value - 1))
+const nextLesson = computed(() => pagerLessonAt(currentIndex.value + 1))
 const lessonCompleted = computed(() =>
   lesson.value ? catalog.isCompleted(lesson.value.id, locale.value) : false,
 )
@@ -377,6 +392,22 @@ async function loadLesson() {
     loadError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
   } finally {
     if (lessonLoadGuard.isCurrent(requestId)) loading.value = false
+  }
+}
+
+async function loadPage() {
+  loading.value = true
+  loadError.value = ''
+  try {
+    await catalog.loadTracks()
+    await catalog.loadLessons(trackId.value, locale.value)
+    await auth.fetchMe()
+    if (auth.user) await catalog.loadProgress()
+    await loadLesson()
+  } catch (error) {
+    loadError.value = catalog.loadError
+      || (error instanceof Error ? error.message : t('lesson.loadErrorGeneric'))
+    loading.value = false
   }
 }
 
@@ -428,17 +459,14 @@ async function onSandboxPassed() {
   await setLessonCompleted(true, false)
 }
 
-onMounted(async () => {
-  await catalog.loadTracks()
-  await catalog.loadLessons(trackId.value, locale.value)
-  await auth.fetchMe()
-  if (auth.user) await catalog.loadProgress()
-  await loadLesson()
-})
+onMounted(loadPage)
 
-watch([slug, locale, trackId], async ([, , track]) => {
-  if (track) await catalog.loadLessons(String(track), locale.value)
-  await loadLesson()
+watch([slug, locale, trackId], async ([nextSlug, nextLocale, nextTrack], [previousSlug, previousLocale, previousTrack]) => {
+  if (nextLocale !== previousLocale || nextTrack !== previousTrack) {
+    await loadPage()
+    return
+  }
+  if (nextSlug !== previousSlug) await loadLesson()
 })
 </script>
 

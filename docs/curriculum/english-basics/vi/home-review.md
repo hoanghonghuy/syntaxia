@@ -58,7 +58,7 @@ steps:
       - id: en-u07-review-there
         kind: dialogue_choice
         prompt: "Câu nào chỉ ra một chiếc giường trong phòng?"
-        choices: ["There's a bed.", "Where's a bed?", "At bed."]
+        choices: ["There's a bed.", "Where's the bed?", "The bed is upstairs."]
         answer: "There's a bed."
       - id: en-u07-review-in
         kind: meaning_choice

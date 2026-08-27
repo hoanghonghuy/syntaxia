@@ -24,9 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Verify SQL Fundamentals
@@ -48,9 +48,9 @@ jobs:
         working-directory: apps/api
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: apps/api/go.mod
           cache: true
@@ -61,6 +61,8 @@ jobs:
           git diff --exit-code -- go.mod go.sum
       - name: Verify module checksums
         run: go mod verify
+      - name: Scan reachable Go vulnerabilities
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
       - name: Unit tests
         # Some drive package smoke tests intentionally read docs/curriculum,
         # which is outside the Go package cache key. Run tests cold so content
@@ -77,23 +79,31 @@ jobs:
         working-directory: apps/web
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
-      - name: Install dependencies
-        run: npm ci
+      - name: Use pinned npm
+        run: |
+          npm install --global npm@11.19.0 --no-audit --no-fund
+          test "$(npm --version)" = "11.19.0"
+      - name: Install committed dependencies
+        run: npm ci --strict-allow-scripts
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
       - name: Build
         run: npm run build
       - name: Product flow, shell and UI regression
         run: |
           npm run test:product-flows
+          npm run test:learning-path
           npm run test:shell-ux
           npm run test:ui-refresh
           npm run test:ui-system
+          npm run test:bundle-contract
           npm run test:e2e-suite
           npm run test:release-contract
       - name: Language V3 contracts
@@ -135,9 +145,9 @@ jobs:
       CURRICULUM_LOCAL_PATH: ../../docs/curriculum
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: apps/api/go.mod
           cache: true
@@ -147,6 +157,10 @@ jobs:
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/init.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/002_sandbox_harden.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/014_language_review_fsrs.sql
+          # Simulate a long-lived production DB that was created when only the
+          # first language track existed. API startup must recreate later
+          # app-owned tracks before curriculum sync or their lessons hit the FK.
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "DELETE FROM tracks WHERE id IN ('english-basics','japanese-jlpt','chinese-it-vocab');"
       - name: Start API with local curriculum
         run: |
           cd apps/api

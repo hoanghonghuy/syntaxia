@@ -119,6 +119,69 @@ describe('language v3 semantic visuals', () => {
     }
   })
 
+  it('ships app-owned sound-to-symbol visuals across the Japanese script foundation', () => {
+    const expected = [
+      ['kana-sounds', 'japanese-vowel-kana.svg', ['あ', 'い', 'う', 'え', 'お', 'ア', 'イ', 'ウ', 'エ', 'オ']],
+      ['hiragana-patterns', 'japanese-hiragana-patterns.svg', ['か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ', 'ぎ', 'しょ', 'ん']],
+      ['katakana-patterns', 'japanese-katakana-patterns.svg', ['か', 'き', 'く', 'け', 'こ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'カメラ', 'コーヒー']],
+      ['mora-length', 'japanese-mora-timing.svg', ['お', 'か', 'あ', 'さ', 'ん', 'き', 'っ', 'ぷ', 'コ', 'ー', 'ヒ']],
+    ]
+
+    for (const [slug, assetName, tokens] of expected) {
+      const assetPath = join(webRoot, 'public/language/scenes', assetName)
+      assert.equal(existsSync(assetPath), true, `${assetName} must be app-owned`)
+      const asset = read(assetPath)
+      for (const token of tokens) {
+        assert.ok(asset.includes(`>${token}<`), `${assetName} must visibly teach ${token}`)
+      }
+
+      for (const locale of ['en', 'vi']) {
+        const body = read(join(repoRoot, `docs/curriculum/japanese-jlpt/${locale}/${slug}.md`))
+        assert.match(body, new RegExp(`imageUrl: "\\/language\\/scenes\\/${assetName.replace('.', '\\.')}"`))
+        assert.match(body, /imageAlt: ".+"/)
+      }
+    }
+  })
+
+  it('ships app-owned structural visuals for the English grammar foundation', () => {
+    const expected = [
+      ['core-sentences', 'english-be-sentence-frame.svg', ['I', 'am', 'a student', 'She', 'is', 'a teacher', 'They', 'are', 'students']],
+      ['basic-questions', 'english-question-frames.svg', ['You are a student.', 'Are you a student?', 'You are from Hanoi.', 'Where are you from?', 'You like music.', 'Do you like music?']],
+    ]
+
+    for (const [slug, assetName, tokens] of expected) {
+      const assetPath = join(webRoot, 'public/language/scenes', assetName)
+      assert.equal(existsSync(assetPath), true, `${assetName} must be app-owned`)
+      const asset = read(assetPath)
+      for (const token of tokens) {
+        assert.ok(asset.includes(`>${token}<`), `${assetName} must visibly teach ${token}`)
+      }
+
+      for (const locale of ['en', 'vi']) {
+        const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/${slug}.md`))
+        assert.match(body, new RegExp(`imageUrl: "\\/language\\/scenes\\/${assetName.replace('.', '\\.')}"`))
+        assert.match(body, /imageAlt: ".+"/)
+      }
+    }
+  })
+
+  it('ships an app-owned meaning-and-frame visual for Mandarin adjective contrasts', () => {
+    const assetName = 'mandarin-adjective-contrasts.svg'
+    const assetPath = join(webRoot, 'public/language/scenes', assetName)
+    assert.equal(existsSync(assetPath), true)
+    const asset = read(assetPath)
+    for (const token of ['大', '小', '热', '冷', '水', '很']) {
+      assert.ok(asset.includes(`>${token}<`), `${assetName} must visibly teach ${token}`)
+    }
+
+    for (const locale of ['en', 'vi']) {
+      const body = read(join(repoRoot, `docs/curriculum/chinese-hsk/${locale}/adjectives.md`))
+      assert.match(body, /imageUrl: "\/language\/scenes\/mandarin-adjective-contrasts\.svg"/)
+      assert.match(body, /imageAlt: ".+"/)
+      assert.match(body, /水很冷/)
+    }
+  })
+
   it('keeps the English image-choice exercise on stable semantic ids', () => {
     for (const locale of ['en', 'vi']) {
       const body = read(join(repoRoot, `docs/curriculum/english-basics/${locale}/greetings.md`))

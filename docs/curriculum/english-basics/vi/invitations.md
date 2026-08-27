@@ -23,6 +23,10 @@ vocab:
   - { word: "Saturday", ipa: "/ˈsætərdeɪ/", gloss: "thứ Bảy" }
   - { word: "friend", ipa: "/frend/", gloss: "bạn" }
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "buổi chiều" }
+  - { word: "do you want to", ipa: "/duː ju wɑːnt tə/", gloss: "cụm mở đầu một lời mời đơn giản" }
+  - { word: "let's", ipa: "/lets/", gloss: "dùng để đề nghị cùng làm một việc" }
+  - { word: "meet", ipa: "/miːt/", gloss: "gặp nhau tại thời gian hoặc địa điểm đã thống nhất" }
+  - { word: "see you there", ipa: "/siː ju ðer/", gloss: "hẹn gặp ở đó; dùng để kết thúc kế hoạch" }
 steps:
   - type: scene
     title: "Lên kế hoạch sau giờ học"
@@ -45,12 +49,13 @@ steps:
     items:
       - { form: "Do you want to go to the park?", gloss: "lời mời đơn giản", example: "Do you want to go to the park on Saturday?" }
       - { form: "Yes, let's go.", gloss: "chấp nhận lời mời", example: "Yes, let's go." }
+      - { form: "At three in the afternoon?", gloss: "xác nhận một giờ gặp đơn giản", example: "At three in the afternoon?" }
       - { form: "See you there.", gloss: "kết thúc kế hoạch", example: "Great. See you there." }
   - type: practice
     id: en-u08-invite-context
     kind: dialogue_choice
     prompt: "Bạn muốn mời một người bạn đến công viên. Câu nào tự nhiên?"
-    choices: ["Do you want to go to the park?", "How much is the park?", "Who's the park?"]
+    choices: ["Do you want to go to the park?", "Is the park open?", "Where is the park?"]
     answer: "Do you want to go to the park?"
   - type: practice
     id: en-u08-invite-listen
@@ -67,12 +72,20 @@ steps:
     acceptedAnswers: ["Do you want to go to the park?", "Do you want to go to the park with me?", "Do you want to go to the park with me"]
     hints:
       - "Bắt đầu bằng Do you want to …"
+  - type: practice
+    id: en-u08-invite-time
+    kind: type_answer
+    prompt: "Hai người đã chọn công viên. Hãy xác nhận giờ gặp: 3 giờ chiều."
+    answer: "At three in the afternoon"
+    acceptedAnswers: ["At three in the afternoon?", "At three in the afternoon.", "At three in the afternoon"]
+    hints:
+      - "Dùng At + giờ + in the afternoon."
   - type: checkpoint
     items:
       - id: en-u08-invite-check-accept
         kind: dialogue_choice
         prompt: "Câu nào chấp nhận lời mời?"
-        choices: ["Yes, let's go.", "No price.", "Where is my book?"]
+        choices: ["Yes, let's go.", "No, I can't.", "The park is open."]
         answer: "Yes, let's go."
       - id: en-u08-invite-check-close
         kind: dialogue_choice

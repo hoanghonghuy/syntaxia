@@ -1,5 +1,5 @@
 /**
- * English Basics CEFR A1 foundation curriculum + map.
+ * English Basics CEFR A1 language foundation curriculum + map.
  * Run: node --experimental-strip-types --test scripts/check-english-basics.mjs
  */
 import assert from 'node:assert/strict'
@@ -13,15 +13,16 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
-const FOUNDATION_SLUGS = [
+const SLUGS = [
   'sound-spelling',
+  'vowel-contrasts',
+  'consonant-clarity',
   'word-stress',
-  'core-be',
+  'sentence-melody',
+  'core-sentences',
+  'basic-questions',
   'foundation-checkpoint',
   'foundation-review',
-]
-
-const COMMUNICATIVE_SLUGS = [
   'greetings',
   'meeting-checkpoint',
   'meeting-review',
@@ -52,9 +53,11 @@ const COMMUNICATIVE_SLUGS = [
   'invitations',
   'free-time-checkpoint',
   'free-time-review',
+  'personal-details',
+  'possessions',
+  'personal-checkpoint',
+  'personal-review',
 ]
-
-const SLUGS = [...FOUNDATION_SLUGS, ...COMMUNICATIVE_SLUGS]
 
 const FOUNDATION_UNITS = new Map([
   ['en-a1-foundation-00', 0],
@@ -66,19 +69,20 @@ const FOUNDATION_UNITS = new Map([
   ['en-a1-shopping-06', 6],
   ['en-a1-home-07', 7],
   ['en-a1-free-time-08', 8],
+  ['en-a1-personal-09', 9],
 ])
 
-const GRAMMAR_EVIDENCE = new Map([
-  ['core-be', /pattern:\s*"I am \/ you are \/ he-she-it is \/ we-they are"/],
-  ['greetings', /pattern:\s*"Hi, I'm …/],
-  ['people', /pattern:\s*"Who's that\? \/ This is … \/ He's … \/ She's …"/],
-  ['places', /pattern:\s*"Where's the …\? \/ It's here\./],
-  ['food-drink', /pattern:\s*"I'd like …, please\./],
-  ['daily-routine', /pattern:\s*"I … at … \/ Then I … \/ What time do you …\?"/],
-  ['shopping', /pattern:\s*"I'd like this … \/ I'll take it\./],
-  ['where-things', /pattern:\s*"Where's the …\? \/ It's on … \/ It's under … \/ It's in …"/],
-  ['invitations', /pattern:\s*"Do you want to …\? \/ Yes, let's …/],
-])
+const FOUNDATION_SLUGS = [
+  'sound-spelling',
+  'vowel-contrasts',
+  'consonant-clarity',
+  'word-stress',
+  'sentence-melody',
+  'core-sentences',
+  'basic-questions',
+  'foundation-checkpoint',
+  'foundation-review',
+]
 
 function scalar(body, key) {
   const match = body.match(new RegExp(`^${key}:\\s*(?:"([^"]+)"|([^\\n#]+))`, 'm'))
@@ -89,21 +93,30 @@ function assessedIds(body) {
   return [...body.matchAll(/^\s+(?:-\s+)?id:\s*([a-z0-9-]+)\s*$/gim)].map((match) => match[1])
 }
 
-describe('english-basics A1 foundation curriculum', () => {
-  it('ships a CEFR-aligned language foundation map, not only Can-Do situations', () => {
+describe('english-basics A1 language foundation curriculum', () => {
+  it('ships a foundation-first CEFR A1 source map', () => {
     const map = join(repoRoot, 'docs/processes/english-basics-a1-map.md')
     assert.equal(existsSync(map), true)
     const body = read(map)
     assert.match(body, /Council of Europe/i)
-    assert.match(body, /phonolog/i)
-    assert.match(body, /grammar progression/i)
-    assert.match(body, /9 units/i)
-    assert.match(body, /35 nodes/i)
-    assert.match(body, /sound-spelling/)
-    assert.match(body, /core-be/)
+    assert.match(body, /CEFR Companion Volume 2020/i)
+    assert.match(body, /phonological/i)
+    assert.match(body, /core grammar/i)
+    assert.match(body, /Vocabulary/i)
+    assert.match(body, /10 units/i)
+    assert.match(body, /43 nodes/i)
+    assert.match(body, /sound.*spelling/i)
+    assert.match(body, /vowel/i)
+    assert.match(body, /consonant/i)
+    assert.match(body, /word stress/i)
+    assert.match(body, /subject pronouns/i)
+    assert.match(body, /Do you like/i)
+    assert.match(body, /How old are you/i)
+    assert.match(body, /Do you have/i)
+    assert.match(body, /ozbonus\/yle-vocabulary-dataset/)
   })
 
-  it('ships exactly 35 paired EN/VI V3 nodes with a real Unit 0 foundation', () => {
+  it('ships exactly 43 paired EN/VI V3 nodes', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
@@ -116,7 +129,6 @@ describe('english-basics A1 foundation curriculum', () => {
         assert.match(raw, new RegExp(`locale:\\s*${loc}`))
         assert.match(raw, /cefr_level:\s*a1/)
         assert.match(raw, /^can_do:\s*".+"/m)
-        assert.match(raw, /^pattern:\s*".+"/m)
         assert.match(raw, /^unit_id:\s*[a-z0-9-]+\s*$/m)
         assert.match(raw, /^unit_role:\s*(?:lesson|checkpoint|review)\s*$/m)
         assert.match(raw, /^steps:/m)
@@ -125,6 +137,11 @@ describe('english-basics A1 foundation curriculum', () => {
         assert.match(raw, /^\s+- type:\s*listen\s*$/m)
         assert.match(raw, /^\s+- type:\s*practice\s*$/m)
         assert.match(raw, /^\s+- type:\s*checkpoint\s*$/m)
+        assert.match(
+          raw,
+          /^\s+kind:\s*(?:type_answer|order_words|listen_type)\s*$/m,
+          `${loc}/${slug} missing controlled recall/production`,
+        )
         assert.doesNotMatch(raw, /^\s+kind:\s*mcq\s*$/m, `${loc}/${slug} still authors generic mcq`)
         assert.ok(assessedIds(raw).length >= 5, `${loc}/${slug} needs >=5 stable assessed ids`)
 
@@ -135,28 +152,47 @@ describe('english-basics A1 foundation curriculum', () => {
     }
   })
 
-  it('locks the sound/stress/be foundation and app-owned visuals', () => {
-    for (const asset of [
-      'english-sound-spelling.svg',
-      'english-word-stress.svg',
-      'english-be-sentence.svg',
-    ]) {
-      assert.equal(existsSync(join(webRoot, 'public/language/scenes', asset)), true, `missing ${asset}`)
-    }
+  it('locks Unit 0 as pronunciation -> grammar -> checkpoint -> review', () => {
+    const expected = new Map([
+      ['sound-spelling', ['pronunciation', 'lesson', '-9']],
+      ['vowel-contrasts', ['pronunciation', 'lesson', '-8']],
+      ['consonant-clarity', ['pronunciation', 'lesson', '-7']],
+      ['word-stress', ['pronunciation', 'lesson', '-6']],
+      ['sentence-melody', ['pronunciation', 'lesson', '-5']],
+      ['core-sentences', ['grammar', 'lesson', '-4']],
+      ['basic-questions', ['grammar', 'lesson', '-3']],
+      ['foundation-checkpoint', ['integrated', 'checkpoint', '-2']],
+      ['foundation-review', ['integrated', 'review', '-1']],
+    ])
 
     for (const loc of ['en', 'vi']) {
-      const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
-      assert.match(read(join(dir, 'sound-spelling.md')), /english-sound-spelling\.svg/)
-      assert.match(read(join(dir, 'word-stress.md')), /english-word-stress\.svg/)
-      assert.match(read(join(dir, 'core-be.md')), /english-be-sentence\.svg/)
+      for (const slug of FOUNDATION_SLUGS) {
+        const raw = read(join(repoRoot, `docs/curriculum/english-basics/${loc}/${slug}.md`))
+        const [focus, role, order] = expected.get(slug)
+        assert.equal(scalar(raw, 'unit_id'), 'en-a1-foundation-00')
+        assert.equal(scalar(raw, 'unit_order'), '0')
+        assert.equal(scalar(raw, 'foundation_focus'), focus)
+        assert.equal(scalar(raw, 'unit_role'), role)
+        assert.equal(scalar(raw, 'order'), order)
+      }
     }
   })
 
-  it('locks representative grammar progression instead of incidental phrase exposure', () => {
+  it('ships app-owned pronunciation diagrams and no external image hotlinks in Unit 0', () => {
+    for (const asset of [
+      'english-sound-spelling.svg',
+      'english-core-vowels.svg',
+      'english-core-consonants.svg',
+      'english-word-stress.svg',
+      'english-sentence-melody.svg',
+    ]) {
+      assert.equal(existsSync(join(webRoot, `public/language/scenes/${asset}`)), true, `missing ${asset}`)
+    }
+
     for (const loc of ['en', 'vi']) {
-      const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
-      for (const [slug, evidence] of GRAMMAR_EVIDENCE) {
-        assert.match(read(join(dir, `${slug}.md`)), evidence, `${loc}/${slug}: grammar progression evidence drifted`)
+      for (const slug of FOUNDATION_SLUGS) {
+        const raw = read(join(repoRoot, `docs/curriculum/english-basics/${loc}/${slug}.md`))
+        assert.doesNotMatch(raw, /imageUrl:\s*"https?:\/\//i, `${loc}/${slug} hotlinks an image`)
       }
     }
   })
@@ -169,6 +205,45 @@ describe('english-basics A1 foundation curriculum', () => {
       assert.equal(scalar(vi, 'id'), scalar(en, 'id'), `${slug}: lesson id drifted between locales`)
       assert.equal(scalar(vi, 'unit_id'), scalar(en, 'unit_id'), `${slug}: unit id drifted between locales`)
       assert.equal(scalar(vi, 'unit_role'), scalar(en, 'unit_role'), `${slug}: role drifted between locales`)
+    }
+  })
+
+  it('keeps communicative progression prerequisite-safe and aligned with declared Can-Do', () => {
+    for (const loc of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
+      const family = read(join(dir, 'family.md'))
+      const places = read(join(dir, 'places.md'))
+      const home = read(join(dir, 'home-things.md'))
+      const where = read(join(dir, 'where-things.md'))
+      const invitations = read(join(dir, 'invitations.md'))
+      const details = read(join(dir, 'personal-details.md'))
+      const possessions = read(join(dir, 'possessions.md'))
+
+      assert.match(family, /id:\s*family-check-2[\s\S]*answer:\s*"This is Linh\."/)
+      assert.doesNotMatch(family, /Room seven/)
+
+      assert.match(places, /id:\s*places-check-2[\s\S]*answer:\s*"Room five\?"/)
+      assert.doesNotMatch(places, /I'd like a tea, please/)
+
+      assert.equal(scalar(home, 'pattern'), "There's a … / This is my …")
+      assert.doesNotMatch(home, /pattern:\s*"[^"]*There are/)
+
+      assert.match(where, /form:\s*"It's in the bag\."/)
+      assert.match(where, /gloss:\s*"[^"]+"/)
+
+      assert.ok(assessedIds(invitations).includes('en-u08-invite-time'))
+      assert.match(invitations, /form:\s*"At three in the afternoon\?"/)
+      assert.match(invitations, /id:\s*en-u08-invite-time[\s\S]*answer:\s*"At three in the afternoon"/)
+
+      assert.match(details, /form:\s*"How old are you\?"/)
+      assert.match(details, /form:\s*"Where do you live\?"/)
+      assert.ok(details.indexOf('form: "Where do you live?"') < details.indexOf('id: en-u09-details-live'))
+      assert.match(details, /id:\s*en-u09-details-live[\s\S]*answer:\s*"I live in Hanoi"/)
+
+      assert.match(possessions, /form:\s*"I have a book\."/)
+      assert.match(possessions, /form:\s*"Do you have a phone\?"/)
+      assert.ok(possessions.indexOf('form: "Do you have a phone?"') < possessions.indexOf('id: en-u09-have-check-question'))
+      assert.match(possessions, /id:\s*en-u09-have-produce[\s\S]*answer:\s*"I have a book"/)
     }
   })
 

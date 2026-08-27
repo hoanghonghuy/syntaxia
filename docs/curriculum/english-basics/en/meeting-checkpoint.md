@@ -38,7 +38,7 @@ steps:
     id: en-u01-check-reply
     kind: dialogue_choice
     prompt: "Someone says: “Hi, I'm Sam.” Choose the natural reply."
-    choices: ["Hi, Sam. I'm Linh.", "See you yesterday.", "Thank you, Sam."]
+    choices: ["Hi, Sam. I'm Linh.", "See you later.", "Thank you, Sam."]
     answer: "Hi, Sam. I'm Linh."
     explanation: "Return the greeting and give your name."
   - type: practice
@@ -63,12 +63,12 @@ steps:
       - id: en-u01-check-close
         kind: dialogue_choice
         prompt: "Class is starting. Which line closes the short exchange naturally?"
-        choices: ["See you later.", "Nice yesterday.", "You're welcome."]
+        choices: ["See you later.", "Nice to meet you.", "You're welcome."]
         answer: "See you later."
       - id: en-u01-check-meet
         kind: meaning_choice
         prompt: "Which phrase belongs to a first meeting?"
-        choices: ["Nice to meet you.", "Good night yesterday.", "No problem tomorrow."]
+        choices: ["Nice to meet you.", "See you later.", "You're welcome."]
         answer: "Nice to meet you."
 exercise:
   type: type_answer

@@ -4,7 +4,6 @@ import {
   pushSnackbar,
   type SnackbarInput,
   type SnackbarItem,
-  type SnackbarTone,
 } from '~/utils/snackbar'
 
 export function useSnackbar() {
@@ -64,5 +63,3 @@ export function useSnackbar() {
     dismiss,
   }
 }
-
-export type { SnackbarTone, SnackbarItem }

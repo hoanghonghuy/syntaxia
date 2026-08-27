@@ -23,6 +23,9 @@ vocab:
   - { word: "afternoon", ipa: "/ˌæftərˈnuːn/", gloss: "buổi chiều" }
   - { word: "clock", ipa: "/klɑːk/", gloss: "đồng hồ chỉ giờ" }
   - { word: "today", ipa: "/təˈdeɪ/", gloss: "hôm nay" }
+  - { word: "what time", ipa: "/wʌt taɪm/", gloss: "dùng để hỏi một việc diễn ra lúc mấy giờ" }
+  - { word: "o'clock", ipa: "/əˈklɑːk/", gloss: "dùng sau số giờ khi nói giờ tròn" }
+  - { word: "at", ipa: "/æt/", gloss: "dùng trước một mốc giờ cụ thể" }
 steps:
   - type: scene
     title: "Xem lịch hôm nay"
@@ -50,7 +53,7 @@ steps:
     id: en-u05-time-context
     kind: dialogue_choice
     prompt: "Một bạn hỏi “What time is class?” Lớp bắt đầu lúc 8:00. Câu nào tự nhiên?"
-    choices: ["It's at eight o'clock.", "It's eight classes.", "Class is who?"]
+    choices: ["It's at eight o'clock.", "Class is in room eight.", "Is class at eight?"]
     answer: "It's at eight o'clock."
     explanation: "Dùng at + giờ để nói khi nào hoạt động diễn ra."
   - type: practice

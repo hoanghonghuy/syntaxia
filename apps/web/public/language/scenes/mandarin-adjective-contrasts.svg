@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" aria-hidden="true">
+  <rect width="720" height="420" rx="32" fill="#f8fafc"/>
+
+  <g font-family="system-ui,'Noto Sans SC',sans-serif" text-anchor="middle" fill="#1f2937">
+    <g transform="translate(58 54)">
+      <rect x="0" y="0" width="286" height="138" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="4"/>
+      <circle cx="86" cy="70" r="42" fill="#c7d2fe" stroke="#6366f1" stroke-width="4"/>
+      <circle cx="208" cy="70" r="20" fill="#e0e7ff" stroke="#6366f1" stroke-width="4"/>
+      <text x="86" y="122" font-size="30" font-weight="700">大</text>
+      <text x="208" y="122" font-size="30" font-weight="700">小</text>
+    </g>
+
+    <g transform="translate(376 54)">
+      <rect x="0" y="0" width="286" height="138" rx="24" fill="#ecfdf5" stroke="#0d9488" stroke-width="4"/>
+      <circle cx="88" cy="66" r="28" fill="#fed7aa" stroke="#ea580c" stroke-width="4"/>
+      <path d="M88 22v-14M88 124v-14M44 66H30M146 66h-14M57 35l-10-10M129 107l-10-10M119 35l10-10M47 107l10-10" stroke="#ea580c" stroke-width="5" stroke-linecap="round"/>
+      <path d="M204 35v58a22 22 0 1 1-28 0V35a14 14 0 0 1 28 0z" fill="#dbeafe" stroke="#0284c7" stroke-width="4"/>
+      <circle cx="190" cy="103" r="11" fill="#7dd3fc"/>
+      <text x="88" y="126" font-size="30" font-weight="700">热</text>
+      <text x="204" y="126" font-size="30" font-weight="700">冷</text>
+    </g>
+
+    <g transform="translate(72 244)">
+      <rect x="0" y="0" width="576" height="112" rx="24" fill="#fff" stroke="#cbd5e1" stroke-width="4"/>
+      <rect x="32" y="24" width="116" height="64" rx="16" fill="#eef2ff" stroke="#6366f1" stroke-width="3"/>
+      <text x="90" y="65" font-size="31" font-weight="700">水</text>
+      <path d="M160 56h54" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M201 45l16 11-16 11" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="230" y="24" width="116" height="64" rx="16" fill="#ecfdf5" stroke="#0d9488" stroke-width="3"/>
+      <text x="288" y="65" font-size="31" font-weight="700">很</text>
+      <path d="M358 56h54" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+      <path d="M399 45l16 11-16 11" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="428" y="24" width="116" height="64" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/>
+      <text x="486" y="65" font-size="31" font-weight="700">冷</text>
+    </g>
+  </g>
+</svg>
