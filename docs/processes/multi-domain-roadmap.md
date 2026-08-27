@@ -1,189 +1,212 @@
-# Multi-domain learning platform roadmap
+# Multi-domain product roadmap
 
-## Purpose
+## Status
 
-Complete plan for Syntaxia as **one app, multiple learning domains**: IT first (shipping), Languages next (Chinese → more), then additional domains — without mixing pedagogies or inventing curricula.
+**Active roadmap for Syntaxia V2.**
 
-## When to use
-
-- Prioritizing work after domain IA + languages placeholder
-- Opening an OpenSpec change for languages / domain maturity
-- Deciding what to pull from Talkory vs design in Syntaxia
+The old MVP-era roadmap that treated FSRS, English/Japanese, and broader language capability as future/deferred work has been retired. Current product direction lives in [`product-direction-v2.md`](./product-direction-v2.md).
 
 ## North star
 
-```
-Syntaxia (one product, one account, shared shell)
-├── Domain: IT          — sandboxes, MD curriculum, Continue/progress as today
-├── Domain: Languages   — HSK-first pedagogy (Talkory-inspired), UI locale vi/en explains
-└── Domain: … later     — same pattern: domain → category → track → lessons
-```
+Syntaxia is one product with shared learner state and domain-specific pedagogy:
 
-**Hard rules (locked):**
-
-1. One app; Mintlify-style chrome shared.
-2. Domain UI ≠ lesson pedagogy — language players must not clone SQL/JS sandboxes.
-3. Do not invent outlines — map public curricula (HSK 3.0, etc.).
-4. Placeholder / under-development before empty lesson spam.
-5. Talkory is a **spec reference**, not a wholesale code merge, until an OpenSpec change says otherwise.
-
----
-
-## Current state (done)
-
-| Layer | Status |
-|-------|--------|
-| IT catalog (SQL / web / code) + sandboxes | Shipping |
-| Domain IA (home cards, `/tracks?domain=`) | Shipping — [`learning-domains.md`](./learning-domains.md) |
-| Languages category + `chinese-hsk` placeholder | Shipping — [`languages-tracks.md`](./languages-tracks.md), migration `006` |
-| Dark code islands + CM theme | Shipping |
-| DB `domain` column | **Not yet** (map in `learningDomains.ts`) |
-
----
-
-## Phased plan
-
-### Phase 0 — Stabilize what just shipped (short)
-
-**Goal:** Domain IA + placeholder feel intentional; prod/local parity.
-
-| # | Work | Done when |
-|---|------|-----------|
-| 0.1 | Apply `006_languages_tracks.sql` on Neon/prod (if not yet) | `chinese-hsk` in API tracks |
-| 0.2 | Smoke: home domains → IT catalog → Languages hub coming soon | Manual + hard-refresh |
-| 0.3 | Optional UX polish: domain-scoped Continue, progress domain filter tabs | Tests green |
-| 0.4 | Commit/PR the domain + languages + dark-code batch if still uncommitted | Reviewable diff |
-
-**Out of scope:** HSK lessons, SRS, AI tutor.
-
----
-
-### Phase 1 — Domain IA maturity (optional, before languages content)
-
-**Goal:** Orientation scales when a 3rd domain appears; less “chip soup”.
-
-| # | Work | Notes |
-|---|------|-------|
-| 1.1 | Persist last domain (`localStorage` `syntaxia_last_domain`) | Soft default for `/tracks` when `?domain=` omitted — **done** 2026-08-02 |
-| 1.2 | Progress hub filter by domain | IT vs Languages progress lists — **done** 2026-08-02 |
-| 1.3 | Search scoped by domain (or clear domain badge on results) | Avoid SQL results when browsing languages — **done** 2026-08-02 |
-| 1.4 | Decide URL polish: keep `?domain=` vs `/it` + `/languages` hubs | **locked:** keep `?domain=` — routes later if needed |
-| 1.5 | Optional DB column `tracks.domain` | **deferred** — TS map still fine with 2 domains |
-
-**OpenSpec:** `learning-domains-ia` (retro-spec if code already landed) or small follow-ups.
-
----
-
-### Phase 2 — Languages pedagogy foundation (research → design)
-
-**Status: locked 2026-07-31** — see [`chinese-hsk-pedagogy.md`](./chinese-hsk-pedagogy.md).
-
-| # | Work | Status |
-|---|------|--------|
-| 2.1 | Research HSK 3.0 / lesson shape / SRS / writing | **done** (chốt in pedagogy doc) |
-| 2.2 | Talkory blocks vs Syntaxia MVP slice | **done** — text + vocab + exercise only |
-| 2.3 | Target `zh` × explain `vi`/`en` | **done** |
-| 2.4 | `/opsx-propose chinese-hsk-mvp` | **done** — `openspec/changes/chinese-hsk-mvp/` |
-| 2.5 | Content pipeline MD vs DB | **done** — MD v1, CMS later |
-
-**Next:** accept proposal → `/syn-apply` (or `/opsx-apply`) for Phase 3.
----
-
-### Phase 3 — Chinese (HSK) vertical slice
-
-**Goal:** First real language track learners can complete end-to-end (narrow).  
-**OpenSpec:** [`openspec/changes/chinese-hsk-mvp/`](../../openspec/changes/chinese-hsk-mvp/)  
-**Status:** archived — `openspec/changes/archive/chinese-hsk-mvp/`; main specs synced (`openspec/specs/language-lessons/`). Neon track copy via `007`. Local stack: curriculum synced (6 en + 6 vi lessons).
-
-Suggested vertical (per pedagogy lock):
-
-1. Map open HSK 3.0 Band 1 vocab → 5–8 thematic lessons (`chinese-hsk-band1-map.md`) — **done** (6 lessons).
-2. Language lesson player: `text` + `vocab` + `exercise` blocks — **done**.
-3. Progress/completion reuse existing progress APIs where possible — **done** (mark complete unchanged).
-4. Track hub / Continue inside `domain=languages` — **done** when lessons synced.
-5. en+vi explain locale = UI locale — **done**.
-
-**Deferred:** FSRS, stroke-order canvas, AI tutor, monetization, JLPT, English track.
----
-
-### Phase 4 — Languages expansion
-
-| Order | Item |
-|-------|------|
-| 4.1 | More HSK Band 1 units — **paused** glossary expansion; migrate to path v2 (`language-lesson-path-v2`). Current bank: **12** lessons (legacy + greetings pilot steps) |
-| 4.2 | English CEFR A1 starter — map + 6 lessons (`english-basics-mvp`) — **done** 2026-08-02 (archived) |
-| 4.3 | JP (JLPT) N5 starter — map + 6 lessons (`japanese-jlpt-mvp`) — **done** 2026-08-02 (archived) |
-| 4.4 | Specialty Chinese IT vocab — pedagogy + track + **6** mapped lessons (`chinese-it-vocab-mvp`) — **done** 2026-08-02 |
-
----
-
-### Phase 5 — More domains (beyond IT + Languages)
-
-**Pattern only — do not pre-build content:**
-
-1. Add domain id to `LEARNING_DOMAIN_IDS` + i18n + home card.
-2. Map categories → domain.
-3. Placeholder track(s) with under-development.
-4. Pedagogy research per domain (never assume sandbox).
-
-Examples (not committed): Design, Cloud, Career — only when owner prioritizes.
-
----
-
-## OpenSpec change sequence (recommended)
-
-```
-[done-ish] languages placeholder + domain IA (code)
-    → optional: /opsx-propose learning-domains-ia (archive/sync specs)
-    → /opsx-research language pedagogy
-    → /opsx-propose chinese-hsk-mvp (player + first units)
-    → /opsx-apply → /opsx-verify → archive
-    → later: english-track / hsk-expansion / domain-N
+```text
+Syntaxia
+├── shared: curriculum / progress / review / skills / mastery / next action
+├── IT: mental model -> predict -> execute -> debug -> apply -> review
+└── Languages: input -> notice -> interact -> produce -> checkpoint -> review
 ```
 
-Active OpenSpec folders should stay empty under `openspec/changes/` (except `archive/`) — stale IT changes (`js-code-sandbox`, `guest-sandbox-access`, `lesson-notebook-style`) archived 2026-08-02.
+The next phase is not catalog expansion. It is turning existing curriculum, progress, sandboxes, assessments, and FSRS into an adaptive learning loop.
 
----
+## Current shipped foundation
 
-## Dependencies & risks
+### IT
 
-| Risk | Mitigation |
-|------|------------|
-| Mixing sandboxes into language lessons | Process lock + OpenSpec “Don't” |
-| Inventing HSK outlines | Map HSK 3.0 / open datasets only |
-| Scope explosion (Talkory full merge) | Phase 2 cut; vertical slice Phase 3 |
-| Progress/Continue confusion across domains | Phase 1.2–1.3 |
-| Neon missing `006` | Phase 0.1 |
+- SQL Fundamentals;
+- PostgreSQL;
+- JavaScript Basics;
+- HTML Basics;
+- CSS Basics;
+- deterministic SQL/JS/HTML-CSS sandbox grading;
+- progress, notes, search, track/domain navigation.
 
----
+### Languages
 
-## Success metrics (lightweight)
+- Mandarin practical Level 1 foundation;
+- English bounded CEFR A1 foundation;
+- Japanese practical N5 foundation;
+- optional Chinese IT specialty;
+- Language V3 guided player;
+- stable assessed identities;
+- semantic visuals/audio;
+- checkpoint/review units;
+- persistent FSRS review state and logs;
+- backward-compatible curriculum continuation.
 
-- Learner can name and enter **IT** vs **Languages** without confusion.
-- Languages hub never shows fake empty lessons.
-- First HSK slice: complete one unit with clear next step.
-- Adding a 3rd domain needs **config + i18n**, not a home rewrite.
+### Platform
 
----
+- shared account/auth;
+- Home learning map;
+- cross-domain Continue/progress;
+- PostgreSQL persistence;
+- product CI with cold Go tests, `govulncheck`, production npm audit, Nuxt build, curriculum gates, and PostgreSQL-backed release E2E.
 
-## Do / Don't
+## Phase P1 — Learning Intelligence V1
 
-### Do
+**Status: active.**
 
-- One phase at a time; research before pedagogy code
-- Keep IT quality bar while languages grow
-- Update this file when a phase’s approach is locked
+Source of truth: [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).
 
-### Don't
+### P1.0 — evidence and mastery foundation
 
-- Build SRS + AI + stroke + HSK 1–6 in one change
-- Put language tracks back into a flat SQL/Web/Code chip row
-- Copy copyrighted textbook content
+```text
+authored skill id
+-> learning evidence
+-> mastery aggregate
+-> authenticated read model
+```
+
+Initial vertical uses persisted language reviews and English skill metadata.
+
+Done when:
+
+- evidence and mastery persistence are transactional;
+- no public/client mastery-write API exists;
+- skill mapping is explicit rather than inferred from prompt text;
+- EN/VI assessed identities map to the same skill ids;
+- exact-head Product CI proves PostgreSQL persistence.
+
+### P1.1 — server-graded attempt evidence
+
+Add higher-confidence evidence for deterministic authored exercises.
+
+The server should persist the attempt/result used for mastery, rather than relying only on a client-submitted review rating.
+
+Done when evidence source/confidence can distinguish at least:
+
+- server-graded deterministic attempt;
+- review-performance signal;
+- future AI/free-form evidence.
+
+### P1.2 — weak-skill read model
+
+Combine:
+
+- mastery score;
+- evidence count/confidence;
+- recent mistakes;
+- due review state;
+- current curriculum frontier.
+
+Return a small, explainable list of repair candidates rather than an opaque recommendation score.
+
+### P1.3 — Adaptive Daily Session
+
+Compose a session from:
+
+```text
+due review
++ weak-skill repair
++ next curriculum action
+```
+
+Signed-in Home should evolve toward:
+
+```text
+Today
+-> Repair / Review
+-> Current paths
+-> Explore
+```
+
+## Phase P2 — English Guided Practice V1
+
+Use English as the first guided-practice language because its A1 foundation is now bounded and audited.
+
+Start text-first.
+
+AI may generate a scenario/variant only from:
+
+- taught curriculum;
+- learner mastery;
+- known weak skills;
+- explicit allowed skill targets.
+
+Do not ship a generic chatbot disconnected from curriculum/progress.
+
+## Phase P3 — Diagnostic and Skill Profile
+
+Only after evidence/mastery quality is reliable:
+
+- short entry diagnostic;
+- recommended curriculum frontier;
+- skill-level profile;
+- transparent reasons for repair recommendations.
+
+This phase must not fabricate completion for skipped earlier lessons.
+
+## Phase P4 — Speaking
+
+Add speech evidence after text practice and mastery-source confidence are mature:
+
+- STT;
+- pronunciation evidence;
+- bounded roleplay;
+- speech-specific repair.
+
+## Phase P5 — Curriculum expansion
+
+Curriculum expansion resumes only after the adaptive loop is production-ready.
+
+Default research order:
+
+1. English A2 candidate map;
+2. Mandarin/Japanese continuation based on learner usage;
+3. new IT track based on real demand.
+
+No expansion is automatic merely because a public syllabus exists.
+
+## Frozen during P1
+
+Do not prioritize:
+
+- new languages;
+- third learning domain;
+- English A2 content production;
+- generic AI chat;
+- social/community;
+- marketplace;
+- large CMS rewrite;
+- microservices;
+- deep leaderboard/currency economy.
+
+## Decision rule
+
+A proposed feature should answer:
+
+> Which part of Learn -> Practice -> Feedback -> Remember -> Repair -> Apply -> Progress does this improve?
+
+If it cannot answer that clearly, it is not a current roadmap priority.
+
+## Quality gate
+
+Every phase preserves the existing release bar:
+
+- product intent and bounded scope;
+- backward compatibility;
+- mobile/a11y/error/retry behavior where relevant;
+- security/data-integrity review;
+- deterministic regression tests;
+- DB-backed E2E for learner state;
+- synchronized source-of-truth docs;
+- exact-head Product CI green.
 
 ## Related
 
-- [`learning-domains.md`](./learning-domains.md)
-- [`languages-tracks.md`](./languages-tracks.md)
-- [`catalog-architecture.md`](./catalog-architecture.md)
+- [`product-direction-v2.md`](./product-direction-v2.md)
+- [`adaptive-learning-v1.md`](./adaptive-learning-v1.md)
+- [`curriculum-product-completion.md`](./curriculum-product-completion.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md)
-- Talkory: `docs/spec/overview.md`, `content-strategy.md`
+- [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
+- [`languages-tracks.md`](./languages-tracks.md)
