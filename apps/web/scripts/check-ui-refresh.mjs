@@ -11,17 +11,52 @@ describe('UI refresh contract', () => {
   it('keeps the home page domain-first, concise, and motion-safe', () => {
     const home = read('app/pages/index.vue')
     assert.match(home, /class="hero home-hero"/)
-    assert.match(home, /home-learning-map/)
+    assert.match(home, /<HomeLearningMap/)
+    assert.match(home, /resolveHomeLearningMap/)
+    assert.match(home, /learningMapLinks/)
+    assert.match(home, /catalog\.lessonsByTrack/)
+    assert.match(home, /catalog\.progress/)
     assert.match(home, /domain-card--it/)
     assert.match(home, /domain-card--languages/)
     assert.match(home, /domain:\s*'it'/)
     assert.match(home, /domain:\s*'languages'/)
     assert.match(home, /prefers-reduced-motion:\s*reduce/)
     assert.match(home, /localePath\('\/tracks'\)/)
+    assert.doesNotMatch(home, /<span class="home-learning-chip chip-(?:sql|web|js|en|zh|ja)"/)
     assert.doesNotMatch(home, /firstTrackId/)
     assert.doesNotMatch(home, /domain\.underDevelopment/)
     assert.doesNotMatch(home, /home\.subtitle/)
     assert.doesNotMatch(home, /track\.description/)
+  })
+
+  it('keeps the circular learning map interactive, accessible, and catalog-driven', () => {
+    const component = read('app/components/HomeLearningMap.vue')
+    const resolver = read('app/utils/homeLearningMap.ts')
+
+    assert.match(component, /<nav class="home-learning-map" :aria-label=/)
+    assert.match(component, /<NuxtLink class="home-learning-core"/)
+    assert.match(component, /v-for="item in items"/)
+    assert.match(component, /<span>\{\{ item\.label \}\}<\/span>/)
+    assert.match(component, /--chip-progress/)
+    assert.match(component, /:aria-label="item\.ariaLabel"/)
+    assert.match(component, /:title="item\.title"/)
+    assert.match(component, /:focus-visible/)
+    assert.match(component, /prefers-reduced-motion:\s*reduce/)
+    assert.doesNotMatch(component, /<nav[^>]+aria-hidden="true"/)
+
+    for (const label of ['SQL', 'Web', 'JS', 'EN', '中文', '日本語']) {
+      assert.match(resolver, new RegExp(`label: '${label}'`))
+    }
+    assert.match(resolver, /category:\s*'sql'/)
+    assert.match(resolver, /category:\s*'web'/)
+    assert.match(resolver, /category:\s*'code'/)
+    assert.match(resolver, /targetLang:\s*'en'/)
+    assert.match(resolver, /targetLang:\s*'zh-Hans'/)
+    assert.match(resolver, /targetLang:\s*'ja'/)
+    assert.match(resolver, /languageTargetLangForTrack/)
+    assert.match(resolver, /trackProgress/)
+    assert.match(resolver, /\.sortOrder/)
+    assert.doesNotMatch(resolver, /english-basics|chinese-hsk|japanese-jlpt/)
   })
 
   it('keeps the loading skeleton structurally aligned with the new home', () => {

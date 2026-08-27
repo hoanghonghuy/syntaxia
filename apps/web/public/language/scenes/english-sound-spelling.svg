@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">English spelling and sound map</title>
+  <desc id="desc">A simple diagram showing that one written vowel can map to different spoken sounds, and that learners should listen before relying on spelling.</desc>
+  <rect width="720" height="360" rx="28" fill="#f7f8fc"/>
+  <rect x="58" y="92" width="180" height="176" rx="24" fill="#ffffff" stroke="#cfd5e6" stroke-width="3"/>
+  <text x="148" y="145" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="700" fill="#20263a">written word</text>
+  <text x="148" y="205" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="800" fill="#4f46e5">sit</text>
+  <text x="148" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="800" fill="#4f46e5">seat</text>
+  <path d="M260 145h188" stroke="#7c86a6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M429 132l22 13-22 13" fill="none" stroke="#7c86a6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="355" y="122" text-anchor="middle" font-family="system-ui,sans-serif" font-size="19" fill="#59617a">listen first</text>
+  <rect x="474" y="92" width="188" height="176" rx="24" fill="#eef0ff" stroke="#b9c0ff" stroke-width="3"/>
+  <text x="568" y="145" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" font-weight="700" fill="#20263a">spoken sound</text>
+  <text x="568" y="205" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="800" fill="#3730a3">/sɪt/</text>
+  <text x="568" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="34" font-weight="800" fill="#3730a3">/siːt/</text>
+  <text x="360" y="322" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#59617a">Spelling helps — but your ear decides the sound.</text>
+</svg>

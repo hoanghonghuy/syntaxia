@@ -57,7 +57,7 @@ Ok "auth/me"
 # synced DB/read model exposes exactly the same published node inventory.
 $flows = @(
   @{ Track = "chinese-hsk"; Slug = "greetings"; ExpectedLessons = 41 },
-  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 30 },
+  @{ Track = "english-basics"; Slug = "greetings"; ExpectedLessons = 35 },
   @{ Track = "japanese-jlpt"; Slug = "politeness"; ExpectedLessons = 28 },
   @{ Track = "chinese-it-vocab"; Slug = "hardware-software"; ExpectedLessons = 6 }
 )
@@ -78,9 +78,9 @@ foreach ($flow in $flows) {
   }
   Ok "$track exact lesson inventory=$($lessons.Count)"
 
-  $unitRows = @($lessons | Where-Object { $_.unitId })
+  $unitRows = @($lessons | Where-Object { $_.unitId -and $null -ne $_.unitOrder -and $_.unitRole })
   if ($unitRows.Count -ne $lessons.Count) {
-    Fail "$track has $($lessons.Count - $unitRows.Count) lesson summaries without unitId"
+    Fail "$track has $($lessons.Count - $unitRows.Count) lesson summaries without complete unit metadata"
   }
   $roles = @($lessons | ForEach-Object { $_.unitRole } | Where-Object { $_ })
   if ($roles.Count -ne $lessons.Count) {
@@ -97,6 +97,17 @@ foreach ($flow in $flows) {
       Fail "$track summary is missing checkpoint/review unit roles"
     }
     Ok "$track communicative-unit summary metadata"
+  }
+
+  if ($track -eq "english-basics") {
+    $foundationRows = @($lessons | Where-Object { [int]$_.unitOrder -eq 0 })
+    if ($foundationRows.Count -ne 5) {
+      Fail "english-basics Unit 0 runtime count $($foundationRows.Count) != expected 5"
+    }
+    if ($foundationRows[0].slug -ne "sound-spelling") {
+      Fail "english-basics foundation does not begin with sound-spelling"
+    }
+    Ok "english-basics Unit 0 sound/grammar foundation runtime metadata"
   }
 
   $lesson = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/lessons/${slug}?locale=en&track=$track" -Session $session
@@ -116,18 +127,10 @@ foreach ($flow in $flows) {
   }
   Ok "$track progress completed"
 
-  if ($track -eq "chinese-hsk") {
-    $reviewLessonId = $lessonId
-  }
-  if ($track -eq "english-basics") {
-    $englishLessonId = $lessonId
-  }
-  if ($track -eq "japanese-jlpt") {
-    $japaneseLessonId = $lessonId
-  }
-  if ($track -eq "chinese-it-vocab") {
-    $specialtyLessonId = $lessonId
-  }
+  if ($track -eq "chinese-hsk") { $reviewLessonId = $lessonId }
+  if ($track -eq "english-basics") { $englishLessonId = $lessonId }
+  if ($track -eq "japanese-jlpt") { $japaneseLessonId = $lessonId }
+  if ($track -eq "chinese-it-vocab") { $specialtyLessonId = $lessonId }
 
   $noteBody = (@{
     locale = "en"
@@ -159,18 +162,10 @@ if ($progRows.Count -lt 4) {
 }
 Ok "progress rows=$($progRows.Count)"
 
-if (-not $reviewLessonId) {
-  Fail "missing completed Mandarin lesson for review smoke"
-}
-if (-not $englishLessonId) {
-  Fail "missing completed English lesson for review smoke"
-}
-if (-not $japaneseLessonId) {
-  Fail "missing completed Japanese lesson for review smoke"
-}
-if (-not $specialtyLessonId) {
-  Fail "missing completed Chinese IT specialty lesson for review smoke"
-}
+if (-not $reviewLessonId) { Fail "missing completed Mandarin lesson for review smoke" }
+if (-not $englishLessonId) { Fail "missing completed English lesson for review smoke" }
+if (-not $japaneseLessonId) { Fail "missing completed Japanese lesson for review smoke" }
+if (-not $specialtyLessonId) { Fail "missing completed Chinese IT specialty lesson for review smoke" }
 
 # Mandarin: sync one authored card and prove repeated FSRS state persists across requests.
 $due = Invoke-SyntaxiaApi -Method GET `

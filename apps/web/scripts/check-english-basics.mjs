@@ -13,7 +13,15 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const repoRoot = join(webRoot, '../..')
 const read = (abs) => readFileSync(abs, 'utf8')
 
-const SLUGS = [
+const FOUNDATION_SLUGS = [
+  'sound-spelling',
+  'word-stress',
+  'core-be',
+  'foundation-checkpoint',
+  'foundation-review',
+]
+
+const COMMUNICATIVE_SLUGS = [
   'greetings',
   'meeting-checkpoint',
   'meeting-review',
@@ -46,7 +54,10 @@ const SLUGS = [
   'free-time-review',
 ]
 
+const SLUGS = [...FOUNDATION_SLUGS, ...COMMUNICATIVE_SLUGS]
+
 const FOUNDATION_UNITS = new Map([
+  ['en-a1-foundation-00', 0],
   ['en-a1-meeting-01', 1],
   ['en-a1-people-02', 2],
   ['en-a1-find-way-03', 3],
@@ -55,6 +66,18 @@ const FOUNDATION_UNITS = new Map([
   ['en-a1-shopping-06', 6],
   ['en-a1-home-07', 7],
   ['en-a1-free-time-08', 8],
+])
+
+const GRAMMAR_EVIDENCE = new Map([
+  ['core-be', /pattern:\s*"I am \/ you are \/ he-she-it is \/ we-they are"/],
+  ['greetings', /pattern:\s*"Hi, I'm …/],
+  ['people', /pattern:\s*"Who's that\? \/ This is … \/ He's … \/ She's …"/],
+  ['places', /pattern:\s*"Where's the …\? \/ It's here\./],
+  ['food-drink', /pattern:\s*"I'd like …, please\./],
+  ['daily-routine', /pattern:\s*"I … at … \/ Then I … \/ What time do you …\?"/],
+  ['shopping', /pattern:\s*"I'd like this … \/ I'll take it\./],
+  ['where-things', /pattern:\s*"Where's the …\? \/ It's on … \/ It's under … \/ It's in …"/],
+  ['invitations', /pattern:\s*"Do you want to …\? \/ Yes, let's …/],
 ])
 
 function scalar(body, key) {
@@ -67,17 +90,20 @@ function assessedIds(body) {
 }
 
 describe('english-basics A1 foundation curriculum', () => {
-  it('ships the A1 foundation map process doc', () => {
+  it('ships a CEFR-aligned language foundation map, not only Can-Do situations', () => {
     const map = join(repoRoot, 'docs/processes/english-basics-a1-map.md')
     assert.equal(existsSync(map), true)
     const body = read(map)
     assert.match(body, /Council of Europe/i)
-    assert.match(body, /ozbonus\/yle-vocabulary-dataset/)
-    assert.match(body, /8 units/i)
-    assert.match(body, /30 nodes/i)
+    assert.match(body, /phonolog/i)
+    assert.match(body, /grammar progression/i)
+    assert.match(body, /9 units/i)
+    assert.match(body, /35 nodes/i)
+    assert.match(body, /sound-spelling/)
+    assert.match(body, /core-be/)
   })
 
-  it('ships exactly 30 paired EN/VI V3 nodes', () => {
+  it('ships exactly 35 paired EN/VI V3 nodes with a real Unit 0 foundation', () => {
     for (const loc of ['en', 'vi']) {
       const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
       assert.equal(existsSync(dir), true, `missing ${dir}`)
@@ -90,6 +116,7 @@ describe('english-basics A1 foundation curriculum', () => {
         assert.match(raw, new RegExp(`locale:\\s*${loc}`))
         assert.match(raw, /cefr_level:\s*a1/)
         assert.match(raw, /^can_do:\s*".+"/m)
+        assert.match(raw, /^pattern:\s*".+"/m)
         assert.match(raw, /^unit_id:\s*[a-z0-9-]+\s*$/m)
         assert.match(raw, /^unit_role:\s*(?:lesson|checkpoint|review)\s*$/m)
         assert.match(raw, /^steps:/m)
@@ -104,6 +131,32 @@ describe('english-basics A1 foundation curriculum', () => {
         const unitId = scalar(raw, 'unit_id')
         assert.equal(FOUNDATION_UNITS.has(unitId), true, `${loc}/${slug}: unknown unit ${unitId}`)
         assert.equal(Number(scalar(raw, 'unit_order')), FOUNDATION_UNITS.get(unitId), `${loc}/${slug}: bad unit order`)
+      }
+    }
+  })
+
+  it('locks the sound/stress/be foundation and app-owned visuals', () => {
+    for (const asset of [
+      'english-sound-spelling.svg',
+      'english-word-stress.svg',
+      'english-be-sentence.svg',
+    ]) {
+      assert.equal(existsSync(join(webRoot, 'public/language/scenes', asset)), true, `missing ${asset}`)
+    }
+
+    for (const loc of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
+      assert.match(read(join(dir, 'sound-spelling.md')), /english-sound-spelling\.svg/)
+      assert.match(read(join(dir, 'word-stress.md')), /english-word-stress\.svg/)
+      assert.match(read(join(dir, 'core-be.md')), /english-be-sentence\.svg/)
+    }
+  })
+
+  it('locks representative grammar progression instead of incidental phrase exposure', () => {
+    for (const loc of ['en', 'vi']) {
+      const dir = join(repoRoot, `docs/curriculum/english-basics/${loc}`)
+      for (const [slug, evidence] of GRAMMAR_EVIDENCE) {
+        assert.match(read(join(dir, `${slug}.md`)), evidence, `${loc}/${slug}: grammar progression evidence drifted`)
       }
     }
   })
