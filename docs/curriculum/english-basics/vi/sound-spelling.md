@@ -47,6 +47,7 @@ steps:
       - { form: "name", reading: "/neɪm/", gloss: "chữ e cuối làm thay đổi mẫu nguyên âm trong từ này", example: "My name is Mia." }
   - type: practice
     id: en-fnd-sound-hear-meet
+    skills: ["en.sound.spelling", "en.listening.word-recognition"]
     kind: audio_choice
     prompt: "Nghe và chọn từ viết khớp."
     audioText: "meet"
@@ -55,6 +56,7 @@ steps:
     explanation: "Từ mục tiêu là meet /miːt/. Cả ba lựa chọn đều là từ thật, nên cần nghe nguyên âm thay vì tìm một dạng viết rõ ràng sai."
   - type: practice
     id: en-fnd-sound-hear-name
+    skills: ["en.sound.spelling", "en.listening.word-recognition"]
     kind: audio_choice
     prompt: "Nghe và chọn từ vừa nghe."
     audioText: "name"
@@ -63,6 +65,7 @@ steps:
     explanation: "Cả ba lựa chọn đều là từ thật. Hãy nghe phụ âm đầu và ghi nhớ dạng viết chuẩn cùng với dạng nói."
   - type: practice
     id: en-fnd-sound-type-hi
+    skills: ["en.sound.spelling", "en.listening.word-recognition"]
     kind: type_answer
     prompt: "Gõ lời chào vừa nghe."
     audioText: "hi"
@@ -74,12 +77,14 @@ steps:
   - type: checkpoint
     items:
       - id: en-fnd-sound-check-this
+        skills: ["en.sound.spelling", "en.listening.word-recognition"]
         kind: audio_choice
         prompt: "Nghe và chọn từ."
         audioText: "this"
         choices: ["this", "these", "thus"]
         answer: "this"
       - id: en-fnd-sound-check-meet
+        skills: ["en.sound.spelling", "en.listening.word-recognition"]
         kind: type_answer
         prompt: "Gõ từ vừa nghe."
         audioText: "meet"
