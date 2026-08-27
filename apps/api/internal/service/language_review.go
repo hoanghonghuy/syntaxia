@@ -120,7 +120,29 @@ func (s *LearningService) RecordLanguageReview(
 	if err != nil {
 		return domain.LanguageReviewCard{}, apperrors.Internal(err)
 	}
-	applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log)
+
+	observationScore, ok := learning.ReviewObservationScore(rating)
+	if !ok {
+		return domain.LanguageReviewCard{}, apperrors.Validation("rating must be between 1 and 4")
+	}
+	skillIDs := learning.LanguageReviewItemSkills(lesson.Exercise, itemKey)
+	evidence := make([]domain.SkillEvidence, 0, len(skillIDs))
+	for _, skillID := range skillIDs {
+		evidence = append(evidence, domain.SkillEvidence{
+			UserID:           before.UserID,
+			TrackID:          before.TrackID,
+			LessonID:         before.LessonID,
+			Locale:           before.Locale,
+			ItemKey:          before.ItemKey,
+			SkillID:          skillID,
+			Source:           learning.SkillEvidenceSourceLanguageReview,
+			Rating:           int16(rating),
+			ObservationScore: observationScore,
+			ObservedAt:       log.ReviewedAt,
+		})
+	}
+
+	applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log, evidence)
 	if err != nil {
 		return domain.LanguageReviewCard{}, apperrors.Internal(err)
 	}
