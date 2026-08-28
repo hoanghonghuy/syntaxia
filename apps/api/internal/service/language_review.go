@@ -20,6 +20,7 @@ import (
 const defaultLanguageReviewLimit = 12
 const maxLanguageReviewLimit = 50
 const maxLanguageReviewResponseMS = 24 * 60 * 60 * 1000
+const maxLanguageAttemptSubmissionBytes = 4096
 
 func (s *LearningService) DueLanguageReviews(
 	ctx context.Context,
@@ -74,6 +75,9 @@ func (s *LearningService) DueLanguageReviews(
 	return cards, nil
 }
 
+// RecordLanguageReview preserves the legacy rating API for compatibility. Its
+// evidence is deliberately lower confidence because correctness was decided by
+// the client before the rating reached the server.
 func (s *LearningService) RecordLanguageReview(
 	ctx context.Context,
 	userID uuid.UUID,
@@ -93,8 +97,8 @@ func (s *LearningService) RecordLanguageReview(
 	if rating < int(fsrs.Again) || rating > int(fsrs.Easy) {
 		return domain.LanguageReviewCard{}, apperrors.Validation("rating must be between 1 and 4")
 	}
-	if responseMS != nil && (*responseMS < 0 || *responseMS > maxLanguageReviewResponseMS) {
-		return domain.LanguageReviewCard{}, apperrors.Validation("responseMs must be between 0 and 86400000")
+	if err := validateLanguageReviewResponseMS(responseMS); err != nil {
+		return domain.LanguageReviewCard{}, err
 	}
 
 	lesson, err := s.repo.GetCompletedLanguageLesson(ctx, userID, lessonID, locale)
@@ -120,29 +124,16 @@ func (s *LearningService) RecordLanguageReview(
 	if err != nil {
 		return domain.LanguageReviewCard{}, apperrors.Internal(err)
 	}
-
-	observationScore, ok := learning.ReviewObservationScore(rating)
-	if !ok {
-		return domain.LanguageReviewCard{}, apperrors.Validation("rating must be between 1 and 4")
-	}
-	skillIDs := learning.LanguageReviewItemSkills(lesson.Exercise, itemKey)
-	evidence := make([]domain.SkillEvidence, 0, len(skillIDs))
-	for _, skillID := range skillIDs {
-		evidence = append(evidence, domain.SkillEvidence{
-			UserID:           before.UserID,
-			TrackID:          before.TrackID,
-			LessonID:         before.LessonID,
-			Locale:           before.Locale,
-			ItemKey:          before.ItemKey,
-			SkillID:          skillID,
-			Source:           learning.SkillEvidenceSourceLanguageReview,
-			Rating:           int16(rating),
-			ObservationScore: observationScore,
-			ObservedAt:       log.ReviewedAt,
-		})
+	evidence, err := buildLanguageSkillEvidence(
+		lesson.Exercise, before, rating, log.ReviewedAt,
+		learning.SkillEvidenceSourceLanguageReview,
+		learning.LanguageReviewEvidenceConfidence,
+	)
+	if err != nil {
+		return domain.LanguageReviewCard{}, err
 	}
 
-	applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log, evidence)
+	applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, log, evidence, nil)
 	if err != nil {
 		return domain.LanguageReviewCard{}, apperrors.Internal(err)
 	}
@@ -150,6 +141,144 @@ func (s *LearningService) RecordLanguageReview(
 		return domain.LanguageReviewCard{}, apperrors.Conflict("review state changed; retry the answer")
 	}
 	return after, nil
+}
+
+// RecordGradedLanguageAttempt is the P1.1 authoritative path: the browser sends
+// the raw answer, the server grades against published curriculum, maps the
+// deterministic result to FSRS Again/Good, and persists review + attempt +
+// mastery evidence atomically. Raw learner text is never persisted.
+func (s *LearningService) RecordGradedLanguageAttempt(
+	ctx context.Context,
+	userID uuid.UUID,
+	lessonID, locale, itemKey, submission string,
+	responseMS *int,
+) (domain.LanguageAttemptResult, error) {
+	lessonID = strings.TrimSpace(lessonID)
+	locale = strings.TrimSpace(locale)
+	itemKey = strings.TrimSpace(itemKey)
+	if lessonID == "" || locale == "" || itemKey == "" {
+		return domain.LanguageAttemptResult{}, apperrors.Validation("lessonId, locale and itemKey are required")
+	}
+	if err := validate.Locale(locale); err != nil {
+		return domain.LanguageAttemptResult{}, err
+	}
+	if strings.TrimSpace(submission) == "" {
+		return domain.LanguageAttemptResult{}, apperrors.Validation("submission is required")
+	}
+	if len(submission) > maxLanguageAttemptSubmissionBytes {
+		return domain.LanguageAttemptResult{}, apperrors.Validation("submission is too long")
+	}
+	if err := validateLanguageReviewResponseMS(responseMS); err != nil {
+		return domain.LanguageAttemptResult{}, err
+	}
+
+	lesson, err := s.repo.GetCompletedLanguageLesson(ctx, userID, lessonID, locale)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.LanguageAttemptResult{}, apperrors.NotFound("review item not found")
+	}
+	if err != nil {
+		return domain.LanguageAttemptResult{}, apperrors.Internal(err)
+	}
+	if !slices.Contains(learning.LanguageReviewItemKeys(lesson.Exercise), itemKey) {
+		return domain.LanguageAttemptResult{}, apperrors.NotFound("review item not found")
+	}
+	correct, gradable := learning.GradeLanguageReviewSubmission(
+		lesson.Exercise, itemKey, lesson.TrackID, submission,
+	)
+	if !gradable {
+		return domain.LanguageAttemptResult{}, apperrors.Internal(errors.New("published review item is not deterministically gradable"))
+	}
+
+	before, err := s.repo.GetLanguageReviewCard(ctx, userID, lessonID, locale, itemKey)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.LanguageAttemptResult{}, apperrors.NotFound("review item not found")
+	}
+	if err != nil {
+		return domain.LanguageAttemptResult{}, apperrors.Internal(err)
+	}
+
+	rating := int(fsrs.Again)
+	if correct {
+		rating = int(fsrs.Good)
+	}
+	now := time.Now().UTC()
+	after, reviewLog, err := scheduleLanguageReview(before, fsrs.Rating(rating), responseMS, now)
+	if err != nil {
+		return domain.LanguageAttemptResult{}, apperrors.Internal(err)
+	}
+	evidence, err := buildLanguageSkillEvidence(
+		lesson.Exercise, before, rating, now,
+		learning.SkillEvidenceSourceServerGradedAttempt,
+		learning.ServerGradedAttemptEvidenceConfidence,
+	)
+	if err != nil {
+		return domain.LanguageAttemptResult{}, err
+	}
+	attempt := domain.LanguageAttemptLog{
+		UserID:        before.UserID,
+		TrackID:       before.TrackID,
+		LessonID:      before.LessonID,
+		Locale:        before.Locale,
+		ItemKey:       before.ItemKey,
+		Correct:       correct,
+		ResponseMS:    responseMS,
+		GraderVersion: learning.LanguageAttemptGraderVersion,
+		Confidence:    learning.ServerGradedAttemptEvidenceConfidence,
+		GradedAt:      now,
+	}
+
+	applied, err := s.repo.SaveLanguageReviewCAS(ctx, before, after, reviewLog, evidence, &attempt)
+	if err != nil {
+		return domain.LanguageAttemptResult{}, apperrors.Internal(err)
+	}
+	if !applied {
+		return domain.LanguageAttemptResult{}, apperrors.Conflict("review state changed; retry the answer")
+	}
+	return domain.LanguageAttemptResult{
+		Correct:    correct,
+		Rating:     rating,
+		Confidence: learning.ServerGradedAttemptEvidenceConfidence,
+		Card:       after,
+	}, nil
+}
+
+func validateLanguageReviewResponseMS(responseMS *int) error {
+	if responseMS != nil && (*responseMS < 0 || *responseMS > maxLanguageReviewResponseMS) {
+		return apperrors.Validation("responseMs must be between 0 and 86400000")
+	}
+	return nil
+}
+
+func buildLanguageSkillEvidence(
+	exercise map[string]any,
+	card domain.LanguageReviewCard,
+	rating int,
+	observedAt time.Time,
+	source string,
+	confidence float64,
+) ([]domain.SkillEvidence, error) {
+	observationScore, ok := learning.ReviewObservationScore(rating)
+	if !ok {
+		return nil, apperrors.Validation("rating must be between 1 and 4")
+	}
+	skillIDs := learning.LanguageReviewItemSkills(exercise, card.ItemKey)
+	evidence := make([]domain.SkillEvidence, 0, len(skillIDs))
+	for _, skillID := range skillIDs {
+		evidence = append(evidence, domain.SkillEvidence{
+			UserID:           card.UserID,
+			TrackID:          card.TrackID,
+			LessonID:         card.LessonID,
+			Locale:           card.Locale,
+			ItemKey:          card.ItemKey,
+			SkillID:          skillID,
+			Source:           source,
+			Rating:           int16(rating),
+			ObservationScore: observationScore,
+			Confidence:       confidence,
+			ObservedAt:       observedAt,
+		})
+	}
+	return evidence, nil
 }
 
 func scheduleLanguageReview(

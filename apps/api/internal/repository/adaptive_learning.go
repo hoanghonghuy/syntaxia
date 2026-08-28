@@ -14,7 +14,7 @@ func (r *Repository) ListSkillMastery(
 	trackID, locale string,
 ) ([]domain.SkillMastery, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT track_id, locale, skill_id, score, evidence_count, last_evidence_at
+		SELECT track_id, locale, skill_id, score, evidence_count, evidence_weight, last_evidence_at
 		FROM learner_skill_mastery
 		WHERE user_id = $1
 			AND ($2 = '' OR track_id = $2)
@@ -35,6 +35,7 @@ func (r *Repository) ListSkillMastery(
 			&mastery.SkillID,
 			&mastery.Score,
 			&mastery.EvidenceCount,
+			&mastery.EvidenceWeight,
 			&mastery.LastEvidenceAt,
 		); err != nil {
 			return nil, err

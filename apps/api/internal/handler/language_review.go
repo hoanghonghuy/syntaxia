@@ -14,10 +14,11 @@ import (
 // RegisterLanguageRoutes keeps language-learning APIs separate from the legacy
 // lesson/progress handlers while the product moves to the v3 player.
 func (h *Handler) RegisterLanguageRoutes(r *gin.Engine) {
-	group := r.Group("/api/v1/language/review")
+	group := r.Group("/api/v1/language")
 	group.Use(middleware.Auth(h.svc.Tokens))
-	group.GET("/due", h.dueLanguageReviews)
-	group.POST("", h.recordLanguageReview)
+	group.GET("/review/due", h.dueLanguageReviews)
+	group.POST("/review", h.recordLanguageReview)
+	group.POST("/attempt", h.recordGradedLanguageAttempt)
 }
 
 func (h *Handler) dueLanguageReviews(c *gin.Context) {
@@ -68,4 +69,31 @@ func (h *Handler) recordLanguageReview(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, card)
+}
+
+func (h *Handler) recordGradedLanguageAttempt(c *gin.Context) {
+	claims, _ := middleware.ClaimsFromContext(c)
+	var req struct {
+		LessonID   string `json:"lessonId"`
+		Locale     string `json:"locale"`
+		ItemKey    string `json:"itemKey"`
+		Submission string `json:"submission"`
+		ResponseMS *int   `json:"responseMs"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		middleware.JSONError(c, apperrors.Validation("invalid body"))
+		return
+	}
+	if req.Locale == "" {
+		req.Locale = constants.DefaultLocale
+	}
+	result, err := h.svc.Learning.RecordGradedLanguageAttempt(
+		c.Request.Context(), claims.UserID, req.LessonID, req.Locale,
+		req.ItemKey, req.Submission, req.ResponseMS,
+	)
+	if err != nil {
+		middleware.JSONError(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, result)
 }

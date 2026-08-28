@@ -3,6 +3,10 @@ package learning
 import "strings"
 
 const SkillEvidenceSourceLanguageReview = "language_review"
+const SkillEvidenceSourceServerGradedAttempt = "server_graded_attempt"
+
+const LanguageReviewEvidenceConfidence = 0.5
+const ServerGradedAttemptEvidenceConfidence = 1.0
 
 // ReviewObservationScore maps the existing 1..4 FSRS answer rating to an
 // explainable 0..100 mastery observation. The aggregate is intentionally
@@ -25,13 +29,21 @@ func ReviewObservationScore(rating int) (float64, bool) {
 // LanguageReviewItemSkills returns authored stable skill ids for one assessed
 // language item. No grammar/skill inference is performed from prompt text.
 func LanguageReviewItemSkills(exercise map[string]any, itemKey string) []string {
+	item, ok := languageReviewItem(exercise, itemKey)
+	if !ok {
+		return nil
+	}
+	return authoredSkillIDs(item)
+}
+
+func languageReviewItem(exercise map[string]any, itemKey string) (map[string]any, bool) {
 	itemKey = strings.TrimSpace(itemKey)
 	if exercise == nil || itemKey == "" {
-		return nil
+		return nil, false
 	}
 	rawSteps, ok := exercise["steps"].([]any)
 	if !ok {
-		return nil
+		return nil, false
 	}
 	for stepIndex, raw := range rawSteps {
 		step, ok := raw.(map[string]any)
@@ -42,7 +54,7 @@ func LanguageReviewItemSkills(exercise map[string]any, itemKey string) []string 
 		switch typeName {
 		case "practice":
 			if reviewItemKey(step, stepIndex, -1) == itemKey {
-				return authoredSkillIDs(step)
+				return step, true
 			}
 		case "checkpoint":
 			if rawItems, ok := step["items"].([]any); ok {
@@ -52,15 +64,15 @@ func LanguageReviewItemSkills(exercise map[string]any, itemKey string) []string 
 						continue
 					}
 					if reviewItemKey(item, stepIndex, itemIndex) == itemKey {
-						return authoredSkillIDs(item)
+						return item, true
 					}
 				}
 			} else if reviewItemKey(step, stepIndex, -1) == itemKey {
-				return authoredSkillIDs(step)
+				return step, true
 			}
 		}
 	}
-	return nil
+	return nil, false
 }
 
 func authoredSkillIDs(item map[string]any) []string {
