@@ -50,18 +50,37 @@ $wrongBody = (@{ lessonId = $lessonId; locale = "en"; itemKey = $itemKey; submis
 $wrong = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/attempt" -JsonBody $wrongBody -Session $session
 if ($wrong.Json.correct) { Fail "Today E2E wrong answer was accepted" }
 
+# P1.3 must consume P1.2's deterministic ordering rather than inventing a new
+# recommendation score. One authored answer can produce evidence for multiple
+# skills, so the expected repair is the first P1.2 candidate, not a hard-coded
+# skill id.
+$weak = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/learning/weak-skills?track=english-basics&locale=en&limit=3" -Session $session
+$weakCandidates = @($weak.Json.candidates)
+if ($weakCandidates.Count -lt 2) { Fail "Today E2E did not produce the expected multi-skill P1.2 evidence" }
+$expectedRepair = $weakCandidates | Select-Object -First 1
+if (-not $expectedRepair -or $expectedRepair.priority -ne "high" -or [double]$expectedRepair.masteryScore -ne 50) {
+  Fail "P1.2 first repair candidate is not the expected high-priority mastery-50 signal"
+}
+if (-not (@($expectedRepair.reasons) -contains "recent_incorrect_attempt")) { Fail "P1.2 first repair candidate lost recent-mistake explanation" }
+if (-not $expectedRepair.repairLesson -or $expectedRepair.repairLesson.lessonId -ne $lessonId) { Fail "P1.2 first repair candidate escaped completed curriculum frontier" }
+
 $today = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/learning/today?track=english-basics&locale=en&targetMinutes=15" -Session $session
 if ($today.Json.trackId -ne "english-basics" -or $today.Json.locale -ne "en") { Fail "Today plan scope mismatch" }
 if ([int]$today.Json.targetMinutes -ne 15) { Fail "Today target budget mismatch" }
-if ([int]$today.Json.estimatedMinutes -gt 15 -or [int]$today.Json.estimatedMinutes -lt 1) { Fail "Today estimated budget is not bounded" }
-if ([int]$today.Json.weakSkillCount -lt 2) { Fail "Today plan lost P1.2 weak-skill signals" }
+if ([int]$today.Json.estimatedMinutes -ne 15) { Fail "Today plan did not fill the bounded 15-minute budget" }
+if ([int]$today.Json.weakSkillCount -ne $weakCandidates.Count) { Fail "Today plan weak-skill count diverged from P1.2 input" }
+if ([int]$today.Json.dueReviewCount -lt 1) { Fail "Today plan lost due FSRS review state" }
 
 $items = @($today.Json.items)
-$repair = @($items | Where-Object { $_.type -eq "repair" -and $_.skillId -eq "en.sound.spelling" }) | Select-Object -First 1
-if (-not $repair) { Fail "Today plan missing high-priority spelling repair" }
-if ($repair.priority -ne "high" -or [double]$repair.masteryScore -ne 50) { Fail "Today repair priority/mastery mismatch" }
+$review = @($items | Where-Object { $_.type -eq "review" }) | Select-Object -First 1
+if (-not $review -or [int]$review.reviewCount -lt 1) { Fail "Today plan missing due-review action" }
+
+$repair = @($items | Where-Object { $_.type -eq "repair" }) | Select-Object -First 1
+if (-not $repair) { Fail "Today plan missing P1.2 repair action" }
+if ($repair.skillId -ne $expectedRepair.skillId) { Fail "Today repair did not consume P1.2 first candidate" }
+if ($repair.priority -ne $expectedRepair.priority -or [double]$repair.masteryScore -ne [double]$expectedRepair.masteryScore) { Fail "Today repair priority/mastery diverged from P1.2" }
 if (-not (@($repair.reasons) -contains "recent_incorrect_attempt")) { Fail "Today repair lost recent-mistake explanation" }
-if (-not $repair.lesson -or $repair.lesson.lessonId -ne $lessonId) { Fail "Today repair escaped completed curriculum frontier" }
+if (-not $repair.lesson -or $repair.lesson.lessonId -ne $expectedRepair.repairLesson.lessonId) { Fail "Today repair escaped P1.2 completed curriculum frontier" }
 
 $newLesson = @($items | Where-Object { $_.type -eq "lesson" }) | Select-Object -First 1
 if (-not $newLesson -or -not $newLesson.lesson) { Fail "Today plan missing next curriculum action" }
@@ -71,7 +90,7 @@ if ([int]$newLesson.lesson.sortOrder -le [int]$repair.lesson.sortOrder) { Fail "
 $serialized = $today.Json | ConvertTo-Json -Depth 10 -Compress
 if ($serialized -match "Meet!" -or $serialized -match "Goodbye") { Fail "Today plan leaked raw learner submissions" }
 
-Ok "Adaptive Today plan composes weakness + next curriculum action inside a 15-minute budget"
+Ok "Adaptive Today plan consumes P1.2 + due reviews + next curriculum action inside an exact 15-minute budget"
 
 Invoke-SyntaxiaApi -Method POST -Path "/api/v1/auth/logout" -Session $session -ExpectStatus @(200, 204) | Out-Null
 Write-Host "PASS: Adaptive Today E2E gate"
