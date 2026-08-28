@@ -1,5 +1,9 @@
 # English Guided Practice V1
 
+## Status
+
+**P2 is in progress. P2.0 is implemented; P2.1 is next.**
+
 ## Purpose
 
 Define how Syntaxia turns the completed English A1 curriculum and Learning Intelligence V1 into bounded, curriculum-constrained guided practice without becoming a generic chatbot.
@@ -39,7 +43,7 @@ completed authored lesson(s) + unit checkpoint
 
 A unit blueprint becomes eligible only when every authored prerequisite slug in that blueprint resolves to a currently published lesson in the requested locale and the learner has completed each prerequisite.
 
-For P2.0, prerequisites are the unit's teaching lesson(s) plus its checkpoint. Missing/unpublished curriculum fails closed.
+P2.0 prerequisites are the unit's teaching lesson(s) plus its checkpoint. Missing/unpublished curriculum fails closed.
 
 Authenticated read API:
 
@@ -63,6 +67,8 @@ A practice blueprint is stable authored product metadata. It declares:
 - stable authored exit-check item keys.
 
 The blueprint references existing checkpoint identities instead of copying answer truth into a second grading system.
+
+P2.0 has exactly **9 blueprints**, one for every communicative Unit 1–9. Unit 3 explicitly includes the number exit item and Unit 8 explicitly includes the planning/close item so every declared target skill has an evidence path.
 
 ## AI boundary
 
@@ -96,7 +102,7 @@ Provider structured output is treated as untrusted data. Schema-valid output sti
 
 ## Evidence boundary
 
-Guided-practice turns are formative in V1. They do not directly create mastery evidence.
+Guided-practice interaction turns are formative in V1. They do not directly create mastery evidence.
 
 Authoritative learner evidence remains:
 
@@ -110,7 +116,15 @@ authored exit-check item
 -> mastery
 ```
 
-P2 must consume the P1 evidence/mastery boundary instead of inventing a second scoring path.
+P2 consumes the P1 evidence/mastery boundary instead of inventing a second scoring path.
+
+P2.0 now locks this mechanically:
+
+- every blueprint target skill must be covered by one or more listed exit-check item keys;
+- each listed exit item must carry authored `skills` metadata;
+- the EN and VI variants of each exit item must carry the same ordered skill ids;
+- the Unit 1 E2E completes the unit, syncs the stable exit cards, submits raw answers through `/api/v1/language/attempt`, and requires mastery `80` with evidence weight `1` for greeting, self-introduction and closing;
+- attempt responses must not echo the raw learner answer.
 
 ## Data minimization
 
@@ -120,19 +134,26 @@ If session persistence is introduced in a later P2 slice, store only the minimum
 
 ## Implementation phases
 
-### P2.0 — contract and eligibility
+### P2.0 — contract, eligibility and exit evidence
+
+**Status: implemented.**
 
 - authored Unit 1–9 blueprint registry;
-- deterministic validation;
+- deterministic identity/prerequisite validation;
 - authenticated eligibility read model;
-- no migration, AI provider, transcript storage, or new grader.
+- explicit Unit 1–9 exit-check skill coverage;
+- EN/VI skill parity regression;
+- API/E2E proof of eligibility + shared P1 exit grading/mastery;
+- no migration, AI provider, transcript storage, session table, or new grader.
 
 ### P2.1 — deterministic fallback state machine
 
-- 3–5 authored interaction turns;
-- next-turn state owned by server/product contract;
-- deterministic fallback works with zero AI configuration;
-- exit-check handoff uses existing checkpoint item identities.
+**Status: next.**
+
+- define 3–5 authored interaction turns;
+- keep next-turn state owned by the practice product contract;
+- make the whole scenario work with zero AI configuration;
+- terminate at existing stable exit-check identities.
 
 ### P2.2 — optional AI variation adapter
 
@@ -180,4 +201,5 @@ If session persistence is introduced in a later P2 slice, store only the minimum
 - [`english-basics-a1-map.md`](./english-basics-a1-map.md)
 - [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
 - [`language-review-session.md`](./language-review-session.md)
+- [`e2e-smoke.md`](./e2e-smoke.md)
 - `openspec/changes/english-guided-practice-v1/`
