@@ -6,9 +6,9 @@
 - [x] Validate identity/order/prerequisite/skill/exit-check invariants.
 - [x] Derive eligibility from published curriculum + authenticated learner progress.
 - [x] Add authenticated eligibility API.
-- [ ] Add source-of-truth process documentation and index entry.
-- [ ] Add authoritative exit-check skill coverage for the blueprint targets.
-- [ ] Add API/E2E regression for eligibility.
+- [x] Add source-of-truth process documentation and index entry.
+- [x] Add authoritative exit-check skill coverage for the blueprint targets.
+- [x] Add API/E2E regression for eligibility and P1 exit-check evidence.
 
 ## P2.1 — deterministic fallback state machine
 
