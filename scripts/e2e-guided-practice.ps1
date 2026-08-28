@@ -68,7 +68,8 @@ Invoke-SyntaxiaApi -Method PUT -Path "/api/v1/progress/$($checkpoint.Json.id)" -
 $afterCheckpoint = Get-Eligibility
 $u1Ready = @(@($afterCheckpoint.Json.units) | Where-Object { [int]$_.blueprint.unitOrder -eq 1 }) | Select-Object -First 1
 if (-not $u1Ready.eligible -or -not $u1Ready.curriculumReady) { Fail "Unit 1 should unlock after lesson + checkpoint completion" }
-if (@($u1Ready.missingPrerequisiteSlugs).Count -ne 0) { Fail "eligible Unit 1 still reports missing prerequisites" }
+$remainingPrerequisites = @($u1Ready.missingPrerequisiteSlugs | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+if ($remainingPrerequisites.Count -ne 0) { Fail "eligible Unit 1 still reports missing prerequisites: $($remainingPrerequisites -join ', ')" }
 
 $u2 = @(@($afterCheckpoint.Json.units) | Where-Object { [int]$_.blueprint.unitOrder -eq 2 }) | Select-Object -First 1
 if (-not $u2 -or $u2.eligible) { Fail "completing Unit 1 must not unlock Unit 2 guided practice" }
