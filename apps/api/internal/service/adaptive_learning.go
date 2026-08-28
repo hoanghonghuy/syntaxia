@@ -60,10 +60,22 @@ func (s *LearningService) ListWeakSkills(
 	}
 
 	now := time.Now().UTC()
+	model := domain.WeakSkillReadModel{
+		TrackID:          trackID,
+		Locale:           locale,
+		AsOf:             now,
+		RecentWindowDays: int(learning.WeakSkillRecentWindow / (24 * time.Hour)),
+		Candidates:       make([]domain.WeakSkillCandidate, 0),
+	}
 	frontier, err := s.repo.GetLearningFrontier(ctx, userID, trackID, locale)
 	if err != nil {
 		return domain.WeakSkillReadModel{}, apperrors.Internal(err)
 	}
+	model.Frontier = frontier
+	if frontier == nil {
+		return model, nil
+	}
+
 	signals, err := s.repo.ListWeakSkillSignals(
 		ctx,
 		userID,
@@ -74,13 +86,6 @@ func (s *LearningService) ListWeakSkills(
 	if err != nil {
 		return domain.WeakSkillReadModel{}, apperrors.Internal(err)
 	}
-
-	return domain.WeakSkillReadModel{
-		TrackID:          trackID,
-		Locale:           locale,
-		AsOf:             now,
-		RecentWindowDays: int(learning.WeakSkillRecentWindow / (24 * time.Hour)),
-		Frontier:         frontier,
-		Candidates:       learning.BuildWeakSkillCandidates(signals, now, limit),
-	}, nil
+	model.Candidates = learning.BuildWeakSkillCandidates(signals, now, limit)
+	return model, nil
 }

@@ -35,6 +35,12 @@ func BuildWeakSkillCandidates(
 ) []domain.WeakSkillCandidate {
 	candidates := make([]domain.WeakSkillCandidate, 0, len(signals))
 	for _, signal := range signals {
+		// A repair recommendation is actionable only when it resolves to a
+		// currently completed, published lesson. Historical mastery survives a
+		// progress reset, but P1.2 must never recommend outside today's frontier.
+		if signal.RepairLesson == nil {
+			continue
+		}
 		if signal.Score >= WeakSkillMasteryTarget && signal.RecentMistakes == 0 {
 			continue
 		}

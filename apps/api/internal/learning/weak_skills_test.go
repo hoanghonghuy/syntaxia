@@ -43,6 +43,7 @@ func TestBuildWeakSkillCandidatesExplainsAndOrdersRepairs(t *testing.T) {
 			EvidenceWeight: 2,
 			LastEvidenceAt: now,
 			NextReviewAt:   &future,
+			RepairLesson:   lesson,
 		},
 		{
 			SkillID:        "skill.thin",
@@ -51,10 +52,19 @@ func TestBuildWeakSkillCandidatesExplainsAndOrdersRepairs(t *testing.T) {
 			EvidenceWeight: 0.5,
 			LastEvidenceAt: now,
 			NextReviewAt:   &past,
+			RepairLesson:   lesson,
 		},
 		{
 			SkillID:        "skill.strong",
 			Score:          85,
+			EvidenceCount:  3,
+			EvidenceWeight: 3,
+			LastEvidenceAt: now,
+			RepairLesson:   lesson,
+		},
+		{
+			SkillID:        "skill.historical-only",
+			Score:          20,
 			EvidenceCount:  3,
 			EvidenceWeight: 3,
 			LastEvidenceAt: now,
@@ -97,9 +107,10 @@ func TestBuildWeakSkillCandidatesExplainsAndOrdersRepairs(t *testing.T) {
 
 func TestBuildWeakSkillCandidatesCapsResult(t *testing.T) {
 	now := time.Now().UTC()
+	lesson := &domain.LearningLessonRef{LessonID: "lesson-1", Slug: "lesson-1", Title: "Lesson 1", SortOrder: 1}
 	signals := []domain.WeakSkillSignal{
-		{SkillID: "a", Score: 20, EvidenceWeight: 1, LastEvidenceAt: now},
-		{SkillID: "b", Score: 30, EvidenceWeight: 1, LastEvidenceAt: now},
+		{SkillID: "a", Score: 20, EvidenceWeight: 1, LastEvidenceAt: now, RepairLesson: lesson},
+		{SkillID: "b", Score: 30, EvidenceWeight: 1, LastEvidenceAt: now, RepairLesson: lesson},
 	}
 	got := BuildWeakSkillCandidates(signals, now, 1)
 	if len(got) != 1 || got[0].SkillID != "a" {
