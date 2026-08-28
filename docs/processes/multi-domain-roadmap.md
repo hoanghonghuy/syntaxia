@@ -17,7 +17,7 @@ Syntaxia
 └── Languages: input -> notice -> interact -> produce -> checkpoint -> review
 ```
 
-The next phase is not catalog expansion. It is turning existing curriculum, progress, sandboxes, assessments, and FSRS into an adaptive learning loop.
+The current direction is not catalog expansion. Learning Intelligence V1 is now complete within its declared P1.0–P1.3 scope; the next phase turns that foundation into richer curriculum-constrained guided practice.
 
 ## Current shipped foundation
 
@@ -48,16 +48,18 @@ The next phase is not catalog expansion. It is turning existing curriculum, prog
 ### Platform
 
 - shared account/auth;
-- Home learning map;
+- Home learning map for exploration/new learners;
+- returning-learner Today adaptive surface;
 - cross-domain Continue/progress;
 - PostgreSQL persistence;
 - immutable skill evidence and confidence-weighted mastery;
 - explainable weak-skill read model;
+- stateless bounded daily-session composition;
 - product CI with cold Go tests, `govulncheck`, production npm audit, Nuxt build, curriculum gates, and PostgreSQL-backed release E2E.
 
 ## Phase P1 — Learning Intelligence V1
 
-**Status: active.**
+**Status: implemented within the declared V1 scope.**
 
 Source of truth: [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).
 
@@ -84,7 +86,7 @@ Implemented contracts:
 
 **Status: implemented.**
 
-Production language review now supports:
+Production language review supports:
 
 ```text
 raw answer
@@ -137,30 +139,44 @@ There is deliberately no ML ranking and no persisted recommendation table. Histo
 
 ### P1.3 — Adaptive Daily Session
 
-**Status: next.**
+**Status: implemented.**
 
-Compose a bounded session from:
+Authenticated endpoint:
 
-```text
-due review
-+ P1.2 weak-skill repair
-+ next curriculum action
+```http
+GET /api/v1/learning/today?track=<track>&locale=<locale>&targetMinutes=15
 ```
 
-P1.3 must consume the existing weak-skill read model rather than duplicate weakness/ranking rules.
-
-Signed-in Home should evolve toward:
+The daily composer combines:
 
 ```text
-Today
--> Repair / Review
--> Current paths
--> Explore
+P1.2 first weak-skill repair candidate
++ due FSRS review work
++ next published incomplete curriculum action
++ bounded time budget
+-> Today plan
 ```
+
+Contracts:
+
+- default target is 15 minutes; accepted range is 10–30;
+- P1.3 consumes P1.2 ordering rather than duplicating or reranking weakness rules;
+- one authored answer may map to multiple skills, so candidate #1 from P1.2 is the repair source of truth;
+- `high` / `medium` weakness reserves repair capacity before new content;
+- a `watch`-only signal does not block new curriculum progression;
+- due reviews fill the remaining bounded capacity;
+- at most one repair and one next lesson are composed in V1;
+- the Today session is stateless and adds no persisted recommendation/session table;
+- Home keeps the exploration map for guests/no-history learners and switches returning learners to the Today surface;
+- Today actions deep-link to existing review and lesson flows rather than inventing another player.
+
+Release E2E independently proves a fresh English learner can produce deterministic Good/Again evidence, obtain the P1.2 ordered repair candidates, and receive due review + candidate #1 repair + next curriculum action inside the exact 15-minute fixture without raw-answer leakage.
 
 ## Phase P2 — English Guided Practice V1
 
-Use English as the first guided-practice language because its A1 foundation is now bounded and audited.
+**Status: next.**
+
+Use English as the first guided-practice language because its A1 foundation is bounded/audited and its stable skill/evidence pipeline now feeds the complete P1 learning-intelligence loop.
 
 Start text-first.
 
@@ -171,11 +187,13 @@ AI may generate a scenario/variant only from:
 - known weak skills;
 - explicit allowed skill targets.
 
+P2 must preserve deterministic grading where authored answer truth exists and must consume, not replace, the P1 mastery/weakness/review boundaries.
+
 Do not ship a generic chatbot disconnected from curriculum/progress.
 
 ## Phase P3 — Diagnostic and Skill Profile
 
-Only after evidence/mastery quality is reliable:
+Only after evidence/mastery quality is reliable in real learner use:
 
 - short entry diagnostic;
 - recommended curriculum frontier;
@@ -195,7 +213,7 @@ Add speech evidence after text practice and mastery-source confidence are mature
 
 ## Phase P5 — Curriculum expansion
 
-Curriculum expansion resumes only after the adaptive loop is production-ready.
+Curriculum expansion resumes only after the adaptive/guided-practice loop is product-ready.
 
 Default research order:
 
@@ -205,7 +223,7 @@ Default research order:
 
 No expansion is automatic merely because a public syllabus exists.
 
-## Frozen during P1
+## Frozen during P2 entry
 
 Do not prioritize:
 
@@ -239,6 +257,8 @@ Every phase preserves the existing release bar:
 - DB-backed E2E for learner state;
 - synchronized source-of-truth docs;
 - exact-head Product CI green.
+
+A green earlier head is only an implementation checkpoint. The PR is review-ready only when the final head after the last code/test/documentation change passes canonical Product CI.
 
 ## Related
 
