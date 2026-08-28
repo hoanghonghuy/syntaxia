@@ -71,7 +71,8 @@ test('lesson and review routes use the production language flow', () => {
 
   const review = read('app/pages/tracks/[track]/review.vue')
   assert.match(review, /dueLanguageReviews\(/, 'review route missing due-card flow')
-  assert.match(review, /recordLanguageReview\(/, 'review route missing persisted review submission')
+  assert.match(review, /recordLanguageAttempt\(/, 'review route missing server-graded persisted attempt')
+  assert.doesNotMatch(review, /recordLanguageReview\(/, 'review route must not persist client-decided ratings')
   assert.match(review, /completedLessonSummaries/, 'review route must derive reviewable completed lessons')
   assert.match(review, /extractIndexedReviewExercisesFromLesson/, 'review route must map authored stable review items')
 })
