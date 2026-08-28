@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  English Guided Practice P2.0 E2E: published curriculum + progress -> deterministic unit eligibility.
+  English Guided Practice P2.0 E2E: published curriculum + progress -> deterministic eligibility -> authoritative exit-check evidence.
 #>
 param(
   [string]$BaseUrl = "http://127.0.0.1:8082"
@@ -74,6 +74,43 @@ $u2 = @(@($afterCheckpoint.Json.units) | Where-Object { [int]$_.blueprint.unitOr
 if (-not $u2 -or $u2.eligible) { Fail "completing Unit 1 must not unlock Unit 2 guided practice" }
 
 Ok "English guided-practice eligibility is frontier-safe and unlocks only after authored lesson + checkpoint completion"
+
+# Completing the checkpoint must expose the existing stable exit items to the P1
+# review engine. P2 does not grade these itself; it delegates raw answers to the
+# authoritative server-graded attempt path.
+$due = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/language/review/due?track=english-basics&locale=en&limit=50" -Session $session
+$dueCards = @($due.Json)
+$produceKey = "en-u01-check-produce"
+$closeKey = "en-u01-check-close"
+$produceCard = @($dueCards | Where-Object { $_.lessonId -eq $checkpoint.Json.id -and $_.itemKey -eq $produceKey }) | Select-Object -First 1
+$closeCard = @($dueCards | Where-Object { $_.lessonId -eq $checkpoint.Json.id -and $_.itemKey -eq $closeKey }) | Select-Object -First 1
+if (-not $produceCard -or -not $closeCard) { Fail "Unit 1 stable exit checks were not synced into the P1 review engine" }
+
+$produceBody = (@{ lessonId = $checkpoint.Json.id; locale = "en"; itemKey = $produceKey; submission = "Hi, I'm Nam."; responseMs = 900 } | ConvertTo-Json -Compress)
+$produceAttempt = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/attempt" -JsonBody $produceBody -Session $session
+if (-not $produceAttempt.Json.correct -or [int]$produceAttempt.Json.rating -ne 3 -or [double]$produceAttempt.Json.confidence -ne 1) {
+  Fail "Unit 1 self-introduction exit check was not authoritatively graded Good"
+}
+if ($produceAttempt.Json.PSObject.Properties.Name -contains "submission") { Fail "exit-check response echoed raw learner text" }
+
+$closeBody = (@{ lessonId = $checkpoint.Json.id; locale = "en"; itemKey = $closeKey; submission = "See you later."; responseMs = 700 } | ConvertTo-Json -Compress)
+$closeAttempt = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/attempt" -JsonBody $closeBody -Session $session
+if (-not $closeAttempt.Json.correct -or [int]$closeAttempt.Json.rating -ne 3 -or [double]$closeAttempt.Json.confidence -ne 1) {
+  Fail "Unit 1 closing exit check was not authoritatively graded Good"
+}
+if ($closeAttempt.Json.PSObject.Properties.Name -contains "submission") { Fail "closing exit-check response echoed raw learner text" }
+
+$mastery = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/learning/mastery?track=english-basics&locale=en" -Session $session
+$masteryRows = @($mastery.Json)
+foreach ($skillId in @("en.communication.greeting", "en.communication.self-introduction", "en.communication.closing")) {
+  $row = @($masteryRows | Where-Object { $_.skillId -eq $skillId }) | Select-Object -First 1
+  if (-not $row) { Fail "guided-practice exit check did not create mastery for $skillId" }
+  if ([double]$row.score -ne 80 -or [double]$row.evidenceWeight -ne 1 -or [int64]$row.evidenceCount -lt 1) {
+    Fail "unexpected P1 mastery for guided-practice target $skillId"
+  }
+}
+
+Ok "Guided-practice exit checks reuse P1 server grading and persist high-confidence target-skill mastery"
 
 Invoke-SyntaxiaApi -Method POST -Path "/api/v1/auth/logout" -Session $session -ExpectStatus @(200, 204) | Out-Null
 Write-Host "PASS: English Guided Practice P2.0 E2E gate"
