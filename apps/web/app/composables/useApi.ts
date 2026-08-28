@@ -1,4 +1,4 @@
-import type { LanguageReviewCard, Lesson, LessonSummary, Note, NoteListItem, Progress, SandboxResult, Track, User } from '~/types/api'
+import type { LanguageAttemptResult, LanguageReviewCard, Lesson, LessonSummary, Note, NoteListItem, Progress, SandboxResult, Track, User } from '~/types/api'
 
 export function useApi() {
   const config = useRuntimeConfig()
@@ -94,6 +94,17 @@ export function useApi() {
       responseMs?: number
     }) =>
       request<LanguageReviewCard>('/api/v1/language/review', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+    recordLanguageAttempt: (payload: {
+      lessonId: string
+      locale: string
+      itemKey: string
+      submission: string
+      responseMs?: number
+    }) =>
+      request<LanguageAttemptResult>('/api/v1/language/attempt', {
         method: 'POST',
         body: JSON.stringify(payload),
       }),

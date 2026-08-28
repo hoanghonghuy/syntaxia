@@ -84,3 +84,10 @@ export type LanguageReviewCard = {
   lastReviewAt?: string
   remainingSteps: number
 }
+
+export type LanguageAttemptResult = {
+  correct: boolean
+  rating: 1 | 3
+  confidence: number
+  card: LanguageReviewCard
+}

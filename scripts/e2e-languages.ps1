@@ -113,7 +113,7 @@ if (-not $englishLessonId) { Fail "missing completed English lesson for review s
 if (-not $japaneseLessonId) { Fail "missing completed Japanese lesson for review smoke" }
 if (-not $specialtyLessonId) { Fail "missing completed Chinese IT specialty lesson for review smoke" }
 
-# Mandarin
+# Mandarin legacy compatibility path
 $due = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/language/review/due?track=chinese-hsk&locale=en&limit=50" -Session $session
 $dueCards = @($due.Json)
 $reviewItemKey = "zh-greet-reply-1"
@@ -133,7 +133,7 @@ $secondReps = [int64]$secondReview.Json.reps
 if ($secondReps -le $firstReps) { Fail "Mandarin review state was not loaded/persisted across requests: $firstReps -> $secondReps" }
 Ok "Mandarin review state persisted across requests reps=$secondReps"
 
-# English foundation
+# English foundation: authoritative raw-answer grading path.
 $englishDue = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/language/review/due?track=english-basics&locale=en&limit=50" -Session $session
 $englishCards = @($englishDue.Json)
 $englishItemKey = "en-fnd-sound-hear-meet"
@@ -141,19 +141,22 @@ $englishSeedCard = @($englishCards | Where-Object { $_.lessonId -eq $englishLess
 if (-not $englishSeedCard) { Fail "English review due sync did not create $englishItemKey for $englishLessonId" }
 Ok "English foundation review card synced from authored stable item id"
 
-$englishReviewBody = (@{ lessonId = $englishLessonId; locale = "en"; itemKey = $englishItemKey; rating = 3; responseMs = 1000 } | ConvertTo-Json -Compress)
-$englishReview = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/review" -JsonBody $englishReviewBody -Session $session
-if ($englishReview.Json.itemKey -ne $englishItemKey -or [int64]$englishReview.Json.reps -lt 1) { Fail "persisted English foundation review response invalid" }
-Ok "English foundation review persisted reps=$($englishReview.Json.reps)"
+$englishAttemptBody = (@{ lessonId = $englishLessonId; locale = "en"; itemKey = $englishItemKey; submission = "Meet!"; responseMs = 1000 } | ConvertTo-Json -Compress)
+$englishAttempt = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/attempt" -JsonBody $englishAttemptBody -Session $session
+if (-not $englishAttempt.Json.correct) { Fail "server grader rejected normalized correct English submission" }
+if ([int]$englishAttempt.Json.rating -ne 3 -or [double]$englishAttempt.Json.confidence -ne 1) { Fail "server-graded English attempt rating/confidence mismatch" }
+if ($englishAttempt.Json.card.itemKey -ne $englishItemKey -or [int64]$englishAttempt.Json.card.reps -lt 1) { Fail "server-graded English attempt did not persist FSRS card" }
+if ($englishAttempt.Json.PSObject.Properties.Name -contains "submission") { Fail "attempt response must not echo raw learner submission" }
+Ok "English raw answer server-graded and persisted without echoing submission"
 
 $masteryResponse = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/learning/mastery?track=english-basics&locale=en" -Session $session
 $masteryRows = @($masteryResponse.Json)
 $soundMastery = @($masteryRows | Where-Object { $_.skillId -eq "en.sound.spelling" }) | Select-Object -First 1
 $listeningMastery = @($masteryRows | Where-Object { $_.skillId -eq "en.listening.word-recognition" }) | Select-Object -First 1
-if (-not $soundMastery -or -not $listeningMastery) { Fail "English review did not produce authored skill mastery rows" }
-if ([int64]$soundMastery.evidenceCount -lt 1 -or [double]$soundMastery.score -ne 80) { Fail "unexpected sound mastery after Good review" }
-if ([int64]$listeningMastery.evidenceCount -lt 1 -or [double]$listeningMastery.score -ne 80) { Fail "unexpected listening mastery after Good review" }
-Ok "English review persisted skill evidence/mastery from authored item skills"
+if (-not $soundMastery -or -not $listeningMastery) { Fail "English attempt did not produce authored skill mastery rows" }
+if ([int64]$soundMastery.evidenceCount -lt 1 -or [double]$soundMastery.score -ne 80 -or [double]$soundMastery.evidenceWeight -ne 1) { Fail "unexpected sound mastery after server-graded Good attempt" }
+if ([int64]$listeningMastery.evidenceCount -lt 1 -or [double]$listeningMastery.score -ne 80 -or [double]$listeningMastery.evidenceWeight -ne 1) { Fail "unexpected listening mastery after server-graded Good attempt" }
+Ok "English server-graded attempt persisted high-confidence skill evidence/mastery"
 
 # Japanese foundation: prove Unit 0 stable IDs enter the same generic FSRS engine.
 $japaneseDue = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/language/review/due?track=japanese-jlpt&locale=en&limit=50" -Session $session
