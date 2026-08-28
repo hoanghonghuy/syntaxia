@@ -44,12 +44,14 @@ steps:
     answer: "Hanoi"
   - type: practice
     id: en-u09-check-age
+    skills: ["en.communication.personal-details"]
     kind: type_answer
     prompt: "Say that you are 22 years old."
     answer: "I'm twenty-two years old"
     acceptedAnswers: ["I'm twenty-two years old.", "I am twenty-two years old", "I am twenty-two years old."]
   - type: practice
     id: en-u09-check-have
+    skills: ["en.communication.possession", "en.grammar.possession"]
     kind: type_answer
     prompt: "Say that you have a book."
     answer: "I have a book"
@@ -57,11 +59,13 @@ steps:
   - type: checkpoint
     items:
       - id: en-u09-check-ask-age
+        skills: ["en.communication.personal-details"]
         kind: type_answer
         prompt: "Ask the other person their age."
         answer: "How old are you"
         acceptedAnswers: ["How old are you?", "How old are you"]
       - id: en-u09-check-have-no
+        skills: ["en.communication.possession", "en.grammar.do-question"]
         kind: dialogue_choice
         prompt: "Someone asks “Do you have a bike?” You do not. Which reply completes the exchange?"
         choices: ["No, I don't.", "I live in Hanoi.", "I'm twenty-two years old."]

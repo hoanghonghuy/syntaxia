@@ -40,6 +40,7 @@ steps:
     answer: "bread"
   - type: practice
     id: en-u04-check-order
+    skills: ["en.communication.cafe-ordering", "en.communication.polite-request"]
     kind: type_answer
     prompt: "You want water. Write a polite order."
     answer: "I'd like water, please"
@@ -58,6 +59,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u04-check-extra
+        skills: ["en.communication.service-closing"]
         kind: dialogue_choice
         prompt: "The server asks “Anything else?” You do not want more. What can you say?"
         choices: ["No, that's all. Thank you.", "Where's the café?", "This is my brother."]

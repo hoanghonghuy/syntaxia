@@ -38,7 +38,7 @@ var englishGuidedPracticeBlueprints = []domain.GuidedPracticeBlueprint{
 		TargetSkills: []string{"en.number.basic", "en.communication.location-question", "en.listening.location"},
 		AllowedPatterns: []string{"Room …?", "Where's the …?", "It's here.", "It's over there."},
 		ExitCheckLessonSlug: "find-way-checkpoint",
-		ExitCheckItemKeys: []string{"en-u03-check-place", "en-u03-check-location"},
+		ExitCheckItemKeys: []string{"en-u03-check-number", "en-u03-check-place", "en-u03-check-location"},
 	},
 	{
 		ID: "en-a1-u04-cafe-practice", TrackID: EnglishGuidedPracticeTrackID,
@@ -88,7 +88,7 @@ var englishGuidedPracticeBlueprints = []domain.GuidedPracticeBlueprint{
 		TargetSkills: []string{"en.communication.preference", "en.communication.invitation", "en.communication.planning"},
 		AllowedPatterns: []string{"I like …", "Do you want to …?", "Yes, let's …", "See you there."},
 		ExitCheckLessonSlug: "free-time-checkpoint",
-		ExitCheckItemKeys: []string{"en-u08-check-like", "en-u08-check-invite"},
+		ExitCheckItemKeys: []string{"en-u08-check-like", "en-u08-check-invite", "en-u08-check-finish"},
 	},
 	{
 		ID: "en-a1-u09-personal-practice", TrackID: EnglishGuidedPracticeTrackID,

@@ -40,6 +40,7 @@ steps:
     answer: "bread"
   - type: practice
     id: en-u04-check-order
+    skills: ["en.communication.cafe-ordering", "en.communication.polite-request"]
     kind: type_answer
     prompt: "Bạn muốn nước. Viết một câu gọi món lịch sự."
     answer: "I'd like water, please"
@@ -58,6 +59,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u04-check-extra
+        skills: ["en.communication.service-closing"]
         kind: dialogue_choice
         prompt: "Nhân viên hỏi “Anything else?” Bạn không muốn gọi thêm. Có thể nói gì?"
         choices: ["No, that's all. Thank you.", "Where's the café?", "This is my brother."]

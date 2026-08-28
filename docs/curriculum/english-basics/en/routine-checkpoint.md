@@ -47,6 +47,7 @@ steps:
     answer: "I go to work at eight."
   - type: practice
     id: en-u05-check-produce
+    skills: ["en.communication.daily-routine", "en.communication.sequence"]
     kind: type_answer
     prompt: "Say: you have breakfast at seven, then you go to school at eight."
     answer: "I have breakfast at seven. Then I go to school at eight."
@@ -57,6 +58,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u05-check-time-question
+        skills: ["en.communication.time-question"]
         kind: dialogue_choice
         prompt: "Which question asks when a routine happens?"
         choices: ["What time do you have breakfast?", "Where do you have breakfast?", "What do you have for breakfast?"]

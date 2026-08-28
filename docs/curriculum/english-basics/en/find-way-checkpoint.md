@@ -34,6 +34,7 @@ steps:
     text: "Room four. It's over there."
   - type: practice
     id: en-u03-check-number
+    skills: ["en.number.basic"]
     kind: listen_type
     prompt: "Listen and type the room number word."
     audioText: "seven"
@@ -48,6 +49,7 @@ steps:
     answer: "Room nine?"
   - type: practice
     id: en-u03-check-place
+    skills: ["en.communication.location-question"]
     kind: type_answer
     prompt: "Ask where the café is."
     answer: "Where's the café?"
@@ -57,6 +59,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u03-check-location
+        skills: ["en.listening.location"]
         kind: audio_choice
         prompt: "Listen. Where is the shop?"
         audioText: "It's here."

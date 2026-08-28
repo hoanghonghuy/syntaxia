@@ -52,6 +52,7 @@ steps:
       - "Câu bắt đầu bằng See."
   - type: practice
     id: en-u01-check-produce
+    skills: ["en.communication.greeting", "en.communication.self-introduction"]
     kind: type_answer
     prompt: "Tên bạn là Nam. Hãy tự giới thiệu, bắt đầu bằng “Hi”."
     answer: "Hi, I'm Nam"
@@ -61,6 +62,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u01-check-close
+        skills: ["en.communication.closing"]
         kind: dialogue_choice
         prompt: "Lớp sắp bắt đầu. Câu nào kết thúc cuộc nói chuyện tự nhiên?"
         choices: ["See you later.", "Nice to meet you.", "You're welcome."]

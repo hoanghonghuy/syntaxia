@@ -42,12 +42,14 @@ steps:
     answer: "3:00"
   - type: practice
     id: en-u08-check-like
+    skills: ["en.communication.preference"]
     kind: type_answer
     prompt: "Nói rằng bạn thích trò chơi."
     answer: "I like games"
     acceptedAnswers: ["I like games."]
   - type: practice
     id: en-u08-check-invite
+    skills: ["en.communication.invitation"]
     kind: type_answer
     prompt: "Mời một người bạn đi công viên."
     answer: "Do you want to go to the park"
@@ -62,6 +64,7 @@ steps:
         choices: ["Yes, let's go.", "It's under the chair.", "I'll take it."]
         answer: "Yes, let's go."
       - id: en-u08-check-finish
+        skills: ["en.communication.planning"]
         kind: dialogue_choice
         prompt: "Đã thống nhất thứ Bảy lúc 3 giờ ở công viên. Câu nào kết thúc kế hoạch?"
         choices: ["See you there.", "How much is this?", "This is my bedroom."]

@@ -52,6 +52,7 @@ steps:
       - "It starts with See."
   - type: practice
     id: en-u01-check-produce
+    skills: ["en.communication.greeting", "en.communication.self-introduction"]
     kind: type_answer
     prompt: "Your name is Nam. Introduce yourself with “Hi”."
     answer: "Hi, I'm Nam"
@@ -61,6 +62,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u01-check-close
+        skills: ["en.communication.closing"]
         kind: dialogue_choice
         prompt: "Class is starting. Which line closes the short exchange naturally?"
         choices: ["See you later.", "Nice to meet you.", "You're welcome."]
