@@ -22,7 +22,7 @@ Every major feature must improve at least one part of this loop without weakenin
 
 ## Shared learning intelligence
 
-The platform layer should progressively understand:
+The platform layer progressively understands:
 
 ```text
 curriculum
@@ -54,7 +54,7 @@ Curriculum controls which language has been introduced. AI may later create cons
 
 ## Current product freeze
 
-After the home/language hardening release, current declared curriculum scopes are frozen except for defect fixes and quality regressions while Adaptive Learning V1 is built.
+After the home/language hardening release, current declared curriculum scopes remain frozen except for defect fixes and quality regressions while adaptive practice is built on the completed Learning Intelligence V1 foundation.
 
 Do not add a new language, a new domain, English A2, or a new IT track merely to grow the catalog during this phase.
 
@@ -62,14 +62,20 @@ Do not add a new language, a new domain, English A2, or a new IT track merely to
 
 ### P1 — Learning Intelligence V1
 
+**Status: implemented within the declared V1 scope.**
+
 1. stable skill ids authored against assessed items — implemented;
 2. immutable skill evidence — implemented;
 3. deterministic learner mastery with explicit evidence confidence — implemented;
 4. deterministic server-graded language attempt evidence — implemented;
 5. explainable weak-skill detection — implemented;
-6. adaptive daily session / next-best-action composition — next.
+6. adaptive daily session / next-best-action composition — implemented.
+
+P1 completion means the product now has an inspectable loop from accepted learning evidence to a bounded Today plan. It does **not** mean mastery is psychometrically calibrated or that a general-purpose recommendation engine is complete.
 
 ### P2 — English Guided Practice V1
+
+**Status: next.**
 
 Curriculum-constrained text practice first. AI can vary practice and explain feedback only inside taught language and known learner state.
 
@@ -115,7 +121,7 @@ AI must not:
 
 Mastery is only as trustworthy as its evidence.
 
-Syntaxia now distinguishes at least two evidence qualities:
+Syntaxia distinguishes at least two evidence qualities:
 
 - compatibility `language_review` signals are authenticated/persisted but originate from a client-decided FSRS rating and carry lower confidence;
 - `server_graded_attempt` evidence is generated after the server deterministically grades the raw answer against published curriculum and carries higher confidence.
@@ -124,24 +130,26 @@ For deterministic language review items, the production review UI uses the serve
 
 P1.2 consumes those trusted primitives without inventing a black-box recommendation score. Weak-skill candidates expose mastery, evidence weight, recent deterministic mistakes, review schedule state, priority and reason codes. Recommendations are emitted only when a currently completed/published repair lesson exists inside the learner's curriculum frontier.
 
-This is sufficient to compose a first adaptive daily session, but it is still not a claim of psychometric calibration or certification-grade measurement. Placement/certification-like decisions need additional validation and calibrated evidence policies.
+P1.3 then consumes P1.2 rather than reranking weakness. `GET /api/v1/learning/today` composes the first P1.2 repair candidate, due FSRS work and the next published incomplete curriculum action inside a bounded 10–30 minute budget (15 minutes by default). The Today read model is stateless and is rebuilt from current learner truth instead of persisting a second recommendation/session source of truth.
+
+This is sufficient for Learning Intelligence V1, but it is still not a claim of psychometric calibration or certification-grade measurement. Placement/certification-like decisions need additional validation and calibrated evidence policies.
 
 ## Product hierarchy for a signed-in learner
 
-The signed-in Home experience should evolve toward:
+The signed-in Home experience now follows the intended hierarchy for returning learners:
 
 ```text
 Today
--> weak / due work
+-> due review / weak-skill repair / next lesson
 -> current learning paths
 -> exploration/catalog
 ```
 
-rather than making catalog discovery the dominant repeated experience.
+Guests and signed-in learners without progress history retain the exploration-oriented learning map rather than seeing an empty adaptive dashboard.
 
 ## Scope-control rules
 
-During P1:
+During the current P2 entry phase:
 
 - no new language;
 - no third domain;
@@ -172,7 +180,7 @@ ai (later)
 
 PostgreSQL remains the system of record. FSRS remains the spaced-review scheduler. New infrastructure is justified by product load/behavior, not by architectural fashion.
 
-P1.2 intentionally adds no recommendation table. It is a read model over existing relational product truth. Persist a derived recommendation/cache only when measured load justifies it.
+P1.2 intentionally adds no recommendation table. P1.3 intentionally adds no daily-session table. Both are read models over existing relational product truth. Persist a derived recommendation/cache only when measured load or a researched resume/analytics requirement justifies it.
 
 ## Definition of Done
 
@@ -193,7 +201,7 @@ Done requires, as applicable:
 
 ## Current implementation
 
-Adaptive Learning V1 has completed the first three learning-intelligence slices:
+Learning Intelligence V1 has completed all four declared slices:
 
 ```text
 P1.0
@@ -218,8 +226,18 @@ mastery + evidence weight
 + completed curriculum frontier
 -> explicit weak-skill reasons
 -> frontier-safe repair lesson
+
+P1.3
+P1.2 first repair candidate
++ due FSRS review count
++ next published incomplete lesson
++ bounded learner time budget
+-> stateless Today session
+-> Home review / repair / lesson actions
 ```
 
-The next product slice is **P1.3 — Adaptive Daily Session**: compose due reviews, P1.2 repair candidates and the next curriculum action into one bounded “What should I learn today?” response and learner flow.
+P1.3 keeps one ranking authority: P1.2 determines weakness order; the daily composer only decides how the available time budget is allocated among repair, new curriculum and due review work. A `watch`-only signal does not block progression to new content.
 
-See [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).
+The next product phase is **P2 — English Guided Practice V1**: text-first, curriculum-constrained practice that consumes taught content and known learner state without turning Syntaxia into a generic chatbot.
+
+See [`adaptive-learning-v1.md`](./adaptive-learning-v1.md) for the completed P1 contract and [`multi-domain-roadmap.md`](./multi-domain-roadmap.md) for ordered phases.
