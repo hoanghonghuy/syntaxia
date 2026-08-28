@@ -33,9 +33,22 @@ raw language submission
 
 The review UI uses P1.1 for production language-review attempts. The older client-rating review endpoint remains available for backward compatibility and is explicitly treated as lower-confidence evidence.
 
+### P1.2 — explainable weak-skill read model
+
+```text
+mastery
++ evidence weight
++ recent deterministic mistakes
++ review schedule state
++ completed curriculum frontier
+-> bounded repair candidates with explicit reasons
+```
+
+P1.2 does not persist another recommendation table and does not calculate an opaque recommendation score. It derives a rebuildable read model from existing PostgreSQL product truth.
+
 ## Security and integrity boundary
 
-There is **no client mastery-write endpoint**.
+There is **no client mastery-write endpoint** and no client weak-skill-write endpoint.
 
 For the authoritative P1.1 path:
 
@@ -45,6 +58,8 @@ For the authoritative P1.1 path:
 - the client does not choose the persisted correctness rating;
 - FSRS card CAS, review log, attempt log, skill evidence and mastery update commit in one PostgreSQL transaction;
 - a failed CAS writes none of those rows.
+
+P1.2 is read-only. It reads only learner-owned mastery/progress/review/attempt/evidence rows under the authenticated user id.
 
 ### Data minimization
 
@@ -59,6 +74,8 @@ Durable attempt history stores only the information needed for learning-state re
 - evidence confidence;
 - timestamp;
 - linkage to the exact review log.
+
+P1.2 therefore reasons from correctness/timestamps and never needs the raw answer text.
 
 ### Legacy compatibility evidence
 
@@ -153,6 +170,61 @@ Why this remains intentionally simple:
 
 A later version may add recency or domain-specific calibration after real learner data exists.
 
+## P1.2 weak-skill contract
+
+### Candidate eligibility
+
+A skill is considered for repair when:
+
+- mastery is below `80`; or
+- there is at least one deterministic incorrect attempt in the recent window.
+
+A skill with mastery `>= 80` and no recent deterministic mistake is not emitted merely because its FSRS review is due. Due review remains useful context, while P1.3 will compose due-review work separately from weak-skill repair.
+
+A candidate is emitted only when its evidence resolves to a **currently completed, published repair lesson**. Historical mastery survives a progress reset, but repair recommendations do not escape the learner's current curriculum frontier.
+
+### Recent window
+
+P1.2 uses the previous **14 days** for deterministic mistake recency.
+
+The API returns `recentWindowDays` so this policy is visible rather than hidden.
+
+### Priority classes
+
+There is no numeric recommendation score.
+
+Priority is deterministic:
+
+- `high`: recent deterministic mistake, or mastery `< 60` with evidence weight `>= 1`;
+- `medium`: mastery `< 80` with evidence weight `>= 1`;
+- `watch`: weak mastery supported only by limited evidence weight `< 1`.
+
+Within a priority class, candidates sort by:
+
+1. lower mastery;
+2. more recent-window mistakes;
+3. review due before not-due;
+4. greater evidence weight;
+5. stable skill id.
+
+### Reason codes
+
+P1.2 returns explicit machine-readable reasons:
+
+- `recent_incorrect_attempt`;
+- `mastery_below_60`;
+- `mastery_below_80`;
+- `review_due`;
+- `limited_evidence`.
+
+The UI can localize these reason codes later without changing learning-state logic.
+
+### Curriculum frontier
+
+`frontier` is the furthest completed, published lesson by `sort_order` for the requested track/locale.
+
+`repairLesson` is the most recently observed completed/published lesson for that skill. If no currently valid repair lesson exists, the historical skill is not emitted as a P1.2 candidate.
+
 ## Persistence
 
 ### Migration `015_adaptive_skill_mastery.sql`
@@ -181,6 +253,8 @@ Deployment order is:
 ```
 
 That order is locked in Product CI, Docker local bootstrap and the Neon migration script.
+
+P1.2 intentionally adds **no migration**. Its read model is derived from the existing tables and remains rebuildable.
 
 ### `language_attempt_logs`
 
@@ -239,6 +313,8 @@ If any step fails, the transaction rolls back.
 
 If the CAS affects zero rows, the function returns a conflict before inserting review/attempt/evidence/mastery rows.
 
+P1.2 performs no writes.
+
 ## APIs
 
 ### Authoritative deterministic attempt
@@ -282,23 +358,50 @@ GET /api/v1/learning/mastery?track=english-basics&locale=en
 
 Response rows are ordered weakest-first, then by skill id.
 
+### Weak-skill read model
+
+```http
+GET /api/v1/learning/weak-skills?track=english-basics&locale=en&limit=5
+```
+
 Example shape:
 
 ```json
-[
-  {
-    "trackId": "english-basics",
-    "locale": "en",
-    "skillId": "en.sound.spelling",
-    "score": 80,
-    "evidenceCount": 1,
-    "evidenceWeight": 1,
-    "lastEvidenceAt": "..."
-  }
-]
+{
+  "trackId": "english-basics",
+  "locale": "en",
+  "recentWindowDays": 14,
+  "frontier": {
+    "lessonId": "en-a1-u00-sound-spelling",
+    "slug": "sound-spelling",
+    "title": "Sound and spelling",
+    "sortOrder": 1
+  },
+  "candidates": [
+    {
+      "skillId": "en.sound.spelling",
+      "masteryScore": 50,
+      "evidenceCount": 2,
+      "evidenceWeight": 2,
+      "recentMistakes": 1,
+      "priority": "high",
+      "reasons": ["recent_incorrect_attempt", "mastery_below_60"],
+      "reviewDue": false,
+      "nextReviewAt": "...",
+      "repairLesson": {
+        "lessonId": "en-a1-u00-sound-spelling",
+        "slug": "sound-spelling",
+        "title": "Sound and spelling",
+        "sortOrder": 1
+      }
+    }
+  ]
+}
 ```
 
-No POST/PATCH mastery endpoint exists.
+`limit` defaults to 5 and is capped at 20.
+
+There is intentionally no POST/PATCH mastery or weak-skill endpoint.
 
 ## Initial pilots
 
@@ -309,7 +412,7 @@ No POST/PATCH mastery endpoint exists.
 - `en.sound.spelling`;
 - `en.listening.word-recognition`.
 
-Release E2E submits raw `Meet!`, requires server grading to normalize it as correct, then requires both skills to persist with score 80 and evidence weight 1.
+Release E2E first submits raw `Meet!` and requires both skills to persist with score 80 / evidence weight 1. It then submits a deterministic wrong answer and requires P1.2 to return both authored skills as explainable high-priority repair candidates with mastery 50 / evidence weight 2.
 
 ### English Unit 9 — possessions
 
@@ -329,29 +432,17 @@ Required gates now include:
 
 - unit tests for rating mapping;
 - unit tests for practice/checkpoint skill extraction and deduplication;
-- unit test proving missing skill metadata is not inferred;
 - deterministic server-grader tests for normalization, accepted/wrong answers and pair canonicalization;
+- weak-skill rule tests for filtering, ordering, priority, due state, limited evidence, result cap and frontier-safe repair;
 - Go module/checksum + `govulncheck` + cold tests + vet;
 - production npm audit, Nuxt build, product flow, Language V3 and i18n gates;
 - release DB initialization applies `014 -> 015 -> 016`;
-- language E2E submits a raw English answer through `/api/v1/language/attempt`;
-- E2E proves the response does not echo the raw answer;
-- E2E requires confidence-1 server-graded skill evidence and mastery;
-- release DB assertion requires persisted `language_attempt_logs`, `skill_evidence` and `learner_skill_mastery` rows.
+- language E2E submits both correct and incorrect deterministic English attempts;
+- E2E requires the weak-skill API to expose the completed frontier and the expected repair lesson;
+- E2E requires recent mistake count, mastery/evidence weight, high priority and explicit reason codes;
+- release DB assertion continues to require persisted `language_attempt_logs`, `skill_evidence` and `learner_skill_mastery` rows.
 
-## Next slices
-
-### P1.2 — weak-skill read model
-
-Combine:
-
-- mastery score;
-- evidence count and evidence weight;
-- recent deterministic mistakes;
-- due review state;
-- current curriculum frontier.
-
-Return a small, explainable list of repair candidates rather than an opaque recommendation score.
+## Next slice
 
 ### P1.3 — Adaptive Daily Session
 
@@ -360,6 +451,8 @@ Compose a bounded session from:
 ```text
 due reviews + weak-skill repair + next curriculum action
 ```
+
+P1.3 should consume P1.2 instead of reimplementing weakness rules.
 
 The first UI should answer one question well:
 

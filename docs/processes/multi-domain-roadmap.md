@@ -42,6 +42,7 @@ The next phase is not catalog expansion. It is turning existing curriculum, prog
 - semantic visuals/audio;
 - checkpoint/review units;
 - persistent FSRS review state and logs;
+- deterministic server-graded review attempts for authored answer types;
 - backward-compatible curriculum continuation.
 
 ### Platform
@@ -50,6 +51,8 @@ The next phase is not catalog expansion. It is turning existing curriculum, prog
 - Home learning map;
 - cross-domain Continue/progress;
 - PostgreSQL persistence;
+- immutable skill evidence and confidence-weighted mastery;
+- explainable weak-skill read model;
 - product CI with cold Go tests, `govulncheck`, production npm audit, Nuxt build, curriculum gates, and PostgreSQL-backed release E2E.
 
 ## Phase P1 — Learning Intelligence V1
@@ -102,38 +105,49 @@ Integrity boundaries:
 - review/attempt/evidence/mastery writes are one CAS-protected PostgreSQL transaction;
 - deployment order is `014 -> 015 -> 016`.
 
-### P1.2 — weak-skill read model
+### P1.2 — explainable weak-skill read model
 
-**Status: next.**
+**Status: implemented.**
 
-Combine:
+Authenticated endpoint:
+
+```http
+GET /api/v1/learning/weak-skills?track=<track>&locale=<locale>&limit=5
+```
+
+The read model combines:
 
 - mastery score;
 - evidence count and accumulated evidence weight;
-- recent deterministic mistakes;
-- due review state;
-- current curriculum frontier.
+- deterministic incorrect attempts from the previous 14 days;
+- current FSRS review schedule state;
+- current completed/published curriculum frontier.
 
-Return a small, explainable list of repair candidates rather than an opaque recommendation score.
+It returns a bounded list with:
 
-The first implementation should expose both the candidate and the reason, for example:
+- stable skill id;
+- mastery and evidence weight;
+- recent mistake count;
+- review due/next-review state;
+- `high` / `medium` / `watch` priority;
+- explicit reason codes;
+- a repair lesson that remains inside the current completed curriculum.
 
-```text
-skill: en.sound.spelling
-reason: recent incorrect attempt + low mastery + due review
-```
-
-Do not introduce ML ranking in this slice.
+There is deliberately no ML ranking and no persisted recommendation table. Historical mastery can survive a progress reset, but P1.2 does not emit a repair candidate unless a currently completed, published lesson can support the repair.
 
 ### P1.3 — Adaptive Daily Session
 
-Compose a session from:
+**Status: next.**
+
+Compose a bounded session from:
 
 ```text
 due review
-+ weak-skill repair
++ P1.2 weak-skill repair
 + next curriculum action
 ```
+
+P1.3 must consume the existing weak-skill read model rather than duplicate weakness/ranking rules.
 
 Signed-in Home should evolve toward:
 

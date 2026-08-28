@@ -66,8 +66,8 @@ Do not add a new language, a new domain, English A2, or a new IT track merely to
 2. immutable skill evidence — implemented;
 3. deterministic learner mastery with explicit evidence confidence — implemented;
 4. deterministic server-graded language attempt evidence — implemented;
-5. weak-skill detection — next;
-6. adaptive daily session / next-best-action composition.
+5. explainable weak-skill detection — implemented;
+6. adaptive daily session / next-best-action composition — next.
 
 ### P2 — English Guided Practice V1
 
@@ -122,7 +122,9 @@ Syntaxia now distinguishes at least two evidence qualities:
 
 For deterministic language review items, the production review UI uses the server-graded path. Raw learner answer text is graded in memory and intentionally not stored or echoed; durable history keeps correctness, response time, grader version, confidence and event identity.
 
-This is sufficient to move P1 toward weak-skill repair, but it is still not a claim of psychometric calibration or certification-grade measurement. Placement/certification-like decisions need additional validation and calibrated evidence policies.
+P1.2 consumes those trusted primitives without inventing a black-box recommendation score. Weak-skill candidates expose mastery, evidence weight, recent deterministic mistakes, review schedule state, priority and reason codes. Recommendations are emitted only when a currently completed/published repair lesson exists inside the learner's curriculum frontier.
+
+This is sufficient to compose a first adaptive daily session, but it is still not a claim of psychometric calibration or certification-grade measurement. Placement/certification-like decisions need additional validation and calibrated evidence policies.
 
 ## Product hierarchy for a signed-in learner
 
@@ -170,6 +172,8 @@ ai (later)
 
 PostgreSQL remains the system of record. FSRS remains the spaced-review scheduler. New infrastructure is justified by product load/behavior, not by architectural fashion.
 
+P1.2 intentionally adds no recommendation table. It is a read model over existing relational product truth. Persist a derived recommendation/cache only when measured load justifies it.
+
 ## Definition of Done
 
 A product feature is not Done merely because the happy-path code works.
@@ -189,7 +193,7 @@ Done requires, as applicable:
 
 ## Current implementation
 
-Adaptive Learning V1 has completed its first two learning-intelligence primitives:
+Adaptive Learning V1 has completed the first three learning-intelligence slices:
 
 ```text
 P1.0
@@ -206,8 +210,16 @@ raw deterministic language answer
 -> immutable attempt audit row
 -> high-confidence skill evidence
 -> mastery
+
+P1.2
+mastery + evidence weight
++ recent deterministic mistakes
++ review schedule
++ completed curriculum frontier
+-> explicit weak-skill reasons
+-> frontier-safe repair lesson
 ```
 
-The next product slice is P1.2: an explainable weak-skill read model combining mastery, evidence weight, recent mistakes, due review state and curriculum frontier.
+The next product slice is **P1.3 — Adaptive Daily Session**: compose due reviews, P1.2 repair candidates and the next curriculum action into one bounded “What should I learn today?” response and learner flow.
 
 See [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).
