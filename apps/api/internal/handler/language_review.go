@@ -19,6 +19,7 @@ func (h *Handler) RegisterLanguageRoutes(r *gin.Engine) {
 	group.GET("/review/due", h.dueLanguageReviews)
 	group.POST("/review", h.recordLanguageReview)
 	group.POST("/attempt", h.recordGradedLanguageAttempt)
+	group.GET("/guided-practice/eligibility", h.guidedPracticeEligibility)
 }
 
 func (h *Handler) dueLanguageReviews(c *gin.Context) {

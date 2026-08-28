@@ -41,12 +41,14 @@ steps:
     answer: "in the bag"
   - type: practice
     id: en-u07-check-describe
+    skills: ["en.grammar.there-is"]
     kind: type_answer
     prompt: "Chỉ ra một chiếc ghế trong phòng."
     answer: "There's a chair"
     acceptedAnswers: ["There's a chair.", "There is a chair", "There is a chair."]
   - type: practice
     id: en-u07-check-locate
+    skills: ["en.communication.object-location", "en.grammar.prepositions-place"]
     kind: type_answer
     prompt: "Cuốn sách ở dưới ghế. Trả lời: “Where's the book?”"
     answer: "It's under the chair"

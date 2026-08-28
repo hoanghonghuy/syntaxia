@@ -47,6 +47,7 @@ steps:
     explanation: "Xác định người đó trước rồi nói thêm mối quan hệ."
   - type: practice
     id: en-u02-check-produce
+    skills: ["en.communication.people-introduction", "en.vocabulary.family"]
     kind: type_answer
     prompt: "Nam là anh/em trai của bạn. Hãy giới thiệu Nam bằng “This is”."
     answer: "This is my brother Nam"
@@ -56,6 +57,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u02-check-question
+        skills: ["en.communication.people-identification"]
         kind: dialogue_choice
         prompt: "Câu nào dùng để hỏi một người là ai?"
         choices: ["Who's that?", "Where is that person?", "What is that?"]

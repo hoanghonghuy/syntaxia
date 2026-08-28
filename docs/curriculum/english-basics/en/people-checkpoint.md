@@ -47,6 +47,7 @@ steps:
     explanation: "Identify the person first, then add the relationship."
   - type: practice
     id: en-u02-check-produce
+    skills: ["en.communication.people-introduction", "en.vocabulary.family"]
     kind: type_answer
     prompt: "Nam is your brother. Introduce him using “This is”."
     answer: "This is my brother Nam"
@@ -56,6 +57,7 @@ steps:
   - type: checkpoint
     items:
       - id: en-u02-check-question
+        skills: ["en.communication.people-identification"]
         kind: dialogue_choice
         prompt: "Which question asks who a person is?"
         choices: ["Who's that?", "Where is that person?", "What is that?"]

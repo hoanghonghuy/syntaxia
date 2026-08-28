@@ -43,12 +43,14 @@ steps:
     answer: "$6"
   - type: practice
     id: en-u06-check-question
+    skills: ["en.communication.price-question"]
     kind: type_answer
     prompt: "Hỏi giá chiếc túi ngay cạnh bạn."
     answer: "How much is this bag"
     acceptedAnswers: ["How much is this bag?", "How much is this?"]
   - type: practice
     id: en-u06-check-purchase
+    skills: ["en.communication.purchase-decision", "en.communication.shopping"]
     kind: type_answer
     prompt: "Giá phù hợp. Nói rằng bạn sẽ mua món đó."
     answer: "I'll take it"

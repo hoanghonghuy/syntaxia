@@ -4,11 +4,9 @@
 
 **Active roadmap for Syntaxia V2.**
 
-The old MVP-era roadmap that treated FSRS, English/Japanese, and broader language capability as future/deferred work has been retired. Current product direction lives in [`product-direction-v2.md`](./product-direction-v2.md).
+Current product direction lives in [`product-direction-v2.md`](./product-direction-v2.md). The MVP-era sequencing that treated FSRS, English/Japanese, and broader language capability as future work is retired.
 
 ## North star
-
-Syntaxia is one product with shared learner state and domain-specific pedagogy:
 
 ```text
 Syntaxia
@@ -17,7 +15,7 @@ Syntaxia
 └── Languages: input -> notice -> interact -> produce -> checkpoint -> review
 ```
 
-The current direction is not catalog expansion. Learning Intelligence V1 is now complete within its declared P1.0–P1.3 scope; the next phase turns that foundation into richer curriculum-constrained guided practice.
+The roadmap is intentionally depth-first. Do not grow catalog breadth while the shared learning loop is still being completed.
 
 ## Current shipped foundation
 
@@ -28,8 +26,8 @@ The current direction is not catalog expansion. Learning Intelligence V1 is now 
 - JavaScript Basics;
 - HTML Basics;
 - CSS Basics;
-- deterministic SQL/JS/HTML-CSS sandbox grading;
-- progress, notes, search, track/domain navigation.
+- deterministic SQL/JS/HTML-CSS grading;
+- progress, notes, search and track/domain navigation.
 
 ### Languages
 
@@ -41,21 +39,21 @@ The current direction is not catalog expansion. Learning Intelligence V1 is now 
 - stable assessed identities;
 - semantic visuals/audio;
 - checkpoint/review units;
-- persistent FSRS review state and logs;
-- deterministic server-graded review attempts for authored answer types;
+- persistent FSRS state/logs;
+- deterministic server-graded authored attempts;
 - backward-compatible curriculum continuation.
 
-### Platform
+### Shared platform
 
-- shared account/auth;
-- Home learning map for exploration/new learners;
-- returning-learner Today adaptive surface;
+- auth/account;
+- Home exploration map for guests/new learners;
+- returning-learner adaptive Today surface;
 - cross-domain Continue/progress;
 - PostgreSQL persistence;
-- immutable skill evidence and confidence-weighted mastery;
-- explainable weak-skill read model;
-- stateless bounded daily-session composition;
-- product CI with cold Go tests, `govulncheck`, production npm audit, Nuxt build, curriculum gates, and PostgreSQL-backed release E2E.
+- immutable skill evidence + confidence-aware mastery;
+- explainable weak-skill model;
+- bounded stateless Today composition;
+- canonical Product CI with cold Go tests, `govulncheck`, production npm audit, Nuxt build, curriculum gates and PostgreSQL-backed E2E.
 
 ## Phase P1 — Learning Intelligence V1
 
@@ -63,173 +61,125 @@ The current direction is not catalog expansion. Learning Intelligence V1 is now 
 
 Source of truth: [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).
 
-### P1.0 — evidence and mastery foundation
+### P1.0 — evidence and mastery
 
-**Status: implemented.**
+**Implemented.** Stable authored skill ids → immutable evidence → confidence-aware mastery → authenticated read model.
 
-```text
-authored skill id
--> learning evidence
--> mastery aggregate
--> authenticated read model
-```
+### P1.1 — server-graded deterministic attempts
 
-Implemented contracts:
+**Implemented.** Raw authored answers are graded on the server, mapped to FSRS, persisted transactionally with attempt/evidence/mastery state, and raw text is not persisted or echoed.
 
-- evidence and mastery persistence are transactional;
-- no public/client mastery-write API exists;
-- skill mapping is explicit rather than inferred from prompt text;
-- EN/VI assessed identities map to the same skill ids;
-- PostgreSQL E2E proves evidence/mastery persistence.
+### P1.2 — explainable weak-skill model
 
-### P1.1 — server-graded deterministic attempt evidence
-
-**Status: implemented.**
-
-Production language review supports:
-
-```text
-raw answer
--> deterministic server grader
--> correct / incorrect
--> FSRS Again / Good
--> attempt log
--> source/confidence-aware skill evidence
--> confidence-weighted mastery
-```
-
-Integrity boundaries:
-
-- server grading uses published authored answers, not AI;
-- raw learner text is not persisted or echoed;
-- direct client-rating review remains only as lower-confidence backward compatibility;
-- server-graded evidence is high confidence;
-- review/attempt/evidence/mastery writes are one CAS-protected PostgreSQL transaction;
-- deployment order is `014 -> 015 -> 016`.
-
-### P1.2 — explainable weak-skill read model
-
-**Status: implemented.**
-
-Authenticated endpoint:
-
-```http
-GET /api/v1/learning/weak-skills?track=<track>&locale=<locale>&limit=5
-```
-
-The read model combines:
-
-- mastery score;
-- evidence count and accumulated evidence weight;
-- deterministic incorrect attempts from the previous 14 days;
-- current FSRS review schedule state;
-- current completed/published curriculum frontier.
-
-It returns a bounded list with:
-
-- stable skill id;
-- mastery and evidence weight;
-- recent mistake count;
-- review due/next-review state;
-- `high` / `medium` / `watch` priority;
-- explicit reason codes;
-- a repair lesson that remains inside the current completed curriculum.
-
-There is deliberately no ML ranking and no persisted recommendation table. Historical mastery can survive a progress reset, but P1.2 does not emit a repair candidate unless a currently completed, published lesson can support the repair.
+**Implemented.** Mastery + evidence weight + 14-day deterministic mistakes + review schedule + current completed/published frontier → explicit `high` / `medium` / `watch` candidates with reason codes and frontier-safe repair lesson.
 
 ### P1.3 — Adaptive Daily Session
 
-**Status: implemented.**
-
-Authenticated endpoint:
-
-```http
-GET /api/v1/learning/today?track=<track>&locale=<locale>&targetMinutes=15
-```
-
-The daily composer combines:
-
-```text
-P1.2 first weak-skill repair candidate
-+ due FSRS review work
-+ next published incomplete curriculum action
-+ bounded time budget
--> Today plan
-```
-
-Contracts:
-
-- default target is 15 minutes; accepted range is 10–30;
-- P1.3 consumes P1.2 ordering rather than duplicating or reranking weakness rules;
-- one authored answer may map to multiple skills, so candidate #1 from P1.2 is the repair source of truth;
-- `high` / `medium` weakness reserves repair capacity before new content;
-- a `watch`-only signal does not block new curriculum progression;
-- due reviews fill the remaining bounded capacity;
-- at most one repair and one next lesson are composed in V1;
-- the Today session is stateless and adds no persisted recommendation/session table;
-- Home keeps the exploration map for guests/no-history learners and switches returning learners to the Today surface;
-- Today actions deep-link to existing review and lesson flows rather than inventing another player.
-
-Release E2E independently proves a fresh English learner can produce deterministic Good/Again evidence, obtain the P1.2 ordered repair candidates, and receive due review + candidate #1 repair + next curriculum action inside the exact 15-minute fixture without raw-answer leakage.
+**Implemented.** P1.2 candidate #1 + due review + next incomplete published lesson + 10–30 minute budget → stateless Today plan. P1.3 composes P1.2 and does not rerank weakness.
 
 ## Phase P2 — English Guided Practice V1
 
+**Status: in progress. P2.0 implemented; P2.1 next.**
+
+Source of truth: [`english-guided-practice-v1.md`](./english-guided-practice-v1.md).
+
+P2 uses English first because the bounded A1 curriculum and P1 evidence pipeline are already audited. P2 is guided scenario practice, not generic AI chat.
+
+### P2.0 — blueprint, eligibility and authoritative exit evidence
+
+**Status: implemented.**
+
+Contracts now locked:
+
+- exactly 9 authored blueprints for English communicative Units 1–9;
+- Unit 0 stays audio/pronunciation-first and is excluded from text guided practice;
+- teaching lesson(s) + checkpoint gate a unit; delayed `*-review` never gates;
+- authenticated eligibility derives from current published curriculum + learner progress;
+- missing/unpublished prerequisites fail closed;
+- stable target skill ids and stable exit-check item keys are server-authored product truth;
+- every target skill has at least one authored authoritative exit-check evidence path;
+- EN/VI exit-check skill mappings must remain identical;
+- P2 has no second grader: exit checks reuse `POST /api/v1/language/attempt`;
+- Unit 1 E2E proves correct exit checks persist high-confidence mastery for greeting, self-introduction and closing;
+- no AI provider, transcript persistence, practice-session table or migration is introduced in P2.0.
+
+### P2.1 — deterministic fallback state machine
+
 **Status: next.**
 
-Use English as the first guided-practice language because its A1 foundation is bounded/audited and its stable skill/evidence pipeline now feeds the complete P1 learning-intelligence loop.
+Build a complete 3–5 turn scenario flow that works with zero AI configuration:
 
-Start text-first.
+```text
+eligible blueprint
+-> authored turn 1
+-> learner response
+-> deterministic transition
+-> authored turn 2 ...
+-> exit-check handoff
+```
 
-AI may generate a scenario/variant only from:
+The state machine owns interaction sequencing, not grading or mastery. It must terminate at existing stable exit-check identities.
 
-- taught curriculum;
-- learner mastery;
-- known weak skills;
-- explicit allowed skill targets.
+### P2.2 — optional AI variation adapter
 
-P2 must preserve deterministic grading where authored answer truth exists and must consume, not replace, the P1 mastery/weakness/review boundaries.
+Only after fallback is complete:
 
-Do not ship a generic chatbot disconnected from curriculum/progress.
+- provider-neutral interface;
+- strict structured response contract;
+- sanitized curriculum/learner context;
+- explicit separation of trusted instructions and untrusted learner text;
+- timeout/refusal/malformed/out-of-contract output → deterministic fallback;
+- no provider-specific business logic in handlers/repositories.
+
+### P2.3 — formative feedback + shared evidence boundary
+
+- AI feedback remains formative;
+- authoritative exit grading stays in P1;
+- evidence source/confidence remains explicit;
+- no AI-written mastery/progress.
+
+### P2.4 — learner-facing integration and release hardening
+
+- practice surface;
+- eligible unit + Today repair entry points where appropriate;
+- loading/error/retry/fallback/mobile/a11y;
+- DB-backed E2E and exact-head release evidence.
 
 ## Phase P3 — Diagnostic and Skill Profile
 
-Only after evidence/mastery quality is reliable in real learner use:
+After evidence/mastery quality has real-use validation:
 
 - short entry diagnostic;
-- recommended curriculum frontier;
-- skill-level profile;
-- transparent reasons for repair recommendations.
+- recommended frontier;
+- skill profile;
+- transparent repair rationale.
 
-This phase must not fabricate completion for skipped earlier lessons.
+Do not fabricate completion for skipped earlier lessons.
 
 ## Phase P4 — Speaking
 
-Add speech evidence after text practice and mastery-source confidence are mature:
+After text guided practice is stable:
 
 - STT;
 - pronunciation evidence;
-- bounded roleplay;
-- speech-specific repair.
+- bounded voice roleplay;
+- speech-specific repair and confidence policy.
 
 ## Phase P5 — Curriculum expansion
 
-Curriculum expansion resumes only after the adaptive/guided-practice loop is product-ready.
-
-Default research order:
+Only after adaptive + guided-practice loops are product-ready. Default research order:
 
 1. English A2 candidate map;
-2. Mandarin/Japanese continuation based on learner usage;
+2. Mandarin/Japanese continuation based on usage;
 3. new IT track based on real demand.
 
-No expansion is automatic merely because a public syllabus exists.
-
-## Frozen during P2 entry
+## Frozen during P2
 
 Do not prioritize:
 
 - new languages;
 - third learning domain;
-- English A2 content production;
+- English A2 production;
 - generic AI chat;
 - social/community;
 - marketplace;
@@ -239,7 +189,7 @@ Do not prioritize:
 
 ## Decision rule
 
-A proposed feature should answer:
+A proposed feature must answer:
 
 > Which part of Learn -> Practice -> Feedback -> Remember -> Repair -> Apply -> Progress does this improve?
 
@@ -247,9 +197,9 @@ If it cannot answer that clearly, it is not a current roadmap priority.
 
 ## Quality gate
 
-Every phase preserves the existing release bar:
+Every phase preserves:
 
-- product intent and bounded scope;
+- bounded product intent;
 - backward compatibility;
 - mobile/a11y/error/retry behavior where relevant;
 - security/data-integrity review;
@@ -258,12 +208,29 @@ Every phase preserves the existing release bar:
 - synchronized source-of-truth docs;
 - exact-head Product CI green.
 
-A green earlier head is only an implementation checkpoint. The PR is review-ready only when the final head after the last code/test/documentation change passes canonical Product CI.
+A green earlier head is only an implementation checkpoint. A PR is review-ready only when the final head after the last code/test/docs change passes canonical Product CI.
+
+## Current checkpoint
+
+```text
+P1.0  Evidence + mastery                 complete
+P1.1  Server-graded attempts             complete
+P1.2  Explainable weak skills            complete
+P1.3  Adaptive Today                     complete
+P2.0  Practice blueprint/eligibility
+      + authoritative exit evidence      complete
+P2.1  Deterministic fallback flow        next
+P2.2  Optional AI variation              later
+P2.3  Feedback/evidence integration      later
+P2.4  Product integration/release        later
+P3+   Diagnostic / Speaking / Expansion  later
+```
 
 ## Related
 
 - [`product-direction-v2.md`](./product-direction-v2.md)
 - [`adaptive-learning-v1.md`](./adaptive-learning-v1.md)
+- [`english-guided-practice-v1.md`](./english-guided-practice-v1.md)
 - [`curriculum-product-completion.md`](./curriculum-product-completion.md)
 - [`product-perfection-checklist.md`](./product-perfection-checklist.md)
 - [`language-learning-pedagogy-v3.md`](./language-learning-pedagogy-v3.md)
