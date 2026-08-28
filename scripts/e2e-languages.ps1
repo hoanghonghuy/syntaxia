@@ -158,6 +158,29 @@ if ([int64]$soundMastery.evidenceCount -lt 1 -or [double]$soundMastery.score -ne
 if ([int64]$listeningMastery.evidenceCount -lt 1 -or [double]$listeningMastery.score -ne 80 -or [double]$listeningMastery.evidenceWeight -ne 1) { Fail "unexpected listening mastery after server-graded Good attempt" }
 Ok "English server-graded attempt persisted high-confidence skill evidence/mastery"
 
+# P1.2: a recent deterministic mistake must become an explainable weak-skill repair candidate.
+$englishWrongBody = (@{ lessonId = $englishLessonId; locale = "en"; itemKey = $englishItemKey; submission = "Goodbye"; responseMs = 850 } | ConvertTo-Json -Compress)
+$englishWrong = Invoke-SyntaxiaApi -Method POST -Path "/api/v1/language/attempt" -JsonBody $englishWrongBody -Session $session
+if ($englishWrong.Json.correct) { Fail "server grader accepted intentionally wrong English submission" }
+if ([int]$englishWrong.Json.rating -ne 1 -or [double]$englishWrong.Json.confidence -ne 1) { Fail "wrong server-graded English attempt rating/confidence mismatch" }
+Ok "English deterministic mistake persisted for weak-skill signals"
+
+$weakResponse = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/learning/weak-skills?track=english-basics&locale=en&limit=5" -Session $session
+if ($weakResponse.Json.trackId -ne "english-basics" -or $weakResponse.Json.locale -ne "en") { Fail "weak-skill read model scope mismatch" }
+if ([int]$weakResponse.Json.recentWindowDays -ne 14) { Fail "weak-skill recent window mismatch" }
+if (-not $weakResponse.Json.frontier -or $weakResponse.Json.frontier.lessonId -ne $englishLessonId) { Fail "weak-skill frontier did not stay on completed English curriculum" }
+$weakCandidates = @($weakResponse.Json.candidates)
+$soundWeak = @($weakCandidates | Where-Object { $_.skillId -eq "en.sound.spelling" }) | Select-Object -First 1
+$listeningWeak = @($weakCandidates | Where-Object { $_.skillId -eq "en.listening.word-recognition" }) | Select-Object -First 1
+if (-not $soundWeak -or -not $listeningWeak) { Fail "recent English mistake did not produce both authored weak-skill candidates" }
+if ($soundWeak.priority -ne "high" -or [int64]$soundWeak.recentMistakes -lt 1) { Fail "sound weak-skill priority/recent mistake mismatch" }
+if ([double]$soundWeak.masteryScore -ne 50 -or [double]$soundWeak.evidenceWeight -ne 2) { Fail "sound weak-skill confidence-weighted mastery mismatch" }
+if (-not (@($soundWeak.reasons) -contains "recent_incorrect_attempt")) { Fail "sound weak-skill explanation missing recent mistake reason" }
+if (-not (@($soundWeak.reasons) -contains "mastery_below_60")) { Fail "sound weak-skill explanation missing low-mastery reason" }
+if (-not $soundWeak.repairLesson -or $soundWeak.repairLesson.lessonId -ne $englishLessonId) { Fail "sound weak-skill repair lesson escaped completed frontier" }
+if (-not $soundWeak.nextReviewAt) { Fail "sound weak-skill read model missing review schedule state" }
+Ok "weak-skill read model explains recent mistake + mastery + review + curriculum frontier"
+
 # Japanese foundation: prove Unit 0 stable IDs enter the same generic FSRS engine.
 $japaneseDue = Invoke-SyntaxiaApi -Method GET -Path "/api/v1/language/review/due?track=japanese-jlpt&locale=en&limit=50" -Session $session
 $japaneseCards = @($japaneseDue.Json)
