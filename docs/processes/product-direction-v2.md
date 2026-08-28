@@ -62,11 +62,12 @@ Do not add a new language, a new domain, English A2, or a new IT track merely to
 
 ### P1 — Learning Intelligence V1
 
-1. stable skill ids authored against assessed items;
-2. immutable skill evidence;
-3. deterministic learner mastery;
-4. weak-skill detection;
-5. adaptive daily session / next-best-action composition.
+1. stable skill ids authored against assessed items — implemented;
+2. immutable skill evidence — implemented;
+3. deterministic learner mastery with explicit evidence confidence — implemented;
+4. deterministic server-graded language attempt evidence — implemented;
+5. weak-skill detection — next;
+6. adaptive daily session / next-best-action composition.
 
 ### P2 — English Guided Practice V1
 
@@ -114,9 +115,14 @@ AI must not:
 
 Mastery is only as trustworthy as its evidence.
 
-Adaptive V1 begins with persisted language-review ratings because they already have authenticated ownership, authored stable item identity, validation, and CAS persistence. These ratings are still client-submitted performance signals, not anti-cheat proof of a correct raw answer.
+Syntaxia now distinguishes at least two evidence qualities:
 
-Before placement, certification-like claims, or high-stakes adaptation rely strongly on mastery, Syntaxia must add server-graded attempt evidence where an authored deterministic answer exists and distinguish evidence source/confidence explicitly.
+- compatibility `language_review` signals are authenticated/persisted but originate from a client-decided FSRS rating and carry lower confidence;
+- `server_graded_attempt` evidence is generated after the server deterministically grades the raw answer against published curriculum and carries higher confidence.
+
+For deterministic language review items, the production review UI uses the server-graded path. Raw learner answer text is graded in memory and intentionally not stored or echoed; durable history keeps correctness, response time, grader version, confidence and event identity.
+
+This is sufficient to move P1 toward weak-skill repair, but it is still not a claim of psychometric calibration or certification-grade measurement. Placement/certification-like decisions need additional validation and calibrated evidence policies.
 
 ## Product hierarchy for a signed-in learner
 
@@ -183,14 +189,25 @@ Done requires, as applicable:
 
 ## Current implementation
 
-Adaptive Learning V1 begins in `feature/adaptive-learning-loop-v1` with the first vertical:
+Adaptive Learning V1 has completed its first two learning-intelligence primitives:
 
 ```text
-accepted language review
+P1.0
+accepted learning event
 -> authored skill ids
 -> immutable skill evidence
--> learner mastery aggregate
+-> confidence-aware learner mastery
 -> authenticated mastery read API
+
+P1.1
+raw deterministic language answer
+-> server grader
+-> FSRS result
+-> immutable attempt audit row
+-> high-confidence skill evidence
+-> mastery
 ```
+
+The next product slice is P1.2: an explainable weak-skill read model combining mastery, evidence weight, recent mistakes, due review state and curriculum frontier.
 
 See [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).

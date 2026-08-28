@@ -60,6 +60,8 @@ Source of truth: [`adaptive-learning-v1.md`](./adaptive-learning-v1.md).
 
 ### P1.0 — evidence and mastery foundation
 
+**Status: implemented.**
+
 ```text
 authored skill id
 -> learning evidence
@@ -67,39 +69,61 @@ authored skill id
 -> authenticated read model
 ```
 
-Initial vertical uses persisted language reviews and English skill metadata.
-
-Done when:
+Implemented contracts:
 
 - evidence and mastery persistence are transactional;
 - no public/client mastery-write API exists;
 - skill mapping is explicit rather than inferred from prompt text;
 - EN/VI assessed identities map to the same skill ids;
-- exact-head Product CI proves PostgreSQL persistence.
+- PostgreSQL E2E proves evidence/mastery persistence.
 
-### P1.1 — server-graded attempt evidence
+### P1.1 — server-graded deterministic attempt evidence
 
-Add higher-confidence evidence for deterministic authored exercises.
+**Status: implemented.**
 
-The server should persist the attempt/result used for mastery, rather than relying only on a client-submitted review rating.
+Production language review now supports:
 
-Done when evidence source/confidence can distinguish at least:
+```text
+raw answer
+-> deterministic server grader
+-> correct / incorrect
+-> FSRS Again / Good
+-> attempt log
+-> source/confidence-aware skill evidence
+-> confidence-weighted mastery
+```
 
-- server-graded deterministic attempt;
-- review-performance signal;
-- future AI/free-form evidence.
+Integrity boundaries:
+
+- server grading uses published authored answers, not AI;
+- raw learner text is not persisted or echoed;
+- direct client-rating review remains only as lower-confidence backward compatibility;
+- server-graded evidence is high confidence;
+- review/attempt/evidence/mastery writes are one CAS-protected PostgreSQL transaction;
+- deployment order is `014 -> 015 -> 016`.
 
 ### P1.2 — weak-skill read model
+
+**Status: next.**
 
 Combine:
 
 - mastery score;
-- evidence count/confidence;
-- recent mistakes;
+- evidence count and accumulated evidence weight;
+- recent deterministic mistakes;
 - due review state;
 - current curriculum frontier.
 
 Return a small, explainable list of repair candidates rather than an opaque recommendation score.
+
+The first implementation should expose both the candidate and the reason, for example:
+
+```text
+skill: en.sound.spelling
+reason: recent incorrect attempt + low mastery + due review
+```
+
+Do not introduce ML ranking in this slice.
 
 ### P1.3 — Adaptive Daily Session
 
