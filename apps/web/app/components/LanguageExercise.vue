@@ -192,7 +192,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   passed: []
-  attempt: [payload: { correct: boolean; attempts: number; responseMs: number }]
+  attempt: [payload: { correct: boolean; attempts: number; responseMs: number; submission: string }]
 }>()
 
 const { t } = useI18n()
@@ -352,14 +352,16 @@ function submission(): string {
 function check() {
   if (!canCheck.value) return
   const checkedAt = Date.now()
+  const rawSubmission = submission()
   attempts.value += 1
-  const ok = gradeLanguageExercise(props.exercise, submission(), targetLang.value)
+  const ok = gradeLanguageExercise(props.exercise, rawSubmission, targetLang.value)
   status.value = ok ? 'pass' : 'fail'
   if (!ok) failedAttempts.value += 1
   emit('attempt', {
     correct: ok,
     attempts: attempts.value,
     responseMs: Math.max(0, checkedAt - startedAt.value),
+    submission: rawSubmission,
   })
   startedAt.value = checkedAt
   if (ok) emit('passed')

@@ -83,4 +83,14 @@ describe('language-review-session', () => {
     assert.match(hub, /\/review/)
     assert.match(hub, /reviewSession|unitReview/)
   })
+
+  it('routes review attempts through the authoritative server grader', () => {
+    const page = read(join(webRoot, 'app/pages/tracks/[track]/review.vue'))
+    const exercise = read(join(webRoot, 'app/components/LanguageExercise.vue'))
+    const api = read(join(webRoot, 'app/composables/useApi.ts'))
+    assert.match(exercise, /submission:\s*rawSubmission/)
+    assert.match(page, /recordLanguageAttempt/)
+    assert.doesNotMatch(page, /recordLanguageReview\(/)
+    assert.match(api, /\/api\/v1\/language\/attempt/)
+  })
 })

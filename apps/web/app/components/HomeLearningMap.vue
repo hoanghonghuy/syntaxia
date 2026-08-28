@@ -1,5 +1,7 @@
 <template>
-  <nav class="home-learning-map" :aria-label="t('catalog.tracksTitle')">
+  <HomeTodaySession v-if="showToday" :track-id="activeTrackId!" />
+
+  <nav v-else class="home-learning-map" :aria-label="t('catalog.tracksTitle')">
     <div class="home-learning-ring home-learning-ring--outer" aria-hidden="true" />
     <div class="home-learning-ring home-learning-ring--inner" aria-hidden="true" />
 
@@ -46,6 +48,25 @@ const catalog = useCatalogStore()
 const auth = useAuthStore()
 
 const items = computed(() => buildHomeLearningMapItems(catalog.tracks))
+
+const activeTrackId = computed(() => {
+  if (!auth.user || !catalog.progressLoaded) return null
+  const completed = catalog.progress
+    .filter((row) => row.completed && row.locale === locale.value)
+    .slice()
+    .sort((a, b) => (b.completedAt || '').localeCompare(a.completedAt || ''))
+
+  for (const row of completed) {
+    for (const [trackId, lessons] of Object.entries(catalog.lessonsByTrack)) {
+      if (lessons.some((lesson) => lesson.id === row.lessonId && lesson.locale === row.locale)) {
+        return trackId
+      }
+    }
+  }
+  return null
+})
+
+const showToday = computed(() => Boolean(auth.user && activeTrackId.value))
 
 function itemLink(item: HomeLearningMapItem) {
   if (item.target.kind === 'track') {

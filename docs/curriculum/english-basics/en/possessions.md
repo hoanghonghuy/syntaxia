@@ -51,12 +51,14 @@ steps:
       - { form: "No, I don't.", gloss: "short negative answer", example: "No, I don't." }
   - type: practice
     id: en-u09-have-context
+    skills: ["en.grammar.possession", "en.communication.possession"]
     kind: dialogue_choice
     prompt: "Someone asks “Do you have a bike?” You do not. Which reply answers the question?"
     choices: ["No, I don't.", "I'm twenty-two years old.", "I live in Hanoi."]
     answer: "No, I don't."
   - type: practice
     id: en-u09-have-listen
+    skills: ["en.listening.possession", "en.grammar.possession"]
     kind: audio_choice
     prompt: "Listen and choose the object the speaker has."
     audioText: "I have a book."
@@ -64,6 +66,7 @@ steps:
     answer: "book"
   - type: practice
     id: en-u09-have-produce
+    skills: ["en.production.possession", "en.grammar.possession"]
     kind: type_answer
     prompt: "Say that you have a book."
     answer: "I have a book"
@@ -73,11 +76,13 @@ steps:
   - type: checkpoint
     items:
       - id: en-u09-have-check-question
+        skills: ["en.grammar.do-question", "en.communication.possession"]
         kind: type_answer
         prompt: "Ask whether the other person has a phone."
         answer: "Do you have a phone"
         acceptedAnswers: ["Do you have a phone?", "Do you have a phone"]
       - id: en-u09-have-check-yes
+        skills: ["en.grammar.do-question", "en.communication.possession"]
         kind: dialogue_choice
         prompt: "You have the book. Which short reply answers “Do you have a book?”"
         choices: ["Yes, I do.", "Yes, I am.", "Yes, I live here."]

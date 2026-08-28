@@ -51,12 +51,14 @@ steps:
       - { form: "No, I don't.", gloss: "câu trả lời phủ định ngắn", example: "No, I don't." }
   - type: practice
     id: en-u09-have-context
+    skills: ["en.grammar.possession", "en.communication.possession"]
     kind: dialogue_choice
     prompt: "Có người hỏi “Do you have a bike?” Bạn không có xe đạp. Câu nào trả lời đúng câu hỏi?"
     choices: ["No, I don't.", "I'm twenty-two years old.", "I live in Hanoi."]
     answer: "No, I don't."
   - type: practice
     id: en-u09-have-listen
+    skills: ["en.listening.possession", "en.grammar.possession"]
     kind: audio_choice
     prompt: "Nghe và chọn đồ vật người nói đang có."
     audioText: "I have a book."
@@ -64,6 +66,7 @@ steps:
     answer: "book"
   - type: practice
     id: en-u09-have-produce
+    skills: ["en.production.possession", "en.grammar.possession"]
     kind: type_answer
     prompt: "Nói rằng bạn có một quyển sách."
     answer: "I have a book"
@@ -73,11 +76,13 @@ steps:
   - type: checkpoint
     items:
       - id: en-u09-have-check-question
+        skills: ["en.grammar.do-question", "en.communication.possession"]
         kind: type_answer
         prompt: "Hỏi người kia có điện thoại hay không."
         answer: "Do you have a phone"
         acceptedAnswers: ["Do you have a phone?", "Do you have a phone"]
       - id: en-u09-have-check-yes
+        skills: ["en.grammar.do-question", "en.communication.possession"]
         kind: dialogue_choice
         prompt: "Bạn có quyển sách. Câu trả lời ngắn nào phù hợp với “Do you have a book?”"
         choices: ["Yes, I do.", "Yes, I am.", "Yes, I live here."]

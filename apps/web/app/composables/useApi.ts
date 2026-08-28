@@ -1,4 +1,4 @@
-import type { LanguageReviewCard, Lesson, LessonSummary, Note, NoteListItem, Progress, SandboxResult, Track, User } from '~/types/api'
+import type { DailyLearningSession, LanguageAttemptResult, LanguageReviewCard, Lesson, LessonSummary, Note, NoteListItem, Progress, SandboxResult, Track, User } from '~/types/api'
 
 export function useApi() {
   const config = useRuntimeConfig()
@@ -82,6 +82,10 @@ export function useApi() {
         method: 'PUT',
         body: JSON.stringify({ locale, completed }),
       }),
+    dailyLearningSession: (track: string, locale: string, targetMinutes = 15) => {
+      const q = new URLSearchParams({ track, locale, targetMinutes: String(targetMinutes) })
+      return request<DailyLearningSession>(`/api/v1/learning/today?${q}`)
+    },
     dueLanguageReviews: (track: string, locale: string, limit = 12) => {
       const q = new URLSearchParams({ track, locale, limit: String(limit) })
       return request<LanguageReviewCard[]>(`/api/v1/language/review/due?${q}`)
@@ -94,6 +98,17 @@ export function useApi() {
       responseMs?: number
     }) =>
       request<LanguageReviewCard>('/api/v1/language/review', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+    recordLanguageAttempt: (payload: {
+      lessonId: string
+      locale: string
+      itemKey: string
+      submission: string
+      responseMs?: number
+    }) =>
+      request<LanguageAttemptResult>('/api/v1/language/attempt', {
         method: 'POST',
         body: JSON.stringify(payload),
       }),

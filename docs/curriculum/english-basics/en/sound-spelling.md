@@ -47,6 +47,7 @@ steps:
       - { form: "name", reading: "/neɪm/", gloss: "the final e changes the vowel pattern here", example: "My name is Mia." }
   - type: practice
     id: en-fnd-sound-hear-meet
+    skills: ["en.sound.spelling", "en.listening.word-recognition"]
     kind: audio_choice
     prompt: "Listen. Which written word matches?"
     audioText: "meet"
@@ -55,6 +56,7 @@ steps:
     explanation: "The target word is meet /miːt/. All three choices are real words, so listen to the vowel rather than looking for an obviously invalid spelling."
   - type: practice
     id: en-fnd-sound-hear-name
+    skills: ["en.sound.spelling", "en.listening.word-recognition"]
     kind: audio_choice
     prompt: "Listen. Which word do you hear?"
     audioText: "name"
@@ -63,6 +65,7 @@ steps:
     explanation: "All three choices are real words. Listen to the initial consonant and keep the standard spelling together with the spoken word."
   - type: practice
     id: en-fnd-sound-type-hi
+    skills: ["en.sound.spelling", "en.listening.word-recognition"]
     kind: type_answer
     prompt: "Type the greeting you hear."
     audioText: "hi"
@@ -74,12 +77,14 @@ steps:
   - type: checkpoint
     items:
       - id: en-fnd-sound-check-this
+        skills: ["en.sound.spelling", "en.listening.word-recognition"]
         kind: audio_choice
         prompt: "Listen and choose the word."
         audioText: "this"
         choices: ["this", "these", "thus"]
         answer: "this"
       - id: en-fnd-sound-check-meet
+        skills: ["en.sound.spelling", "en.listening.word-recognition"]
         kind: type_answer
         prompt: "Type the word you hear."
         audioText: "meet"

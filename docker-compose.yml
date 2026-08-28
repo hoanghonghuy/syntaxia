@@ -19,6 +19,8 @@ services:
       - ./apps/api/migrations/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
       - ./apps/api/migrations/002_sandbox_harden.sql:/docker-entrypoint-initdb.d/02-sandbox.sql:ro
       - ./apps/api/migrations/014_language_review_fsrs.sql:/docker-entrypoint-initdb.d/03-language-review.sql:ro
+      - ./apps/api/migrations/015_adaptive_skill_mastery.sql:/docker-entrypoint-initdb.d/04-adaptive-mastery.sql:ro
+      - ./apps/api/migrations/016_server_graded_language_attempts.sql:/docker-entrypoint-initdb.d/05-server-graded-attempts.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U syntaxia -d syntaxia"]
       interval: 5s

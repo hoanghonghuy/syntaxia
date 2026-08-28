@@ -144,14 +144,16 @@ func (r *Repository) ListDueLanguageReviewCards(
 }
 
 // SaveLanguageReviewCAS atomically updates a card only when it still matches
-// the state that the scheduler read, then appends the review log. A false
-// return means another request/device updated the card first and the caller
-// must report a conflict instead of re-applying the same rating to newer state.
+// the state that the scheduler read, appends the review log, optionally appends
+// one authoritative server-graded attempt log, then persists authored skill
+// evidence and its confidence-weighted current aggregate.
 func (r *Repository) SaveLanguageReviewCAS(
 	ctx context.Context,
 	before domain.LanguageReviewCard,
 	after domain.LanguageReviewCard,
 	log domain.LanguageReviewLog,
+	evidence []domain.SkillEvidence,
+	attempt *domain.LanguageAttemptLog,
 ) (bool, error) {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
@@ -195,18 +197,69 @@ func (r *Repository) SaveLanguageReviewCAS(
 		return false, nil
 	}
 
-	if _, err = tx.Exec(ctx, `
+	var reviewLogID int64
+	if err = tx.QueryRow(ctx, `
 		INSERT INTO language_review_logs (
 			user_id, track_id, lesson_id, locale, item_key, rating, response_ms,
 			reviewed_at, due_before, due_after, state_before, state_after,
 			stability_before, stability_after, difficulty_before, difficulty_after
 		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+		RETURNING id
 	`, log.UserID, log.TrackID, log.LessonID, log.Locale, log.ItemKey,
 		log.Rating, log.ResponseMS, log.ReviewedAt, log.DueBefore, log.DueAfter,
 		log.StateBefore, log.StateAfter, log.StabilityBefore, log.StabilityAfter,
-		log.DifficultyBefore, log.DifficultyAfter); err != nil {
+		log.DifficultyBefore, log.DifficultyAfter).Scan(&reviewLogID); err != nil {
 		return false, err
 	}
+
+	var attemptLogID *int64
+	if attempt != nil {
+		var id int64
+		if err = tx.QueryRow(ctx, `
+			INSERT INTO language_attempt_logs (
+				review_log_id, user_id, track_id, lesson_id, locale, item_key,
+				correct, response_ms, grader_version, confidence, graded_at
+			) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+			RETURNING id
+		`, reviewLogID, attempt.UserID, attempt.TrackID, attempt.LessonID,
+			attempt.Locale, attempt.ItemKey, attempt.Correct, attempt.ResponseMS,
+			attempt.GraderVersion, attempt.Confidence, attempt.GradedAt).Scan(&id); err != nil {
+			return false, err
+		}
+		attemptLogID = &id
+	}
+
+	for _, item := range evidence {
+		if _, err = tx.Exec(ctx, `
+			INSERT INTO skill_evidence (
+				review_log_id, attempt_log_id, user_id, track_id, lesson_id, locale,
+				item_key, skill_id, source, rating, observation_score, confidence, observed_at
+			) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+		`, reviewLogID, attemptLogID, item.UserID, item.TrackID, item.LessonID,
+			item.Locale, item.ItemKey, item.SkillID, item.Source, item.Rating,
+			item.ObservationScore, item.Confidence, item.ObservedAt); err != nil {
+			return false, err
+		}
+
+		if _, err = tx.Exec(ctx, `
+			INSERT INTO learner_skill_mastery (
+				user_id, track_id, locale, skill_id, score, evidence_count,
+				evidence_weight, last_evidence_at, updated_at
+			) VALUES ($1,$2,$3,$4,$5,1,$6,$7,now())
+			ON CONFLICT (user_id, track_id, locale, skill_id) DO UPDATE SET
+				score = ((learner_skill_mastery.score * learner_skill_mastery.evidence_weight)
+					+ (EXCLUDED.score * EXCLUDED.evidence_weight))
+					/ (learner_skill_mastery.evidence_weight + EXCLUDED.evidence_weight),
+				evidence_count = learner_skill_mastery.evidence_count + 1,
+				evidence_weight = learner_skill_mastery.evidence_weight + EXCLUDED.evidence_weight,
+				last_evidence_at = GREATEST(learner_skill_mastery.last_evidence_at, EXCLUDED.last_evidence_at),
+				updated_at = now()
+		`, item.UserID, item.TrackID, item.Locale, item.SkillID,
+			item.ObservationScore, item.Confidence, item.ObservedAt); err != nil {
+			return false, err
+		}
+	}
+
 	if err := tx.Commit(ctx); err != nil {
 		return false, err
 	}

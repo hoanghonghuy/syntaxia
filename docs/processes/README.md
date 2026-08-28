@@ -44,7 +44,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [auth-email-local-phase.md](./auth-email-local-phase.md) | Email + local curriculum phase (Google deferred) |
 | [onboarding.md](./onboarding.md) | Auth redirect, guest soft gates, login/register polish |
 | [i18n.md](./i18n.md) | en/vi locale + lesson pair parity gate |
-| [e2e-smoke.md](./e2e-smoke.md) | API/E2E smoke gates (SQL + languages + catalog orchestrator) |
+| [e2e-smoke.md](./e2e-smoke.md) | API/E2E smoke gates (SQL + languages + adaptive Today + catalog orchestrator) |
 | [release-hardening.md](./release-hardening.md) | Ordered release smoke + light a11y/env gate |
 | [postgresql-track.md](./postgresql-track.md) | PostgreSQL track levels + scaffold lessons |
 | [javascript-track.md](./javascript-track.md) | JS Basics (MDN map) + code sandbox |
@@ -64,6 +64,7 @@ Canonical rule: see **Process documentation (mandatory)** in [`AGENTS.md`](../AG
 | [language-unit-path-hub.md](./language-unit-path-hub.md) | Historical linear path notes |
 | [language-step-audio.md](./language-step-audio.md) | Listen/TTS + audio-first transcript behavior |
 | [language-review-session.md](./language-review-session.md) | FSRS-backed review behavior and persistence |
+| [adaptive-learning-v1.md](./adaptive-learning-v1.md) | **Active** Learning Intelligence V1: evidence/mastery, weak-skill repair, bounded Today session |
 | [chinese-it-vocab-map.md](./chinese-it-vocab-map.md) | Specialty vocabulary themes |
 | [japanese-jlpt-n5-map.md](./japanese-jlpt-n5-map.md) | Initial N5 map |
 | [chinese-hsk-mvp.md](./chinese-hsk-mvp.md) | Historical Band 1 MVP wiring |
