@@ -4,8 +4,8 @@
   Orchestrate all API/E2E smoke gates (fail-closed).
 
 .DESCRIPTION
-  Runs runtime curriculum integrity, catalog API smoke, SQL Fundamentals E2E, and Languages E2E.
-  Optional -IncludeSandboxes also runs JS/HTMLCSS sandbox scripts.
+  Runs runtime curriculum integrity, catalog API smoke, SQL Fundamentals E2E, Languages E2E,
+  and Adaptive Today E2E. Optional -IncludeSandboxes also runs JS/HTMLCSS sandbox scripts.
 
 .PARAMETER BaseUrl
   API base URL. Default http://127.0.0.1:8082
@@ -52,6 +52,10 @@ if ($LASTEXITCODE -ne 0) { Fail "e2e-sql-fundamentals.ps1 exited $LASTEXITCODE" 
 Step "Languages E2E"
 & (Join-Path $PSScriptRoot "e2e-languages.ps1") -BaseUrl $BaseUrl
 if ($LASTEXITCODE -ne 0) { Fail "e2e-languages.ps1 exited $LASTEXITCODE" }
+
+Step "Adaptive Today E2E"
+& (Join-Path $PSScriptRoot "e2e-adaptive-today.ps1") -BaseUrl $BaseUrl
+if ($LASTEXITCODE -ne 0) { Fail "e2e-adaptive-today.ps1 exited $LASTEXITCODE" }
 
 if ($IncludeSandboxes) {
   Step "JavaScript sandbox"

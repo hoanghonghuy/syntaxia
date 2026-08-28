@@ -84,3 +84,39 @@ export type LanguageReviewCard = {
   lastReviewAt?: string
   remainingSteps: number
 }
+
+export type LanguageAttemptResult = {
+  correct: boolean
+  rating: 1 | 3
+  confidence: number
+  card: LanguageReviewCard
+}
+
+export type LearningLessonRef = {
+  lessonId: string
+  slug: string
+  title: string
+  sortOrder: number
+}
+
+export type DailyLearningItem = {
+  type: 'review' | 'repair' | 'lesson'
+  estimatedMinutes: number
+  reviewCount?: number
+  skillId?: string
+  priority?: 'high' | 'medium' | 'watch'
+  reasons?: string[]
+  masteryScore?: number
+  lesson?: LearningLessonRef
+}
+
+export type DailyLearningSession = {
+  trackId: string
+  locale: string
+  asOf: string
+  targetMinutes: number
+  estimatedMinutes: number
+  dueReviewCount: number
+  weakSkillCount: number
+  items: DailyLearningItem[]
+}

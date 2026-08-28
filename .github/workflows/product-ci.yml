@@ -157,6 +157,8 @@ jobs:
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/init.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/002_sandbox_harden.sql
           psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/014_language_review_fsrs.sql
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/015_adaptive_skill_mastery.sql
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f apps/api/migrations/016_server_graded_language_attempts.sql
           # Simulate a long-lived production DB that was created when only the
           # first language track existed. API startup must recreate later
           # app-owned tracks before curriculum sync or their lessons hit the FK.
@@ -177,14 +179,26 @@ jobs:
       - name: Run full cross-domain E2E and sandboxes
         shell: pwsh
         run: ./scripts/e2e-all.ps1 -BaseUrl http://127.0.0.1:8082 -IncludeSandboxes
-      - name: Verify persisted FSRS rows
+      - name: Verify persisted learning rows
         run: |
           cards=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_cards")
           logs=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_review_logs")
+          attempts=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM language_attempt_logs")
+          evidence=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM skill_evidence")
+          graded_evidence=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM skill_evidence WHERE source = 'server_graded_attempt' AND confidence = 1")
+          mastery=$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM learner_skill_mastery")
           echo "language_review_cards=$cards"
           echo "language_review_logs=$logs"
+          echo "language_attempt_logs=$attempts"
+          echo "skill_evidence=$evidence"
+          echo "server_graded_skill_evidence=$graded_evidence"
+          echo "learner_skill_mastery=$mastery"
           test "$cards" -ge 4
           test "$logs" -ge 5
+          test "$attempts" -ge 1
+          test "$evidence" -ge 1
+          test "$graded_evidence" -ge 2
+          test "$mastery" -ge 1
       - name: Show API log on failure
         if: failure()
         run: cat "$RUNNER_TEMP/syntaxia-api.log" || true

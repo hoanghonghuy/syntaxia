@@ -87,7 +87,6 @@ const finished = ref(false)
 const caughtUp = ref(false)
 const exerciseRevision = ref(0)
 const lastAttemptWasCorrect = ref(false)
-const lastResponseMs = ref<number | undefined>()
 let pendingReviewWrite: Promise<void> = Promise.resolve()
 
 const lead = computed(() => t('lesson.reviewLead'))
@@ -124,7 +123,6 @@ async function loadReview() {
   exerciseRevision.value = 0
   session.value = []
   lastAttemptWasCorrect.value = false
-  lastResponseMs.value = undefined
   try {
     await catalog.loadTracks()
     await catalog.loadLessons(trackId.value, locale.value)
@@ -177,29 +175,30 @@ async function loadReview() {
 function resetCurrentExerciseAfterWriteFailure() {
   pendingReviewWrite = Promise.resolve()
   lastAttemptWasCorrect.value = false
-  lastResponseMs.value = undefined
   exerciseRevision.value += 1
 }
 
-function onAttempt(payload: { correct: boolean; responseMs: number }) {
-  lastAttemptWasCorrect.value = payload.correct
-  lastResponseMs.value = payload.responseMs
+function onAttempt(payload: { correct: boolean; responseMs: number; submission: string }) {
   const item = current.value
-  if (!item || payload.correct) return
-
+  if (!item) return
+  lastAttemptWasCorrect.value = false
   writeError.value = ''
   pendingReviewWrite = pendingReviewWrite
     .catch(() => undefined)
     .then(async () => {
       try {
-        const card = await api.recordLanguageReview({
+        const result = await api.recordLanguageAttempt({
           lessonId: item.lessonId,
           locale: locale.value,
           itemKey: item.itemKey,
-          rating: 1,
+          submission: payload.submission,
           responseMs: payload.responseMs,
         })
-        item.card = card
+        if (result.correct !== payload.correct) {
+          throw new Error(t('lesson.loadErrorGeneric'))
+        }
+        item.card = result.card
+        lastAttemptWasCorrect.value = result.correct
       } catch (error) {
         writeError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
         throw error
@@ -209,18 +208,13 @@ function onAttempt(payload: { correct: boolean; responseMs: number }) {
 
 async function onPassed() {
   const item = current.value
-  if (!item || !lastAttemptWasCorrect.value) return
+  if (!item) return
   writeError.value = ''
   try {
     await pendingReviewWrite
-    const card = await api.recordLanguageReview({
-      lessonId: item.lessonId,
-      locale: locale.value,
-      itemKey: item.itemKey,
-      rating: 3,
-      responseMs: lastResponseMs.value,
-    })
-    item.card = card
+    if (!lastAttemptWasCorrect.value) {
+      throw new Error(t('lesson.loadErrorGeneric'))
+    }
   } catch (error) {
     writeError.value = error instanceof Error ? error.message : t('lesson.loadErrorGeneric')
     resetCurrentExerciseAfterWriteFailure()
@@ -229,7 +223,6 @@ async function onPassed() {
 
   pendingReviewWrite = Promise.resolve()
   lastAttemptWasCorrect.value = false
-  lastResponseMs.value = undefined
   exerciseRevision.value = 0
   if (index.value >= session.value.length - 1) {
     finished.value = true

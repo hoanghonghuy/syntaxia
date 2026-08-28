@@ -85,6 +85,7 @@ func main() {
 	r.Use(middleware.RequestID(), middleware.Logger(logr), middleware.Recovery(logr), middleware.CORS(cfg.CORSOrigins))
 	h.RegisterRoutes(r)
 	h.RegisterLanguageRoutes(r)
+	h.RegisterAdaptiveLearningRoutes(r)
 
 	addr := ":" + cfg.Port
 	logr.Info("starting api", "addr", addr)
