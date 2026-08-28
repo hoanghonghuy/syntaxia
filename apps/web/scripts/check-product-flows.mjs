@@ -77,6 +77,23 @@ test('lesson and review routes use the production language flow', () => {
   assert.match(review, /extractIndexedReviewExercisesFromLesson/, 'review route must map authored stable review items')
 })
 
+test('home adapts from discovery map to a recoverable Today plan for returning learners', () => {
+  const map = read('app/components/HomeLearningMap.vue')
+  const today = read('app/components/HomeTodaySession.vue')
+  const api = read('app/composables/useApi.ts')
+
+  assert.match(map, /HomeTodaySession/, 'home learning map missing adaptive Today surface')
+  assert.match(map, /progressLoaded/, 'Today surface must wait for authoritative progress state')
+  assert.match(map, /completedAt/, 'Today surface must prefer the recently studied track')
+  assert.match(api, /\/api\/v1\/learning\/today/, 'web API missing Today session endpoint')
+  assert.match(today, /dailyLearningSession\(/, 'Today surface does not load the server-composed plan')
+  assert.match(today, /loading/, 'Today surface missing loading state')
+  assert.match(today, /loadError/, 'Today surface missing recoverable error state')
+  assert.match(today, /loadSession/, 'Today surface missing retry path')
+  assert.match(today, /\/review/, 'Today review item must navigate to the review route')
+  assert.match(today, /\/lessons\//, 'Today repair/new-lesson items must navigate to lessons')
+})
+
 test('auth pages keep explicit redirect handling', () => {
   for (const route of ['app/pages/login.vue', 'app/pages/register.vue']) {
     const source = read(route)
